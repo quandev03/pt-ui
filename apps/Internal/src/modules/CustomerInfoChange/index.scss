@@ -1,0 +1,23 @@
+.btn-sign-pdf {
+  right: 1rem;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.subscription--form-label {
+  width: 148px;
+}
+
+.ant-form-item-explain-connected {
+  color: inherit !important;
+}
+
+.path {
+  fill: none;
+  stroke-width: 2px;
+  stroke: red;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}

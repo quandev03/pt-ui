@@ -1,0 +1,9 @@
+.scrollable-content {
+  max-height: 700px; 
+   overflow-y: auto; 
+   overflow-x: hidden;
+   width: 400px;
+ }
+ .ant-checkbox+span {
+   width: 33%;
+ }

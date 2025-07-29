@@ -1,0 +1,51 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@react/commons/*": [
+        "commons/src/lib/commons/*"
+      ],
+      "@react/constants/*": [
+        "commons/src/lib/constants/*"
+      ],
+      "@react/helpers/*": [
+        "commons/src/lib/helpers/*"
+      ],
+      "@react/url/*": [
+        "commons/src/lib/url/*"
+      ],
+      "@react/languages/*": [
+        "commons/src/lib/languages/*"
+      ],
+      "@react/utils/*": [
+        "commons/src/lib/utils/*"
+      ],
+      "@react/hooks/*": [
+        "commons/src/lib/hooks/*"
+      ],
+      "apps/*": [
+        "apps/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
+}

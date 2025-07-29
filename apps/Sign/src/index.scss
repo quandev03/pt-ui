@@ -1,0 +1,348 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@function toRem($value) {
+  $remValue: calc($value / 16) + rem;
+  @return $remValue;
+}
+
+html {
+  font-size: 16px;
+
+  @media only screen and (max-width: 1365px) {
+    font-size: 14px;
+  }
+
+  @media only screen and (max-width: 1023px) {
+    font-size: 12px;
+  }
+}
+
+@media print {
+  @page {
+    margin: 0;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  .modal-backdrop.show {
+    opacity: 0.6;
+  }
+
+  .popover-body:hover {
+    background: #253147;
+
+    & *:not(.not-change) {
+      svg {
+        path {
+          fill: #3391ff;
+        }
+      }
+
+      div {
+        color: #3391ff;
+      }
+    }
+  }
+
+  .popover .arrow {
+    display: none;
+  }
+
+  .custom-control-label {
+
+    &:before,
+    &:after {
+      top: 0;
+    }
+  }
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+
+.tickers-list,
+.tickers-list-1 {
+  will-change: auto !important;
+}
+
+button {
+  border: none;
+}
+
+::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.infinite-scroll-component__outerdiv {
+  height: 100%;
+
+  .infinite-scroll-component {
+    thead {
+      tr>th {
+        top: 0px;
+        position: sticky;
+      }
+    }
+  }
+}
+
+.cursor-pointer {
+  user-select: none;
+  cursor: pointer;
+}
+
+.mr-12 {
+  margin-right: 12px;
+}
+
+.ant-modal-header {
+  margin-bottom: 20px !important;
+}
+
+.ant-modal-body {
+  max-height: 85vh;
+  overflow: auto;
+}
+
+.ant-modal-title {
+  font-size: 18px !important;
+}
+
+.popupSwal {
+  .swal2-html-container {
+    font-size: 14px;
+  }
+
+  .titleSwal {
+    font-size: 20px;
+  }
+}
+
+.ant-modal-confirm-content {
+  max-width: 100% !important;
+}
+
+.ant-form-item {
+  .ant-form-item-label {
+    text-align: start;
+  }
+}
+
+.ant-form-item-required {
+  position: relative;
+
+  &::after {
+    right: -10px;
+  }
+
+  &::before {
+    position: absolute;
+    margin-inline-end: -10px !important;
+    right: 0;
+  }
+}
+
+.ant-form-horizontal {
+  .ant-form-item-required {
+    margin-right: 12px;
+  }
+
+  ::before {
+    right: 13px;
+    top: 7px;
+  }
+}
+
+.ant-form-vertical {
+  .ant-form-item-required {
+    &::after {
+      margin-inline-start: 0 !important;
+      margin-inline-end: 0 !important;
+    }
+  }
+}
+
+.ant-picker {
+  width: 100%;
+}
+
+
+.quickSearchOverlay {
+  .ant-tooltip-inner {
+    text-align: justify;
+    max-width: 500px;
+  }
+
+  .ant-tooltip-content {
+    min-width: max-content;
+  }
+}
+
+.ant-tooltip-inner {
+  white-space: pre-wrap;
+}
+
+//Css for Firmware Notification Content
+.notificationContent {
+  width: auto;
+  padding: 5px 0 0 0 !important;
+}
+
+.notificationContent .ant-notification-notice-message {
+  padding-inline-end: 20px !important;
+}
+
+.ant-notification-notice-close {
+  top: 10px !important;
+  inset-inline-end: 10px !important;
+}
+
+.export-item {
+  display: flex;
+  align-items: center;
+
+  svg {
+    height: 18px;
+    width: 18px;
+    margin-right: 10px;
+  }
+}
+
+.react-flow__attribution {
+  display: none;
+}
+
+.custom-label-group-chart {
+  writing-mode: vertical-lr;
+  margin-top: -10px;
+  transform: translateY(-12px);
+}
+
+.ant-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label-required-suffix::after {
+  display: inline-block;
+  margin-inline-start: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: '*';
+}
+
+fieldset {
+  display: block;
+  min-width: 0;
+  padding-block-start: toRem(6);
+  padding-block-end: toRem(12);
+  padding-inline-start: toRem(12);
+  padding-inline-end: toRem(12);
+  border: 1px solid #d9d9d9;
+  border-radius: toRem(20);
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.ant-form legend {
+  width: auto;
+  margin-bottom: 0;
+  color: inherit;
+  border-bottom: none;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #2c3d94;
+
+  svg {
+    color: initial;
+  }
+}
+
+.ant-form-item .ant-form-item-label-left {
+  display: flex;
+  align-items: center;
+}
+
+div#app-version {
+  bottom: 0;
+  position: fixed;
+  text-align: left;
+  padding-left: 10px;
+  color: black;
+  font-weight: bold;
+  background-color: transparent;
+  width: max-content;
+  height: 25px;
+}
+
+.ant-modal-confirm-paragraph {
+  max-width: 100% !important;
+}

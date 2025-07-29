@@ -1,0 +1,81 @@
+.siteBar {
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  width: 20%;
+  background-color: white;
+  top: 0;
+}
+
+.siteBarBlock {
+  overflow-y: scroll;
+  height: 100vh;
+}
+.dashboard {
+  /* width: 100%; */
+  background-color: #f2f4fb;
+  padding: 2rem 2.5rem;
+  min-height: 100vh;
+}
+.dashboardPage {
+  background-color: #f8f8f8;
+  display: flex;
+  width: 100%;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(88, 88, 88, 0.5);
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.showHideSite {
+  position: absolute;
+  right: -1rem;
+  top: 2rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background-color: #fecb63;
+  font-size: 12px;
+  color: #231f20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 1;
+  transition: all 0.5s;
+}
+.showHideSite:hover {
+  color: white;
+}
+
+.siteBarHide {
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  width: 5%;
+  background-color: white;
+  top: 0;
+}
+.siteBarHide p {
+  display: none;
+}
+
+.dashboardHide {
+  width: 95%;
+  /* background-color: #f3f0f0; */
+  background-color: #f2f4fb;
+  margin-left: 5%;
+  padding: 2rem 2.5rem;
+  min-height: 100vh;
+}
+.dashboardColor {
+  background-color: #f2f4fb !important;
+}

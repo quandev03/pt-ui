@@ -1,0 +1,19 @@
+.topUp-subscription--extend {
+  background-color: inherit !important;
+  &:focus,
+  &:hover,
+  &:focus-within {
+    background-color: inherit !important;
+  }
+}
+.topUp-subscription--amount {
+  // position: absolute;
+  z-index: 1;
+  @extend .topUp-subscription--extend;
+}
+
+.topUp-subscription--hint {
+  position: absolute;
+  left: 0;
+  @extend .topUp-subscription--extend;
+}
