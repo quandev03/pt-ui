@@ -1,81 +1,454 @@
-# React
+# Hi-VN - Hệ thống quản lý nội bộ
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+<a alt="Vissoft logo" href="https://vissoft.vn/" target="_blank" rel="noreferrer"><img src="https://vissoft.vn/upload/images/group-34075.png" width="45"></a>
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+✨ **Dự án được phát triển bởi [Venn](https://github.com/ChuNguyenChuong) - Vissoft** ✨
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## 📋 Mục lục
 
-## Finish your remote caching setup
+- [Tổng quan](#tổng-quan)
+- [Công nghệ sử dụng](#công-nghệ-sử-dụng)
+- [Cài đặt](#cài-đặt)
+- [Scripts chính](#scripts-chính)
+- [Cấu trúc dự án](#cấu-trúc-dự-án)
+- [Development](#development)
+- [Build & Deploy](#build--deploy)
+- [Testing](#testing)
+- [Nx Commands](#nx-commands)
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/fca1QhzUz5)
+## 🎯 Tổng quan
 
-## Run tasks
+Hi-VN là hệ thống quản lý nội bộ được xây dựng trên nền tảng React Monorepo với Nx workspace. Dự án bao gồm hai ứng dụng chính:
 
-To run the dev server for your app, use:
+- **Internal App** - Hệ thống quản lý nội bộ 
+- **Partner App** - Hệ thống đối tác 
 
-```sh
-npx nx serve Partner
+Được thiết kế với:
+- **Scalability**: Dễ dàng mở rộng với nhiều apps và shared libraries
+- **Developer Experience**: Setup sẵn tools và best practices
+- **Performance**: Optimized builds với Vite và Nx caching
+- **Type Safety**: Full TypeScript support
+
+## 🛠 Công nghệ sử dụng
+
+### Core Technologies
+
+- **React 18.3.1** - UI Library
+- **TypeScript 5.5.2** - Type safety
+- **Vite** - Build tool và dev server
+- **Nx 19.5.6** - Monorepo management
+
+### UI & Styling
+
+- **Tailwind CSS 3.4.3** - Utility-first CSS
+- **Styled Components 6.1.16** - CSS-in-JS
+- **Ant Design 5.26.0** - UI Component library
+- **Lucide React** - Icon library
+
+### State Management
+
+- **Zustand 5.0.5** - Lightweight state management
+- **TanStack Query 5.69.0** - Server state management
+
+### Authentication & Services
+
+- **Firebase 12.0.0** - Authentication và backend services
+- **React OAuth Google** - Google OAuth integration
+- **Axios** - HTTP client
+
+### Testing
+
+- **Vitest** - Unit testing framework
+- **Jest** - Testing utilities
+- **React Testing Library** - Component testing
+- **Playwright** - E2E testing
+
+### Development Tools
+
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
+- **Husky** - Git hooks
+- **Commitlint** - Commit message validation
+- **Yarn** - Package manager
+
+## 🚀 Cài đặt
+
+### Prerequisites
+
+- Node.js >= 18
+- Yarn >= 1.22
+
+### Installation Steps
+
+```bash
+# Clone repository
+git clone <repository-url>
+cd hi-vn
+
+# Install dependencies
+yarn install
+
+# Setup environment (nếu cần)
+cp .env.example .env.local
 ```
 
-To create a production bundle:
+## 📝 Scripts chính
 
-```sh
-npx nx build Partner
+### Development
+
+```bash
+yarn internal          # 🚀 Chạy internal app development mode
+yarn partner           # 🚀 Chạy partner app development mode
+yarn nx:graph          # 📊 Xem dependency graph
+yarn nx:reset          # 🔄 Reset Nx cache
 ```
 
-To see all available targets to run for a project, run:
+### Build & Production
 
-```sh
-npx nx show project Partner
+```bash
+yarn build:internal    # 🏗️  Build internal app for production
+yarn build:partner     # 🏗️  Build partner app for production
+yarn start:internal    # ▶️  Serve internal app (port 3001)
+yarn start:partner     # ▶️  Serve partner app (port 3000)
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+### Library Management
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/react:app Partner
+```bash
+yarn vis-add <name>    # 📦 Tạo library mới trong libs/
 ```
 
-To generate a new library, use:
+### Utilities
 
-```sh
-npx nx g @nx/react:lib mylib
+```bash
+yarn nx:repair         # 🔧 Sửa chữa Nx workspace
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+## 📁 Cấu trúc dự án
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```
+hi-vn/
+├── 📁 apps/                    # Ứng dụng chính
+│   ├── 📁 internal/           # Hệ thống quản lý nội bộ
+│   │   ├── 📁 src/
+│   │   │   ├── 📁 modules/    # Feature modules
+│   │   │   │   ├── 📁 Auth/   # Authentication module
+│   │   │   │   ├── 📁 UserManagement/ # User management
+│   │   │   │   └── 📁 WelcomePage/    # Welcome page
+│   │   │   ├── 📁 routers/    # Routing configuration
+│   │   │   ├── 📁 services/   # API services
+│   │   │   └── 📁 types/      # TypeScript types
+│   │   ├── index.html
+│   │   ├── vite.config.ts     # Vite configuration
+│   │   └── tailwind.config.js # Tailwind config
+│   │
+│   └── 📁 partner/            # Hệ thống đối tác
+│       ├── 📁 src/
+│       │   ├── 📁 modules/    # Feature modules
+│       │   ├── 📁 routers/    # Routing configuration
+│       │   ├── 📁 services/   # API services
+│       │   └── 📁 types/      # TypeScript types
+│       ├── index.html
+│       ├── vite.config.ts     # Vite configuration
+│       └── tailwind.config.js # Tailwind config
+│
+├── 📁 libs/                   # Shared libraries
+│   └── 📁 common/            # Common components/utils
+│       ├── 📁 lib/           # UI Components
+│       │   ├── 📁 Button/    # Button components
+│       │   ├── 📁 Input/     # Input components
+│       │   ├── 📁 Table/     # Table components
+│       │   ├── 📁 Modal/     # Modal components
+│       │   └── 📁 ...        # Other components
+│       ├── 📁 hooks/         # Custom hooks
+│       ├── 📁 services/      # Shared services
+│       ├── 📁 types/         # Shared types
+│       └── 📁 utils/         # Utility functions
+│
+├── 📁 dist/                   # Build output
+│   └── 📁 apps/
+│       ├── 📁 internal/      # Internal app build
+│       └── 📁 partner/       # Partner app build
+│
+├── 📊 package.json           # Root dependencies & scripts
+├── 📊 nx.json               # Nx workspace config
+├── 📊 tsconfig.base.json    # TypeScript base config
+├── 📊 commitlint.config.cjs # Commit message rules
+└── 📋 README.md             # This file
+```
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 💻 Development
 
-## Install Nx Console
+### Khởi động Development Server
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+```bash
+# Chạy internal app
+yarn internal
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+# Chạy partner app
+yarn partner
+```
 
-## Useful links
+- Internal app: http://localhost:4200
+- Partner app: http://localhost:4200 (sẽ tự động chuyển port nếu có conflict)
+- Hot reload enabled
+- TypeScript checking
+- ESLint integration
 
-Learn more:
+### Tạo Library mới
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```bash
+yarn vis-add my-feature
+```
 
-And join the Nx community:
+Sẽ tạo library mới tại `libs/my-feature/` với:
+- TypeScript setup
+- Vitest testing
+- Export barrel (index.ts)
 
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Best Practices
+
+- 📝 Code theo TypeScript strict mode
+- 🎨 Sử dụng Tailwind CSS cho styling
+- 🧪 Viết tests cho components
+- 📐 Follow ESLint rules
+- 🔄 Commit với conventional commit format
+
+## 🏗️ Build & Deploy
+
+### Development Build
+
+```bash
+yarn build:internal
+yarn build:partner
+```
+
+### Production Serve
+
+```bash
+yarn start:internal  # Port 3001
+yarn start:partner   # Port 3000
+```
+
+- Serves từ `dist/apps/[app-name]/`
+- Production optimized
+- Environment variables từ `.env.local`
+
+### Docker Deployment
+
+Dự án có sẵn Dockerfile cho từng app:
+- `Dockerfile-Internal` - Cho internal app
+- `Dockerfile-Partner` - Cho partner app
+- `Dockerfile-Sign` - Cho signing app
+
+## 🧪 Testing
+
+### Chạy Tests
+
+```bash
+# Tất cả tests
+yarn test
+
+# Watch mode
+yarn test --watch
+
+# Coverage report
+yarn test --coverage
+```
+
+### Testing Guidelines
+
+- Unit tests cho components
+- Integration tests cho features
+- E2E tests với Playwright
+- Accessibility testing
+
+## ⚡ Nx Commands
+
+### Workspace Management
+
+```bash
+# Xem project graph
+npx nx graph
+
+# Reset cache
+npx nx reset
+
+# Repair workspace
+npx nx repair
+```
+
+### Running Tasks
+
+```bash
+# Chạy specific target
+npx nx <target> <project>
+
+# Multiple targets
+npx nx run-many -t build test
+
+# Filtered projects
+npx nx run-many -t build -p internal partner
+```
+
+### Generate Commands
+
+```bash
+# Tạo React component
+npx nx g @nx/react:component MyComponent --project=internal
+
+# Tạo library
+npx nx g @nx/react:library my-lib --directory=libs/my-lib
+```
+
+## 📚 Resources
+
+### Documentation
+
+- 📖 [Nx Documentation](https://nx.dev)
+- ⚛️ [React Documentation](https://react.dev)
+- 🎨 [Tailwind CSS](https://tailwindcss.com)
+- 📘 [TypeScript Handbook](https://typescriptlang.org)
+- 🔥 [Firebase Documentation](https://firebase.google.com/docs)
+
+## 🤝 Contributing
+
+### Git Workflow
+
+1. Tạo branch theo naming convention
+2. Code & commit với conventional format
+3. Push và tạo Pull Request
+4. Code review & merge
+
+### 🌿 Branch Naming Rules
+
+#### Protected Branches (Chỉ admin)
+
+- `main` - Production branch
+- `develop` - Development branch
+- `test` - Testing environment
+- `uat` - User Acceptance Testing
+- `dev-common` - Common development
+
+> ⚠️ **Lưu ý**: Chỉ user có email `chunguyenchuong2014bg@gmail.com` mới được push trực tiếp lên các protected branches.
+
+#### Feature Branches (Tất cả developers)
+
+- `feature/*` - Tính năng mới
+- `bugfix/*` - Sửa lỗi
+- `hotfix/*` - Sửa lỗi khẩn cấp
+- `release/*` - Chuẩn bị release
+- `deploy/*` - Deploy scripts/configs
+- `conflict/*` - Giải quyết conflicts
+
+**Ví dụ branch names:**
+
+```bash
+feature/user-authentication
+bugfix/fix-login-error
+hotfix/security-patch
+release/v1.2.0
+```
+
+### 📝 Commit Message Rules
+
+Project sử dụng **Conventional Commits** với **commitlint** để kiểm tra format.
+
+#### Format bắt buộc:
+
+```
+type(SCOPE): subject
+```
+
+#### Types cho phép:
+
+- `feat` - Tính năng mới
+- `bug` - Sửa lỗi
+- `hotfix` - Sửa lỗi khẩn cấp
+- `release` - Release version
+
+#### Scope rules:
+
+- **Bắt buộc** phải có scope
+- Format: **UPPERCASE** với chữ cái, số và dấu gạch ngang
+- Ví dụ: `C010GESIM-0`, `USER-AUTH`, `API-V1`
+
+#### Subject rules:
+
+- **Không được để trống**
+- **Không được kết thúc bằng dấu chấm**
+- **Tối đa 150 ký tự**
+
+#### ✅ Ví dụ commit messages đúng:
+
+```bash
+feat(USER-AUTH): thêm chức năng đăng nhập
+bug(API-V1): sửa lỗi validation email
+hotfix(SECURITY): cập nhật dependencies
+release(V1-2-0): chuẩn bị release version 1.2.0
+```
+
+#### ❌ Ví dụ commit messages sai:
+
+```bash
+# Thiếu type và scope
+Thêm chức năng đăng nhập
+
+# Scope không đúng format (phải UPPERCASE)
+feat(user-auth): thêm chức năng đăng nhập
+
+# Kết thúc bằng dấu chấm
+feat(USER-AUTH): thêm chức năng đăng nhập.
+
+# Thiếu scope
+feat: thêm chức năng đăng nhập
+```
+
+### 🚫 Pre-commit Hooks
+
+Project có cấu hình **husky hooks**:
+
+1. **Pre-commit hook**:
+   - Kiểm tra branch naming convention
+   - Chạy build để đảm bảo code không lỗi
+   - Kiểm tra quyền push lên protected branches
+
+2. **Commit-msg hook**:
+   - Validate commit message format với commitlint
+   - Đảm bảo tuân thủ conventional commits
+
+#### Bypass hooks (Không khuyến nghị):
+
+```bash
+# Bỏ qua pre-commit hook
+git commit --no-verify -m "feat(SCOPE): commit message"
+
+# Bỏ qua commit-msg hook
+git commit --no-edit --no-verify
+```
+
+### 🔧 Troubleshooting Commit Issues
+
+#### Lỗi Branch Naming:
+
+```bash
+# Đổi tên branch hiện tại
+git branch -m new-branch-name
+
+# Hoặc tạo branch mới
+git checkout -b feature/ten-tinh-nang
+```
+
+#### Lỗi Commit Message:
+
+```bash
+# Sửa commit message cuối cùng
+git commit --amend -m "feat(SCOPE): mô tả ngắn gọn"
+
+# Hoặc commit với format đúng
+git commit -m "feat(USER-AUTH): thêm chức năng đăng nhập"
+```
+
+---
+
+🏢 **Developed by [Vissoft Vietnam](https://vissoft.vn)**

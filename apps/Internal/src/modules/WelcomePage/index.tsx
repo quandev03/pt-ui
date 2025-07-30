@@ -1,13 +1,12 @@
-
 const WelcomePage = () => {
   return (
-    <div className="text-center ">
-      <span className="text-[#00509f] text-3xl font-semibold drop-shadow-md">
-        Hệ thống Kinh doanh và Dịch vụ khách hàng
+    <div className="text-center">
+      <span className="text-3xl font-semibold text-[#00509f] drop-shadow-md">
+        Hệ thống bán eSIM đa mạng
       </span>
       <span className="text-3xl font-semibold drop-shadow-md">{' - '}</span>
-      <span className="text-[#e50013] text-3xl font-semibold drop-shadow-md">
-        BCSS
+      <span className="text-3xl font-semibold text-[#e50013] drop-shadow-md">
+        Chợ eSIM
       </span>
     </div>
   );

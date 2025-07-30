@@ -1,12 +1,15 @@
-import CInput from '@react/commons/Input';
-import CModal from '@react/commons/Modal';
-import { IFieldErrorsItem } from '@react/commons/types';
+import {
+  AnyElement,
+  CInput,
+  CModal,
+  cleanUpPhoneNumber,
+  emailRegex,
+  setFieldError,
+} from '@vissoft-react/common';
 import { Button, Col, Form, Row } from 'antd';
 import { FocusEvent } from 'react';
-import { useSupportInitForgotPassword } from '../queryHooks';
+import { useSupportInitForgotPassword } from '../hooks';
 import { IInitPayload } from '../types';
-import { cleanUpPhoneNumber } from '@react/helpers/utils';
-import { emailRegex } from '@react/constants/regex';
 
 type Props = {
   open: boolean;
@@ -17,13 +20,7 @@ const ModalForgotPassword = ({ open, onClose }: Props) => {
   const [form] = Form.useForm();
   const { mutate: initForgotPassword } = useSupportInitForgotPassword(
     (fieldErrors) => {
-      console.log(fieldErrors);
-      form.setFields(
-        fieldErrors.map((item: IFieldErrorsItem) => ({
-          name: item.field,
-          errors: [item.detail],
-        }))
-      );
+      setFieldError(form, fieldErrors);
     }
   );
   const handleBlur = (e: FocusEvent<HTMLInputElement>, field: string) => {
@@ -87,10 +84,10 @@ const ModalForgotPassword = ({ open, onClose }: Props) => {
                     handleBlur(e, 'email');
                   }}
                   maxLength={100}
-                  onInput={(e: any) =>
+                  onInput={(e: AnyElement) =>
                     (e.target.value = cleanUpPhoneNumber(e.target.value))
                   }
-                  onKeyDown={(e: any) => {
+                  onKeyDown={(e: AnyElement) => {
                     if (e.key === ' ') {
                       e.preventDefault();
                     }

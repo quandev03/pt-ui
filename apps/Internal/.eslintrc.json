@@ -8,10 +8,7 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "rules": {
-        "@typescript-eslint/no-explicit-any": "off",
-        "react-hooks/exhaustive-deps": "off"
-      }
+      "rules": {}
     },
     {
       "files": ["*.js", "*.jsx"],

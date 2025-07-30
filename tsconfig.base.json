@@ -10,42 +10,18 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@react/commons/*": [
-        "commons/src/lib/commons/*"
-      ],
-      "@react/constants/*": [
-        "commons/src/lib/constants/*"
-      ],
-      "@react/helpers/*": [
-        "commons/src/lib/helpers/*"
-      ],
-      "@react/url/*": [
-        "commons/src/lib/url/*"
-      ],
-      "@react/languages/*": [
-        "commons/src/lib/languages/*"
-      ],
-      "@react/utils/*": [
-        "commons/src/lib/utils/*"
-      ],
-      "@react/hooks/*": [
-        "commons/src/lib/hooks/*"
-      ],
-      "apps/*": [
-        "apps/*"
-      ]
+      "@main-app/assets/*": ["apps/main-app/src/assets/*"],
+      "@main-app/hooks/*": ["apps/main-app/src/hooks/*"],
+      "@main-app/modules/*": ["apps/main-app/src/modules/*"],
+      "@main-app/routers/*": ["apps/main-app/src/routers/*"],
+      "@main-app/services/*": ["apps/main-app/src/services/*"],
+      "@vissoft-react/common": ["libs/common/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

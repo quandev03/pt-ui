@@ -1,27 +1,30 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import CButton from '@react/commons/Button';
-import { TypeCustom } from '@react/commons/Button/enum';
-import CInput from '@react/commons/Input';
-import CInputPassword from '@react/commons/InputPass';
-import { IErrorResponse, IFieldErrorsItem } from '@react/commons/types';
-import { cleanUpPhoneNumber } from '@react/helpers/utils';
 import { useIsMutating, useQueryClient } from '@tanstack/react-query';
+import {
+  AnyElement,
+  CButton,
+  CInput,
+  CInputPassword,
+  IErrorResponse,
+  StorageService,
+  cleanUpPhoneNumber,
+  setFieldError,
+  validateForm,
+} from '@vissoft-react/common';
 import { Col, Divider, Form, Image, Row, Spin } from 'antd';
-import { GOOGLE_CLIENT_ID } from 'apps/Internal/src/AppConfig';
-import Logo from 'apps/Internal/src/assets/images/logo.svg';
-import Smartphone from 'apps/Internal/src/assets/images/smartphone.png';
-import useConfigAppStore from 'apps/Internal/src/components/layouts/store';
-import { REACT_QUERY_KEYS } from 'apps/Internal/src/constants/querykeys';
-import { pathRoutes } from 'apps/Internal/src/constants/routes';
-import BgLogin from 'apps/Internal/src/assets/images/bg-login.png';
 import { FocusEvent, useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import LoginButton, { RedirectLocationState } from '../components/LoginButton';
-import { useSupportLoginLocal } from '../queryHooks';
+import Logo from '../../../assets/images/Logo-mini.svg';
+import BgLogin from '../../../assets/images/bg-login.png';
+import Smartphone from '../../../assets/images/smartphone.png';
+import { ACCESS_TOKEN_KEY, GOOGLE_CLIENT_ID } from '../../../constants';
+import { REACT_QUERY_KEYS } from '../../../constants/query-key';
+import { pathRoutes } from '../../../routers/url';
+import useConfigAppStore from '../../Layouts/stores';
+import LoginButton from '../components/LoginButton';
+import ModalForgotPassword from '../components/ModalForgotPassword';
+import { useSupportLoginLocal } from '../hooks';
 import { ILoginDataRequest } from '../types';
-import StorageService from 'apps/Internal/src/helpers/storageService';
-import ModalForgotPassword from 'apps/Internal/src/modules/Auth/components/ModalForgotPassword';
-import validateForm from '@react/utils/validator';
 
 const LoginPage = () => {
   const totalMutating = useIsMutating({ mutationKey: ['login'] });
@@ -30,49 +33,34 @@ const LoginPage = () => {
   const [openForgot, setForgot] = useState(false);
   const queryClient = useQueryClient();
   const { setIsAuthenticated, isAuthenticated } = useConfigAppStore();
-  const token = StorageService.getAccessToken();
+  const token = StorageService.get(ACCESS_TOKEN_KEY);
   const { state: locationState } = useLocation();
-
-  const handleRedirect = () => {
+  const handleRedirect = useCallback(() => {
+    navigate(pathRoutes.welcome);
     if (locationState) {
-      // state is any by default
-      const { redirectTo } = locationState as RedirectLocationState;
-      navigate(`${redirectTo.pathname}${redirectTo.search}`);
+      const { pathname, search } = locationState;
+      navigate(`${pathname}${search}`);
     } else {
       navigate(pathRoutes.welcome);
     }
-  };
+  }, [locationState, navigate]);
 
   useEffect(() => {
     if (isAuthenticated && token) {
       handleRedirect();
     }
-  }, []);
-
-  const setFieldError = useCallback(
-    (fieldErrors: IFieldErrorsItem[]) => {
-      form.setFields(
-        fieldErrors.map((item: IFieldErrorsItem) => ({
-          name: item.field,
-          errors: [item.detail],
-        }))
-      );
-    },
-    [form]
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, token, handleRedirect]);
 
   const { mutate: loginLocal, isPending: loadingLoginLocal } =
     useSupportLoginLocal(
       () => {
         setIsAuthenticated(true);
         handleRedirect();
-        queryClient.invalidateQueries({
-          queryKey: [REACT_QUERY_KEYS.GET_MENU],
-        });
       },
       (err: IErrorResponse) => {
         if (err.errors) {
-          setFieldError(err.errors);
+          setFieldError(form, err.errors);
         }
       }
     );
@@ -91,7 +79,7 @@ const LoginPage = () => {
     form.validateFields([field]);
   };
   return (
-    <Spin spinning={!!totalMutating}>
+    <Spin spinning={!!totalMutating} wrapperClassName="flex-1">
       <Row
         gutter={30}
         className="bg-inherit !m-0 p-12 sm:px-28 md:px-36 lg:px-40 xl:px-48 2xl:px-56 text-left bg-cover h-screen"
@@ -154,7 +142,7 @@ const LoginPage = () => {
                   onPaste={(e) => {
                     handlePates(e, 'password');
                   }}
-                  onInput={(e: any) =>
+                  onInput={(e: AnyElement) =>
                     (e.target.value = cleanUpPhoneNumber(e.target.value))
                   }
                   className="login-form__input"
@@ -176,7 +164,7 @@ const LoginPage = () => {
 
               <div className="mt-5">
                 <CButton
-                  typeCustom={TypeCustom.Primary}
+                  type="primary"
                   size="large"
                   block
                   loading={loadingLoginLocal}

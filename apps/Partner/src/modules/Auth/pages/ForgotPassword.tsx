@@ -1,13 +1,12 @@
-import { faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Text } from '@react/commons/Template/style';
-import { Button, message } from 'antd';
-import BgLogin from 'apps/Partner/src/assets/images/bg-login.png';
-import Logo from 'apps/Partner/src/assets/images/logo.svg';
-import { pathRoutes } from 'apps/Partner/src/constants/routes';
+import BgLogin from '../../../assets/images/bg-login.png';
+import { message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useSupportGetNewPassword } from '../queryHooks';
+import { useSupportGetNewPassword } from '../hooks';
+import Logo from '../../../assets/images/logo.svg';
+import { CButton, Text } from '@vissoft-react/common';
+import { Copy } from 'lucide-react';
+import { pathRoutes } from '../../../routers/url';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -54,7 +53,7 @@ const ForgotPassword = () => {
     >
       <div className="mt-52 flex">
         <div
-          className="p-10 pb-5 bg-white rounded-lg flex items-center flex-col w-full h-max mt-7 "
+          className="p-10 min-w-[550px] pb-5 bg-white rounded-lg flex items-center flex-col w-full h-max mt-7 "
           style={{
             boxShadow:
               'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px',
@@ -78,19 +77,20 @@ const ForgotPassword = () => {
                 onClick={handleCopy}
                 className="ml-auto p-1 text-gray-500 hover:text-gray-700 focus:outline-none"
               >
-                <FontAwesomeIcon icon={faClipboard} />
+                <Copy size={16} />
               </button>
             </div>
           )}
+
           <div className="mb-6">
-            <Button
+            <CButton
               type="primary"
               onClick={() => {
-                navigate(pathRoutes.login);
+                navigate(pathRoutes.login as string);
               }}
             >
               {errorMessage ? 'Đóng' : 'Đăng nhập ngay'}
-            </Button>
+            </CButton>
           </div>
         </div>
       </div>

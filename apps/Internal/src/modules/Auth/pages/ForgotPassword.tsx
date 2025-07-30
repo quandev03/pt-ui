@@ -1,14 +1,12 @@
-import { faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CButton from '@react/commons/Button';
-import { Text } from '@react/commons/Template/style';
+import BgLogin from '../../../assets/images/bg-login.png';
 import { message } from 'antd';
-import BgLogin from 'apps/Internal/src/assets/images/bg-login.png';
-import Logo from 'apps/Internal/src/assets/images/logo.svg';
-import { pathRoutes } from 'apps/Internal/src/constants/routes';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useSupportGetNewPassword } from '../queryHooks';
+import { useSupportGetNewPassword } from '../hooks';
+import Logo from '../../../assets/images/logo.svg';
+import { CButton, Text } from '@vissoft-react/common';
+import { Copy } from 'lucide-react';
+import { pathRoutes } from '../../../routers/url';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -79,7 +77,7 @@ const ForgotPassword = () => {
                 onClick={handleCopy}
                 className="ml-auto p-1 text-gray-500 hover:text-gray-700 focus:outline-none"
               >
-                <FontAwesomeIcon icon={faClipboard} />
+                <Copy size={16} />
               </button>
             </div>
           )}

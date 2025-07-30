@@ -1,5 +1,5 @@
-import { IParamsRequest } from '@react/commons/types';
-import { IRoleItem } from '../RoleManagement/types';
+import { AnyElement, IParamsRequest } from '@vissoft-react/common';
+import { IGroups, IRoleItem } from '../../types';
 
 export enum StatusUserEnum {
   ACTIVE = 'ACTIVE',
@@ -18,8 +18,8 @@ export interface IUserItem {
   fullname: string;
   gender: number;
   email: string;
-  idCardNo: any;
-  phoneNumber: any;
+  idCardNo: AnyElement;
+  phoneNumber: AnyElement;
   dateOfBirth: string;
   status: number;
   type: string;
@@ -31,18 +31,6 @@ export interface IUserItem {
   loginMethod: number | string;
 }
 
-export interface IGroups {
-  createdBy: string;
-  createdDate: string;
-  lastModifiedBy: string;
-  lastModifiedDate: string;
-  clientIdentity: string;
-  id: string;
-  code: string;
-  name: string;
-  status: number;
-}
-
 export interface IClient {
   createdBy: string;
   createdDate: string;
@@ -52,8 +40,8 @@ export interface IClient {
   code: string;
   name: string;
   contactName: string;
-  contactEmail: any;
-  contactPosition: any;
+  contactEmail: AnyElement;
+  contactPosition: AnyElement;
   contactPhone: string;
   permanentAddress: string;
   permanentProvinceId: number;
@@ -106,5 +94,5 @@ export interface IDepartment {
   id: number;
   name: string;
   status: number;
-  code?: string
+  code?: string;
 }

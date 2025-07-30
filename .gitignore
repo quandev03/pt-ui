@@ -8,8 +8,6 @@ tmp
 # dependencies
 node_modules
 
-package-lock.json
-
 # IDEs and editors
 /.idea
 .project
@@ -42,16 +40,3 @@ Thumbs.db
 
 .nx/cache
 .nx/workspace-data
-
-.yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-
-
-.nx/installation
-.million
-yarn.lock

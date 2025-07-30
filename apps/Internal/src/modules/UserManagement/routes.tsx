@@ -1,27 +1,33 @@
-import { lazy } from 'react';
-import { pathRoutes } from '../../constants/routes';
-import { RouterConfig } from '../../routers/ProtectedRoute';
+import { RouteObject } from 'react-router-dom';
+import { pathRoutes } from '../../routers/url';
 
-const ListUser = lazy(() => import('./page/ListUser'));
-const ActionUser = lazy(() => import('./page/ActionUser'));
-
-const userRoutes: RouterConfig[] = [
+export const routesUserManagement: RouteObject[] = [
   {
-    path: pathRoutes.userManager,
-    page: <ListUser />,
+    path: pathRoutes.systemUserManager,
+    lazy: async () => {
+      const { ListUser } = await import('./pages');
+      return { Component: ListUser };
+    },
   },
   {
-    path: pathRoutes.userManagerAdd,
-    page: <ActionUser />,
+    path: pathRoutes.systemUserManagerAdd,
+    lazy: async () => {
+      const { ActionUser } = await import('./pages');
+      return { Component: ActionUser };
+    },
   },
   {
-    path: pathRoutes.userManagerView(),
-    page: <ActionUser />,
+    path: pathRoutes.systemUserManagerEdit(),
+    lazy: async () => {
+      const { ActionUser } = await import('./pages');
+      return { Component: ActionUser };
+    },
   },
   {
-    path: pathRoutes.userManagerEdit(),
-    page: <ActionUser />,
+    path: pathRoutes.systemUserManagerView(),
+    lazy: async () => {
+      const { ActionUser } = await import('./pages');
+      return { Component: ActionUser };
+    },
   },
 ];
-
-export default userRoutes;

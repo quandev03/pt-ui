@@ -2,18 +2,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import { resolve } from 'node:path';
-import svgr from '@svgr/rollup';
-import MillionLint from '@million/lint';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/apps/Internal',
-  resolve: {
-    alias: [
-      { find: '@', replacement: resolve(__dirname, 'apps/Internal/src') },
-    ],
-  },
+  cacheDir: '../../node_modules/.vite/apps/internal',
+
   server: {
     port: 4200,
     host: 'localhost',
@@ -24,11 +17,7 @@ export default defineConfig({
     host: 'localhost',
   },
 
-  plugins: [react(), nxViteTsPaths(), svgr(),  MillionLint.vite({
-    optimizeDOM: true,
-    enabled: false,
-  }),
-  ],
+  plugins: [react(), nxViteTsPaths()],
 
   // Uncomment this if you are using workers.
   // worker: {
@@ -36,29 +25,24 @@ export default defineConfig({
   // },
 
   build: {
-    outDir: '../../dist/apps/Internal',
+    outDir: '../../dist/apps/internal',
     emptyOutDir: true,
-    minify: 'terser',
-    sourcemap: false,
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
     },
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          react: ['react', 'react-dom'],
-          axios: ['axios'],
-          lodash: ['lodash'],
-          antd: ['antd'],
-          'react-query': ['@tanstack/react-query'],
-          apexcharts: ['apexcharts'],
-          // million: ['million'],
-        },
-      },
-    },
   },
-  optimizeDeps: {
-    exclude: ['js-big-decimal'],
+
+  test: {
+    watch: false,
+    globals: true,
+    environment: 'jsdom',
+    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+
+    reporters: ['default'],
+    coverage: {
+      reportsDirectory: '../../coverage/apps/internal',
+      provider: 'v8',
+    },
   },
 });

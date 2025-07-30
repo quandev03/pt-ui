@@ -1,0 +1,62 @@
+#!/bin/sh
+# . "$(dirname "$0")/_/husky.sh"
+
+# Check for changes in @internal/, @partner/, and @libs/ folders
+internal_changes=$(git diff --cached --name-only | grep -E "^apps/internal/" | wc -l)
+partner_changes=$(git diff --cached --name-only | grep -E "^apps/partner/" | wc -l)
+libs_changes=$(git diff --cached --name-only | grep -E "^libs/" | wc -l)
+
+# If libs folder has changes, build both projects
+if [ $libs_changes -gt 0 ]; then
+  echo "Detected changes in @libs/ folder. Building both internal and partner projects..."
+  yarn build:internal
+  yarn build:partner
+else
+  # Check individual project changes
+  if [ $internal_changes -gt 0 ]; then
+    echo "Detected changes in @internal/ folder. Building internal project..."
+    yarn build:internal
+  fi
+
+  if [ $partner_changes -gt 0 ]; then
+    echo "Detected changes in @partner/ folder. Building partner project..."
+    yarn build:partner
+  fi
+
+  # If no changes in any folder, skip build
+  if [ $internal_changes -eq 0 ] && [ $partner_changes -eq 0 ]; then
+    echo "No changes detected in @internal/, @partner/, or @libs/ folders. Skipping build."
+  fi
+fi
+
+# Get the current branch name
+branch_name=$(git rev-parse --abbrev-ref HEAD)
+
+# Define your branch naming convention regex
+branch_regex="^(feature|bugfix|hotfix|release|deploy|conflict)\/.*$"
+
+
+# Check if the branch name is main or dev
+if [[ "$branch_name" == "main" || "$branch_name" == "master" || "$branch_name" == "develop" || "$branch_name" == "test" || "$branch_name" == "uat" || "$branch_name" == "dev-common" ]]; then
+  email=$(git config user.email)
+
+  # List of allowed usernames
+  allowed_email=("chunguyenchuong2014bg@gmail.com" "chuongcn@vissoft.vn")
+  # Check if the username is in the allowed list
+  if [[ ! " ${allowed_email[@]} " =~ " ${email} " ]]; then
+    echo "Error: User '$email' is not allowed to push to the '$branch_name' branch."
+    exit 1
+  fi
+  echo "Skipping branch name check for '$branch_name' with user has email '$email'"
+
+else
+  # Check if the branch name matches the convention
+  if [[ ! $branch_name =~ $branch_regex ]]; then
+    echo "Error: Branch name '$branch_name' does not follow the naming convention."
+    echo "Allowed patterns: feature/*, bugfix/*, hotfix/*, release/*, deploy/*, conflict/*"
+    exit 1
+  fi
+fi
+
+# If the branch name is valid, allow the commit
+exit 0

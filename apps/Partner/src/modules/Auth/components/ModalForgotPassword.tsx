@@ -1,12 +1,15 @@
-import CInput from '@react/commons/Input';
-import CModal from '@react/commons/Modal';
-import { IFieldErrorsItem } from '@react/commons/types';
+import {
+  AnyElement,
+  CInput,
+  CModal,
+  cleanUpPhoneNumber,
+  emailRegex,
+  setFieldError,
+} from '@vissoft-react/common';
 import { Button, Col, Form, Row } from 'antd';
-import { cleanUpPhoneNumber } from 'apps/Partner/src/helpers';
 import { FocusEvent } from 'react';
-import { useSupportInitForgotPassword } from '../queryHooks';
+import { useSupportInitForgotPassword } from '../hooks';
 import { IInitPayload } from '../types';
-import { emailRegex } from '@react/constants/regex';
 
 type Props = {
   open: boolean;
@@ -17,25 +20,12 @@ const ModalForgotPassword = ({ open, onClose }: Props) => {
   const [form] = Form.useForm();
   const { mutate: initForgotPassword } = useSupportInitForgotPassword(
     (fieldErrors) => {
-      form.setFields(
-        fieldErrors.map((item: IFieldErrorsItem) => ({
-          name: item.field,
-          errors: [item.detail],
-        }))
-      );
+      setFieldError(form, fieldErrors);
     }
   );
   const handleBlur = (e: FocusEvent<HTMLInputElement>, field: string) => {
     form.setFieldValue(field, e.target.value.trim());
     form.validateFields([field]);
-  };
-
-  const handlePates = async (
-    e: React.ClipboardEvent<HTMLInputElement>,
-    field: string
-  ) => {
-    const value = (e.target as HTMLInputElement).value;
-    form.setFieldValue(field, value.trim());
   };
 
   const handleFinish = (values: IInitPayload) => {
@@ -71,40 +61,6 @@ const ModalForgotPassword = ({ open, onClose }: Props) => {
           <Row gutter={[16, 0]}>
             <Col span={24}>
               <Form.Item
-                label={<div className="font-bold">Mã đối tác</div>}
-                name="clientIdentity"
-                required
-                rules={[
-                  {
-                    validator: (_, value) => {
-                      if (!value) {
-                        return Promise.reject('Không được để trống trường này');
-                      }
-                      return Promise.resolve();
-                    },
-                  },
-                ]}
-              >
-                <CInput
-                  onBlur={(e) => {
-                    handleBlur(e, 'clientIdentity');
-                  }}
-                  onPaste={(e) => {
-                    handlePates(e, 'clientIdentity');
-                  }}
-                  className="login-form__input"
-                  placeholder={'Nhập mã đối tác'}
-                  maxLength={5}
-                  onInput={(e: any) =>
-                    (e.target.value = cleanUpPhoneNumber(
-                      e.target.value
-                    ).toUpperCase())
-                  }
-                />
-              </Form.Item>
-            </Col>
-            <Col span={24}>
-              <Form.Item
                 label={<div className="font-bold">Email</div>}
                 name="email"
                 required
@@ -128,9 +84,14 @@ const ModalForgotPassword = ({ open, onClose }: Props) => {
                     handleBlur(e, 'email');
                   }}
                   maxLength={100}
-                  onInput={(e: any) =>
+                  onInput={(e: AnyElement) =>
                     (e.target.value = cleanUpPhoneNumber(e.target.value))
                   }
+                  onKeyDown={(e: AnyElement) => {
+                    if (e.key === ' ') {
+                      e.preventDefault();
+                    }
+                  }}
                 />
               </Form.Item>
             </Col>

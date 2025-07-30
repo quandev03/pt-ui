@@ -2,15 +2,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
-import { resolve } from 'node:path';
-import svgr from '@svgr/rollup';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/apps/Partner',
-  resolve: {
-    alias: [{ find: '@', replacement: resolve(__dirname, 'apps/Partner/src') }],
-  },
+  cacheDir: '../../node_modules/.vite/apps/partner',
+
   server: {
     port: 4200,
     host: 'localhost',
@@ -21,7 +17,7 @@ export default defineConfig({
     host: 'localhost',
   },
 
-  plugins: [react(), nxViteTsPaths(), svgr()],
+  plugins: [react(), nxViteTsPaths()],
 
   // Uncomment this if you are using workers.
   // worker: {
@@ -29,29 +25,24 @@ export default defineConfig({
   // },
 
   build: {
-    outDir: '../../dist/apps/Partner',
+    outDir: '../../dist/apps/partner',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
     },
-    minify: 'terser',
-    sourcemap: false,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          react: ['react', 'react-dom'],
-          axios: ['axios'],
-          lodash: ['lodash'],
-          antd: ['antd'],
-          'react-query': ['@tanstack/react-query'],
-          apexcharts: ['apexcharts'],
-          million: ['million'],
-        },
-      },
-    },
   },
-  optimizeDeps: {
-    exclude: ['js-big-decimal'],
+
+  test: {
+    watch: false,
+    globals: true,
+    environment: 'jsdom',
+    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+
+    reporters: ['default'],
+    coverage: {
+      reportsDirectory: '../../coverage/apps/partner',
+      provider: 'v8',
+    },
   },
 });

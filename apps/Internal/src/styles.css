@@ -1,0 +1,230 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* You can add global styles to this file, and also import other style files */
+
+@function toRem($value) {
+  $remValue: calc($value / 16) + rem;
+  @return $remValue;
+}
+
+html {
+  font-size: 16px;
+
+  @media only screen and (max-width: 1365px) {
+    font-size: 14px;
+  }
+
+  @media only screen and (max-width: 1023px) {
+    font-size: 12px;
+  }
+}
+
+* {
+  font-family: Inter;
+}
+
+@media print {
+  @page {
+    margin: 0;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+
+  vertical-align: baseline;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  .modal-backdrop.show {
+    opacity: 0.6;
+  }
+
+  .popover-body:hover {
+    background: #253147;
+
+    & *:not(.not-change) {
+      svg {
+        path {
+          fill: #3391ff;
+        }
+      }
+
+      div {
+        color: #3391ff;
+      }
+    }
+  }
+
+  .popover .arrow {
+    display: none;
+  }
+
+  .custom-control-label {
+
+    &:before,
+    &:after {
+      top: 0;
+    }
+  }
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+
+.tickers-list,
+.tickers-list-1 {
+  will-change: auto !important;
+}
+
+button {
+  border: none;
+}
+
+::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.infinite-scroll-component__outerdiv {
+  height: 100%;
+
+  .infinite-scroll-component {
+    thead {
+      tr>th {
+        top: 0px;
+        position: sticky;
+      }
+    }
+  }
+}
+
+.cursor-pointer {
+  user-select: none;
+  cursor: pointer;
+}
+
+/* From Uiverse.io by alexruix */
+.loader {
+  position: relative;
+  width: 120px;
+  height: 90px;
+  margin: 0 auto;
+}
+
+.loader:before {
+  content: "";
+  position: absolute;
+  bottom: 30px;
+  left: 50px;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: loading-bounce 0.5s ease-in-out infinite alternate;
+}
+
+.loader:after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 7px;
+  width: 45px;
+  border-radius: 4px;
+  box-shadow: 0 5px 0 #f2f2f2, -35px 50px 0 #f2f2f2, -70px 95px 0 #f2f2f2;
+  animation: loading-step 1s ease-in-out infinite;
+}
+
+@keyframes loading-bounce {
+  0% {
+    transform: scale(1, 0.7);
+  }
+
+  40% {
+    transform: scale(0.8, 1.2);
+  }
+
+  60% {
+    transform: scale(1, 1);
+  }
+
+  100% {
+    bottom: 140px;
+  }
+}
+
+@keyframes loading-step {
+  0% {
+    box-shadow: 0 10px 0 rgba(0, 0, 0, 0),
+      0 10px 0 #f2f2f2,
+      -35px 50px 0 #f2f2f2,
+      -70px 90px 0 #f2f2f2;
+  }
+
+  100% {
+    box-shadow: 0 10px 0 #f2f2f2,
+      -35px 50px 0 #f2f2f2,
+      -70px 90px 0 #f2f2f2,
+      -70px 90px 0 rgba(0, 0, 0, 0);
+  }
+}
