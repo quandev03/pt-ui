@@ -32,12 +32,12 @@ export const ADMIN_USER = 'owner';
 export const OidcClientCredentials = {
   clientId:
     (window as unknown as { _env_: { [key: string]: string | number } })._env_
-      ?.VITE_INTERNAL_SITE_OIDC_CLIENT_ID ??
-    import.meta.env.VITE_INTERNAL_SITE_OIDC_CLIENT_ID,
+      ?.VITE_PARTNER_SITE_OIDC_CLIENT_ID ??
+    import.meta.env.VITE_PARTNER_SITE_OIDC_CLIENT_ID,
   clientSecret:
     (window as unknown as { _env_: { [key: string]: string | number } })._env_
-      ?.VITE_INTERNAL_SITE_CLIENT_SECRET ??
-    import.meta.env.VITE_INTERNAL_SITE_CLIENT_SECRET,
+      ?.VITE_PARTNER_SITE_OIDC_CLIENT_SECRET ??
+    import.meta.env.VITE_PARTNER_SITE_OIDC_CLIENT_SECRET,
 };
 export const GOOGLE_CLIENT_ID =
   (window as unknown as { _env_: { [key: string]: string } })._env_
