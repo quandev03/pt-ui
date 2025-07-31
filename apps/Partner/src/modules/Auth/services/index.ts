@@ -26,7 +26,7 @@ export const AuthServices = {
   loginApi: async (data: ILoginDataRequest) => {
     const bodyAccess = new URLSearchParams();
     bodyAccess.append('grant_type', 'password');
-    bodyAccess.append('client_identity', 'VNSKY');
+    bodyAccess.append('client_identity', data.client_identity);
     bodyAccess.append('username', data.username);
     bodyAccess.append('password', data.password);
     return await safeApiClient.post<ILoginResponse>(

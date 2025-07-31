@@ -115,6 +115,23 @@ const LoginPage = () => {
               className="!w-full"
             >
               <Form.Item
+                label={<div className="font-bold">Mã đối tác</div>}
+                name="client_identity"
+                rules={[validateForm.required]}
+              >
+                <CInput
+                  onBlur={(e) => {
+                    handleBlur(e, 'client_identity');
+                  }}
+                  onPaste={(e) => {
+                    handlePates(e, 'client_identity');
+                  }}
+                  className="login-form__input"
+                  placeholder={'Nhập mã đối tác'}
+                  maxLength={50}
+                />
+              </Form.Item>
+              <Form.Item
                 label={<div className="font-bold">Tên đăng nhập</div>}
                 name="username"
                 rules={[validateForm.required]}
@@ -174,10 +191,6 @@ const LoginPage = () => {
                 </CButton>
               </div>
             </Form>
-            <Divider style={{ borderColor: '#7cb305' }}>Hoặc</Divider>
-            <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-              <LoginButton />
-            </GoogleOAuthProvider>
           </div>
         </Col>
         <Col span={12}>
