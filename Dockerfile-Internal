@@ -1,7 +1,7 @@
 ARG BASE_BUILDER="harbor.vissoft.vn/vnsky/web-builder"
 ARG BASE_RUNNER="harbor.vissoft.vn/vnsky/web-runner"
 
-FROM $BASE_BUILDER AS base
+FROM node:20-alpine AS base
 WORKDIR /workspace
 COPY package.json ./package.json
 ARG NPM_CONFIG_REGISTRY="https://registry.npmjs.org"
