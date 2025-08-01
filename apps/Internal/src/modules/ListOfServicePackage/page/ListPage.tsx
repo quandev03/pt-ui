@@ -21,11 +21,6 @@ export const ListPage = () => {
   const { data, isPending } = useList(
     formatQueryParams<IListOfServicePackage>(params)
   );
-  const dataTable = useMemo(() => {
-    return {
-      content: data,
-    };
-  }, [data]);
   const actionComponent = useMemo(() => {
     return (
       <CButtonAdd
@@ -62,7 +57,7 @@ export const ListPage = () => {
   return (
     <>
       <LayoutList
-        data={dataTable as AnyElement}
+        data={data as AnyElement}
         actionComponent={actionComponent}
         columns={columns}
         title="Danh mục gói cước"
