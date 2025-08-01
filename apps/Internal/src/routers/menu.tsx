@@ -46,8 +46,30 @@ export const routerItems: RouterItems[] = [
     label: 'Tra cứu số',
     parentId: pathRoutes.manageNumber as string,
   },
+  // Quản lý đối tác
+  {
+    key: pathRoutes.partnerCatalog,
+    label: 'Quản lý đối tác',
+    parentId: pathRoutes.systemManager as string,
+  },
+  // Quản lý danh mục
+  {
+    key: pathRoutes.category,
+    label: 'Quản lý danh mục',
+    parentId: pathRoutes.systemManager,
+    hasChild: true,
+  },
+  {
+    key: pathRoutes.list_of_service_package,
+    label: 'Danh mục gói cước',
+    parentId: pathRoutes.category,
+  },
+  {
+    key: pathRoutes.partnerCatalog,
+    label: 'Danh mục đối tác',
+    parentId: pathRoutes.category,
+  },
 ];
-
 export const singlePopActions = ['add'];
 export const doublePopActions = ['edit', 'view'];
 export const specialActions = [];
