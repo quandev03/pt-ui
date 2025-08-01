@@ -21,7 +21,7 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.userManager as string,
-    label: 'Tài khoản',
+    label: 'Quản lý user đại lý',
     parentId: pathRoutes.accountAuthorization as string,
   },
 ];

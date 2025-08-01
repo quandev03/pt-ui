@@ -9,16 +9,25 @@ export const routesUserManagement: RouteObject[] = [
       return { Component: ListUser };
     },
   },
-  // {
-  //   path: pathRoutes.userManagerView(),
-  //   page: <ActionUser />,
-  // },
-  // {
-  //   path: pathRoutes.userManagerEdit(),
-  //   page: <ActionUser />,
-  // },
-  // {
-  //   path: pathRoutes.userManagerAdd,
-  //   page: <ActionUser />,
-  // },
+  {
+    path: pathRoutes.userManagerView(),
+    lazy: async () => {
+      const { ActionUser } = await import('./page');
+      return { Component: ActionUser };
+    },
+  },
+  {
+    path: pathRoutes.userManagerEdit(),
+    lazy: async () => {
+      const { ActionUser } = await import('./page');
+      return { Component: ActionUser };
+    },
+  },
+  {
+    path: pathRoutes.userManagerAdd,
+    lazy: async () => {
+      const { ActionUser } = await import('./page');
+      return { Component: ActionUser };
+    },
+  },
 ];
