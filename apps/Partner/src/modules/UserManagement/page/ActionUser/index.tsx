@@ -254,17 +254,16 @@ export const ActionUser = memo(() => {
               />
             )}
             {actionMode !== IModeAction.READ &&
-              (permission.canDelete ||
-                (permission.canUpdate && (
-                  <CButtonSave
-                    onClick={() => {
-                      setIsSubmitBack(true);
-                      form.submit();
-                    }}
-                    loading={loadingAdd || loadingUpdate}
-                    disabled={loadingAdd || loadingUpdate}
-                  />
-                )))}
+              (permission.canUpdate || permission.canCreate) && (
+                <CButtonSave
+                  onClick={() => {
+                    setIsSubmitBack(true);
+                    form.submit();
+                  }}
+                  loading={loadingAdd || loadingUpdate}
+                  disabled={loadingAdd || loadingUpdate}
+                />
+              )}
             {actionMode === IModeAction.READ && permission.canUpdate && (
               <CButtonEdit
                 onClick={() => {

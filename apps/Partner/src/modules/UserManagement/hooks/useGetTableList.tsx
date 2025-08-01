@@ -254,7 +254,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
             },
             label: <Text type="danger">Xóa</Text>,
           },
-        ];
+        ].filter((item) => permission.getAllPermissions().includes(item.key));
 
         return (
           <WrapperActionTable>
@@ -266,16 +266,15 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
               />
             )}
             <div className="w-5">
-              {permission.canUpdate ||
-                (permission.canDelete && (
-                  <Dropdown
-                    menu={{ items: items }}
-                    placement="bottom"
-                    trigger={['click']}
-                  >
-                    <MoreVertical size={16} />
-                  </Dropdown>
-                ))}
+              {(permission.canUpdate || permission.canDelete) && (
+                <Dropdown
+                  menu={{ items: items }}
+                  placement="bottom"
+                  trigger={['click']}
+                >
+                  <MoreVertical size={16} />
+                </Dropdown>
+              )}
             </div>
           </WrapperActionTable>
         );
