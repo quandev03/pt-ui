@@ -17,11 +17,11 @@ COPY ./.env ./.env
 COPY ./tsconfig.base.json ./tsconfig.base.json
 COPY ./jest.config.ts ./jest.config.ts
 COPY ./jest.preset.js ./jest.preset.js
-COPY ./webpack.config.js ./webpack.config.js
-COPY ./.eslintrc.json ./.eslintrc.json
-COPY ./.eslintignore ./.eslintignore
-COPY ./.prettierrc ./.prettierrc
-COPY ./.prettierignore ./.prettierignore
+#COPY ./webpack.config.js ./webpack.config.js
+#COPY ./.eslintrc.json ./.eslintrc.json
+#COPY ./.eslintignore ./.eslintignore
+#COPY ./.prettierrc ./.prettierrc
+#COPY ./.prettierignore ./.prettierignore
 #COPY ./commons ./commons
 COPY ./apps/Internal ./apps/Internal
 RUN yarn build:Internal
