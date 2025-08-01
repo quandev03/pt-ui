@@ -24,7 +24,7 @@ COPY ./jest.preset.js ./jest.preset.js
 #COPY ./.prettierignore ./.prettierignore
 #COPY ./commons ./commons
 COPY ./apps/Internal ./apps/Internal
-RUN yarn build:Internal
+RUN yarn build:internal
 
 FROM $BASE_RUNNER AS runner
 ENV TZ=Asia/Ho_Chi_Minh
