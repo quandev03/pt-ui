@@ -1,7 +1,7 @@
 import { GetProp } from 'antd';
 import { UploadProps } from 'antd/lib';
 import { cloneDeep } from 'lodash';
-import { AnyElement, IParamsRequest } from '../types';
+import { AnyElement, IModeAction, IParamsRequest } from '../types';
 import { parseValue } from './utils';
 export type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -121,4 +121,16 @@ export const checkIfImage = async (url: string): Promise<boolean> => {
     img.onerror = () => resolve(false);
     img.src = url;
   });
+};
+export const getActionMode = (value: string | undefined) => {
+  switch (value) {
+    case IModeAction.CREATE:
+      return 'Tạo';
+    case IModeAction.UPDATE:
+      return 'Chỉnh sửa';
+    case IModeAction.READ:
+      return 'Chi tiết';
+    default:
+      return '';
+  }
 };
