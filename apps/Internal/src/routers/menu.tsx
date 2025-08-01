@@ -9,16 +9,10 @@ export const routerItems: RouterItems[] = [
     label: 'Tổng quan',
   },
   {
-    key: pathRoutes.systemManager as string,
-    icon: <Settings />,
-    label: 'Quản trị hệ thống',
-    hasChild: true,
-  },
-  // quản lý tài khoản
-  {
     key: pathRoutes.accountAuthorization as string,
-    label: 'Quản lý tài khoản',
-    parentId: pathRoutes.systemManager,
+    icon: <Settings />,
+    label: 'Quản Trị Hệ Thống',
+    hasChild: true,
   },
   {
     key: pathRoutes.roleManager as string,
@@ -29,22 +23,6 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.systemUserManager as string,
     label: 'Tài khoản',
     parentId: pathRoutes.accountAuthorization as string,
-  },
-  {
-    key: pathRoutes.object as string,
-    label: 'Quản lý object',
-    parentId: pathRoutes.accountAuthorization as string,
-  },
-  // Quản lý số
-  {
-    key: pathRoutes.manageNumber as string,
-    label: 'Quản lý số',
-    parentId: pathRoutes.systemManager as string,
-  },
-  {
-    key: pathRoutes.lookupNumber as string,
-    label: 'Tra cứu số',
-    parentId: pathRoutes.manageNumber as string,
   },
 ];
 

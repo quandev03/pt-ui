@@ -5,7 +5,6 @@ export enum TypeTagEnum {
   WARNING = 'warning',
   WAITING = 'waiting',
   STOP = 'stop',
-  DEFAULT = 'default',
 }
 export enum StatusEnum {
   ACTIVE = 1,

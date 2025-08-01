@@ -1,1 +1,1 @@
-export type ParamKeys = 'STOCK_ISDN_STATUS' | 'STOCK_ISDN_TRANSFER_STATUS';
+export type ParamKeys = 'EXAMPLE' | 'EXAMPLE2';

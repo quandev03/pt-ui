@@ -18,7 +18,6 @@ export const pathRoutes = {
   notFound: '/not-found',
 
   // Quản trị hệ thống
-  systemManager: '/system-manager',
   accountAuthorization: '/account-authorization',
   systemUserManager: '/user-manager',
   systemUserManagerAdd: '/user-manager/add',
@@ -33,12 +32,4 @@ export const pathRoutes = {
   roleManagerView: (id?: IStringNumber) =>
     `/role-manager/view/${id ? id : ':id'}`,
   auditLog: '/audit-log',
-
-  object: '/object-manager',
-  object_add: '/object-manager/add',
-  object_edit: (id = ':id') => `/object-manager/edit/${id}`,
-  object_view: (id = ':id') => `/object-manager/view/${id}`,
-  // Quản lý số
-  manageNumber: '/manage-number',
-  lookupNumber: '/lookup-number', //tra cứu số
 };

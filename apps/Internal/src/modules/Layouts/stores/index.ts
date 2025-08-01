@@ -106,8 +106,9 @@ const useConfigAppStore = create(
         set(() => ({ urlsActive }));
       },
       params: {
-        STOCK_ISDN_STATUS: [],
-        STOCK_ISDN_TRANSFER_STATUS: [],
+        EXAMPLE: [],
+        EXAMPLE2: [],
+        EXAMPLE3: [],
       },
       setParams(params) {
         set(() => ({ params }));
