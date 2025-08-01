@@ -10,12 +10,12 @@ export const pathRoutes = {
 
   // Quản trị hệ thống
   accountAuthorization: '/account-authorization',
-  systemUserManager: '/user-manager',
-  systemUserManagerAdd: '/user-manager/add',
-  systemUserManagerEdit: (id?: IStringNumber) =>
-    `/user-manager/edit/${id ? id : ':id'}`,
-  systemUserManagerView: (id?: IStringNumber) =>
-    `/user-manager/view/${id ? id : ':id'}`,
+  userManager: '/user-management',
+  userManagerAdd: '/user-management/add',
+  userManagerEdit: (id?: IStringNumber) =>
+    `/user-management/edit/${id ? id : ':id'}`,
+  userManagerView: (id?: IStringNumber) =>
+    `/user-management/view/${id ? id : ':id'}`,
   roleManager: '/role-manager',
   roleManagerAdd: '/role-manager/add',
   roleManagerEdit: (id?: IStringNumber) =>
