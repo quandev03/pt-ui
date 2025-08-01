@@ -2,6 +2,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import { resolve } from 'path';
 
 export default defineConfig({
   root: __dirname,
@@ -18,6 +19,13 @@ export default defineConfig({
   },
 
   plugins: [react(), nxViteTsPaths()],
+
+  resolve: {
+    alias: {
+      'apps/Internal/src': resolve(__dirname, 'src'),
+      'apps/Internal': resolve(__dirname),
+    },
+  },
 
   // Uncomment this if you are using workers.
   // worker: {
