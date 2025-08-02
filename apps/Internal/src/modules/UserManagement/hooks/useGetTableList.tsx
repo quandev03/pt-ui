@@ -3,7 +3,6 @@ import {
   CTag,
   CTooltip,
   IModeAction,
-  ModalConfirm,
   RenderCell,
   StatusEnum,
   Text,
@@ -20,10 +19,9 @@ import dayjs from 'dayjs';
 import { MoreVertical } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { pathRoutes } from '../../../routers';
-import { IRoleItem } from '../../../types';
+import { IGroups, IRoleItem } from '../../../types';
 import useConfigAppStore from '../../Layouts/stores';
-import { IGroups, IUserItem } from '../types';
-import { useCheckAllowDelete } from '.';
+import { IUserItem } from '../types';
 
 export const useGetTableList = (): ColumnsType<IUserItem> => {
   const [searchParams] = useSearchParams();
@@ -31,9 +29,6 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
   const navigate = useNavigate();
-  const { mutate: checkAllowDelete } = useCheckAllowDelete((id) => {
-    deleteUser(id);
-  });
 
   const handleAction = (action: IModeAction, record: IUserItem) => {
     switch (action) {
@@ -51,15 +46,6 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
         }
         break;
       }
-      case IModeAction.DELETE:
-        ModalConfirm({
-          title: 'Bạn có chắc chắn muốn Xóa bản ghi không?',
-          message: 'Các dữ liệu liên quan cũng sẽ bị xóa',
-          handleConfirm: () => {
-            checkAllowDelete(record.id);
-          },
-        });
-        break;
     }
   };
   return [
@@ -266,6 +252,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
                 onClick={() => {
                   handleAction(IModeAction.READ, record);
                 }}
+                size="small"
               />
             )}
             <div className="w-5">
