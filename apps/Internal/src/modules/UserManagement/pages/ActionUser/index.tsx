@@ -58,6 +58,7 @@ export const ActionUser = memo(() => {
           form={form}
           onFinish={handleFinish}
           labelCol={{ span: 5 }}
+          labelAlign="left"
           labelWrap={true}
           validateTrigger={['onSubmit']}
           colon={false}
@@ -125,7 +126,7 @@ export const ActionUser = memo(() => {
                 >
                   <CInput
                     placeholder="Nhập họ và tên"
-                    maxLength={100}
+                    maxLength={50}
                     disabled={actionMode === IModeAction.READ}
                     onBlur={(e) => {
                       const value = cleanUpString(e.target.value);
