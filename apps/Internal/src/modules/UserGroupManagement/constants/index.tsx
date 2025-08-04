@@ -5,114 +5,78 @@ import {
   formatDateTime,
   IModeAction,
   IParamsRequest,
-  StatusEnum,
   Text,
   WrapperActionTable,
 } from '@vissoft-react/common';
+
 import { Dropdown, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { includes } from 'lodash';
 import { MoreVertical } from 'lucide-react';
-import { IRoleItem } from '../types';
+import { IUserGroup } from '../types';
 
-export const DEFAULT_VALUE_ROLE: IRoleItem = {
-  id: '',
-  createdBy: '',
-  createdDate: '',
-  description: '',
-  lastModifiedBy: '',
-  lastModifiedDate: '',
-  name: '',
-  status: 1,
-  checkedKeys: [],
-  code: '',
-};
-
-export const getColumnsTableRole = (
+export const getColumnUserGroup = (
   params: IParamsRequest,
   listRoles: ActionsTypeEnum[],
   {
     onDelete,
     onAction,
   }: {
-    onAction: (type: IModeAction, record: IRoleItem) => void;
-    onDelete: (record: IRoleItem) => void;
+    onAction: (type: IModeAction, record: IUserGroup) => void;
+    onDelete: (record: IUserGroup) => void;
   }
-): ColumnsType<IRoleItem> => {
+): ColumnsType<IUserGroup> => {
   return [
     {
       title: 'STT',
       align: 'left',
-      width: 50,
       fixed: 'left',
+      width: 50,
       render(_, record, index) {
         return (
-          <Text disabled={record.status === StatusEnum.INACTIVE}>
+          <Text disabled={!record?.status}>
             {index + 1 + params.page * params.size}
           </Text>
         );
       },
     },
     {
-      title: 'Mã',
+      title: 'Mã nhóm tài khoản',
       dataIndex: 'code',
+      width: 180,
       align: 'left',
-      width: 100,
       render(value, record) {
         return (
           <Tooltip title={value} placement="topLeft">
-            <Text disabled={record.status === StatusEnum.INACTIVE}>
-              {value}
-            </Text>
+            <Text disabled={!record?.status}>{value}</Text>
           </Tooltip>
         );
       },
     },
     {
-      title: 'Tên',
+      title: 'Tên nhóm',
       dataIndex: 'name',
+      width: 180,
       align: 'left',
-      width: 100,
       render(value, record) {
         return (
           <Tooltip title={value} placement="topLeft">
-            <Text disabled={record.status === StatusEnum.INACTIVE}>
-              {value}
-            </Text>
+            <Text disabled={!record?.status}>{value}</Text>
           </Tooltip>
         );
       },
     },
     {
-      title: 'Người tạo',
-      dataIndex: 'createdBy',
+      title: 'Vai trò',
+      dataIndex: 'roles',
+      width: 150,
       align: 'left',
-      width: 200,
-      render(value, record) {
+      render: (value, record) => {
+        const text = record.roles.map((item) => item.name).join(', ');
         return (
-          <Tooltip title={value} placement="topLeft">
-            <Text disabled={record.status === StatusEnum.INACTIVE}>
-              {value}
-            </Text>
-          </Tooltip>
-        );
-      },
-    },
-    {
-      title: 'Ngày tạo',
-      dataIndex: 'createdDate',
-      align: 'left',
-      width: 100,
-      render(value, record) {
-        return (
-          <Tooltip
-            title={dayjs(value).format(formatDateTime)}
-            placement="topLeft"
-          >
-            <Text disabled={record.status === StatusEnum.INACTIVE}>
-              {dayjs(value).format(formatDate)}
-            </Text>
+          <Tooltip title={text} placement="topLeft">
+            <Text disabled={!record?.status}>{text}</Text>
           </Tooltip>
         );
       },
@@ -120,14 +84,12 @@ export const getColumnsTableRole = (
     {
       title: 'Người cập nhật',
       dataIndex: 'lastModifiedBy',
+      width: 150,
       align: 'left',
-      width: 200,
-      render(value, record) {
+      render: (value, record) => {
         return (
           <Tooltip title={value} placement="topLeft">
-            <Text disabled={record.status === StatusEnum.INACTIVE}>
-              {value}
-            </Text>
+            <Text disabled={!record?.status}>{value}</Text>
           </Tooltip>
         );
       },
@@ -135,15 +97,15 @@ export const getColumnsTableRole = (
     {
       title: 'Ngày cập nhật',
       dataIndex: 'lastModifiedDate',
+      width: 130,
       align: 'left',
-      width: 100,
-      render(value, record) {
+      render: (value, record) => {
         return (
           <Tooltip
             title={dayjs(value).format(formatDateTime)}
             placement="topLeft"
           >
-            <Text disabled={record.status === StatusEnum.INACTIVE}>
+            <Text disabled={!record?.status}>
               {dayjs(value).format(formatDate)}
             </Text>
           </Tooltip>
@@ -153,15 +115,24 @@ export const getColumnsTableRole = (
     {
       title: 'Trạng thái',
       dataIndex: 'status',
+      width: 150,
       align: 'left',
-      width: 100,
-      render(value) {
+      render: (value) => {
         return (
           <Tooltip
             title={<Text>{value ? 'Hoạt động' : 'Không hoạt động'}</Text>}
             placement="topLeft"
           >
+            {/* <CTag
+              type={TypeTagEnum.PROCESSING}
+              color={
+                value === StatusEnum.ACTIVE
+                  ? ColorList.SUCCESS
+                  : ColorList.CANCEL
+              }
+            > */}
             <Text>{value ? 'Hoạt động' : 'Không hoạt động'}</Text>
+            {/* </CTag> */}
           </Tooltip>
         );
       },
@@ -200,16 +171,14 @@ export const getColumnsTableRole = (
           <WrapperActionTable>
             {includes(listRoles, ActionsTypeEnum.READ) && (
               <CButtonDetail
-                onClick={() => {
-                  onAction(IModeAction.READ, record);
-                }}
+                onClick={() => onAction(IModeAction.READ, record)}
               />
             )}
             <div className="w-5">
               {(includes(listRoles, ActionsTypeEnum.UPDATE) ||
                 includes(listRoles, ActionsTypeEnum.DELETE)) && (
                 <Dropdown
-                  menu={{ items: items }}
+                  menu={{ items }}
                   placement="bottom"
                   trigger={['click']}
                 >
