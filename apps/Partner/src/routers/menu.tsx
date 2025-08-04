@@ -24,6 +24,11 @@ export const routerItems: RouterItems[] = [
     label: 'Quản lý user đại lý',
     parentId: pathRoutes.accountAuthorization as string,
   },
+  {
+    key: pathRoutes.agencyList as string,
+    label: 'Cấu hình đại lý',
+    parentId: pathRoutes.accountAuthorization as string,
+  },
 ];
 
 export const singlePopActions = ['add'];

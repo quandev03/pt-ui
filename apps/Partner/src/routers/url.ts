@@ -23,4 +23,10 @@ export const pathRoutes = {
   roleManagerView: (id?: IStringNumber) =>
     `/role-manager/view/${id ? id : ':id'}`,
   auditLog: '/audit-log',
+  agencyList: '/partner_configuration',
+  agencyAdd: '/partner_configuration/add',
+  agencyView: (id?: IStringNumber) =>
+    `/partner_configuration/view/${id ? id : ':id'}`,
+  agencyEdit: (id?: IStringNumber) =>
+    `/partner_configuration/edit/${id ? id : ':id'}`,
 };
