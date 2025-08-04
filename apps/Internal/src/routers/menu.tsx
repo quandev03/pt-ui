@@ -46,6 +46,23 @@ export const routerItems: RouterItems[] = [
     label: 'Tra cứu số',
     parentId: pathRoutes.manageNumber as string,
   },
+  // Quản lý danh mục
+  {
+    key: pathRoutes.category,
+    label: 'Quản lý danh mục',
+    parentId: pathRoutes.systemManager,
+    hasChild: true,
+  },
+  {
+    key: pathRoutes.listOfServicePackage,
+    label: 'Danh mục gói cước',
+    parentId: pathRoutes.category,
+  },
+  {
+    key: pathRoutes.partnerCatalog,
+    label: 'Danh mục đối tác',
+    parentId: pathRoutes.category,
+  },
 ];
 
 export const singlePopActions = ['add'];

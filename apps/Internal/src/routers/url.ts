@@ -41,4 +41,24 @@ export const pathRoutes = {
   // Quản lý số
   manageNumber: '/manage-number',
   lookupNumber: '/lookup-number', //tra cứu số
+  // Quản lý đối tác
+  partnerCatalog: '/partner-catalog',
+  partnerCatalogAdd: '/partner-catalog/add',
+  partnerCatalogEdit: (id?: IStringNumber) =>
+    `/partner-catalog/edit/${id ? id : ':id'}`,
+  partnerCatalogView: (id?: IStringNumber) =>
+    `/partner-catalog/view/${id ? id : ':id'}`,
+  partnerCatalogUserManagement: (orgCode = ':orgCode') =>
+    `/partner-catalog/user-management/${orgCode}`,
+  // Quản lý danh mục
+  category: '/category',
+
+  listOfServicePackage: '/list-of-service-package',
+  listOfServicePackageAdd: '/list-of-service-package/add',
+  listOfServicePackageEdit: (id?: IStringNumber) =>
+    `/list-of-service-package/edit/${id ? id : ':id'}`,
+  listOfServicePackageView: (id?: IStringNumber) =>
+    `/list-of-service-package/view/${id ? id : ':id'}`,
+
+  //========= Danh mục đối tác
 };

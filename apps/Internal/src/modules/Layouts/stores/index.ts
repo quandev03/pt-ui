@@ -108,6 +108,10 @@ const useConfigAppStore = create(
       params: {
         STOCK_ISDN_STATUS: [],
         STOCK_ISDN_TRANSFER_STATUS: [],
+        PARTNER_TYPE: [],
+        PARTNER_SUB_TYPE: [],
+        PARTNER_APPROVAL_STATUS: [],
+        PARTNER_STATUS: [],
       },
       setParams(params) {
         set(() => ({ params }));

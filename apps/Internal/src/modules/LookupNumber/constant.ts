@@ -65,15 +65,6 @@ export const ACTION_KEEP_ISDN = {
   UN_KEEP: 'unkeep',
 };
 
-export const QUERY_KEY = {
-  GET_SEARCH_NUMBER: 'GET_SEARCH_NUMBER',
-  GET_HISTORY_ISDN: 'GET_HISTORY_ISDN',
-  GET_KEEP_ISDN: 'GET_KEEP_ISDN',
-  GET_UN_KEEP_ISDN: 'GET_UN_KEEP_ISDN',
-  GET_STOCK_ISDN: 'GET_STOCK_ISDN',
-  GET_STATUS: 'GET_STATUS',
-  GET_TRANSFER_STATUS: 'GET_TRANSFER_STATUS',
-};
 export const TRANS_TYPE = {
   A: 'Upload vào kho',
   B: 'Điều chuyển',

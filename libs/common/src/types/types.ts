@@ -111,3 +111,14 @@ export interface ILoginResponse {
   token_type: string;
   expires_in: number;
 }
+export interface IErrorResponse {
+  detail: string;
+  message: string;
+  error?: string;
+  path?: string;
+  status: number;
+  title: string;
+  type: string;
+  code?: string;
+  errors: IFieldErrorsItem[];
+}

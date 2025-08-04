@@ -35,7 +35,7 @@ export const AddEditView = () => {
   const isCreateMode = actionMode === IModeAction.CREATE;
   const navigate = useNavigate();
   const { id } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const isPartner = params?.isPartner === 'true';
   const isMobile = params?.isMobile === 'true';
