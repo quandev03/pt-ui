@@ -18,8 +18,8 @@ import {
   validateForm,
 } from '@vissoft-react/common';
 import { Col, Form, Row, Spin, Tree, Typography } from 'antd';
-import { useRolesByRouter } from 'apps/Internal/src/hooks';
-import { pathRoutes } from 'apps/Internal/src/routers';
+import { useRolesByRouter } from '../../../hooks';
+import { pathRoutes } from '../../../routers';
 import { includes } from 'lodash';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

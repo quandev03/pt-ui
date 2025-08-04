@@ -30,8 +30,8 @@ import {
 import { useGetAllRole } from '../../UserManagement/hooks';
 import { CButtonSaveAndAdd } from '@vissoft-react/common';
 import { CButtonSave } from '@vissoft-react/common';
-import { pathRoutes } from 'apps/Internal/src/routers';
-import { useGetAllUsers } from 'apps/Internal/src/hooks';
+import { pathRoutes } from '../../../routers';
+import { useGetAllUsers } from '../../../hooks';
 
 export const ActionGroupUser = () => {
   const [isSubmitBack, setIsSubmitBack] = useState(false);

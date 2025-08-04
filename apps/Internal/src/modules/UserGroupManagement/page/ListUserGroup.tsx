@@ -2,7 +2,6 @@ import {
   ActionsTypeEnum,
   AnyElement,
   CButtonAdd,
-  CButtonSaveAndAdd,
   decodeSearchParams,
   FilterItemProps,
   formatQueryParams,
@@ -14,11 +13,11 @@ import {
 } from '@vissoft-react/common';
 import { Form } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { useRolesByRouter } from 'apps/Internal/src/hooks';
-import { pathRoutes } from 'apps/Internal/src/routers';
 import includes from 'lodash/includes';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useRolesByRouter } from '../../../hooks';
+import { pathRoutes } from '../../../routers';
 import { getColumnUserGroup } from '../constants';
 import { useGetGroupUsers, useSupportDeleteGroup } from '../queryHook';
 import { IGroupUserParams, IUserGroup } from '../types';
@@ -36,18 +35,38 @@ export const ListUserGroup = () => {
 
   const handleAdd = useCallback(() => {
     navigate(pathRoutes.groupUserManagerAdd);
-  }, []);
+  }, [navigate]);
 
-  const handleDeleteItem = (id: string) => {
-    if (id) {
-      ModalConfirm({
-        message: MESSAGE.G05,
-        handleConfirm: () => {
-          deleteGroup(id);
-        },
-      });
-    }
-  };
+  const handleDeleteItem = useCallback(
+    (id: string) => {
+      if (id) {
+        ModalConfirm({
+          message: MESSAGE.G05,
+          handleConfirm: () => {
+            deleteGroup(id);
+          },
+        });
+      }
+    },
+    [deleteGroup]
+  );
+
+  const openModalEditView = useCallback(
+    (type: IModeAction, record: IUserGroup) => {
+      switch (type) {
+        case IModeAction.READ:
+          navigate(pathRoutes.groupUserManagerView(record.id));
+          return;
+        case IModeAction.CREATE:
+          navigate(pathRoutes.groupUserManagerAdd);
+          return;
+        case IModeAction.UPDATE:
+          navigate(pathRoutes.groupUserManagerEdit(record.id));
+          return;
+      }
+    },
+    [navigate]
+  );
 
   const columns: ColumnsType<IUserGroup> = useMemo(() => {
     return getColumnUserGroup(params, actionByRole, {
@@ -58,21 +77,7 @@ export const ListUserGroup = () => {
         handleDeleteItem(user.id);
       },
     });
-  }, [actionByRole, params]);
-
-  const openModalEditView = (type: IModeAction, record: IUserGroup) => {
-    switch (type) {
-      case IModeAction.READ:
-        navigate(pathRoutes.groupUserManagerView(record.id));
-        return;
-      case IModeAction.CREATE:
-        navigate(pathRoutes.groupUserManagerAdd);
-        return;
-      case IModeAction.UPDATE:
-        navigate(pathRoutes.groupUserManagerEdit(record.id));
-        return;
-    }
-  };
+  }, [actionByRole, handleDeleteItem, openModalEditView, params]);
 
   useEffect(() => {
     form.setFieldsValue(params);
@@ -110,22 +115,20 @@ export const ListUserGroup = () => {
     );
   }, [actionByRole, handleAdd]);
   return (
-    <>
-      <LayoutList
-        filterItems={filters}
-        data={(data as AnyElement) ?? []}
-        columns={columns}
-        title="Nhóm tài khoản"
-        loading={loadingTable}
-        searchComponent={
-          <LayoutList.SearchComponent
-            name="q"
-            tooltip="Nhập mã hoặc tên nhóm tài khoản"
-            placeholder="Nhập mã hoặc tên nhóm tài khoản"
-          />
-        }
-        actionComponent={actionComponent}
-      />
-    </>
+    <LayoutList
+      filterItems={filters}
+      data={(data as AnyElement) ?? []}
+      columns={columns}
+      title="Nhóm tài khoản"
+      loading={loadingTable}
+      searchComponent={
+        <LayoutList.SearchComponent
+          name="q"
+          tooltip="Nhập mã hoặc tên nhóm tài khoản"
+          placeholder="Nhập mã hoặc tên nhóm tài khoản"
+        />
+      }
+      actionComponent={actionComponent}
+    />
   );
 };

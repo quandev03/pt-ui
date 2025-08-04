@@ -1,24 +1,23 @@
 import {
   ActionsTypeEnum,
   CButtonAdd,
-  CInput,
   decodeSearchParams,
   formatQueryParams,
   IModeAction,
   LayoutList,
   ModalConfirm,
 } from '@vissoft-react/common';
-import { Form, Tooltip } from 'antd';
+import { Form } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { useRolesByRouter } from 'apps/Internal/src/hooks/useRolesByRouter';
-import { pathRoutes } from 'apps/Internal/src/routers';
 import { includes } from 'lodash';
 import { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useRolesByRouter } from '../../../hooks';
+import { pathRoutes } from '../../../routers';
 import { getColumnsTableRole } from '../constants';
 import { useGetRoles, useSupportDeleteRole } from '../hooks';
-import { IRoleItem, IRoleParams, PropsRole } from '../types';
 import { useFilters } from '../hooks/useFilters';
+import { IRoleItem, IRoleParams, PropsRole } from '../types';
 
 export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
   const actionByRole = useRolesByRouter();
@@ -30,7 +29,7 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
 
   useEffect(() => {
     form.setFieldsValue(params);
-  }, [pathname]);
+  }, [form, params, pathname]);
 
   const handleAction = useCallback(
     (type: IModeAction, record: IRoleItem) => {
@@ -58,7 +57,7 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
           return;
       }
     },
-    [navigate]
+    [isPartner, navigate]
   );
 
   const { mutate: deleteRole } = useSupportDeleteRole();
@@ -79,7 +78,7 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
         },
       });
     },
-    [deleteRole]
+    [deleteRole, isPartner]
   );
   const handleAddRole = useCallback(() => {
     if (isPartner) {
@@ -102,27 +101,25 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
         disabled={!includes(actionByRole, ActionsTypeEnum.CREATE)}
       />
     );
-  }, [handleAddRole]);
+  }, [actionByRole, handleAddRole]);
   return (
-    <>
-      <LayoutList
-        title={
-          isPartner ? 'Vai trò & Phân quyền đối tác' : 'Vai Trò & Phân Quyền'
-        }
-        filterItems={filters}
-        loading={loadingTable}
-        columns={columns}
-        data={listRole}
-        searchComponent={
-          <LayoutList.SearchComponent
-            name="q"
-            tooltip="Nhập mã hoặc tên vai trò"
-            placeholder="Nhập mã hoặc tên vai trò"
-            maxLength={100}
-          />
-        }
-        actionComponent={actionComponent}
-      />
-    </>
+    <LayoutList
+      title={
+        isPartner ? 'Vai trò & Phân quyền đối tác' : 'Vai Trò & Phân Quyền'
+      }
+      filterItems={filters}
+      loading={loadingTable}
+      columns={columns}
+      data={listRole}
+      searchComponent={
+        <LayoutList.SearchComponent
+          name="q"
+          tooltip="Nhập mã hoặc tên vai trò"
+          placeholder="Nhập mã hoặc tên vai trò"
+          maxLength={100}
+        />
+      }
+      actionComponent={actionComponent}
+    />
   );
 });
