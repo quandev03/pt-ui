@@ -15,11 +15,11 @@ export const useFilters = () => {
           },
           {
             label: 'Hoạt động',
-            value: StatusEnum.ACTIVE,
+            value: String(StatusEnum.ACTIVE),
           },
           {
             label: 'Không hoạt động',
-            value: StatusEnum.INACTIVE,
+            value: String(StatusEnum.INACTIVE),
           },
         ],
         placeholder: 'Chọn trạng thái',

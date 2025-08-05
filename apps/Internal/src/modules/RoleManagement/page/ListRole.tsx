@@ -114,11 +114,12 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
         columns={columns}
         data={listRole}
         searchComponent={
-          <Tooltip title="Nhập mã hoặc tên vai trò" placement="right">
-            <Form.Item name="q" className="min-w-72">
-              <CInput maxLength={100} placeholder="Nhập mã hoặc tên vai trò" />
-            </Form.Item>
-          </Tooltip>
+          <LayoutList.SearchComponent
+            name="q"
+            tooltip="Nhập mã hoặc tên vai trò"
+            placeholder="Nhập mã hoặc tên vai trò"
+            maxLength={100}
+          />
         }
         actionComponent={actionComponent}
       />

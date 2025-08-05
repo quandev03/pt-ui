@@ -13,6 +13,7 @@ import {
   ModalConfirm,
   Show,
   Text,
+  TitleHeader,
   useActionMode,
   validateForm,
 } from '@vissoft-react/common';
@@ -21,10 +22,9 @@ import { useRolesByRouter } from 'apps/Internal/src/hooks';
 import { pathRoutes } from 'apps/Internal/src/routers';
 import { includes } from 'lodash';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   useGetObjectList,
-  useGetObjectListMobile,
   useSupportAddRole,
   useSupportDeleteRole,
   useSupportGetRoleDetail,
@@ -55,22 +55,15 @@ export const ActionRole: FC<PropsRole> = ({ isPartner }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [form] = Form.useForm();
-  const pathname = useLocation();
   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
-  const [autoExpandParentMobile, setAutoExpandParentMobile] =
-    useState<boolean>(true);
   const [showValidateTree, setShowValidateTree] = useState<boolean>(false);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
-  const [selectedKeysMobile, setSelectedKeysMobile] = useState<React.Key[]>([]);
   const [checkedKeys, setCheckedKeys] = useState<string[]>([]);
-  const [checkedKeysMobile, setCheckedKeysMobile] = useState<string[]>([]);
   const actionByRole = useRolesByRouter();
 
   const actionMode = useActionMode();
 
   const { data: listRoleByIsPartner = [] } = useGetObjectList(isPartner);
-  const { data: listRoleByIsPartnerMobile = [] } =
-    useGetObjectListMobile(isPartner);
 
   const { data: dataRoleDetail, isLoading: isLoadingGetRole } =
     useSupportGetRoleDetail(isPartner, id);
@@ -82,23 +75,14 @@ export const ActionRole: FC<PropsRole> = ({ isPartner }) => {
       const checkedKeys = dataRoleDetail.checkedKeys.filter((item) =>
         getKey(listRoleByIsPartner).includes(item)
       );
-      const checkedKeysMobile = dataRoleDetail.checkedKeys.filter((item) =>
-        getKey(listRoleByIsPartnerMobile).includes(item)
-      );
       setCheckedKeys(checkedKeys);
-      setCheckedKeysMobile(checkedKeysMobile);
     }
-  }, [dataRoleDetail]);
+  }, [dataRoleDetail, form, listRoleByIsPartner]);
 
   const treeData = useMemo(() => {
     if (!listRoleByIsPartner) return [];
     return processTreeData(listRoleByIsPartner);
   }, [listRoleByIsPartner]);
-
-  const treeDataMobile = useMemo(() => {
-    if (!listRoleByIsPartnerMobile) return [];
-    return processTreeData(listRoleByIsPartnerMobile);
-  }, [listRoleByIsPartnerMobile]);
 
   const handleClose = () => {
     navigate(-1);
@@ -123,7 +107,6 @@ export const ActionRole: FC<PropsRole> = ({ isPartner }) => {
       } else {
         form.resetFields();
         setCheckedKeys([]);
-        setCheckedKeysMobile([]);
       }
     },
     setFieldError
@@ -135,22 +118,9 @@ export const ActionRole: FC<PropsRole> = ({ isPartner }) => {
     setFieldError
   );
 
-  const Title = useMemo(() => {
-    switch (actionMode) {
-      case IModeAction.READ:
-        return 'Xem chi tiết vai trò & phân quyền';
-      case IModeAction.CREATE:
-        return 'Tạo vai trò & phân quyền';
-      case IModeAction.UPDATE:
-        return 'Chỉnh sửa vai trò & phân quyền';
-      default:
-        return 'Tạo vai trò & phân quyền';
-    }
-  }, [actionMode]);
-
   const handleFinish = useCallback(
     (values: any) => {
-      const mergeCheckedKeys = [...checkedKeys, ...checkedKeysMobile];
+      const mergeCheckedKeys = [...checkedKeys];
       if (!mergeCheckedKeys.length) {
         setShowValidateTree(true);
         return;
@@ -180,25 +150,18 @@ export const ActionRole: FC<PropsRole> = ({ isPartner }) => {
         });
       }
     },
-    [checkedKeys, checkedKeysMobile, actionMode, id, isPartner]
+    [checkedKeys, actionMode, id, isPartner]
   );
 
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
-  const [expandedKeysMobile, setExpandedKeysMobile] = useState<React.Key[]>([]);
 
   const onExpand = (expandedKeysValue: React.Key[]) => {
     setExpandedKeys(expandedKeysValue);
     setAutoExpandParent(false);
   };
 
-  const onExpandMobile = (expandedKeysValue: React.Key[]) => {
-    setExpandedKeysMobile(expandedKeysValue);
-    setAutoExpandParentMobile(false);
-  };
-
   const onCheck = (checkedKeysValue: any) => {
-    console.log('checkedKeysValue', checkedKeysValue);
-    const mergeCheckedKeys = [...checkedKeysValue, ...checkedKeysMobile];
+    const mergeCheckedKeys = [...checkedKeysValue];
     if (mergeCheckedKeys?.length) {
       setShowValidateTree(false);
     } else {
@@ -206,29 +169,25 @@ export const ActionRole: FC<PropsRole> = ({ isPartner }) => {
     }
     setCheckedKeys(checkedKeysValue);
   };
-  console.log('checkedKeys', checkedKeys);
 
   const onSelect = (selectedKeysValue: React.Key[]) => {
-    console.log('selectedKeysValue', selectedKeysValue);
     setSelectedKeys(selectedKeysValue);
   };
-
-  const onCheckMobile = (checkedKeysValue: any) => {
-    const mergeCheckedKeys = [...checkedKeysValue, ...checkedKeys];
-    if (mergeCheckedKeys?.length) {
-      setShowValidateTree(false);
-    } else {
-      setShowValidateTree(true);
+  const Title = useMemo(() => {
+    switch (actionMode) {
+      case IModeAction.READ:
+        return 'Xem chi tiết vai trò & phân quyền';
+      case IModeAction.CREATE:
+        return 'Tạo vai trò & phân quyền';
+      case IModeAction.UPDATE:
+        return 'Chỉnh sửa vai trò & phân quyền';
+      default:
+        return 'Tạo vai trò & phân quyền';
     }
-    setCheckedKeysMobile(checkedKeysValue);
-  };
-  const onSelectMobile = (selectedKeysValue: React.Key[]) => {
-    setSelectedKeysMobile(selectedKeysValue);
-  };
-
+  }, [actionMode]);
   return (
     <div className="flex flex-col w-full h-full">
-      {/* <TitleHeader>{Title}</TitleHeader> */}
+      <TitleHeader>{Title}</TitleHeader>
       <Spin spinning={isLoadingGetRole}>
         <Form
           form={form}
@@ -242,7 +201,7 @@ export const ActionRole: FC<PropsRole> = ({ isPartner }) => {
           labelAlign="left"
         >
           <div className="bg-white rounded-[10px] px-6 pt-4 pb-8">
-            <Row gutter={24}>
+            <Row gutter={[30, 0]}>
               <Col span={12}>
                 <Typography.Title level={5} className="titleTree">
                   Thông tin vai trò

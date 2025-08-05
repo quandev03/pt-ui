@@ -1,12 +1,14 @@
 import {
   ActionsTypeEnum,
   CButtonDetail,
+  CTag,
   formatDate,
   formatDateTime,
   IModeAction,
   IParamsRequest,
   StatusEnum,
   Text,
+  TypeTagEnum,
   WrapperActionTable,
 } from '@vissoft-react/common';
 import { Dropdown, Tooltip } from 'antd';
@@ -55,7 +57,7 @@ export const getColumnsTableRole = (
       },
     },
     {
-      title: 'Mã',
+      title: 'Mã vai trò',
       dataIndex: 'code',
       align: 'left',
       width: 100,
@@ -70,7 +72,7 @@ export const getColumnsTableRole = (
       },
     },
     {
-      title: 'Tên',
+      title: 'Tên vai trò',
       dataIndex: 'name',
       align: 'left',
       width: 100,
@@ -158,10 +160,20 @@ export const getColumnsTableRole = (
       render(value) {
         return (
           <Tooltip
-            title={<Text>{value ? 'Hoạt động' : 'Không hoạt động'}</Text>}
+            title={
+              value === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động'
+            }
             placement="topLeft"
           >
-            <Text>{value ? 'Hoạt động' : 'Không hoạt động'}</Text>
+            <CTag
+              type={
+                value === StatusEnum.ACTIVE
+                  ? TypeTagEnum.SUCCESS
+                  : TypeTagEnum.ERROR
+              }
+            >
+              {value === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động'}
+            </CTag>
           </Tooltip>
         );
       },
@@ -178,22 +190,14 @@ export const getColumnsTableRole = (
             onClick: () => {
               onAction(IModeAction.UPDATE, record);
             },
-            label: (
-              <Text>
-                <Text>Sửa</Text>
-              </Text>
-            ),
+            label: <Text>Sửa</Text>,
           },
           {
             key: ActionsTypeEnum.DELETE,
             onClick: () => {
               onDelete(record);
             },
-            label: (
-              <Text type="danger">
-                <Text>Xóa</Text>
-              </Text>
-            ),
+            label: <Text type="danger">Xóa</Text>,
           },
         ].filter((item) => includes(listRoles, item?.key));
         return (

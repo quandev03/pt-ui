@@ -1,11 +1,15 @@
 import {
   ActionsTypeEnum,
   CButtonDetail,
+  CTag,
+  CTooltip,
   formatDate,
   formatDateTime,
   IModeAction,
   IParamsRequest,
+  StatusEnum,
   Text,
+  TypeTagEnum,
   WrapperActionTable,
 } from '@vissoft-react/common';
 
@@ -35,7 +39,7 @@ export const getColumnUserGroup = (
       width: 50,
       render(_, record, index) {
         return (
-          <Text disabled={!record?.status}>
+          <Text disabled={record?.status !== StatusEnum.ACTIVE}>
             {index + 1 + params.page * params.size}
           </Text>
         );
@@ -49,7 +53,7 @@ export const getColumnUserGroup = (
       render(value, record) {
         return (
           <Tooltip title={value} placement="topLeft">
-            <Text disabled={!record?.status}>{value}</Text>
+            <Text disabled={record?.status !== StatusEnum.ACTIVE}>{value}</Text>
           </Tooltip>
         );
       },
@@ -62,7 +66,7 @@ export const getColumnUserGroup = (
       render(value, record) {
         return (
           <Tooltip title={value} placement="topLeft">
-            <Text disabled={!record?.status}>{value}</Text>
+            <Text disabled={record?.status !== StatusEnum.ACTIVE}>{value}</Text>
           </Tooltip>
         );
       },
@@ -76,7 +80,7 @@ export const getColumnUserGroup = (
         const text = record.roles.map((item) => item.name).join(', ');
         return (
           <Tooltip title={text} placement="topLeft">
-            <Text disabled={!record?.status}>{text}</Text>
+            <Text disabled={record?.status !== StatusEnum.ACTIVE}>{text}</Text>
           </Tooltip>
         );
       },
@@ -89,7 +93,7 @@ export const getColumnUserGroup = (
       render: (value, record) => {
         return (
           <Tooltip title={value} placement="topLeft">
-            <Text disabled={!record?.status}>{value}</Text>
+            <Text disabled={record?.status !== StatusEnum.ACTIVE}>{value}</Text>
           </Tooltip>
         );
       },
@@ -105,7 +109,7 @@ export const getColumnUserGroup = (
             title={dayjs(value).format(formatDateTime)}
             placement="topLeft"
           >
-            <Text disabled={!record?.status}>
+            <Text disabled={record?.status !== StatusEnum.ACTIVE}>
               {dayjs(value).format(formatDate)}
             </Text>
           </Tooltip>
@@ -119,21 +123,22 @@ export const getColumnUserGroup = (
       align: 'left',
       render: (value) => {
         return (
-          <Tooltip
-            title={<Text>{value ? 'Hoạt động' : 'Không hoạt động'}</Text>}
+          <CTooltip
+            title={
+              value === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động'
+            }
             placement="topLeft"
           >
-            {/* <CTag
-              type={TypeTagEnum.PROCESSING}
-              color={
+            <CTag
+              type={
                 value === StatusEnum.ACTIVE
-                  ? ColorList.SUCCESS
-                  : ColorList.CANCEL
+                  ? TypeTagEnum.SUCCESS
+                  : TypeTagEnum.ERROR
               }
-            > */}
-            <Text>{value ? 'Hoạt động' : 'Không hoạt động'}</Text>
-            {/* </CTag> */}
-          </Tooltip>
+            >
+              {value === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động'}
+            </CTag>
+          </CTooltip>
         );
       },
     },
@@ -160,11 +165,7 @@ export const getColumnUserGroup = (
             onClick: () => {
               onDelete(record);
             },
-            label: (
-              <Text type="danger">
-                <Text>Xóa</Text>
-              </Text>
-            ),
+            label: <Text type="danger">Xóa</Text>,
           },
         ].filter((item) => includes(listRoles, item?.key));
         return (

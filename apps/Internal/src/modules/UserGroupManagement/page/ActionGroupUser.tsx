@@ -204,7 +204,7 @@ export const ActionGroupUser = () => {
           labelAlign="left"
         >
           <div className="bg-white rounded-[10px] px-6 pt-4 pb-8">
-            <Row gutter={24}>
+            <Row gutter={[30, 0]}>
               <Col span={12}>
                 <Form.Item
                   label="Mã nhóm"

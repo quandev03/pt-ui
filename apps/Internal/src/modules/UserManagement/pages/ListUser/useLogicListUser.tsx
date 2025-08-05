@@ -16,6 +16,7 @@ import {
   formatQueryParams,
   usePermissions,
   FilterItemProps,
+  StatusEnum,
 } from '@vissoft-react/common';
 import { ColumnsType } from 'antd/es/table';
 
@@ -59,7 +60,19 @@ export const useLogicListUser = () => {
   }, [handleAdd, permission.canCreate]);
 
   const filters: FilterItemProps[] = useMemo(() => {
-    return [];
+    return [
+      {
+        type: 'Select',
+        name: 'status',
+        label: 'Trạng thái',
+        placeholder: 'Chọn trạng thái',
+        options: [
+          { label: 'Tất cả', value: '' },
+          { label: 'Hoạt động', value: String(StatusEnum.ACTIVE) },
+          { label: 'Không hoạt động', value: String(StatusEnum.INACTIVE) },
+        ],
+      },
+    ];
   }, []);
 
   return {

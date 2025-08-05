@@ -8,6 +8,7 @@ import {
   formatQueryParams,
   IModeAction,
   LayoutList,
+  MESSAGE,
   ModalConfirm,
   StatusEnum,
 } from '@vissoft-react/common';
@@ -40,8 +41,7 @@ export const ListUserGroup = () => {
   const handleDeleteItem = (id: string) => {
     if (id) {
       ModalConfirm({
-        title: 'common.confirmDelete',
-        message: 'common.relatedDataDeleted',
+        message: MESSAGE.G05,
         handleConfirm: () => {
           deleteGroup(id);
         },
@@ -83,7 +83,6 @@ export const ListUserGroup = () => {
         type: 'Select',
         name: 'status',
         label: 'Trạng thái',
-        showDefault: true,
         options: [
           {
             label: 'Tất cả',
@@ -91,11 +90,11 @@ export const ListUserGroup = () => {
           },
           {
             label: 'Hoạt động',
-            value: StatusEnum.ACTIVE,
+            value: String(StatusEnum.ACTIVE),
           },
           {
             label: 'Không hoạt động',
-            value: StatusEnum.INACTIVE,
+            value: String(StatusEnum.INACTIVE),
           },
         ],
         placeholder: 'Chọn trạng thái',

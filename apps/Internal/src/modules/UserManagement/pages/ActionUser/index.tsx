@@ -1,5 +1,6 @@
 import {
   CButtonClose,
+  CButtonDelete,
   CButtonEdit,
   CButtonSave,
   CButtonSaveAndAdd,
@@ -44,6 +45,7 @@ export const ActionUser = memo(() => {
     setRoleInActive,
     groupsInActive,
     setGroupsInActive,
+    handleDelete,
   } = useLogicActionUser();
   const { id } = useParams();
   const { data: INTERNAL_DEPARTMENT = [] } = useGetDepartments();
@@ -346,6 +348,13 @@ export const ActionUser = memo(() => {
               <CButtonEdit
                 onClick={() => {
                   navigate(pathRoutes.systemUserManagerEdit(id!));
+                }}
+              />
+            )}
+            {actionMode === IModeAction.READ && permission.canDelete && (
+              <CButtonDelete
+                onClick={() => {
+                  handleDelete(id!);
                 }}
               />
             )}
