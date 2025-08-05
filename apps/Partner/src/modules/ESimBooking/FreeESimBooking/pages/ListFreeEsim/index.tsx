@@ -1,7 +1,6 @@
 import { LayoutList } from '@vissoft-react/common';
 import { memo } from 'react';
 import { useLogicListFreeEsimBooking } from './useLogicListFreeEsimBooking';
-import { IFreeEsimBooking } from '../../types';
 
 export const ListFreeEsim = memo(() => {
   const {

@@ -23,9 +23,9 @@ export const pathRoutes = {
   roleManagerView: (id?: IStringNumber) =>
     `/role-manager/view/${id ? id : ':id'}`,
   auditLog: '/audit-log',
-  freeEsimBooking: `/sales-management/free-esim-booking`,
-  freeEsimBookingAdd: `/sales-management/free-esim-booking/add`,
+  freeEsimBooking: `/free-esim-booking`,
+  freeEsimBookingAdd: `/free-esim-booking/add`,
   freeEsimBookingView: (id?: IStringNumber) =>
-    `/sales-management/free-esim-booking/view/${id ? id : ':id'}`,
-  buyBundleWithEsim: '/sales-management/buy-bundle-with-esim',
+    `/free-esim-booking/view/${id ? id : ':id'}`,
+  buyBundleWithEsim: 'buy-bundle-with-esim',
 };

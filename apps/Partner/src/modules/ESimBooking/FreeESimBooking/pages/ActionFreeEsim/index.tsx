@@ -2,29 +2,48 @@ import {
   CButtonClose,
   CButtonSaveAndAdd,
   CInput,
+  cleanUpString,
   CSelect,
   IModeAction,
   TitleHeader,
-  usePermissions,
 } from '@vissoft-react/common';
-import useConfigAppStore from '../../../../Layouts/stores';
-import { memo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { memo, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useLogicActionUser } from './useLogicActionFreeEsim';
 import { Col, Form, Row } from 'antd';
 
 export const ActionFreeEsim = memo(() => {
-  // const navigate = useNavigate();
-  // const { id } = useParams();
-  // const { menuData } = useConfigAppStore();
-  // const permission = usePermissions(menuData);
-  const { Title, actionMode, handleClose } = useLogicActionUser();
+  const { id } = useParams();
+  const {
+    Title,
+    actionMode,
+    handleClose,
+    handleFinish,
+    bookingInProcess,
+    form,
+    getFreeEsimList,
+  } = useLogicActionUser();
+
+  useEffect(() => {
+    if (actionMode === IModeAction.READ && getFreeEsimList?.content && id) {
+      const esimData = getFreeEsimList.content.find(
+        (item: { id: string }) => item.id === id
+      );
+      if (esimData) {
+        form.setFieldsValue({
+          quantity: esimData.quantity || '',
+          packageCode: esimData.pckCode || '',
+        });
+      }
+    }
+  }, [actionMode, getFreeEsimList, id, form]);
+
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{Title}</TitleHeader>
       <Form
-        form={undefined}
-        onFinish={undefined}
+        form={form}
+        onFinish={handleFinish}
         labelCol={{ span: 5 }}
         colon={false}
       >
@@ -32,15 +51,48 @@ export const ActionFreeEsim = memo(() => {
           <Col span={12}>
             <Form.Item
               label="Số lượng eSIM"
-              name="numberOfEsim"
-              required={true}
+              name="quantity"
+              required
+              rules={[
+                {
+                  validator(_, value) {
+                    if (!value) {
+                      return Promise.reject('Không được để trống trường này');
+                    } else {
+                      return Promise.resolve();
+                    }
+                  },
+                },
+              ]}
             >
-              <CInput />
+              <CInput disabled={actionMode === IModeAction.READ} />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Gói cước" name="package" required={true}>
-              <CSelect disabled={!!IModeAction.READ} />
+            <Form.Item
+              label="Gói cước"
+              name="packageCode"
+              required
+              rules={[
+                {
+                  validator(_, value) {
+                    if (!value) {
+                      return Promise.reject('Không được để trống trường này');
+                    } else {
+                      return Promise.resolve();
+                    }
+                  },
+                },
+              ]}
+            >
+              {/* <CSelect disabled={actionMode === IModeAction.READ} /> */}
+              <CInput
+                disabled={actionMode === IModeAction.READ}
+                onBlur={(e) => {
+                  const value = cleanUpString(e.target.value);
+                  form.setFieldValue('packageCode', value);
+                }}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -48,10 +100,9 @@ export const ActionFreeEsim = memo(() => {
           {actionMode === IModeAction.CREATE && (
             <CButtonSaveAndAdd
               onClick={() => {
-                // form.submit();
+                form.submit();
               }}
-              // loading={loadingAdd || loadingUpdate}
-              disabled={!!IModeAction.READ}
+              loading={bookingInProcess}
             />
           )}
           <CButtonClose onClick={handleClose} />

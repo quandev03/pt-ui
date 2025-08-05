@@ -1,10 +1,17 @@
 export interface IFreeEsimBooking {
   id: string;
-  eSimTotalNumber: number;
-  package: string;
-  user: string;
-  createdTime: string;
-  duration: string;
-  processStatus: string;
-  result: string;
+  quantity: number;
+  pckCode: string;
+  createdBy: string;
+  createdDate: string;
+  finishedDate: string;
+  status: number;
+  succeededNumber: string;
+  failedNumber: string;
+}
+
+export interface IBookFreeEsim {
+  id?: string;
+  quantity: number;
+  pckCode: string[];
 }

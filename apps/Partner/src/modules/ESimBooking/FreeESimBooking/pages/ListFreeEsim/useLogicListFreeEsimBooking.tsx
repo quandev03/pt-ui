@@ -3,6 +3,7 @@ import {
   decodeSearchParams,
   FilterItemProps,
   formatQueryParams,
+  IParamsRequest,
   usePermissions,
 } from '@vissoft-react/common';
 import { pathRoutes } from '../../../../../routers/url';
@@ -11,7 +12,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import useConfigAppStore from '../../../../Layouts/stores';
 import { IFreeEsimBooking } from '../../types';
 import { ColumnsType } from 'antd/es/table';
-import { useTableFreeEsimBooking } from '../../hooks/useESimFreeBookingListColumn';
+import { useGetTableFreeEsimBooking } from '../../hooks/useGetTableFreeEsimBooking';
 import { useGetListFreeEsimBooking } from '../../hooks/useGetListFreeEsimBooking';
 
 export const useLogicListFreeEsimBooking = () => {
@@ -32,29 +33,23 @@ export const useLogicListFreeEsimBooking = () => {
   }, [handleAdd, permission.canCreate]);
 
   const { data: listFreeEsimBooked, isLoading: loadingEsimList } =
-    useGetListFreeEsimBooking(params);
+    useGetListFreeEsimBooking(formatQueryParams<IParamsRequest>(params));
 
-  const columns: ColumnsType<IFreeEsimBooking> = useTableFreeEsimBooking();
+  const columns: ColumnsType<IFreeEsimBooking> = useGetTableFreeEsimBooking();
 
   const filters: FilterItemProps[] = useMemo(() => {
-    // You need to create objects that match the shape of your filter types.
     return [
       {
         type: 'Select',
-        name: 'status', // A unique name for this filter field
+        name: 'status',
         label: 'Trạng thái',
         placeholder: 'Chọn trạng thái đơn hàng',
-        options: [
-          { value: 'pending', label: 'Chờ xử lý' },
-          { value: 'shipped', label: 'Đã giao hàng' },
-          { value: 'completed', label: 'Hoàn thành' },
-          { value: 'cancelled', label: 'Đã huỷ' },
-        ],
+        options: [],
       },
 
       {
         type: 'DateRange',
-        name: 'orderDate', // A unique name for this filter field
+        name: 'orderDate',
         label: 'Ngày đặt hàng',
         keySearch: ['startDate', 'endDate'],
         formatSearch: 'YYYY-MM-DD',

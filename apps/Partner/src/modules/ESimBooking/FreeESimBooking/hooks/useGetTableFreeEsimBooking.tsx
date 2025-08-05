@@ -5,17 +5,16 @@ import {
   IModeAction,
   RenderCell,
   usePermissions,
-  Text,
   WrapperActionTable,
   CButtonDetail,
+  formatDateTime,
 } from '@vissoft-react/common';
 import useConfigAppStore from '../../../Layouts/stores';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { pathRoutes } from '../../../../routers/url';
-import { Dropdown } from 'antd';
-import { MoreVertical } from 'lucide-react';
+import dayjs from 'dayjs';
 
-export const useTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
+export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const { menuData } = useConfigAppStore();
@@ -25,10 +24,13 @@ export const useTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
   const handleAction = (action: IModeAction, record: IFreeEsimBooking) => {
     switch (action) {
       case IModeAction.READ: {
+        console.log('current action', action);
         const toView = pathRoutes.freeEsimBookingView;
         if (typeof toView === 'function') {
+          console.log('id is: ', record.id);
           navigate(toView(record.id));
         }
+        break;
       }
     }
   };
@@ -44,119 +46,104 @@ export const useTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
           <RenderCell
             value={index + 1 + params.page * params.size}
             tooltip={index + 1 + params.page * params.size}
-            // disabled={!record?.status}
           />
         );
       },
     },
     {
       title: 'Số lượng eSIM',
-      dataIndex: 'eSimTotalNumber',
-      width: 200,
-      align: 'left',
-      fixed: 'left',
-      render(value, record) {
-        return (
-          <RenderCell
-            value={value}
-            tooltip={value}
-            // disabled={record?.status !== 1}
-          />
-        );
-      },
-    },
-    {
-      title: 'Gói cước',
-      dataIndex: 'package',
-      width: 200,
-      align: 'left',
-      fixed: 'left',
-      render(value, record) {
-        return (
-          <RenderCell
-            value={value}
-            tooltip={value}
-            // disabled={record?.status !== 1}
-          />
-        );
-      },
-    },
-    {
-      title: 'User thực hiện',
-      dataIndex: 'user',
-      width: 200,
-      align: 'left',
-      fixed: 'left',
-      render(value, record) {
-        return (
-          <RenderCell
-            value={value}
-            tooltip={value}
-            // disabled={record?.status !== 1}
-          />
-        );
-      },
-    },
-    {
-      title: 'Thời gian tạo',
-      dataIndex: 'createdTime',
-      width: 250,
-      align: 'left',
-      fixed: 'left',
-      render(value, record) {
-        return (
-          <RenderCell
-            value={value}
-            tooltip={value}
-            // disabled={record?.status !== 1}
-          />
-        );
-      },
-    },
-    {
-      title: 'Thời gian hoàn thành',
-      dataIndex: 'duration',
-      width: 250,
-      align: 'left',
-      fixed: 'left',
-      render(value, record) {
-        return (
-          <RenderCell
-            value={value}
-            tooltip={value}
-            // disabled={record?.status !== 1}
-          />
-        );
-      },
-    },
-    {
-      title: 'Trạng thái xử lý',
-      dataIndex: 'processStatus',
+      dataIndex: 'quantity',
       width: 150,
       align: 'left',
       fixed: 'left',
       render(value, record) {
+        return <RenderCell value={value} tooltip={value} />;
+      },
+    },
+    {
+      title: 'Gói cước',
+      dataIndex: 'pckCode',
+      width: 200,
+      align: 'left',
+      fixed: 'left',
+      render(value, record) {
+        return <RenderCell value={value} tooltip={value} />;
+      },
+    },
+    {
+      title: 'User thực hiện',
+      dataIndex: 'createdBy',
+      width: 250,
+      align: 'left',
+      fixed: 'left',
+      render(value) {
+        return <RenderCell value={value} tooltip={value} />;
+      },
+    },
+    {
+      title: 'Thời gian tạo',
+      dataIndex: 'createdDate',
+      width: 250,
+      align: 'left',
+      fixed: 'left',
+      render(value) {
+        const textFormatDate = value ? dayjs(value).format(formatDateTime) : '';
+        return <RenderCell value={textFormatDate} tooltip={textFormatDate} />;
+      },
+    },
+    {
+      title: 'Thời gian hoàn thành',
+      dataIndex: 'finishedDate',
+      width: 250,
+      align: 'left',
+      fixed: 'left',
+      render(value) {
+        const textFormatDate = value ? dayjs(value).format(formatDateTime) : '';
+        return <RenderCell value={textFormatDate} tooltip={textFormatDate} />;
+      },
+    },
+    {
+      title: 'Trạng thái xử lý',
+      dataIndex: 'status',
+      width: 150,
+      align: 'left',
+      fixed: 'left',
+      render(value) {
+        let displayText = '';
+        let textColor = '';
+
+        if (value === 2) {
+          displayText = 'Hoàn thành';
+          textColor = '#178801';
+        } else if (value === 1) {
+          displayText = 'Đang xử lý';
+          textColor = '#FAAD14';
+        }
+
         return (
           <RenderCell
-            value={value}
-            tooltip={value}
-            // disabled={record?.status !== 1}
+            value={<span style={{ color: textColor }}>{displayText}</span>}
+            tooltip={displayText}
           />
         );
       },
     },
     {
       title: 'Kết quả',
-      dataIndex: 'result',
+      dataIndex: 'succeededNumber',
       width: 300,
       align: 'left',
       fixed: 'left',
       render(value, record) {
         return (
           <RenderCell
-            value={value}
-            tooltip={value}
-            // disabled={record?.status !== 1}
+            value={
+              <div>
+                <div>Số lượng thành công: {record.succeededNumber}</div>
+                <div>Số lượng thất bại: {record.failedNumber}</div>
+              </div>
+            }
+            tooltip={`Số lượng thành công: ${record.succeededNumber}\nSố lượng thất bại: ${record.failedNumber}`}
           />
         );
       },
@@ -167,23 +154,6 @@ export const useTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
       width: 150,
       fixed: 'right',
       render(_, record) {
-        const items = [
-          {
-            key: IModeAction.UPDATE,
-            onClick: () => {
-              handleAction(IModeAction.UPDATE, record);
-            },
-            label: <Text>Sửa</Text>,
-          },
-          {
-            key: IModeAction.DELETE,
-            onClick: () => {
-              handleAction(IModeAction.DELETE, record);
-            },
-            label: <Text type="danger">Xóa</Text>,
-          },
-        ];
-
         return (
           <WrapperActionTable>
             {permission.canRead && (
@@ -193,18 +163,6 @@ export const useTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
                 }}
               />
             )}
-            <div className="w-5">
-              {permission.canUpdate ||
-                (permission.canDelete && (
-                  <Dropdown
-                    menu={{ items: items }}
-                    placement="bottom"
-                    trigger={['click']}
-                  >
-                    <MoreVertical size={16} />
-                  </Dropdown>
-                ))}
-            </div>
           </WrapperActionTable>
         );
       },
