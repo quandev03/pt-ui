@@ -34,6 +34,7 @@ export const NumberInput: React.FC<NumberInputProps> = ({
     <div className="relative">
       <Input hidden />
       <NumericFormat
+        disabled={rest.disabled}
         allowNegative={false}
         decimalScale={0}
         isAllowed={({ floatValue }) =>

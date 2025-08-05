@@ -52,4 +52,29 @@ export const pathRoutes = {
   // Quản lý số
   manageNumber: '/manage-number',
   lookupNumber: '/lookup-number', //tra cứu số
+  // Quản lý danh mục
+  category: '/category',
+
+  list_of_service_package: '/list-of-service-package',
+  list_of_service_package_add: '/list-of-service-package/add',
+  list_of_service_package_edit: (id?: IStringNumber) =>
+    `/list-of-service-package/edit/${id ? id : ':id'}`,
+  list_of_service_package_view: (id?: IStringNumber) =>
+    `/list-of-service-package/view/${id ? id : ':id'}`,
+
+  //========= Danh mục đối tác
+  partnerCatalog: '/partner-catalog',
+  partnerCatalogAdd: '/partner-catalog/add',
+  partnerCatalogEdit: (id?: IStringNumber) =>
+    `/partner-catalog/edit/${id ? id : ':id'}`,
+  partnerCatalogView: (id?: IStringNumber) =>
+    `/partner-catalog/view/${id ? id : ':id'}`,
+  partnerCatalogUserManagement: (orgCode = ':orgCode') =>
+    `/partner-catalog/user-management/${orgCode}`,
+  partnerCatalogUserAdd: (orgCode = ':orgCode') =>
+    `/partner-catalog/user-management/${orgCode}/add`,
+  partnerCatalogUserEdit: (orgCode = ':orgCode', id = ':id') =>
+    `/partner-catalog/user-management/${orgCode}/edit/${id}`,
+  partnerCatalogUserView: (orgCode = ':orgCode', id = ':id') =>
+    `/partner-catalog/user-management/${orgCode}/view/${id}`,
 };

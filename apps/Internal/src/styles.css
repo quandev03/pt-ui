@@ -229,6 +229,12 @@ button {
   }
 }
 
+.ant-form-item {
+  .ant-form-item-label {
+    text-align: start;
+  }
+}
+
 .ant-form-item-required {
   position: relative;
 
@@ -240,5 +246,25 @@ button {
     position: absolute;
     margin-inline-end: -10px !important;
     right: 0;
+  }
+}
+
+.ant-form-horizontal {
+  .ant-form-item-required {
+    margin-right: 12px;
+  }
+
+  ::before {
+    right: 13px;
+    top: 7px;
+  }
+}
+
+.ant-form-vertical {
+  .ant-form-item-required {
+    &::after {
+      margin-inline-start: 0 !important;
+      margin-inline-end: 0 !important;
+    }
   }
 }

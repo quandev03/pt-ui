@@ -125,7 +125,7 @@ export const checkIfImage = async (url: string): Promise<boolean> => {
 export const getActionMode = (value: string | undefined) => {
   switch (value) {
     case IModeAction.CREATE:
-      return 'Tạo';
+      return 'Thêm mới';
     case IModeAction.UPDATE:
       return 'Chỉnh sửa';
     case IModeAction.READ:
