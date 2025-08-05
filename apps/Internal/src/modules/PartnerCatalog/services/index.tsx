@@ -12,12 +12,15 @@ import {
 } from '../types';
 import { safeApiClient } from 'apps/Internal/src/services';
 import { IPage } from '@vissoft-react/common';
-import { prefixSaleService } from 'apps/Internal/src/constants';
+import {
+  prefixAuthService,
+  prefixSaleService,
+} from 'apps/Internal/src/constants';
 import type { AxiosRequestHeaders } from 'axios';
 export const PartnerCatalogService = {
   getOrganizationPartner: (params: IPartnerCatalogParams) => {
     return safeApiClient.get<IPage<ICatalogPartner>>(
-      `${prefixSaleService}/organization-partner`,
+      `${prefixAuthService}/api/organization-partner`,
       {
         params,
       }
@@ -25,13 +28,13 @@ export const PartnerCatalogService = {
   },
   getProductByCategory: (params: IParamsProductByCategory) => {
     return safeApiClient.get<IPage<any>>(
-      `${prefixSaleService}/product/search-flat`,
+      `${prefixAuthService}/api/product/search-flat`,
       { params }
     );
   },
   getProductAuthorization: (id: string | number) => {
     return safeApiClient.get<IProductAuthorization[]>(
-      `${prefixSaleService}/organization-partner/${id}/organization-product`
+      `${prefixAuthService}/api/organization-partner/${id}/organization-product`
     );
   },
   createProductAuthorization: (data: {
@@ -40,13 +43,13 @@ export const PartnerCatalogService = {
   }) => {
     const { id, payload } = data;
     return safeApiClient.post(
-      `${prefixSaleService}/organization-partner/${id}/organization-product`,
+      `${prefixAuthService}/api/organization-partner/${id}/organization-product`,
       payload
     );
   },
   getOrganizationPartnerDetail: async (id: string | number) => {
     const res = await safeApiClient.get<IOrganizationUnitDTO>(
-      `${prefixSaleService}/organization-partner/${id}`
+      `${prefixAuthService}/api/organization-partner/${id}`
     );
     if (res.contractNoFileUrl) {
       const contractNoFileUrl = await PartnerCatalogService.getPreviewFile(
@@ -99,10 +102,10 @@ export const PartnerCatalogService = {
     orgCode: string;
   }) => {
     const resPromise = safeApiClient.put<IOrganizationUnitDTO>(
-      `${prefixSaleService}/organization-partner/${id}/update-status?status=${status}`
+      `${prefixAuthService}/api/organization-partner/${id}/update-status?status=${status}`
     );
     const updateStatusClientPromise = safeApiClient.put<IOrganizationUnitDTO>(
-      `${prefixSaleService}/private/api/clients/${orgCode}/status`,
+      `${prefixAuthService}/private/api/clients/${orgCode}/status`,
       { status }
     );
     const [res] = await Promise.all([resPromise, updateStatusClientPromise]);
@@ -130,7 +133,7 @@ export const PartnerCatalogService = {
     );
 
     return safeApiClient.post<any>(
-      `${prefixSaleService}/organization-partner`,
+      `${prefixAuthService}/organization-partner`,
       formData,
       {
         headers: {
@@ -189,7 +192,7 @@ export const PartnerCatalogService = {
     formData.append('portrait', payload.portrait as Blob);
 
     return safeApiClient.post<ICCCDInfo>(
-      `${prefixSaleService}/activation-info?cardType=1`,
+      `${prefixAuthService}/activation-info?cardType=1`,
       formData,
       {
         headers: {
@@ -200,11 +203,11 @@ export const PartnerCatalogService = {
   },
   getStockPermission: (id: string | number) => {
     return safeApiClient.get<IStockNumber[]>(
-      `${prefixSaleService}/organization-partner/${id}/stock-permission`
+      `${prefixAuthService}/organization-partner/${id}/stock-permission`
     );
   },
   getStockNumber: (params: IStockNumberParams) => {
-    const url = `${prefixSaleService}/stock-isdn-org/find/by-stock-type?${params}`;
+    const url = `${prefixAuthService}/stock-isdn-org/find/by-stock-type?${params}`;
     return safeApiClient.get<IPage<IStockNumber>>(url);
   },
   createStockPermission: (payload: {
@@ -213,12 +216,12 @@ export const PartnerCatalogService = {
   }) => {
     const { data, id } = payload;
     return safeApiClient.post<IStockNumber>(
-      `${prefixSaleService}/organization-partner/${id}/stock-permission`,
+      `${prefixAuthService}/organization-partner/${id}/stock-permission`,
       data
     );
   },
   getPreviewFile: (uri: string) => {
-    return safeApiClient.get<Blob>(`${prefixSaleService}/file/${uri}`, {
+    return safeApiClient.get<Blob>(`${prefixAuthService}/file/${uri}`, {
       responseType: 'blob',
     });
   },

@@ -1,19 +1,4 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { useRolesByRouter } from 'apps/Internal/src/hooks/useRolesByRouter';
-import ModalStockPermission from 'apps/Internal/src/modules/PartnerCatalog/components/ModalStockPermission';
-import { includes } from 'lodash';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import ProductAuthorizationModal from '../components/ProductAuthorizationModal';
-import { getColumnsTablePartnerCatalog } from '../constants';
 import {
-  useGetOrganizationPartner,
-  useUpdateStatusPartner,
-} from '../queryHooks';
-import usePartnerStore from '../stores';
-import { IOrganizationUnitDTO } from '../types';
-import {
-  ApprovalProcessKey,
   CButtonAdd,
   CInput,
   cleanParams,
@@ -23,11 +8,20 @@ import {
   IModeAction,
   LayoutList,
   ModalConfirm,
-  TitleHeader,
 } from '@vissoft-react/common';
 import { Form, Tooltip } from 'antd';
+import { useRolesByRouter } from 'apps/Internal/src/hooks/useRolesByRouter';
 import { pathRoutes } from 'apps/Internal/src/routers';
+import { includes } from 'lodash';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useConfigAppStore from '../../Layouts/stores';
+import {
+  useGetOrganizationPartner,
+  useUpdateStatusPartner,
+} from '../queryHooks';
+import usePartnerStore from '../stores';
+import { IOrganizationUnitDTO } from '../types';
 
 export const PartnerCatalogList = () => {
   const [searchParams] = useSearchParams();
@@ -174,6 +168,7 @@ export const PartnerCatalogList = () => {
             </Form.Item>
           </Tooltip>
         }
+        // dataTable={dataTable}
       />
     </>
   );
