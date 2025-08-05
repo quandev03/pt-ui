@@ -1,11 +1,10 @@
-import { AnyElement, IPage } from '@vissoft-react/common';
+import { IPage } from '@vissoft-react/common';
 import {
   prefixAuthService,
   prefixSaleService,
 } from '../../../../src/constants';
 import { safeApiClient } from '../../../../src/services';
 import {
-  IBulkPackageSalePayload,
   IPackage,
   IPackageSaleItem,
   IPackageSaleParams,
@@ -23,19 +22,12 @@ export const packageSaleService = {
       }
     );
   },
-  createSinglePackageSale: async (data: IPayloadRegister) => {
-    const createAgencyRes = await safeApiClient.post<AnyElement>(
-      `${prefixAuthService}/api/package-sale`,
+  addPackageSingle: async (data: IPayloadRegister) => {
+    const res = await safeApiClient.post<IPayloadRegister>(
+      `${prefixSaleService}/sale-package/register-package`,
       data
     );
-    return createAgencyRes;
-  },
-  createBulkPackageSale: async (data: IBulkPackageSalePayload) => {
-    const createAgencyRes = await safeApiClient.post<AnyElement>(
-      `${prefixAuthService}/api/package-sale`,
-      data
-    );
-    return createAgencyRes;
+    return res;
   },
   checkIsdnAndGetPackage: async (payload: IPayloadCheckIsdnAndGetPackage) => {
     const res = await safeApiClient.get<IPackage[]>(

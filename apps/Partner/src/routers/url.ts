@@ -32,6 +32,6 @@ export const pathRoutes = {
   // Quản lý bán hàng
   saleManagement: '/sale-management',
   salePackage: '/sell-bundle-for-existing-sub',
-  salePackageAddSingle: '/sell-bundle-for-existing-sub/add-single',
-  salePackageAddBulk: '/sell-bundle-for-existing-sub/add-bulk',
+  salePackageAddSingle: '/sell-bundle-for-existing-sub/single',
+  salePackageAddBulk: '/sell-bundle-for-existing-sub/bulk',
 };

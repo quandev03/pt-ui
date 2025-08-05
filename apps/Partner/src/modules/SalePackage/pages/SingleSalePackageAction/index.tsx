@@ -14,7 +14,6 @@ import { ModalOtpMemo } from '../components/ModalOtp';
 export const SingleSalePackageAction = () => {
   const {
     form,
-    loadingAdd,
     handleClose,
     actionMode,
     prefixIsdn,
@@ -22,6 +21,10 @@ export const SingleSalePackageAction = () => {
     optionPackage,
     loadingCheckIsdnAndGetPackage,
     handleOpenOtp,
+    handleCancel,
+    openOtp,
+    handleCheckNumberPhone,
+    handleCloseOtp,
   } = useLogicActionSingleSalePackage();
   return (
     <div className="flex flex-col w-full h-full">
@@ -59,6 +62,9 @@ export const SingleSalePackageAction = () => {
                     setOptionPackage([]);
                     form.setFieldValue('idPackage', null);
                   }}
+                  onBlur={(e) => {
+                    handleCheckNumberPhone(e);
+                  }}
                 />
               </Form.Item>
             </Col>
@@ -80,17 +86,13 @@ export const SingleSalePackageAction = () => {
           </Row>
         </div>
         <div className="flex gap-4 flex-wrap justify-end mt-7">
-          {actionMode === IModeAction.CREATE && (
-            <CButton
-              onClick={() => {
-                form.submit();
-              }}
-              loading={loadingAdd}
-              disabled={loadingAdd}
-            >
-              Thực hiện
-            </CButton>
-          )}
+          <CButton
+            onClick={() => {
+              form.submit();
+            }}
+          >
+            Thực hiện
+          </CButton>
           <CButtonClose onClick={handleClose} />
         </div>
       </Form>

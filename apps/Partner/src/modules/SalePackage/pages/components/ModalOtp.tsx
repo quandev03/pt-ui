@@ -1,7 +1,7 @@
 import { useForm } from 'antd/es/form/Form';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSellSinglePackageStore } from '../../store';
-import { useSupportAddSinglePackageSale } from '../../hooks';
+import { useAddPackageSingle } from '../../hooks';
 import {
   CButton,
   CInput,
@@ -10,10 +10,10 @@ import {
   useGetDataFromQueryKey,
   validateForm,
 } from '@vissoft-react/common';
-import { Col, Form, Row } from 'antd';
 import { REACT_QUERY_KEYS } from '../../../../../src/constants/query-key';
 import { handleConvertIsdn } from '../../utils';
 import { IPayloadRegister } from '../../types';
+import { Col, Form, Row } from 'antd';
 
 const ModalOtp = ({
   open,
@@ -30,7 +30,7 @@ const ModalOtp = ({
   const [isDisabled, setIsDisabled] = useState(true);
   const { count, setCount, dataGenOtp } = useSellSinglePackageStore();
   const { mutate: addPackageSingle, isPending: loadingAdd } =
-    useSupportAddSinglePackageSale(() => {
+    useAddPackageSingle(() => {
       handleSuccess();
       form.resetFields();
     });
@@ -44,6 +44,7 @@ const ModalOtp = ({
       setCount(count - 1);
     }, 1000);
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count]);
   const userLogin = useGetDataFromQueryKey<IUserInfo>([
     REACT_QUERY_KEYS.GET_PROFILE,

@@ -1,21 +1,15 @@
-import {
-  AnyElement,
-  setFieldError,
-  useActionMode,
-} from '@vissoft-react/common';
+import { AnyElement, useActionMode } from '@vissoft-react/common';
 import { Form } from 'antd';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSupportAddSinglePackageSale } from '../../hooks';
-import { ISinglePackageSalePayload } from '../../types';
 import {
   usePrefixIsdnQuery,
   usePrefixIsdnRegex,
 } from '../../../../../src/hooks/usePrefixIsdnRegex';
 import { useCheckIsdnAndGetPackage } from '../../hooks/useCheckIsdnAndGetPackage';
-import { handleConvertIsdn } from '../../utils';
 import { useGenOtp } from '../../hooks/useGenOtp';
 import { useSellSinglePackageStore } from '../../store';
+import { handleConvertIsdn } from '../../utils';
 
 export const useLogicActionSingleSalePackage = () => {
   const navigate = useNavigate();
@@ -49,6 +43,11 @@ export const useLogicActionSingleSalePackage = () => {
       }))
     );
   });
+  const handleCancel = useCallback(() => {
+    form.resetFields();
+    setOpenOtp(false);
+    reset();
+  }, [form, reset]);
   const handleCheckNumberPhone = useCallback(
     (e: AnyElement) => {
       const value = e.target.value.trim();
@@ -93,26 +92,6 @@ export const useLogicActionSingleSalePackage = () => {
     },
     [form, checkIsdnAndGetPackage, regexPrefixIsdn]
   );
-  const { mutate: createAgency, isPending: loadingAdd } =
-    useSupportAddSinglePackageSale(
-      () => {
-        handleClose();
-        form.resetFields();
-      },
-      (e) => {
-        setFieldError(form, e);
-      }
-    );
-
-  const handleFinish = useCallback(
-    (values: ISinglePackageSalePayload) => {
-      const data: ISinglePackageSalePayload = {
-        ...values,
-      };
-      createAgency(data);
-    },
-    [createAgency]
-  );
   const { mutate: genOtp } = useGenOtp((data) => {
     const { idPackage, isdn, typePayment } = form.getFieldsValue();
     setDataGenOtp({
@@ -145,10 +124,11 @@ export const useLogicActionSingleSalePackage = () => {
   const handleClose = useCallback(() => {
     navigate(-1);
   }, [navigate]);
+  const handleCloseOtp = useCallback(() => {
+    setOpenOtp(false);
+  }, [setOpenOtp]);
   return {
     form,
-    loadingAdd,
-    handleFinish,
     handleClose,
     actionMode,
     prefixIsdn,
@@ -158,5 +138,8 @@ export const useLogicActionSingleSalePackage = () => {
     openOtp,
     setOpenOtp,
     handleOpenOtp,
+    handleCancel,
+    handleCheckNumberPhone,
+    handleCloseOtp,
   };
 };

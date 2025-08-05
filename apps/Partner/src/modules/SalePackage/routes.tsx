@@ -9,4 +9,11 @@ export const routesPackageSaleList: RouteObject[] = [
       return { Component: PackageSaleList };
     },
   },
+  {
+    path: pathRoutes.salePackageAddSingle,
+    lazy: async () => {
+      const { SingleSalePackageAction } = await import('./pages');
+      return { Component: SingleSalePackageAction };
+    },
+  },
 ];
