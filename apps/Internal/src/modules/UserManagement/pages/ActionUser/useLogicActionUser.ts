@@ -1,5 +1,6 @@
 import {
   IModeAction,
+  MESSAGE,
   ModalConfirm,
   StatusEnum,
   cleanUpPhoneNumber,
@@ -10,13 +11,10 @@ import {
 import { Form } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { pathRoutes } from '../../../../routers';
 import { IGroups, IRoleItem } from '../../../../types';
 import {
-  useCheckAllowDelete,
   useGetAllGroupUser,
   useGetAllRole,
-  useListOrgUnit,
   useSupportAddUser,
   useSupportDeleteUser,
   useSupportGetUser,
@@ -133,14 +131,6 @@ export const useLogicActionUser = () => {
     return options;
   }, [listRole, actionMode, roleInActive]);
 
-  const { data: listOrganization } = useListOrgUnit({ status: 1 });
-  const optionOrganization = useMemo(() => {
-    if (!listOrganization) {
-      return [];
-    }
-    return listOrganization;
-  }, [listOrganization]);
-
   const { mutate: createUser, isPending: loadingAdd } = useSupportAddUser(
     () => {
       if (isSubmitBack) {
@@ -211,35 +201,36 @@ export const useLogicActionUser = () => {
   const handleClose = useCallback(() => {
     navigate(-1);
   }, [navigate]);
-
-  const { mutate: deleteUser, isPending: loadingDelete } = useSupportDeleteUser(
-    () => {
-      navigate(pathRoutes.userManager as string);
-    }
+  const { mutate: deleteUser } = useSupportDeleteUser();
+  const handleDelete = useCallback(
+    (id: string) => {
+      ModalConfirm({
+        message: MESSAGE.G05,
+        handleConfirm: () => {
+          deleteUser(id);
+        },
+      });
+    },
+    [deleteUser]
   );
-  const { mutate: checkAllowDelete } = useCheckAllowDelete((id) => {
-    deleteUser(id);
-  });
   return {
     form,
     loadingGetUser,
     userDetail,
     optionGroups,
     optionListRole,
-    optionOrganization,
     loadingAdd,
     loadingUpdate,
-    loadingDelete,
-    checkAllowDelete,
-    handleFinish,
-    handleClose,
     Title,
     actionMode,
-    setIsSubmitBack,
     loginMethod,
     roleInActive,
     groupsInActive,
     setRoleInActive,
     setGroupsInActive,
+    handleFinish,
+    handleClose,
+    setIsSubmitBack,
+    handleDelete,
   };
 };

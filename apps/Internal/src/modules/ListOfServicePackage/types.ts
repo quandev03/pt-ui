@@ -7,7 +7,7 @@ export interface IListOfServicePackage {
   pckCode: string;
   pckName: string;
   packagePrice: number;
-  status: string;
+  status: number;
   description: string;
 }
 export interface IListOfServicePackageForm {

@@ -1,31 +1,34 @@
 import {
   CButtonDetail,
-  CSwitch,
   CTag,
+  CTooltip,
   decodeSearchParams,
   formatCurrencyVND,
+  formatDate,
+  formatDateTime,
   IModeAction,
   RenderCell,
+  StatusEnum,
   Text,
+  TypeTagEnum,
   usePermissions,
   WrapperActionTable,
 } from '@vissoft-react/common';
-import { Dropdown, TableColumnsType, Tooltip } from 'antd';
+import dayjs from 'dayjs';
+
+import { Dropdown, TableColumnsType } from 'antd';
+import { MoreVertical } from 'lucide-react';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useConfigAppStore from '../../Layouts/stores';
-import { AnyARecord } from 'dns';
 import { IListOfServicePackage } from '../types';
-import { MoreVertical } from 'lucide-react';
 
 export const useTable = ({
   handleView,
   handleEdit,
-  handleDelete,
 }: {
   handleView: (id: string) => void;
   handleEdit: (id: string) => void;
-  handleDelete: (id: string) => void;
 }) => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
@@ -43,7 +46,7 @@ export const useTable = ({
             <RenderCell
               value={index + 1 + params.page * params.size}
               tooltip={index + 1 + params.page * params.size}
-              disabled={!record?.status}
+              disabled={record?.status !== StatusEnum.ACTIVE}
             />
           );
         },
@@ -52,16 +55,28 @@ export const useTable = ({
         title: 'Mã gói cước',
         dataIndex: 'pckCode',
         width: 150,
-        render: (value: string) => {
-          return <RenderCell value={value} tooltip={value} />;
+        render: (value: string, record: IListOfServicePackage) => {
+          return (
+            <RenderCell
+              disabled={record?.status !== StatusEnum.ACTIVE}
+              value={value}
+              tooltip={value}
+            />
+          );
         },
       },
       {
         title: 'Tên gói cước',
         dataIndex: 'pckName',
         width: 150,
-        render: (value: string) => {
-          return <RenderCell value={value} tooltip={value} />;
+        render: (value: string, record: IListOfServicePackage) => {
+          return (
+            <RenderCell
+              disabled={record?.status !== StatusEnum.ACTIVE}
+              value={value}
+              tooltip={value}
+            />
+          );
         },
       },
       {
@@ -69,11 +84,12 @@ export const useTable = ({
         dataIndex: 'packagePrice',
         width: 150,
         align: 'right',
-        render: (value: string) => {
+        render: (value: string, record: IListOfServicePackage) => {
           return (
             <RenderCell
               value={formatCurrencyVND(value)}
               tooltip={formatCurrencyVND(value)}
+              disabled={record?.status !== StatusEnum.ACTIVE}
             />
           );
         },
@@ -82,24 +98,43 @@ export const useTable = ({
         title: 'Người tạo',
         dataIndex: 'createdBy',
         width: 150,
-        render: (value: string) => {
-          return <RenderCell value={value} tooltip={value} />;
+        render: (value: string, record: IListOfServicePackage) => {
+          return (
+            <RenderCell
+              disabled={record?.status !== StatusEnum.ACTIVE}
+              value={value}
+              tooltip={value}
+            />
+          );
         },
       },
       {
         title: 'Ngày tạo',
         dataIndex: 'createdDate',
         width: 150,
-        render: (value: string) => {
-          return <RenderCell value={value} tooltip={value} />;
+        render: (value: string, record: IListOfServicePackage) => {
+          const text = value ? dayjs(value).format(formatDate) : '';
+          return (
+            <RenderCell
+              disabled={record?.status !== StatusEnum.ACTIVE}
+              value={text}
+              tooltip={value ? dayjs(value).format(formatDateTime) : ''}
+            />
+          );
         },
       },
       {
         title: 'Người cập nhật',
         dataIndex: 'modifiedBy',
         width: 150,
-        render: (value: string) => {
-          return <RenderCell value={value} tooltip={value} />;
+        render: (value: string, record: IListOfServicePackage) => {
+          return (
+            <RenderCell
+              disabled={record?.status !== StatusEnum.ACTIVE}
+              value={value}
+              tooltip={value}
+            />
+          );
         },
       },
       {
@@ -108,7 +143,24 @@ export const useTable = ({
         width: 180,
         align: 'left',
         render(value) {
-          return <RenderCell value={value ? 'Hoạt động' : 'Không hoạt động'} />;
+          return (
+            <CTooltip
+              title={
+                value === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động'
+              }
+              placement="topLeft"
+            >
+              <CTag
+                type={
+                  value === StatusEnum.ACTIVE
+                    ? TypeTagEnum.SUCCESS
+                    : TypeTagEnum.ERROR
+                }
+              >
+                {value === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động'}
+              </CTag>
+            </CTooltip>
+          );
         },
       },
       {
@@ -125,14 +177,7 @@ export const useTable = ({
               },
               label: <Text>Sửa</Text>,
             },
-            {
-              key: IModeAction.DELETE,
-              onClick: () => {
-                handleDelete(record.id);
-              },
-              label: <Text type="danger">Xóa</Text>,
-            },
-          ];
+          ].filter((item) => permission.getAllPermissions().includes(item.key));
 
           return (
             <WrapperActionTable>
@@ -144,16 +189,15 @@ export const useTable = ({
                 />
               )}
               <div className="w-5">
-                {permission.canUpdate ||
-                  (permission.canDelete && (
-                    <Dropdown
-                      menu={{ items: items }}
-                      placement="bottom"
-                      trigger={['click']}
-                    >
-                      <MoreVertical size={16} />
-                    </Dropdown>
-                  ))}
+                {permission.canUpdate && (
+                  <Dropdown
+                    menu={{ items: items }}
+                    placement="bottom"
+                    trigger={['click']}
+                  >
+                    <MoreVertical size={16} />
+                  </Dropdown>
+                )}
               </div>
             </WrapperActionTable>
           );

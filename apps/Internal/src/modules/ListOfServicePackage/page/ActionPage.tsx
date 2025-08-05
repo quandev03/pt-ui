@@ -1,7 +1,5 @@
 import {
-  AnyElement,
   CButtonClose,
-  CButtonDelete,
   CButtonEdit,
   CButtonSave,
   CButtonSaveAndAdd,
@@ -9,7 +7,6 @@ import {
   CSwitch,
   CTextInfo,
   EActionSubmit,
-  EStatus,
   getActionMode,
   getBase64,
   ImageFileType,
@@ -21,26 +18,15 @@ import {
   useActionMode,
   validateForm,
 } from '@vissoft-react/common';
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  Row,
-  Space,
-  Spin,
-  Switch,
-  Upload,
-} from 'antd';
+import { Button, Card, Col, Form, Row, Space, Spin, Upload } from 'antd';
 import { RcFile } from 'antd/es/upload';
 import { UploadIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { IListOfServicePackageForm } from '../types';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useView } from '../hook/useView';
-import { useDelete } from '../hook/useDelete';
-import { useEdit } from '../hook/useEdit';
 import { useAdd } from '../hook/useAdd';
+import { useEdit } from '../hook/useEdit';
+import { useView } from '../hook/useView';
+import { IListOfServicePackageForm } from '../types';
 
 export const ActionPage = () => {
   const actionMode = useActionMode();
@@ -49,9 +35,6 @@ export const ActionPage = () => {
   const [form] = Form.useForm();
   const { id } = useParams();
   const { data: dataView } = useView(id ?? '');
-  const { mutate: mutateDelete } = useDelete(() => {
-    navigate(-1);
-  });
   const { mutate: mutateEdit } = useEdit();
   const { mutate: mutateAdd } = useAdd(() => {
     if (type === EActionSubmit.SAVE_AND_ADD) {
@@ -136,9 +119,6 @@ export const ActionPage = () => {
     },
     [form, id, mutateAdd, mutateEdit]
   );
-  const handleDelete = useCallback(() => {
-    mutateDelete(id ?? '');
-  }, [mutateDelete, id]);
   useEffect(() => {
     if (dataView) {
       form.setFieldsValue({
@@ -159,7 +139,19 @@ export const ActionPage = () => {
         >
           <Card className="mb-2">
             <CTextInfo>Thông tin gói cước</CTextInfo>
-            <Row className="mt-2" gutter={[24, 12]}>
+            <Row className="mt-2" gutter={[30, 0]}>
+              <Col span={12}>
+                <Form.Item label="Hoạt động" name="status">
+                  <CSwitch
+                    disabled={actionMode !== IModeAction.UPDATE}
+                    checked={true}
+                    onChange={(value) => {
+                      console.log('value', value);
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12} />
               <Col span={12}>
                 <Form.Item
                   rules={[validateForm.required]}
@@ -262,17 +254,6 @@ export const ActionPage = () => {
                   </Upload>
                 </Form.Item>
               </Col>
-              <Col span={12}>
-                <Form.Item label="Hoạt động" name="status">
-                  <CSwitch
-                    disabled={actionMode !== IModeAction.UPDATE}
-                    checked={true}
-                    onChange={(value) => {
-                      console.log('value', value);
-                    }}
-                  />
-                </Form.Item>
-              </Col>
             </Row>
           </Card>
           <Row justify="end" className="mt-4">
@@ -296,7 +277,6 @@ export const ActionPage = () => {
               )}
               {actionMode === IModeAction.READ && (
                 <>
-                  <CButtonDelete onClick={handleDelete}>Xóa</CButtonDelete>
                   <CButtonEdit
                     htmlType="submit"
                     onClick={() => setType(EActionSubmit.SAVE)}

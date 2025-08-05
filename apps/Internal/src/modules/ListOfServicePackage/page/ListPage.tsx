@@ -42,17 +42,11 @@ export const ListPage = () => {
     [navigate]
   );
   const { mutate: mutateDelete } = useDelete();
-  const handleDelete = useCallback(
-    (id: string) => {
-      mutateDelete(id);
-    },
-    [mutateDelete]
-  );
+  const handleDelete = useCallback((id: string) => {}, [mutateDelete]);
 
   const { columns } = useTable({
     handleView,
     handleEdit,
-    handleDelete,
   });
   return (
     <>

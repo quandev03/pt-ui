@@ -18,12 +18,8 @@ export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.accountAuthorization as string,
     label: 'Quản lý tài khoản',
+    hasChild: true,
     parentId: pathRoutes.systemManager,
-  },
-  {
-    key: pathRoutes.roleManager as string,
-    label: 'Vai trò & Phân quyền',
-    parentId: pathRoutes.accountAuthorization as string,
   },
   {
     key: pathRoutes.systemUserManager as string,
@@ -62,6 +58,21 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.partnerCatalog,
     label: 'Danh mục đối tác',
     parentId: pathRoutes.category,
+  },
+  {
+    key: pathRoutes.groupUserManager as string,
+    label: 'Nhóm tài khoản',
+    parentId: pathRoutes.accountAuthorization as string,
+  },
+  {
+    key: pathRoutes.roleManager as string,
+    label: 'Vai trò & Phân quyền',
+    parentId: pathRoutes.accountAuthorization as string,
+  },
+  {
+    key: pathRoutes.rolePartnerManager as string,
+    label: 'Vai trò & Phân quyền đối tác',
+    parentId: pathRoutes.accountAuthorization as string,
   },
 ];
 export const singlePopActions = ['add'];
