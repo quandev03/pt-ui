@@ -1,21 +1,22 @@
-import { Text, WrapperActionTable } from '@react/commons/Template/style';
 import {
-  ACTION_MODE_ENUM,
+  CButtonDetail,
+  CTag,
+  formatDate,
+  formatDateTime,
+  IModeAction,
   IParamsRequest,
-  ModelStatus,
-} from '@react/commons/types';
-import { ActionsTypeEnum } from '@react/constants/app';
-import { formatDate, formatDateTime } from '@react/constants/moment';
+  StatusEnum,
+  Text,
+  TypeTagEnum,
+  usePermissions,
+  WrapperActionTable,
+} from '@vissoft-react/common';
 import { Dropdown, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { ReactComponent as IconMore } from 'apps/Internal/src/assets/images/IconMore.svg';
 import dayjs from 'dayjs';
-import { includes } from 'lodash';
-import { FormattedMessage } from 'react-intl';
+import { MoreVertical } from 'lucide-react';
+import useConfigAppStore from '../../Layouts/stores';
 import { IRoleItem } from '../types';
-import CTag from '@react/commons/Tag';
-import { CButtonDetail } from '@react/commons/Button';
-import { ColorList } from '@react/constants/color';
 
 export const DEFAULT_VALUE_ROLE: IRoleItem = {
   id: '',
@@ -32,38 +33,39 @@ export const DEFAULT_VALUE_ROLE: IRoleItem = {
 
 export const getColumnsTableRole = (
   params: IParamsRequest,
-  listRoles: ActionsTypeEnum[],
   {
     onDelete,
     onAction,
   }: {
-    onAction: (type: ACTION_MODE_ENUM, record: IRoleItem) => void;
+    onAction: (type: IModeAction, record: IRoleItem) => void;
     onDelete: (record: IRoleItem) => void;
   }
 ): ColumnsType<IRoleItem> => {
+  const { menuData } = useConfigAppStore();
+  const permission = usePermissions(menuData);
   return [
     {
-      title: <FormattedMessage id="common.stt" />,
+      title: 'STT',
       align: 'left',
       width: 50,
       fixed: 'left',
       render(_, record, index) {
         return (
-          <Text disabled={record.status === ModelStatus.INACTIVE}>
+          <Text disabled={record.status === StatusEnum.INACTIVE}>
             {index + 1 + params.page * params.size}
           </Text>
         );
       },
     },
     {
-      title: <FormattedMessage id="role.code" />,
+      title: 'Mã vai trò',
       dataIndex: 'code',
       align: 'left',
       width: 100,
       render(value, record) {
         return (
           <Tooltip title={value} placement="topLeft">
-            <Text disabled={record.status === ModelStatus.INACTIVE}>
+            <Text disabled={record.status === StatusEnum.INACTIVE}>
               {value}
             </Text>
           </Tooltip>
@@ -71,14 +73,14 @@ export const getColumnsTableRole = (
       },
     },
     {
-      title: <FormattedMessage id="role.codeName" />,
+      title: 'Tên vai trò',
       dataIndex: 'name',
       align: 'left',
       width: 100,
       render(value, record) {
         return (
           <Tooltip title={value} placement="topLeft">
-            <Text disabled={record.status === ModelStatus.INACTIVE}>
+            <Text disabled={record.status === StatusEnum.INACTIVE}>
               {value}
             </Text>
           </Tooltip>
@@ -86,14 +88,14 @@ export const getColumnsTableRole = (
       },
     },
     {
-      title: <FormattedMessage id="common.creator" />,
+      title: 'Người tạo',
       dataIndex: 'createdBy',
       align: 'left',
       width: 200,
       render(value, record) {
         return (
           <Tooltip title={value} placement="topLeft">
-            <Text disabled={record.status === ModelStatus.INACTIVE}>
+            <Text disabled={record.status === StatusEnum.INACTIVE}>
               {value}
             </Text>
           </Tooltip>
@@ -101,7 +103,7 @@ export const getColumnsTableRole = (
       },
     },
     {
-      title: <FormattedMessage id="common.creationDate" />,
+      title: 'Ngày tạo',
       dataIndex: 'createdDate',
       align: 'left',
       width: 100,
@@ -111,7 +113,7 @@ export const getColumnsTableRole = (
             title={dayjs(value).format(formatDateTime)}
             placement="topLeft"
           >
-            <Text disabled={record.status === ModelStatus.INACTIVE}>
+            <Text disabled={record.status === StatusEnum.INACTIVE}>
               {dayjs(value).format(formatDate)}
             </Text>
           </Tooltip>
@@ -119,14 +121,14 @@ export const getColumnsTableRole = (
       },
     },
     {
-      title: <FormattedMessage id="common.updater" />,
+      title: 'Người cập nhật',
       dataIndex: 'lastModifiedBy',
       align: 'left',
       width: 200,
       render(value, record) {
         return (
           <Tooltip title={value} placement="topLeft">
-            <Text disabled={record.status === ModelStatus.INACTIVE}>
+            <Text disabled={record.status === StatusEnum.INACTIVE}>
               {value}
             </Text>
           </Tooltip>
@@ -134,7 +136,7 @@ export const getColumnsTableRole = (
       },
     },
     {
-      title: <FormattedMessage id="common.updatedDate" />,
+      title: 'Ngày cập nhật',
       dataIndex: 'lastModifiedDate',
       align: 'left',
       width: 100,
@@ -144,7 +146,7 @@ export const getColumnsTableRole = (
             title={dayjs(value).format(formatDateTime)}
             placement="topLeft"
           >
-            <Text disabled={record.status === ModelStatus.INACTIVE}>
+            <Text disabled={record.status === StatusEnum.INACTIVE}>
               {dayjs(value).format(formatDate)}
             </Text>
           </Tooltip>
@@ -152,7 +154,7 @@ export const getColumnsTableRole = (
       },
     },
     {
-      title: <FormattedMessage id="common.status" />,
+      title: 'Trạng thái',
       dataIndex: 'status',
       align: 'left',
       width: 100,
@@ -160,79 +162,65 @@ export const getColumnsTableRole = (
         return (
           <Tooltip
             title={
-              <FormattedMessage
-                id={value ? 'common.active' : 'common.inactive'}
-              />
+              value === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động'
             }
             placement="topLeft"
           >
             <CTag
-              color={
-                value === ModelStatus.ACTIVE
-                  ? ColorList.SUCCESS
-                  : ColorList.CANCEL
+              type={
+                value === StatusEnum.ACTIVE
+                  ? TypeTagEnum.SUCCESS
+                  : TypeTagEnum.ERROR
               }
             >
-              <FormattedMessage
-                id={value ? 'common.active' : 'common.inactive'}
-              />
+              {value === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động'}
             </CTag>
           </Tooltip>
         );
       },
     },
     {
-      title: <FormattedMessage id="common.action" />,
+      title: 'Thao tác',
       align: 'center',
       width: 150,
       fixed: 'right',
       render(_, record) {
         const items = [
           {
-            key: ActionsTypeEnum.UPDATE,
+            key: IModeAction.UPDATE,
             onClick: () => {
-              onAction(ACTION_MODE_ENUM.EDIT, record);
+              onAction(IModeAction.UPDATE, record);
             },
-            label: (
-              <Text>
-                <FormattedMessage id={'common.edit'} />
-              </Text>
-            ),
+            label: <Text>Sửa</Text>,
           },
           {
-            key: ActionsTypeEnum.DELETE,
+            key: IModeAction.DELETE,
             onClick: () => {
               onDelete(record);
             },
-            label: (
-              <Text type="danger">
-                <FormattedMessage id={'common.delete'} />
-              </Text>
-            ),
+            label: <Text type="danger">Xóa</Text>,
           },
-        ].filter((item) => includes(listRoles, item?.key));
+        ].filter((item) => permission.getAllPermissions().includes(item.key));
         return (
           <WrapperActionTable>
-            {includes(listRoles, ActionsTypeEnum.READ) && (
+            {permission.canRead && (
               <CButtonDetail
                 onClick={() => {
-                  onAction(ACTION_MODE_ENUM.VIEW, record);
+                  onAction(IModeAction.READ, record);
                 }}
               />
             )}
-             <div className="w-5">
-              {(includes(listRoles, ActionsTypeEnum.UPDATE) ||
-                includes(listRoles, ActionsTypeEnum.DELETE)) && (
+            <div className="w-5">
+              {(permission.canUpdate || permission.canDelete) && (
                 <Dropdown
                   menu={{ items: items }}
                   placement="bottom"
                   trigger={['click']}
                 >
-                  <IconMore className="iconMore" />
+                  <MoreVertical size={16} />
                 </Dropdown>
               )}
-
-             </div>
+            </div>
           </WrapperActionTable>
         );
       },

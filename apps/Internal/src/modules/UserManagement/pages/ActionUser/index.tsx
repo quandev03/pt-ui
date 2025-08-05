@@ -1,5 +1,6 @@
 import {
   CButtonClose,
+  CButtonDelete,
   CButtonEdit,
   CButtonSave,
   CButtonSaveAndAdd,
@@ -44,6 +45,7 @@ export const ActionUser = memo(() => {
     setRoleInActive,
     groupsInActive,
     setGroupsInActive,
+    handleDelete,
   } = useLogicActionUser();
   const { id } = useParams();
   const { data: INTERNAL_DEPARTMENT = [] } = useGetDepartments();
@@ -58,6 +60,7 @@ export const ActionUser = memo(() => {
           form={form}
           onFinish={handleFinish}
           labelCol={{ span: 5 }}
+          labelAlign="left"
           labelWrap={true}
           validateTrigger={['onSubmit']}
           colon={false}
@@ -125,7 +128,7 @@ export const ActionUser = memo(() => {
                 >
                   <CInput
                     placeholder="Nhập họ và tên"
-                    maxLength={100}
+                    maxLength={50}
                     disabled={actionMode === IModeAction.READ}
                     onBlur={(e) => {
                       const value = cleanUpString(e.target.value);
@@ -345,6 +348,13 @@ export const ActionUser = memo(() => {
               <CButtonEdit
                 onClick={() => {
                   navigate(pathRoutes.systemUserManagerEdit(id!));
+                }}
+              />
+            )}
+            {actionMode === IModeAction.READ && permission.canDelete && (
+              <CButtonDelete
+                onClick={() => {
+                  handleDelete(id!);
                 }}
               />
             )}

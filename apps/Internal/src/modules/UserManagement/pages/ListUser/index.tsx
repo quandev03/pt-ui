@@ -18,6 +18,7 @@ export const ListUser = memo(() => {
           name="q"
           tooltip="Nhập họ và tên hoặc email"
           placeholder="Nhập họ và tên hoặc email"
+          maxLength={100}
         />
       }
     />
