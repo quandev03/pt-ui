@@ -9,7 +9,7 @@ import { REACT_QUERY_KEYS } from '../../../constants/query-key';
 import { userServices } from '../services';
 import { IUserItem, IUserParams } from '../types';
 
-export const useGetAllRole = (params: { isPartner: boolean }) => {
+const useGetAllRole = (params: { isPartner: boolean }) => {
   return useQuery({
     queryKey: [REACT_QUERY_KEYS.GET_ALL_ROLES, params],
     queryFn: () => {
@@ -17,27 +17,15 @@ export const useGetAllRole = (params: { isPartner: boolean }) => {
     },
   });
 };
-export const useListOrgUnit = (params: { status: number }) => {
-  return useQuery({
-    queryFn: () => userServices.getListOrgUnit(params),
-    queryKey: [REACT_QUERY_KEYS.GET_LIST_ORG_UNIT, params],
-    staleTime: Infinity,
-    select: (data) =>
-      data?.map((e) => ({
-        value: e.id,
-        label: e.orgName,
-      })),
-  });
-};
 
-export const useGetUsers = (params: IUserParams) => {
+const useGetUsers = (params: IUserParams) => {
   return useQuery({
     queryKey: [REACT_QUERY_KEYS.GET_ALL_USERS, params],
     queryFn: () => userServices.getUsers(params),
   });
 };
 
-export const useGetDepartments = (status: number[] = [0, 1]) => {
+const useGetDepartments = (status: number[] = [0, 1]) => {
   return useQuery({
     queryKey: [REACT_QUERY_KEYS.GET_ALL_DEPARTMENTS],
     queryFn: () => userServices.getAllDepartment(),
@@ -54,7 +42,7 @@ export const useGetDepartments = (status: number[] = [0, 1]) => {
   });
 };
 
-export const useSupportAddUser = (
+const useSupportAddUser = (
   onSuccess: () => void,
   onError: (errorField: IFieldErrorsItem[]) => void
 ) => {
@@ -76,7 +64,7 @@ export const useSupportAddUser = (
   });
 };
 
-export function useSupportUpdateUser(
+function useSupportUpdateUser(
   onSuccess: () => void,
   onError: (errorField: IFieldErrorsItem[]) => void
 ) {
@@ -98,27 +86,29 @@ export function useSupportUpdateUser(
   });
 }
 
-export function useCheckAllowDelete(onSuccess: (is: string) => void) {
+function useCheckAllowDelete(onSuccess: (is: string) => void) {
   return useMutation({
     mutationFn: userServices.checkDeleteUser,
     onSuccess: (data, payload) => {
       if (data.isDeleteThisUser) {
         onSuccess(payload);
       } else {
-        NotificationError(
-          'Không thể xóa tài khoản được gán vị trí nhân viên kinh doanh/ AM'
-        );
+        NotificationError({
+          message:
+            'Không thể xóa tài khoản được gán vị trí nhân viên kinh doanh/ AM',
+        });
       }
     },
     onError() {
-      NotificationError(
-        'Không thể xóa tài khoản được gán vị trí nhân viên kinh doanh/ AM'
-      );
+      NotificationError({
+        message:
+          'Không thể xóa tài khoản được gán vị trí nhân viên kinh doanh/ AM',
+      });
     },
   });
 }
 
-export function useSupportDeleteUser(onSuccess?: () => void) {
+function useSupportDeleteUser(onSuccess?: () => void) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: userServices.deleteUsers,
@@ -132,7 +122,7 @@ export function useSupportDeleteUser(onSuccess?: () => void) {
   });
 }
 
-export const useSupportGetUser = (onSuccess: (data: IUserItem) => void) => {
+const useSupportGetUser = (onSuccess: (data: IUserItem) => void) => {
   return useMutation({
     mutationFn: userServices.getUser,
     onSuccess: (data) => {
@@ -141,9 +131,21 @@ export const useSupportGetUser = (onSuccess: (data: IUserItem) => void) => {
   });
 };
 
-export const useGetAllGroupUser = () => {
+const useGetAllGroupUser = () => {
   return useQuery({
     queryKey: ['useGetAllGroupUser'],
     queryFn: userServices.getAllGroupUsers,
   });
+};
+
+export {
+  useCheckAllowDelete,
+  useGetAllGroupUser,
+  useGetAllRole,
+  useGetDepartments,
+  useGetUsers,
+  useSupportAddUser,
+  useSupportDeleteUser,
+  useSupportGetUser,
+  useSupportUpdateUser,
 };

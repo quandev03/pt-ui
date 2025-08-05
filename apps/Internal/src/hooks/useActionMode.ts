@@ -1,16 +1,16 @@
-import { ACTION_MODE_ENUM } from '../modules/Layouts/types';
+import { IModeAction } from '@vissoft-react/common';
 import { useLocation } from 'react-router-dom';
 
 const useActionMode = () => {
   const { pathname } = useLocation();
   if (pathname.includes('view')) {
-    return ACTION_MODE_ENUM.VIEW;
+    return IModeAction.READ;
   } else if (pathname.includes('add')) {
-    return ACTION_MODE_ENUM.CREATE;
+    return IModeAction.CREATE;
   } else if (pathname.includes('edit')) {
-    return ACTION_MODE_ENUM.EDIT;
+    return IModeAction.UPDATE;
   } else {
-    return ACTION_MODE_ENUM.CREATE;
+    return IModeAction.CREATE;
   }
 };
 
