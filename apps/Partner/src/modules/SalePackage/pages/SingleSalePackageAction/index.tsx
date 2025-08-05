@@ -3,19 +3,17 @@ import {
   CButtonClose,
   CInput,
   CSelect,
-  IModeAction,
   TitleHeader,
   validateForm,
 } from '@vissoft-react/common';
 import { Col, Form, Row } from 'antd';
-import { useLogicActionSingleSalePackage } from './useLogicActionSingleSalePackage';
 import { ModalOtpMemo } from '../components/ModalOtp';
+import { useLogicActionSingleSalePackage } from './useLogicActionSingleSalePackage';
 
 export const SingleSalePackageAction = () => {
   const {
     form,
     handleClose,
-    actionMode,
     prefixIsdn,
     setOptionPackage,
     optionPackage,
