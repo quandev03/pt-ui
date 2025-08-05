@@ -1,4 +1,4 @@
-import { House, Settings } from 'lucide-react';
+import { House, Settings, Store } from 'lucide-react';
 import { pathRoutes } from './url';
 import { RouterItems } from '@vissoft-react/common';
 
@@ -23,6 +23,17 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.systemUserManager as string,
     label: 'Tài khoản',
     parentId: pathRoutes.accountAuthorization as string,
+  },
+  {
+    key: pathRoutes.saleManagement as string,
+    icon: <Store />,
+    label: 'Quản Lý Bán Hàng',
+    hasChild: true,
+  },
+  {
+    key: pathRoutes.salePackage as string,
+    label: 'Bán gói cho thuê bao hiện hữu',
+    parentId: pathRoutes.saleManagement as string,
   },
 ];
 
