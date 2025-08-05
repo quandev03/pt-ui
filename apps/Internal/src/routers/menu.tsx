@@ -46,12 +46,6 @@ export const routerItems: RouterItems[] = [
     label: 'Tra cứu số',
     parentId: pathRoutes.manageNumber as string,
   },
-  // Quản lý đối tác
-  {
-    key: pathRoutes.partnerCatalog,
-    label: 'Quản lý đối tác',
-    parentId: pathRoutes.systemManager as string,
-  },
   // Quản lý danh mục
   {
     key: pathRoutes.category,
