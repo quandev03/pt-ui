@@ -10,24 +10,26 @@ import {
   MESSAGE,
   ModalConfirm,
   StatusEnum,
+  usePermissions,
 } from '@vissoft-react/common';
 import { Form } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import includes from 'lodash/includes';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useRolesByRouter } from '../../../hooks';
 import { pathRoutes } from '../../../routers';
 import { getColumnUserGroup } from '../constants';
 import { useGetGroupUsers, useSupportDeleteGroup } from '../queryHook';
 import { IGroupUserParams, IUserGroup } from '../types';
+import useConfigAppStore from '../../Layouts/stores';
 
 export const ListUserGroup = () => {
   const [searchParams] = useSearchParams();
   const [form] = Form.useForm();
   const params = decodeSearchParams(searchParams);
   const navigate = useNavigate();
-  const actionByRole = useRolesByRouter();
+  const { menuData } = useConfigAppStore();
+  const permission = usePermissions(menuData);
   const { data, isLoading: loadingTable } = useGetGroupUsers(
     formatQueryParams<IGroupUserParams>(params)
   );
@@ -69,7 +71,7 @@ export const ListUserGroup = () => {
   );
 
   const columns: ColumnsType<IUserGroup> = useMemo(() => {
-    return getColumnUserGroup(params, actionByRole, {
+    return getColumnUserGroup(params, {
       onAction: (type, record) => {
         openModalEditView(type, record);
       },
@@ -77,7 +79,7 @@ export const ListUserGroup = () => {
         handleDeleteItem(user.id);
       },
     });
-  }, [actionByRole, handleDeleteItem, openModalEditView, params]);
+  }, [handleDeleteItem, openModalEditView, params]);
 
   useEffect(() => {
     form.setFieldsValue(params);
@@ -107,13 +109,8 @@ export const ListUserGroup = () => {
     ];
   }, []);
   const actionComponent = useMemo(() => {
-    return (
-      <CButtonAdd
-        onClick={handleAdd}
-        disabled={!includes(actionByRole, ActionsTypeEnum.CREATE)}
-      />
-    );
-  }, [actionByRole, handleAdd]);
+    return <CButtonAdd onClick={handleAdd} disabled={!permission.canCreate} />;
+  }, [permission.canCreate, handleAdd]);
   return (
     <LayoutList
       filterItems={filters}

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-import { useRolesByRouter } from '../../../hooks/useRolesByRouter';
 import { includes } from 'lodash';
 import {
   useSupportAddGroup,
@@ -26,17 +25,20 @@ import {
   textOnlyRegex,
   TitleHeader,
   useActionMode,
+  usePermissions,
 } from '@vissoft-react/common';
 import { useGetAllRole } from '../../UserManagement/hooks';
 import { CButtonSaveAndAdd } from '@vissoft-react/common';
 import { CButtonSave } from '@vissoft-react/common';
 import { pathRoutes } from '../../../routers';
 import { useGetAllUsers } from '../../../hooks';
+import useConfigAppStore from '../../Layouts/stores';
 
 export const ActionGroupUser = () => {
   const [isSubmitBack, setIsSubmitBack] = useState(false);
   const navigate = useNavigate();
-  const actionByRole = useRolesByRouter();
+  const { menuData } = useConfigAppStore();
+  const permission = usePermissions(menuData);
   const [form] = Form.useForm();
   const pathname = useLocation();
   const { id } = useParams();
@@ -207,6 +209,15 @@ export const ActionGroupUser = () => {
             <Row gutter={[30, 0]}>
               <Col span={12}>
                 <Form.Item
+                  label="Trạng thái"
+                  name="status"
+                  valuePropName="checked"
+                >
+                  <CSwitch disabled={IModeAction.UPDATE !== actionMode} />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
                   label="Mã nhóm"
                   name="code"
                   required
@@ -340,15 +351,6 @@ export const ActionGroupUser = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="Trạng thái"
-                  name="status"
-                  valuePropName="checked"
-                >
-                  <CSwitch disabled={IModeAction.UPDATE !== actionMode} />
-                </Form.Item>
-              </Col>
             </Row>
           </div>
           <div className="flex gap-4 flex-wrap justify-end mt-7">
@@ -362,8 +364,7 @@ export const ActionGroupUser = () => {
               />
             )}
             {actionMode !== IModeAction.READ &&
-              (includes(actionByRole, ActionsTypeEnum.UPDATE) ||
-                includes(actionByRole, ActionsTypeEnum.CREATE)) && (
+              (permission.canUpdate || permission.canCreate) && (
                 <CButtonSave
                   onClick={() => {
                     setIsSubmitBack(true);
@@ -376,9 +377,7 @@ export const ActionGroupUser = () => {
             {actionMode === IModeAction.READ && (
               <>
                 <Show>
-                  <Show.When
-                    isTrue={includes(actionByRole, ActionsTypeEnum.DELETE)}
-                  >
+                  <Show.When isTrue={permission.canDelete}>
                     <CButtonDelete
                       onClick={() => {
                         ModalConfirm({
@@ -395,9 +394,7 @@ export const ActionGroupUser = () => {
                   </Show.When>
                 </Show>
                 <Show>
-                  <Show.When
-                    isTrue={includes(actionByRole, ActionsTypeEnum.UPDATE)}
-                  >
+                  <Show.When isTrue={permission.canUpdate}>
                     <CButtonEdit
                       onClick={() => {
                         navigate(pathRoutes.groupUserManagerEdit(id));

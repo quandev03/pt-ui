@@ -1,5 +1,4 @@
 import {
-  ActionsTypeEnum,
   CButtonDetail,
   CTag,
   CTooltip,
@@ -10,19 +9,19 @@ import {
   StatusEnum,
   Text,
   TypeTagEnum,
+  usePermissions,
   WrapperActionTable,
 } from '@vissoft-react/common';
 
 import { Dropdown, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
-import { includes } from 'lodash';
 import { MoreVertical } from 'lucide-react';
+import useConfigAppStore from '../../Layouts/stores';
 import { IUserGroup } from '../types';
 
 export const getColumnUserGroup = (
   params: IParamsRequest,
-  listRoles: ActionsTypeEnum[],
   {
     onDelete,
     onAction,
@@ -31,6 +30,8 @@ export const getColumnUserGroup = (
     onDelete: (record: IUserGroup) => void;
   }
 ): ColumnsType<IUserGroup> => {
+  const { menuData } = useConfigAppStore();
+  const permission = usePermissions(menuData);
   return [
     {
       title: 'STT',
@@ -150,7 +151,7 @@ export const getColumnUserGroup = (
       render(_, record) {
         const items = [
           {
-            key: ActionsTypeEnum.UPDATE,
+            key: IModeAction.UPDATE,
             onClick: () => {
               onAction(IModeAction.UPDATE, record);
             },
@@ -161,23 +162,22 @@ export const getColumnUserGroup = (
             ),
           },
           {
-            key: ActionsTypeEnum.DELETE,
+            key: IModeAction.DELETE,
             onClick: () => {
               onDelete(record);
             },
             label: <Text type="danger">Xóa</Text>,
           },
-        ].filter((item) => includes(listRoles, item?.key));
+        ].filter((item) => permission.getAllPermissions().includes(item.key));
         return (
           <WrapperActionTable>
-            {includes(listRoles, ActionsTypeEnum.READ) && (
+            {permission.canRead && (
               <CButtonDetail
                 onClick={() => onAction(IModeAction.READ, record)}
               />
             )}
             <div className="w-5">
-              {(includes(listRoles, ActionsTypeEnum.UPDATE) ||
-                includes(listRoles, ActionsTypeEnum.DELETE)) && (
+              {(permission.canUpdate || permission.canDelete) && (
                 <Dropdown
                   menu={{ items }}
                   placement="bottom"

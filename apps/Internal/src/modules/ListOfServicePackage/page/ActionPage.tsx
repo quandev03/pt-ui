@@ -261,16 +261,22 @@ export const ActionPage = () => {
               {actionMode === IModeAction.CREATE && (
                 <>
                   <CButtonSaveAndAdd
+                    disabled={false}
                     htmlType="submit"
                     onClick={() => setType(EActionSubmit.SAVE_AND_ADD)}
                   />
                   <CButtonSave
+                    disabled={false}
                     htmlType="submit"
                     onClick={() => setType(EActionSubmit.SAVE)}
                   >
                     Lưu
                   </CButtonSave>
-                  <CButtonClose type="default" onClick={() => navigate(-1)}>
+                  <CButtonClose
+                    disabled={false}
+                    type="default"
+                    onClick={() => navigate(-1)}
+                  >
                     Đóng
                   </CButtonClose>
                 </>
@@ -278,12 +284,17 @@ export const ActionPage = () => {
               {actionMode === IModeAction.READ && (
                 <>
                   <CButtonEdit
+                    disabled={false}
                     htmlType="submit"
                     onClick={() => setType(EActionSubmit.SAVE)}
                   >
                     Sửa
                   </CButtonEdit>
-                  <CButtonClose type="default" onClick={() => navigate(-1)}>
+                  <CButtonClose
+                    disabled={false}
+                    type="default"
+                    onClick={() => navigate(-1)}
+                  >
                     Đóng
                   </CButtonClose>
                 </>
@@ -296,7 +307,11 @@ export const ActionPage = () => {
                   >
                     Lưu
                   </CButtonSave>
-                  <CButtonClose type="default" onClick={() => navigate(-1)}>
+                  <CButtonClose
+                    disabled={false}
+                    type="default"
+                    onClick={() => navigate(-1)}
+                  >
                     Đóng
                   </CButtonClose>
                 </>

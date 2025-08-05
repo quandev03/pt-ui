@@ -6,31 +6,31 @@ import {
   IModeAction,
   LayoutList,
   ModalConfirm,
+  usePermissions,
 } from '@vissoft-react/common';
 import { Form } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { includes } from 'lodash';
 import { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { useRolesByRouter } from '../../../hooks';
 import { pathRoutes } from '../../../routers';
 import { getColumnsTableRole } from '../constants';
 import { useGetRoles, useSupportDeleteRole } from '../hooks';
 import { useFilters } from '../hooks/useFilters';
 import { IRoleItem, IRoleParams, PropsRole } from '../types';
+import useConfigAppStore from '../../Layouts/stores';
 
 export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
-  const actionByRole = useRolesByRouter();
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
   const params = decodeSearchParams(searchParams);
   const navigate = useNavigate();
   const [form] = Form.useForm();
-
+  const { menuData } = useConfigAppStore();
   useEffect(() => {
     form.setFieldsValue(params);
   }, [form, params, pathname]);
-
+  const permission = usePermissions(menuData);
   const handleAction = useCallback(
     (type: IModeAction, record: IRoleItem) => {
       switch (type) {
@@ -89,19 +89,16 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
   }, [isPartner, navigate]);
   const { filters } = useFilters();
   const columns: ColumnsType<IRoleItem> = useMemo(() => {
-    return getColumnsTableRole(params, actionByRole, {
+    return getColumnsTableRole(params, {
       onAction: handleAction,
       onDelete: handleDeleteRole,
     });
-  }, [params, actionByRole, handleAction, handleDeleteRole]);
+  }, [params, handleAction, handleDeleteRole]);
   const actionComponent = useMemo(() => {
     return (
-      <CButtonAdd
-        onClick={handleAddRole}
-        disabled={!includes(actionByRole, ActionsTypeEnum.CREATE)}
-      />
+      <CButtonAdd onClick={handleAddRole} disabled={!permission.canCreate} />
     );
-  }, [actionByRole, handleAddRole]);
+  }, [permission.canCreate, handleAddRole]);
   return (
     <LayoutList
       title={
