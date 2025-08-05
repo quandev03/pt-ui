@@ -1,5 +1,4 @@
 import {
-  ActionsTypeEnum,
   CButtonAdd,
   decodeSearchParams,
   formatQueryParams,
@@ -9,16 +8,14 @@ import {
   usePermissions,
 } from '@vissoft-react/common';
 import { Form } from 'antd';
-import { ColumnsType } from 'antd/es/table';
-import { includes } from 'lodash';
 import { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { pathRoutes } from '../../../routers';
-import { getColumnsTableRole } from '../constants';
+import useConfigAppStore from '../../Layouts/stores';
 import { useGetRoles, useSupportDeleteRole } from '../hooks';
+import { useColumnsTableRole } from '../hooks/useColumnsTableRole';
 import { useFilters } from '../hooks/useFilters';
 import { IRoleItem, IRoleParams, PropsRole } from '../types';
-import useConfigAppStore from '../../Layouts/stores';
 
 export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
   const [searchParams] = useSearchParams();
@@ -88,12 +85,10 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
     }
   }, [isPartner, navigate]);
   const { filters } = useFilters();
-  const columns: ColumnsType<IRoleItem> = useMemo(() => {
-    return getColumnsTableRole(params, {
-      onAction: handleAction,
-      onDelete: handleDeleteRole,
-    });
-  }, [params, handleAction, handleDeleteRole]);
+  const columns = useColumnsTableRole(params, {
+    onAction: handleAction,
+    onDelete: handleDeleteRole,
+  });
   const actionComponent = useMemo(() => {
     return (
       <CButtonAdd onClick={handleAddRole} disabled={!permission.canCreate} />
