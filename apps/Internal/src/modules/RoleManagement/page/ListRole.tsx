@@ -14,7 +14,7 @@ import { includes } from 'lodash';
 import { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { pathRoutes } from '../../../routers';
-import { getColumnsTableRole } from '../constants';
+import { useColumnsTableRole } from '../hooks/useColumnsTableRole';
 import { useGetRoles, useSupportDeleteRole } from '../hooks';
 import { useFilters } from '../hooks/useFilters';
 import { IRoleItem, IRoleParams, PropsRole } from '../types';
@@ -89,7 +89,7 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
   }, [isPartner, navigate]);
   const { filters } = useFilters();
   const columns: ColumnsType<IRoleItem> = useMemo(() => {
-    return getColumnsTableRole(params, {
+    return useColumnsTableRole(params, {
       onAction: handleAction,
       onDelete: handleDeleteRole,
     });
