@@ -4,6 +4,7 @@ ARG BASE_RUNNER="harbor.vissoft.vn/vnsky/web-runner"
 FROM $BASE_BUILDER AS base
 WORKDIR /workspace
 COPY package.json ./package.json
+COPY yarn.lock ./yarn.lock
 ARG NPM_CONFIG_REGISTRY="https://registry.npmjs.org"
 ARG YARN_NPM_REGISTRY_SERVER="https://registry.npmjs.org"
 RUN ls -la &&  \
@@ -17,16 +18,15 @@ COPY ./.env ./.env
 COPY ./tsconfig.base.json ./tsconfig.base.json
 COPY ./jest.config.ts ./jest.config.ts
 COPY ./jest.preset.js ./jest.preset.js
-COPY ./webpack.config.js ./webpack.config.js
 COPY ./.eslintrc.json ./.eslintrc.json
 COPY ./.eslintignore ./.eslintignore
 COPY ./.prettierrc ./.prettierrc
 COPY ./.prettierignore ./.prettierignore
-COPY ./commons ./commons
-COPY ./apps/Internal ./apps/Internal
-RUN yarn build:Internal
+COPY ./libs ./libs
+COPY ./apps/internal ./apps/internal
+RUN yarn build:internal
 
 FROM $BASE_RUNNER AS runner
 ENV TZ=Asia/Ho_Chi_Minh
 WORKDIR /usr/share/nginx/html
-COPY --from=base --chown=nginx:nginx /workspace/dist/apps/Internal /usr/share/nginx/html
+COPY --from=base --chown=nginx:nginx /workspace/dist/apps/internal /usr/share/nginx/html
