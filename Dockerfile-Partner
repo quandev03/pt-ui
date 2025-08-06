@@ -25,7 +25,7 @@ COPY ./.eslintignore ./.eslintignore
 COPY ./.prettierrc ./.prettierrc
 COPY ./.prettierignore ./.prettierignore
 COPY ./libs ./libs
-COPY ./apps/partner ./apps/partner
+COPY ./apps/Partner ./apps/Partner
 RUN yarn build:partner
 
 FROM $BASE_RUNNER AS runner
