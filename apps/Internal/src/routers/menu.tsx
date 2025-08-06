@@ -4,15 +4,15 @@ import { RouterItems } from '@vissoft-react/common';
 
 export const routerItems: RouterItems[] = [
   {
-    key: pathRoutes.home as string,
-    icon: <House />,
-    label: 'Tổng quan',
-  },
-  {
     key: pathRoutes.systemManager as string,
-    icon: <Settings />,
+    icon: <Settings color="#000" />,
     label: 'Quản trị hệ thống',
     hasChild: true,
+  },
+  {
+    key: pathRoutes.dashboard as string,
+    label: 'Tổng quan',
+    parentId: pathRoutes.systemManager,
   },
   // quản lý tài khoản
   {

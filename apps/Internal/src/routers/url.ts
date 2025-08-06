@@ -10,6 +10,7 @@ export interface ParamsType {
 }
 
 export const pathRoutes = {
+  dashboard: '/dashboard',
   home: '/',
   welcome: '/welcome',
   profile: '/profile',

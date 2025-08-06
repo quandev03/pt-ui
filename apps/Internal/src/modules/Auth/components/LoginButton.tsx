@@ -28,7 +28,9 @@ const LoginButton = () => {
     },
     (error) => {
       console.log('🚀 ~ LoginButton ~ error:', error);
-      NotificationError(error.detail);
+      NotificationError({
+        message: error.detail,
+      });
     }
   );
   const handleLogin = useGoogleLogin({
