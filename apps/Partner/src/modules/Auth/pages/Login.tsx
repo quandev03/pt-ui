@@ -1,5 +1,4 @@
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { useIsMutating, useQueryClient } from '@tanstack/react-query';
+import { useIsMutating } from '@tanstack/react-query';
 import {
   AnyElement,
   CButton,
@@ -11,16 +10,15 @@ import {
   setFieldError,
   validateForm,
 } from '@vissoft-react/common';
-import { Col, Divider, Form, Image, Row, Spin } from 'antd';
+import { Col, Form, Image, Row, Spin } from 'antd';
 import { FocusEvent, useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../../../assets/images/Logo-mini.svg';
-import BgLogin from '../../../assets/images/bg-login.png';
+import BgLogin from '../../../assets/images/background.png';
 import Smartphone from '../../../assets/images/smartphone.png';
-import { ACCESS_TOKEN_KEY, GOOGLE_CLIENT_ID } from '../../../constants';
+import { ACCESS_TOKEN_KEY } from '../../../constants';
 import { pathRoutes } from '../../../routers/url';
 import useConfigAppStore from '../../Layouts/stores';
-import LoginButton from '../components/LoginButton';
 import ModalForgotPassword from '../components/ModalForgotPassword';
 import { useSupportLoginLocal } from '../hooks';
 import { ILoginDataRequest } from '../types';
@@ -30,7 +28,6 @@ const LoginPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [openForgot, setForgot] = useState(false);
-  const queryClient = useQueryClient();
   const { setIsAuthenticated, isAuthenticated } = useConfigAppStore();
   const token = StorageService.get(ACCESS_TOKEN_KEY);
   const { state: locationState } = useLocation();
@@ -193,17 +190,8 @@ const LoginPage = () => {
             </Form>
           </div>
         </Col>
-        <Col span={12}>
-          <div className="text-center flex flex-col gap-3">
-            <span className="text-white text-3xl font-semibold drop-shadow-md">
-              Hệ thống Kinh doanh và Dịch vụ khách hàng
-            </span>
-            <span className="text-[#e50013] text-3xl font-semibold drop-shadow-md flex items-center justify-center gap-2">
-              <p className="text-white">-</p> BCSS
-              <p className="text-white">-</p>
-            </span>
-          </div>
-          <div className="flex justify-center mt-16">
+        <Col span={12} className="flex justify-center items-center">
+          <div>
             <Image src={Smartphone} preview={false} />
           </div>
         </Col>

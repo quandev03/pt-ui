@@ -5,6 +5,7 @@ import {
   MenuObjectItem,
 } from '@vissoft-react/common';
 import { prefixAuthService, prefixSaleService } from '../constants';
+import { IAgency } from '../types';
 import { safeApiClient } from './axios';
 
 export const globalService = {
@@ -12,22 +13,18 @@ export const globalService = {
     try {
       const profilePromise = globalService.getProfile();
       const menuPromise = globalService.getMenu();
-      const paramsPromise = globalService.getParamsOption();
-      const [profile, menuData, params] = await Promise.all([
+      const [profile, menuData] = await Promise.all([
         profilePromise,
         menuPromise,
-        paramsPromise,
       ]);
       return {
         profile,
         menus: menuData,
-        params,
       };
     } catch {
       return {
         profile: {} as IUserInfo,
         menus: [],
-        params: {} as IAllParamResponse,
       };
     }
   },
@@ -48,5 +45,13 @@ export const globalService = {
   },
   getParamsOption() {
     return safeApiClient.get<IAllParamResponse>(`${prefixSaleService}/params`);
+  },
+  getAgencies: (params?: Record<string, string>) => {
+    return safeApiClient.get<IAgency[]>(
+      `${prefixSaleService}/organization-unit`,
+      {
+        params,
+      }
+    );
   },
 };
