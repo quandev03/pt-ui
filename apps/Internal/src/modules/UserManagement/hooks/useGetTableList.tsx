@@ -3,6 +3,7 @@ import {
   CTag,
   CTooltip,
   IModeAction,
+  MESSAGE,
   ModalConfirm,
   RenderCell,
   StatusEnum,
@@ -20,10 +21,11 @@ import dayjs from 'dayjs';
 import { MoreVertical } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { pathRoutes } from '../../../routers';
-import { IRoleItem } from '../../../types';
+import { IGroups, IRoleItem } from '../../../types';
 import useConfigAppStore from '../../Layouts/stores';
-import { IGroups, IUserItem } from '../types';
-import { useCheckAllowDelete } from '.';
+import { IUserItem } from '../types';
+import { useSupportDeleteUser } from '.';
+import { includes } from 'lodash';
 
 export const useGetTableList = (): ColumnsType<IUserItem> => {
   const [searchParams] = useSearchParams();
@@ -31,10 +33,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
   const navigate = useNavigate();
-  const { mutate: checkAllowDelete } = useCheckAllowDelete((id) => {
-    deleteUser(id);
-  });
-
+  const { mutate: deleteUser } = useSupportDeleteUser();
   const handleAction = (action: IModeAction, record: IUserItem) => {
     switch (action) {
       case IModeAction.READ: {
@@ -51,15 +50,15 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
         }
         break;
       }
-      case IModeAction.DELETE:
+      case IModeAction.DELETE: {
         ModalConfirm({
-          title: 'Bạn có chắc chắn muốn Xóa bản ghi không?',
-          message: 'Các dữ liệu liên quan cũng sẽ bị xóa',
+          message: MESSAGE.G05,
           handleConfirm: () => {
-            checkAllowDelete(record.id);
+            deleteUser(record.id);
           },
         });
         break;
+      }
     }
   };
   return [
@@ -67,13 +66,12 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
       title: 'STT',
       align: 'left',
       width: 50,
-      fixed: 'left',
       render(_, record, index) {
         return (
           <RenderCell
             value={index + 1 + params.page * params.size}
             tooltip={index + 1 + params.page * params.size}
-            disabled={!record?.status}
+            disabled={record?.status !== StatusEnum.ACTIVE}
           />
         );
       },
@@ -83,13 +81,12 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
       dataIndex: 'fullname',
       width: 200,
       align: 'left',
-      fixed: 'left',
       render(value, record) {
         return (
           <RenderCell
             value={value}
             tooltip={value}
-            disabled={record?.status !== 1}
+            disabled={record?.status !== StatusEnum.ACTIVE}
           />
         );
       },
@@ -99,13 +96,12 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
       dataIndex: 'email',
       width: 250,
       align: 'left',
-      fixed: 'left',
       render(value, record) {
         return (
           <RenderCell
             value={value}
             tooltip={value}
-            disabled={record?.status !== 1}
+            disabled={record?.status !== StatusEnum.ACTIVE}
           />
         );
       },
@@ -116,7 +112,12 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
       width: 100,
       align: 'left',
       render(value, record) {
-        return <RenderCell value={value} disabled={record?.status !== 1} />;
+        return (
+          <RenderCell
+            value={value}
+            disabled={record?.status !== StatusEnum.ACTIVE}
+          />
+        );
       },
     },
     {
@@ -133,7 +134,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
           <RenderCell
             value={roleNames}
             tooltip={roleNames}
-            disabled={record?.status !== 1}
+            disabled={record?.status !== StatusEnum.ACTIVE}
           />
         );
       },
@@ -152,7 +153,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
           <RenderCell
             value={roleNames}
             tooltip={roleNames}
-            disabled={record?.status !== 1}
+            disabled={record?.status !== StatusEnum.ACTIVE}
           />
         );
       },
@@ -167,7 +168,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
           <RenderCell
             value={value}
             tooltip={value}
-            disabled={record?.status !== 1}
+            disabled={record?.status !== StatusEnum.ACTIVE}
           />
         );
       },
@@ -186,7 +187,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
           <RenderCell
             value={textformatDate}
             tooltip={textformatDateTime}
-            disabled={record?.status !== 1}
+            disabled={record?.status !== StatusEnum.ACTIVE}
           />
         );
       },
@@ -197,7 +198,12 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
       width: 200,
       align: 'left',
       render(value, record) {
-        return <RenderCell value={value} disabled={record?.status !== 1} />;
+        return (
+          <RenderCell
+            value={value}
+            disabled={record?.status !== StatusEnum.ACTIVE}
+          />
+        );
       },
     },
     {
@@ -211,7 +217,11 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
           ? dayjs(value).format(formatDateTime)
           : '';
         return (
-          <RenderCell value={textformatDate} disabled={record?.status !== 1} />
+          <RenderCell
+            tooltip={textformatDateTime}
+            value={textformatDate}
+            disabled={record?.status !== StatusEnum.ACTIVE}
+          />
         );
       },
     },
@@ -222,7 +232,12 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
       align: 'left',
       render: (value) => {
         return (
-          <CTooltip title={value} placement="topLeft">
+          <CTooltip
+            title={
+              value === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động'
+            }
+            placement="topLeft"
+          >
             <CTag
               type={
                 value === StatusEnum.ACTIVE
@@ -237,7 +252,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
       },
     },
     {
-      title: 'Hành động',
+      title: 'Thao tác',
       align: 'center',
       width: 150,
       fixed: 'right',
@@ -257,7 +272,9 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
             },
             label: <Text type="danger">Xóa</Text>,
           },
-        ];
+        ].filter((item) => {
+          return includes([IModeAction.UPDATE, IModeAction.DELETE], item.key);
+        });
 
         return (
           <WrapperActionTable>
@@ -269,16 +286,15 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
               />
             )}
             <div className="w-5">
-              {permission.canUpdate ||
-                (permission.canDelete && (
-                  <Dropdown
-                    menu={{ items: items }}
-                    placement="bottom"
-                    trigger={['click']}
-                  >
-                    <MoreVertical size={16} />
-                  </Dropdown>
-                ))}
+              {(permission.canUpdate || permission.canDelete) && (
+                <Dropdown
+                  menu={{ items: items }}
+                  placement="bottom"
+                  trigger={['click']}
+                >
+                  <MoreVertical size={16} />
+                </Dropdown>
+              )}
             </div>
           </WrapperActionTable>
         );
