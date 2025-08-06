@@ -24,6 +24,7 @@ import {
 import usePartnerStore from '../stores';
 import { IOrganizationUnitDTO } from '../types';
 import { useColumnsTablePartnerCatalog } from '../hook/useColumnsTablePartnerCatalog';
+import { StatusEnum } from '../constants';
 
 export const PartnerCatalogList = () => {
   const [searchParams] = useSearchParams();
@@ -53,7 +54,20 @@ export const PartnerCatalogList = () => {
         type: 'Select',
         label: 'Trạng thái',
         name: 'status',
-        options: PARTNER_STATUS,
+        options: [
+          {
+            label: 'Tất cả',
+            value: '',
+          },
+          {
+            label: 'Hoạt động',
+            value: String(StatusEnum.ACTIVE),
+          },
+          {
+            label: 'Không hoạt động',
+            value: String(StatusEnum.INACTIVE),
+          },
+        ],
         placeholder: 'Chọn trạng thái',
       },
     ];

@@ -332,6 +332,7 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
             orgSubType: '0',
             orgPartnerType: '0',
           }}
+          labelAlign="left"
           onFinishFailed={scrollToFirstError}
         >
           <div className="flex flex-col gap-[30px]">
