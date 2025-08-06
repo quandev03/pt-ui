@@ -24,9 +24,6 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const { menuData } = useConfigAppStore();
-  useEffect(() => {
-    form.setFieldsValue(params);
-  }, [form, params, pathname]);
   const permission = usePermissions(menuData);
   const handleAction = useCallback(
     (type: IModeAction, record: IRoleItem) => {
@@ -85,7 +82,7 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
     }
   }, [isPartner, navigate]);
   const { filters } = useFilters();
-  const columns = useColumnsTableRole(params, {
+  const columns = useColumnsTableRole({
     onAction: handleAction,
     onDelete: handleDeleteRole,
   });

@@ -4,10 +4,8 @@ import { axiosClient, safeApiClient } from '../../../services/axios';
 import { IRoleItem } from '../../../types/admin';
 import {
   IAllGroupUser,
-  IDepartment,
   IFormUser,
   IOrganization,
-  IRelationUser,
   IUserItem,
   IUserParams,
 } from '../types';
