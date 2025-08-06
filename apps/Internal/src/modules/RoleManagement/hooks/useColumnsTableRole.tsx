@@ -1,10 +1,12 @@
 import {
   CButtonDetail,
   CTag,
+  decodeSearchParams,
   formatDate,
   formatDateTime,
   IModeAction,
   IParamsRequest,
+  RenderCell,
   StatusEnum,
   Text,
   TypeTagEnum,
@@ -18,6 +20,7 @@ import { MoreVertical } from 'lucide-react';
 import useConfigAppStore from '../../Layouts/stores';
 import { IRoleItem } from '../types';
 import { useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 export const DEFAULT_VALUE_ROLE: IRoleItem = {
   id: '',
@@ -32,16 +35,15 @@ export const DEFAULT_VALUE_ROLE: IRoleItem = {
   code: '',
 };
 
-export const useColumnsTableRole = (
-  params: IParamsRequest,
-  {
-    onDelete,
-    onAction,
-  }: {
-    onAction: (type: IModeAction, record: IRoleItem) => void;
-    onDelete: (record: IRoleItem) => void;
-  }
-) => {
+export const useColumnsTableRole = ({
+  onDelete,
+  onAction,
+}: {
+  onAction: (type: IModeAction, record: IRoleItem) => void;
+  onDelete: (record: IRoleItem) => void;
+}) => {
+  const [searchParams] = useSearchParams();
+  const params = decodeSearchParams(searchParams);
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
   const columns: ColumnsType<IRoleItem> = useMemo(
@@ -53,9 +55,11 @@ export const useColumnsTableRole = (
         fixed: 'left',
         render(_, record, index) {
           return (
-            <Text disabled={record.status === StatusEnum.INACTIVE}>
-              {index + 1 + params.page * params.size}
-            </Text>
+            <RenderCell
+              value={index + 1 + params.page * params.size}
+              tooltip={index + 1 + params.page * params.size}
+              disabled={record?.status !== StatusEnum.ACTIVE}
+            />
           );
         },
       },
@@ -66,11 +70,11 @@ export const useColumnsTableRole = (
         width: 100,
         render(value, record) {
           return (
-            <Tooltip title={value} placement="topLeft">
-              <Text disabled={record.status === StatusEnum.INACTIVE}>
-                {value}
-              </Text>
-            </Tooltip>
+            <RenderCell
+              value={value}
+              tooltip={value}
+              disabled={record?.status !== StatusEnum.ACTIVE}
+            />
           );
         },
       },
@@ -81,11 +85,11 @@ export const useColumnsTableRole = (
         width: 100,
         render(value, record) {
           return (
-            <Tooltip title={value} placement="topLeft">
-              <Text disabled={record.status === StatusEnum.INACTIVE}>
-                {value}
-              </Text>
-            </Tooltip>
+            <RenderCell
+              value={value}
+              tooltip={value}
+              disabled={record?.status !== StatusEnum.ACTIVE}
+            />
           );
         },
       },
@@ -96,11 +100,11 @@ export const useColumnsTableRole = (
         width: 200,
         render(value, record) {
           return (
-            <Tooltip title={value} placement="topLeft">
-              <Text disabled={record.status === StatusEnum.INACTIVE}>
-                {value}
-              </Text>
-            </Tooltip>
+            <RenderCell
+              value={value}
+              tooltip={value}
+              disabled={record?.status !== StatusEnum.ACTIVE}
+            />
           );
         },
       },
@@ -111,14 +115,11 @@ export const useColumnsTableRole = (
         width: 100,
         render(value, record) {
           return (
-            <Tooltip
-              title={dayjs(value).format(formatDateTime)}
-              placement="topLeft"
-            >
-              <Text disabled={record.status === StatusEnum.INACTIVE}>
-                {dayjs(value).format(formatDate)}
-              </Text>
-            </Tooltip>
+            <RenderCell
+              value={dayjs(value).format(formatDate)}
+              tooltip={dayjs(value).format(formatDateTime)}
+              disabled={record?.status !== StatusEnum.ACTIVE}
+            />
           );
         },
       },
@@ -129,11 +130,11 @@ export const useColumnsTableRole = (
         width: 200,
         render(value, record) {
           return (
-            <Tooltip title={value} placement="topLeft">
-              <Text disabled={record.status === StatusEnum.INACTIVE}>
-                {value}
-              </Text>
-            </Tooltip>
+            <RenderCell
+              value={value}
+              tooltip={value}
+              disabled={record?.status !== StatusEnum.ACTIVE}
+            />
           );
         },
       },
@@ -144,14 +145,11 @@ export const useColumnsTableRole = (
         width: 100,
         render(value, record) {
           return (
-            <Tooltip
-              title={dayjs(value).format(formatDateTime)}
-              placement="topLeft"
-            >
-              <Text disabled={record.status === StatusEnum.INACTIVE}>
-                {dayjs(value).format(formatDate)}
-              </Text>
-            </Tooltip>
+            <RenderCell
+              value={dayjs(value).format(formatDate)}
+              tooltip={dayjs(value).format(formatDateTime)}
+              disabled={record?.status !== StatusEnum.ACTIVE}
+            />
           );
         },
       },
@@ -228,7 +226,7 @@ export const useColumnsTableRole = (
         },
       },
     ],
-    [onAction, onDelete, permission]
+    [onAction, onDelete, permission, params]
   );
   return columns;
 };
