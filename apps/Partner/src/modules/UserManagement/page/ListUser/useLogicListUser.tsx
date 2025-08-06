@@ -1,13 +1,3 @@
-import { useCallback, useMemo } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { pathRoutes } from '../../../../routers/url';
-import useConfigAppStore from '../../../Layouts/stores';
-import { useGetTableList } from '../../hooks/useGetTableList';
-import {
-  useCheckAllowDelete,
-  useGetUsers,
-  useSupportDeleteUser,
-} from '../../hooks';
 import { IUserItem, IUserParams } from '../../types';
 import {
   CButtonAdd,
@@ -16,18 +6,20 @@ import {
   formatQueryParams,
   usePermissions,
   FilterItemProps,
-  StatusEnum,
 } from '@vissoft-react/common';
 import { ColumnsType } from 'antd/es/table';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useGetUsers, useSupportDeleteUser } from '../../hooks';
+import useConfigAppStore from '../../../Layouts/stores';
+import { useCallback, useMemo } from 'react';
+import { pathRoutes } from '../../../../../src/routers';
+import { useGetTableList } from '../../hooks/useGetTableList';
 
 export const useLogicListUser = () => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const navigate = useNavigate();
   const { mutate: deleteUser } = useSupportDeleteUser();
-  const { mutate: checkAllowDelete } = useCheckAllowDelete((id) => {
-    deleteUser(id);
-  });
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
   const { data: listUser, isLoading: loadingTable } = useGetUsers(
@@ -39,17 +31,17 @@ export const useLogicListUser = () => {
       ModalConfirm({
         message: 'Bạn có chắc chắn muốn Xóa bản ghi không?',
         handleConfirm: () => {
-          checkAllowDelete(record.id);
+          deleteUser(record.id);
         },
       });
     },
-    [checkAllowDelete]
+    [deleteUser]
   );
 
   const columns: ColumnsType<IUserItem> = useGetTableList();
 
   const handleAdd = useCallback(() => {
-    navigate(pathRoutes.systemUserManagerAdd);
+    navigate(pathRoutes.userManagerAdd);
   }, [navigate]);
 
   const actionComponent = useMemo(() => {
@@ -62,14 +54,17 @@ export const useLogicListUser = () => {
     return [
       {
         type: 'Select',
+        name: 'agency',
+        label: 'Đại lý',
+        placeholder: 'Đại lý',
+        options: [],
+      },
+      {
+        type: 'Select',
         name: 'status',
         label: 'Trạng thái',
-        placeholder: 'Chọn trạng thái',
-        options: [
-          { label: 'Tất cả', value: '' },
-          { label: 'Hoạt động', value: String(StatusEnum.ACTIVE) },
-          { label: 'Không hoạt động', value: String(StatusEnum.INACTIVE) },
-        ],
+        placeholder: 'Trạng thái',
+        options: [],
       },
     ];
   }, []);

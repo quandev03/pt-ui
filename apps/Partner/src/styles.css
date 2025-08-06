@@ -76,6 +76,31 @@ body {
       top: 0;
     }
   }
+
+  .ant-form-item-required {
+    position: relative;
+
+    &::after {
+      right: -10px;
+    }
+
+    &::before {
+      position: absolute;
+      margin-inline-end: -10px !important;
+      right: 0;
+    }
+  }
+
+  .ant-form-horizontal {
+    .ant-form-item-required {
+      margin-right: 12px;
+    }
+
+    ::before {
+      right: 13px;
+      top: 7px;
+    }
+  }
 }
 
 article,
