@@ -41,9 +41,9 @@ export const useLogicListFreeEsimBooking = () => {
     return [
       {
         type: 'Select',
-        name: 'status',
-        label: 'Trạng thái',
-        placeholder: 'Chọn trạng thái đơn hàng',
+        name: 'agency',
+        label: 'Đại lý',
+        placeholder: 'Chọn đại lý',
         options: [],
       },
 

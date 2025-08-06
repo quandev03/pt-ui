@@ -12,6 +12,7 @@ import { IBookFreeEsim } from '../../types';
 import { useBookFreeEsim } from '../../hooks/useBookFreeEsim';
 import { Form } from 'antd';
 import { useGetListFreeEsimBooking } from '../../hooks/useGetListFreeEsimBooking';
+import { useGetPackageCodes } from '../../hooks/usePackageCodes';
 
 export const useLogicActionUser = () => {
   const navigate = useNavigate();
@@ -43,6 +44,14 @@ export const useLogicActionUser = () => {
   );
   const { data: getFreeEsimList, isPending: loadingEsimList } =
     useGetListFreeEsimBooking(formatQueryParams<IParamsRequest>(params));
+
+  const { data: packageCodeList } = useGetPackageCodes();
+
+  const packageOptions = packageCodeList?.map((pkg) => ({
+    key: pkg.id,
+    value: pkg.pckCode,
+    label: pkg.pckCode,
+  }));
 
   const Title = useMemo(() => {
     console.log('action mode is: ', actionMode);
@@ -83,5 +92,6 @@ export const useLogicActionUser = () => {
     form,
     getFreeEsimList,
     loadingEsimList,
+    packageOptions,
   };
 };

@@ -15,3 +15,16 @@ export interface IBookFreeEsim {
   quantity: number;
   pckCode: string[];
 }
+export interface IPackage {
+  createdBy: string;
+  createdDate: string;
+  description: string;
+  id: string;
+  modifiedBy: string;
+  modifiedDate: string;
+  packagePrice: number;
+  pckCode: string;
+  pckName: string;
+  status: number;
+  urlImagePackage: string;
+}

@@ -2,7 +2,6 @@ import {
   CButtonClose,
   CButtonSaveAndAdd,
   CInput,
-  cleanUpString,
   CSelect,
   IModeAction,
   TitleHeader,
@@ -22,6 +21,7 @@ export const ActionFreeEsim = memo(() => {
     bookingInProcess,
     form,
     getFreeEsimList,
+    packageOptions,
   } = useLogicActionUser();
 
   useEffect(() => {
@@ -57,7 +57,9 @@ export const ActionFreeEsim = memo(() => {
                 {
                   validator(_, value) {
                     if (!value) {
-                      return Promise.reject('Không được để trống trường này');
+                      return Promise.reject(
+                        'Vui lòng chọn số lượng eSIM mong muốn'
+                      );
                     } else {
                       return Promise.resolve();
                     }
@@ -65,7 +67,10 @@ export const ActionFreeEsim = memo(() => {
                 },
               ]}
             >
-              <CInput disabled={actionMode === IModeAction.READ} />
+              <CInput
+                placeholder="Nhập số lượng eSIM"
+                disabled={actionMode === IModeAction.READ}
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -77,7 +82,7 @@ export const ActionFreeEsim = memo(() => {
                 {
                   validator(_, value) {
                     if (!value) {
-                      return Promise.reject('Không được để trống trường này');
+                      return Promise.reject('Vui lòng chọn gọi cước mong muốn');
                     } else {
                       return Promise.resolve();
                     }
@@ -85,13 +90,10 @@ export const ActionFreeEsim = memo(() => {
                 },
               ]}
             >
-              {/* <CSelect disabled={actionMode === IModeAction.READ} /> */}
-              <CInput
+              <CSelect
+                placeholder="Chọn gói cước"
                 disabled={actionMode === IModeAction.READ}
-                onBlur={(e) => {
-                  const value = cleanUpString(e.target.value);
-                  form.setFieldValue('packageCode', value);
-                }}
+                options={packageOptions}
               />
             </Form.Item>
           </Col>

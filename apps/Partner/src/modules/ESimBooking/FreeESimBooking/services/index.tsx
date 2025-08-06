@@ -1,5 +1,5 @@
 import { IPage, IParamsRequest } from '@vissoft-react/common';
-import { IBookFreeEsim, IFreeEsimBooking } from '../types';
+import { IBookFreeEsim, IFreeEsimBooking, IPackage } from '../types';
 import { prefixSaleService } from '../../../../constants';
 import { safeApiClient } from '../../../../services/axios';
 
@@ -20,13 +20,11 @@ export const freeEsimBookingServices = {
     );
     return createNewEsimRes;
   },
-
-  //   createUser: async (data: IFormUser) => {
-  //   const { organizationIds, ...payload } = data;
-  //   const createUserRes = await safeApiClient.post<IUserItem>(
-  //     `${prefixAuthService}/api/users/internal`,
-  //     payload
-  //   );
-  //   return createUserRes;
-  // },
+  getPackageCodes: async () => {
+    const res = await safeApiClient.get<IPackage[]>(
+      `${prefixSaleService}/esim-free/get-package`
+    );
+    if (!res) throw new Error('Oops');
+    return res;
+  },
 };

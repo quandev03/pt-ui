@@ -115,7 +115,7 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
         if (value === 2) {
           displayText = 'Hoàn thành';
           textColor = '#178801';
-        } else if (value === 1) {
+        } else {
           displayText = 'Đang xử lý';
           textColor = '#FAAD14';
         }
