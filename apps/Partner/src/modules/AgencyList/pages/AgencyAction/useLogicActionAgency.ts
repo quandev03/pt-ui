@@ -1,8 +1,8 @@
 import {
+  AnyElement,
   IModeAction,
   ModalConfirm,
   StatusEnum,
-  cleanUpString,
   setFieldError,
   useActionMode,
 } from '@vissoft-react/common';
@@ -10,11 +10,13 @@ import { Form } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
+  convertArrToObj,
+  useGetAgencies,
   useSupportAddAgency,
   useSupportGetAgency,
   useSupportUpdateUser,
 } from '../../hooks';
-import { IFormAgency } from '../../types';
+import { IAgency, IFormAgency } from '../../types';
 
 export const useLogicActionAgency = () => {
   const [isSubmitBack, setIsSubmitBack] = useState(false);
@@ -23,6 +25,9 @@ export const useLogicActionAgency = () => {
   const [form] = Form.useForm();
   const { id } = useParams();
   const actionMode = useActionMode();
+  const { data: listAgency, isLoading: loadingListAgency } = useGetAgencies({
+    status: 1,
+  });
   const {
     mutate: getAgencyAction,
     isPending: loadingGetAgency,
@@ -37,6 +42,9 @@ export const useLogicActionAgency = () => {
     });
   });
 
+  const checkFirstParent =
+    !listAgency?.some((value: IAgency) => value.parentId === null) ||
+    (actionMode !== IModeAction.CREATE && agencyDetail?.parentId === null);
   useEffect(() => {
     if (id) {
       getAgencyAction(id);
@@ -44,7 +52,27 @@ export const useLogicActionAgency = () => {
       form.setFieldsValue({ status: true });
     }
   }, [form, getAgencyAction, id, pathname]);
-
+  const listParentId = useMemo(() => {
+    if (!listAgency || !Array.isArray(listAgency)) return [];
+    else if (actionMode === IModeAction.UPDATE) {
+      return convertArrToObj(
+        listAgency.filter(
+          (item: AnyElement) =>
+            String(item.id) !== String(id) &&
+            String(item.parentId) !== String(id)
+        ),
+        null
+      );
+    }
+    return convertArrToObj(listAgency, null);
+  }, [listAgency, id, actionMode]);
+  const mapStockParent = (stocks: AnyElement) => {
+    return stocks?.map((item: AnyElement) => ({
+      title: item.orgName,
+      value: item.id,
+      children: mapStockParent(item.children),
+    }));
+  };
   const { mutate: createAgency, isPending: loadingAdd } = useSupportAddAgency(
     () => {
       if (isSubmitBack) {
@@ -86,7 +114,8 @@ export const useLogicActionAgency = () => {
         ...values,
         id: actionMode === IModeAction.UPDATE ? id : undefined,
         status: values?.status ? StatusEnum.ACTIVE : StatusEnum.INACTIVE,
-        agencyCode: cleanUpString(values.agencyCode),
+        orgCode: values.orgCode,
+        orgName: values.orgName,
         parentId: values.parentId,
       };
       if (actionMode === IModeAction.CREATE) {
@@ -117,5 +146,10 @@ export const useLogicActionAgency = () => {
     Title,
     actionMode,
     setIsSubmitBack,
+    listAgency,
+    loadingListAgency,
+    checkFirstParent,
+    mapStockParent,
+    listParentId,
   };
 };

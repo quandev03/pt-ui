@@ -9,7 +9,6 @@ import {
   Text,
   TypeTagEnum,
   WrapperActionTable,
-  decodeSearchParams,
   formatDate,
   formatDateTime,
   usePermissions,
@@ -18,15 +17,14 @@ import { Dropdown } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { MoreVertical } from 'lucide-react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useSupportDeleteAgency } from '.';
+import { StatusLabel } from '../../../../src/constants';
 import { pathRoutes } from '../../../routers';
 import useConfigAppStore from '../../Layouts/stores';
-import { useSupportDeleteAgency } from '.';
 import { IAgency } from '../types';
 
 export const useGetTableList = (): ColumnsType<IAgency> => {
-  const [searchParams] = useSearchParams();
-  const params = decodeSearchParams(searchParams);
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
   const navigate = useNavigate();
@@ -34,14 +32,14 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
   const handleAction = (action: IModeAction, record: IAgency) => {
     switch (action) {
       case IModeAction.READ: {
-        const to = pathRoutes.userManagerView;
+        const to = pathRoutes.agencyView;
         if (typeof to === 'function') {
           navigate(to(record.id));
         }
         break;
       }
       case IModeAction.UPDATE: {
-        const to = pathRoutes.userManagerEdit;
+        const to = pathRoutes.agencyEdit;
         if (typeof to === 'function') {
           navigate(to(record.id));
         }
@@ -49,8 +47,7 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
       }
       case IModeAction.DELETE:
         ModalConfirm({
-          title: 'Bạn có chắc chắn muốn Xóa bản ghi không?',
-          message: 'Các dữ liệu liên quan cũng sẽ bị xóa',
+          message: 'Bạn có chắc chắn muốn Xóa bản ghi không?',
           handleConfirm: () => {
             deleteAgency(record.id as string);
           },
@@ -60,23 +57,8 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
   };
   return [
     {
-      title: 'STT',
-      align: 'left',
-      width: 50,
-      fixed: 'left',
-      render(_, record, index) {
-        return (
-          <RenderCell
-            value={index + 1 + params.page * params.size}
-            tooltip={index + 1 + params.page * params.size}
-            disabled={!record?.status}
-          />
-        );
-      },
-    },
-    {
       title: 'Tên đại lý',
-      dataIndex: 'agentName',
+      dataIndex: 'orgName',
       width: 200,
       align: 'left',
       fixed: 'left',
@@ -92,7 +74,7 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
     },
     {
       title: 'Mã đại lý',
-      dataIndex: 'agentCode',
+      dataIndex: 'orgCode',
       width: 250,
       align: 'left',
       fixed: 'left',
@@ -142,7 +124,7 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
     },
     {
       title: 'Người cập nhật',
-      dataIndex: 'lastModifiedBy',
+      dataIndex: 'modifiedBy',
       width: 200,
       align: 'left',
       render(value, record) {
@@ -151,7 +133,7 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
     },
     {
       title: 'Ngày cập nhật',
-      dataIndex: 'lastModifiedDate',
+      dataIndex: 'modifiedDate',
       width: 120,
       align: 'left',
       render(value, record) {
@@ -183,7 +165,9 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
                   : TypeTagEnum.ERROR
               }
             >
-              {value === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động'}
+              {value === StatusEnum.ACTIVE
+                ? StatusLabel.ACTIVE
+                : StatusLabel.INACTIVE}
             </CTag>
           </CTooltip>
         );

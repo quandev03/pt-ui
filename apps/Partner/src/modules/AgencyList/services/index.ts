@@ -1,12 +1,11 @@
-import { IPage } from '@vissoft-react/common';
-import { prefixAuthService } from '../../../../src/constants';
+import { prefixSaleService } from '../../../../src/constants';
 import { safeApiClient } from '../../../../src/services';
 import { IAgency, IAgencyParams, IFormAgency } from '../types';
 
 export const agencyListService = {
   getAgencies: (params: IAgencyParams) => {
-    return safeApiClient.get<IPage<IAgency>>(
-      `${prefixAuthService}/api/agency`,
+    return safeApiClient.get<IAgency[]>(
+      `${prefixSaleService}/organization-unit`,
       {
         params,
       }
@@ -14,27 +13,27 @@ export const agencyListService = {
   },
   getAgency: async (id: string) => {
     const res = await safeApiClient.get<IAgency>(
-      `${prefixAuthService}/api/agency/${id}`
+      `${prefixSaleService}/organization-unit/${id}`
     );
     return res;
   },
   createAgency: async (data: IFormAgency) => {
     const createAgencyRes = await safeApiClient.post<IAgency>(
-      `${prefixAuthService}/api/agency`,
+      `${prefixSaleService}/organization-unit`,
       data
     );
     return createAgencyRes;
   },
   updateAgency: async (data: IFormAgency) => {
     const res = await safeApiClient.put<IAgency>(
-      `${prefixAuthService}/api/agency/${data.id}`,
+      `${prefixSaleService}/organization-unit/${data.id}`,
       data
     );
     return res;
   },
   deleteAgencys: async (id: string) => {
     const res = await safeApiClient.delete(
-      `${prefixAuthService}/api/agency/${id}`
+      `${prefixSaleService}/organization-unit/${id}`
     );
     return res;
   },

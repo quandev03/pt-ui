@@ -1,5 +1,6 @@
 import { LayoutList } from '@vissoft-react/common';
 import { memo } from 'react';
+import { convertArrToObj } from '../../hooks';
 import { useLogicListAgency } from './useLogicAgencyList';
 
 export const AgencyList = memo(() => {
@@ -8,14 +9,16 @@ export const AgencyList = memo(() => {
   return (
     <LayoutList
       actionComponent={actionComponent}
-      data={listAgency}
+      dataNoPagination={convertArrToObj(listAgency || [], null) || []}
       columns={columns}
-      title="Quản lý user đại lý"
+      title="Cấu hình đại lý"
       filterItems={filters}
       loading={loadingTable}
+      expandable={{ defaultExpandAllRows: true }}
+      pagination={false}
       searchComponent={
         <LayoutList.SearchComponent
-          name="q"
+          name="textSearch"
           tooltip="Nhập mã hoặc tên đại lý để tìm kiếm"
           placeholder="Nhập mã hoặc tên đại lý để tìm kiếm"
         />

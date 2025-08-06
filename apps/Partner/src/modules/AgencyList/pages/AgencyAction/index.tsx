@@ -5,19 +5,18 @@ import {
   CButtonSaveAndAdd,
   CInput,
   cleanUpString,
-  CSelect,
   CSwitch,
   IModeAction,
   MESSAGE,
   TitleHeader,
   usePermissions,
 } from '@vissoft-react/common';
+import { Col, Form, Row, Spin, TreeSelect } from 'antd';
 import { memo } from 'react';
-import { useLogicActionAgency } from './useLogicActionAgency';
-import { Col, Form, Row, Spin } from 'antd';
-import { pathRoutes } from '../../../../../src/routers';
 import { useNavigate, useParams } from 'react-router-dom';
+import { pathRoutes } from '../../../../../src/routers';
 import useConfigAppStore from '../../../Layouts/stores';
+import { useLogicActionAgency } from './useLogicActionAgency';
 
 export const AgencyAction = memo(() => {
   const navigate = useNavigate();
@@ -34,6 +33,10 @@ export const AgencyAction = memo(() => {
     Title,
     actionMode,
     setIsSubmitBack,
+    loadingListAgency,
+    listParentId,
+    mapStockParent,
+    agencyDetail,
   } = useLogicActionAgency();
   return (
     <div className="flex flex-col w-full h-full">
@@ -55,8 +58,18 @@ export const AgencyAction = memo(() => {
             <Row gutter={[30, 0]}>
               <Col span={12}>
                 <Form.Item
+                  label="Hoạt động"
+                  name="status"
+                  valuePropName="checked"
+                >
+                  <CSwitch disabled={IModeAction.UPDATE !== actionMode} />
+                </Form.Item>
+              </Col>
+              <Col span={12}></Col>
+              <Col span={12}>
+                <Form.Item
                   label="Mã đối tác"
-                  name="agencyCode"
+                  name="orgCode"
                   required
                   rules={[
                     {
@@ -73,12 +86,42 @@ export const AgencyAction = memo(() => {
                   ]}
                 >
                   <CInput
-                    placeholder="Nhập họ và tên"
+                    placeholder="Nhập mã đối tác"
+                    maxLength={30}
+                    disabled={actionMode === IModeAction.READ}
+                    preventSpecialExceptHyphenAndUnderscore
+                    preventSpace
+                    preventVietnamese
+                    uppercase
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Tên đối tác"
+                  name="orgName"
+                  required
+                  rules={[
+                    {
+                      validator(_, value) {
+                        if (!value) {
+                          return Promise.reject(
+                            'Không được để trống trường này'
+                          );
+                        } else {
+                          return Promise.resolve();
+                        }
+                      },
+                    },
+                  ]}
+                >
+                  <CInput
+                    placeholder="Nhập tên đối tác"
                     maxLength={100}
                     disabled={actionMode === IModeAction.READ}
                     onBlur={(e) => {
                       const value = cleanUpString(e.target.value);
-                      form.setFieldValue('agencyCode', value);
+                      form.setFieldValue('orgName', value);
                     }}
                   />
                 </Form.Item>
@@ -89,20 +132,18 @@ export const AgencyAction = memo(() => {
                   name="parentId"
                   rules={[{ required: true, message: MESSAGE.G06 }]}
                 >
-                  <CSelect
+                  <TreeSelect
                     placeholder="Chọn đại lý cha"
-                    options={[{ label: '1', value: '2' }]}
-                    disabled={actionMode === IModeAction.READ}
+                    showSearch
+                    treeDefaultExpandAll
+                    treeNodeFilterProp="title"
+                    disabled={
+                      actionMode === IModeAction.READ ||
+                      agencyDetail?.parentId === null
+                    }
+                    loading={loadingListAgency}
+                    treeData={mapStockParent(listParentId || [])}
                   />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="Hoạt động"
-                  name="status"
-                  valuePropName="checked"
-                >
-                  <CSwitch disabled={IModeAction.UPDATE !== actionMode} />
                 </Form.Item>
               </Col>
             </Row>
@@ -131,7 +172,7 @@ export const AgencyAction = memo(() => {
             {actionMode === IModeAction.READ && permission.canUpdate && (
               <CButtonEdit
                 onClick={() => {
-                  navigate(pathRoutes.userManagerEdit(id || ''));
+                  navigate(pathRoutes.agencyEdit(id || ''));
                 }}
               />
             )}

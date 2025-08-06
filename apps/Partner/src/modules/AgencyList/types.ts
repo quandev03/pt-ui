@@ -1,23 +1,28 @@
-import { IParamsRequest } from '@vissoft-react/common';
-
 export interface IAgency {
-  parentId: string | number;
-  id: string | number;
-  agentName: string;
-  agentCode: string;
+  address: string | null;
   createdBy: string;
-  createdAt: string;
-  updatedBy: string;
-  updatedAt: string;
-  status: string | number;
+  createdDate: string;
+  districtCode: string | null;
+  email: string | null;
+  id: string;
+  modifiedBy: string;
+  modifiedDate: string;
+  note: string | null;
+  orgCode: string;
+  orgName: string;
+  parentId: string;
+  provinceCode: string | null;
+  status: number;
+  wardCode: string | null;
 }
-export interface IAgencyParams extends IParamsRequest {
-  status?: string;
-  partner?: string;
+export interface IAgencyParams {
+  status?: string | number;
+  textSearch?: string;
 }
 export interface IFormAgency {
   id?: string;
-  agencyCode: string;
+  orgCode: string;
   parentId: string;
   status: number;
+  orgName: string;
 }

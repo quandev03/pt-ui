@@ -50,8 +50,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
       }
       case IModeAction.DELETE:
         ModalConfirm({
-          title: 'Bạn có chắc chắn muốn Xóa bản ghi không?',
-          message: 'Các dữ liệu liên quan cũng sẽ bị xóa',
+          message: 'Bạn có chắc chắn muốn Xóa bản ghi không?',
           handleConfirm: () => {
             deleteUser(record.id);
           },
@@ -208,7 +207,11 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
           ? dayjs(value).format(formatDateTime)
           : '';
         return (
-          <RenderCell value={textformatDate} disabled={record?.status !== 1} />
+          <RenderCell
+            tooltip={textformatDateTime}
+            value={textformatDate}
+            disabled={record?.status !== 1}
+          />
         );
       },
     },

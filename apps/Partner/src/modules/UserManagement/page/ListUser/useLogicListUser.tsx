@@ -29,8 +29,7 @@ export const useLogicListUser = () => {
   const handleDelete = useCallback(
     (record: IUserItem) => {
       ModalConfirm({
-        title: 'Bạn có chắc chắn muốn Xóa bản ghi không?',
-        message: 'Các dữ liệu liên quan cũng sẽ bị xóa',
+        message: 'Bạn có chắc chắn muốn Xóa bản ghi không?',
         handleConfirm: () => {
           deleteUser(record.id);
         },

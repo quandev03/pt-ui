@@ -14,6 +14,7 @@ import useConfigAppStore from '../../../Layouts/stores';
 import { IAgency, IAgencyParams } from '../../types';
 import { useGetTableList } from '../../hooks/useGetTableList';
 import { useGetAgencies, useSupportDeleteAgency } from '../../hooks';
+import { STATUS_OPTIONS } from '../../../../../src/constants';
 
 export const useLogicListAgency = () => {
   const [searchParams] = useSearchParams();
@@ -23,14 +24,17 @@ export const useLogicListAgency = () => {
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
   const { data: listAgency, isLoading: loadingTable } = useGetAgencies(
-    formatQueryParams<IAgencyParams>(params)
+    formatQueryParams<IAgencyParams>({
+      ...params,
+      page: undefined,
+      size: undefined,
+    })
   );
 
   const handleDelete = useCallback(
     (record: IAgency) => {
       ModalConfirm({
-        title: 'Bạn có chắc chắn muốn Xóa bản ghi không?',
-        message: 'Các dữ liệu liên quan cũng sẽ bị xóa',
+        message: 'Bạn có chắc chắn muốn Xóa bản ghi không?',
         handleConfirm: () => {
           deleteAgency(record.id + '');
         },
@@ -55,17 +59,10 @@ export const useLogicListAgency = () => {
     return [
       {
         type: 'Select',
-        name: 'agency',
-        label: 'Đại lý',
-        placeholder: 'Đại lý',
-        options: [],
-      },
-      {
-        type: 'Select',
         name: 'status',
         label: 'Trạng thái',
         placeholder: 'Trạng thái',
-        options: [],
+        options: STATUS_OPTIONS,
       },
     ];
   }, []);

@@ -4,6 +4,8 @@ import {
   IFieldErrorsItem,
   NotificationSuccess,
   IErrorResponse,
+  AnyElement,
+  NotificationError,
 } from '@vissoft-react/common';
 import { REACT_QUERY_KEYS } from '../../../../src/constants/query-key';
 import { IAgency, IAgencyParams } from '../types';
@@ -30,7 +32,7 @@ export const useSupportAddAgency = (
   return useMutation({
     mutationFn: agencyListService.createAgency,
     onSuccess: () => {
-      NotificationSuccess('Thêm mới thành công');
+      NotificationSuccess('Thêm Đại lý thành công');
       queryClient.invalidateQueries({
         queryKey: [REACT_QUERY_KEYS.GET_ALL_AGENCY],
       });
@@ -39,6 +41,10 @@ export const useSupportAddAgency = (
     onError(error: IErrorResponse & { fieldErrors?: IFieldErrorsItem[] }) {
       if (error?.errors) {
         onError(error?.errors);
+      } else {
+        NotificationError({
+          message: 'Lỗi hệ thống, thêm mới Đại lý thất bại',
+        });
       }
     },
   });
@@ -79,3 +85,19 @@ export function useSupportDeleteAgency(onSuccess?: () => void) {
     },
   });
 }
+
+export const convertArrToObj = (arr: AnyElement[], parent: AnyElement) => {
+  const newArr = arr
+    ?.filter(
+      (item) =>
+        item.parentId === parent ||
+        (!arr?.some((val: AnyElement) => val.id === item.parentId) &&
+          parent === null)
+    )
+    ?.reduce((acc, item) => {
+      acc.push({ ...item, children: convertArrToObj(arr, item.id) });
+      return acc;
+    }, []);
+
+  return newArr?.length > 0 ? newArr : undefined;
+};
