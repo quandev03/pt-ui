@@ -1,9 +1,10 @@
 import { useLoaderData } from 'react-router-dom';
-import { IUserInfo, MenuObjectItem } from '../types';
+import { IAllParamResponse, IUserInfo, MenuObjectItem } from '../types';
 
 export type LoaderData = {
   profile: IUserInfo;
   menus: MenuObjectItem[];
+  params: IAllParamResponse;
 };
 
 export const useGetLoaderData = (): LoaderData => {

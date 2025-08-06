@@ -1,11 +1,10 @@
 import {
-  IParamsOption,
+  IAllParamResponse,
   IUserInfo,
   LoaderData,
   MenuObjectItem,
 } from '@vissoft-react/common';
 import { prefixAuthService, prefixSaleService } from '../constants';
-import { ParamKeys } from '../types';
 import { safeApiClient } from './axios';
 
 export const globalService = {
@@ -13,18 +12,22 @@ export const globalService = {
     try {
       const profilePromise = globalService.getProfile();
       const menuPromise = globalService.getMenu();
-      const [profile, menuData] = await Promise.all([
+      const paramsPromise = globalService.getParamsOption();
+      const [profile, menuData, params] = await Promise.all([
         profilePromise,
         menuPromise,
+        paramsPromise,
       ]);
       return {
         profile,
         menus: menuData,
+        params,
       };
     } catch {
       return {
         profile: {} as IUserInfo,
         menus: [],
+        params: {} as IAllParamResponse,
       };
     }
   },
@@ -44,8 +47,6 @@ export const globalService = {
     return res;
   },
   getParamsOption() {
-    return safeApiClient.get<IParamsOption<ParamKeys>>(
-      `${prefixSaleService}/params`
-    );
+    return safeApiClient.get<IAllParamResponse>(`${prefixSaleService}/params`);
   },
 };
