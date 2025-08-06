@@ -10,7 +10,7 @@ export const pathRoutes = {
 
   // Quản trị hệ thống
   accountAuthorization: '/account-authorization',
-  systemUserManager: '/user-manager',
+  systemUserManager: '/user-manage',
   systemUserManagerAdd: '/user-manager/add',
   systemUserManagerEdit: (id?: IStringNumber) =>
     `/user-manager/edit/${id ? id : ':id'}`,
@@ -23,4 +23,6 @@ export const pathRoutes = {
   roleManagerView: (id?: IStringNumber) =>
     `/role-manager/view/${id ? id : ':id'}`,
   auditLog: '/audit-log',
+  saleManagement: '/sale-management',
+  updateSubscriberInfo: '/subscriber-info-registration',
 };

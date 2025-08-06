@@ -1,0 +1,192 @@
+import {
+  AnyElement,
+  CButton,
+  MESSAGE,
+  UploadFileMax,
+} from '@vissoft-react/common';
+import { Form, FormInstance, Spin } from 'antd';
+import { RcFile } from 'antd/es/upload';
+import imageCompression from 'browser-image-compression';
+import { FC, useRef, useState } from 'react';
+import Webcam from 'react-webcam';
+import useCamera from '../../../../src/assets/images/userCamera.png';
+import { useCameraStatus } from '../hooks/useCameraStatus';
+import { StyledUpload } from '../pages/styled';
+import { useUpdateSubscriberInfoStore } from '../store';
+import { StepEnum } from '../type';
+import { base64ToFile } from '../utils';
+
+type Props = {
+  form: FormInstance;
+};
+const VerifyFace: FC<Props> = ({ form }) => {
+  const webcamRef = useRef<Webcam>(null);
+  const { hasCamera } = useCameraStatus();
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [progressLoading, setProgressLoading] = useState<boolean>(false);
+  const { setStep } = useUpdateSubscriberInfoStore();
+  const ImageFileType = ['image/png', 'image/jpeg', 'image/jpg'];
+
+  const handleCapture = () => {
+    const img = webcamRef.current?.getScreenshot();
+    if (img) {
+      const unCompressedFile = base64ToFile(img, 'image.jpg');
+      handlePressFile(unCompressedFile);
+    }
+  };
+  const handleResetImage = () => {
+    setImageSrc(null);
+  };
+  const handlePressFile = (unCompressedFile: File) => {
+    const options = {
+      maxSizeMB: 0.488,
+      useWebWorker: true,
+      maxWidthOrHeight: 1024,
+    };
+    const p1 = new Promise(function (resolve) {
+      setTimeout(resolve, 10000, unCompressedFile);
+    });
+    const race = Promise.race([
+      p1,
+      imageCompression(unCompressedFile, options),
+    ]);
+    setProgressLoading(true);
+    race.then(async (response) => {
+      const file: AnyElement = response;
+      if (file.size && file.size > UploadFileMax) {
+        form.setFields([
+          {
+            name: 'image',
+            errors: ['Nén không thành công'],
+          },
+        ]);
+        return;
+      }
+      // const fileFormBlob = new File([file], file.name, { type: file.type });
+      // form.setFieldsValue({
+      //   decree13: fileFormBlob,
+      // });
+      const url = await imageCompression.getDataUrlFromFile(file);
+      form.setFields([
+        {
+          name: 'image',
+          errors: [],
+        },
+      ]);
+      form.setFieldValue('image', file);
+      setImageSrc(url);
+      setProgressLoading(false);
+    });
+  };
+  const beforeUpload = async (unCompressedFile: RcFile) => {
+    if (!ImageFileType.includes(unCompressedFile.type || '')) {
+      form.setFields([
+        {
+          name: 'image',
+          errors: [MESSAGE.G31],
+        },
+      ]);
+      return;
+    }
+    handlePressFile(unCompressedFile);
+    return false;
+  };
+
+  const renderImage = () => {
+    if (!hasCamera && !imageSrc) {
+      return (
+        <div className="w-full border-dotted border-[8px] aspect-[4/4] border-[##D5DDEF] flex justify-center items-center rounded-full">
+          <div className="w-[96%] aspect-[4/4] bg-[#F3F3F3] flex justify-center items-center rounded-full">
+            <div className="w-1/2">
+              <img src={useCamera} alt="user camera icon" />
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      if (imageSrc) {
+        return (
+          <div className="mt-1 mb-3 w-full overflow-hidden rounded-full aspect-[4/4]">
+            <img
+              src={imageSrc}
+              alt="ảnh được tải lên"
+              className="rounded-full w-full h-full object-cover"
+            />
+          </div>
+        );
+      }
+      return (
+        <Webcam
+          audio={false}
+          ref={webcamRef}
+          screenshotFormat="image/jpeg"
+          videoConstraints={{
+            facingMode: 'user',
+          }}
+          className="rounded-full w-full mt-1 mb-3 object-cover aspect-[4/4]"
+        />
+      );
+    }
+  };
+  const handleCheckFace = () => {
+    setStep(StepEnum.STEP4);
+  };
+  return (
+    <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
+      <div className="flex items-center flex-col  w-full">
+        <p className="text-lg font-semibold mt-2">Xác thực hộ chiếu</p>
+        <p className={`text-center mb-6 mt-4`}>
+          {imageSrc
+            ? 'Kiểm tra hình ảnh và nhấn '
+            : 'Vui lòng điều chỉnh sao cho khuôn mặt của bạn nằm trong vòng tròn'}
+          <span className="text-[#1062AD]">{imageSrc ? 'Xác nhận' : ''}</span>
+        </p>
+        <div className="w-4/5">
+          <Form.Item name="image">
+            <Spin spinning={progressLoading}>{renderImage()}</Spin>
+          </Form.Item>
+        </div>
+      </div>
+      {imageSrc ? (
+        <div className="flex justify-between gap-5 w-full">
+          <CButton
+            className="rounded-full w-full py-6 mb-4 flex-1"
+            onClick={handleResetImage}
+            type="default"
+          >
+            Quay lại
+          </CButton>
+          <CButton
+            className="rounded-full w-full py-6 flex-1"
+            onClick={handleCheckFace}
+          >
+            Kiểm tra
+          </CButton>
+        </div>
+      ) : (
+        <div className="flex justify-between gap-5 w-full">
+          <div className="flex-1">
+            <CButton
+              className="rounded-full w-full py-6 mb-4"
+              onClick={handleCapture}
+              disabled={!hasCamera}
+            >
+              Chụp ảnh
+            </CButton>
+          </div>
+          <div className="flex-1">
+            <StyledUpload
+              accept={ImageFileType.join(',')}
+              showUploadList={false}
+              multiple={false}
+              beforeUpload={beforeUpload}
+            >
+              <CButton className="rounded-full w-full py-6">Upload ảnh</CButton>
+            </StyledUpload>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+export default VerifyFace;
