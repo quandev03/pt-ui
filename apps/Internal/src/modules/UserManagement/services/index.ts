@@ -1,4 +1,4 @@
-import { IPage } from '@vissoft-react/common';
+import { AnyElement, IPage } from '@vissoft-react/common';
 import { prefixAuthService } from '../../../constants';
 import { axiosClient, safeApiClient } from '../../../services/axios';
 import { IRoleItem } from '../../../types/admin';
@@ -73,9 +73,10 @@ export const userServices = {
   },
   getAllDepartment: async () => {
     try {
-      return await axiosClient.get<string, IDepartment[]>(
+      const data = await axiosClient.get<AnyElement>(
         `${prefixAuthService}/api/departments/all`
       );
+      return data.data;
     } catch {
       return [];
     }

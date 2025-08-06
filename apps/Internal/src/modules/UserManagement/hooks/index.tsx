@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  AnyElement,
   IErrorResponse,
   IFieldErrorsItem,
   NotificationError,
@@ -7,7 +8,7 @@ import {
 } from '@vissoft-react/common';
 import { REACT_QUERY_KEYS } from '../../../constants/query-key';
 import { userServices } from '../services';
-import { IUserItem, IUserParams } from '../types';
+import { IDepartment, IUserItem, IUserParams } from '../types';
 
 const useGetAllRole = (params: { isPartner: boolean }) => {
   return useQuery({
@@ -25,15 +26,15 @@ const useGetUsers = (params: IUserParams) => {
   });
 };
 
-const useGetDepartments = (status: number[] = [0, 1]) => {
+const useGetDepartments = (status: number[] = [1]) => {
   return useQuery({
     queryKey: [REACT_QUERY_KEYS.GET_ALL_DEPARTMENTS],
     queryFn: () => userServices.getAllDepartment(),
     select: (data) => {
       if (!data) return [];
       return data
-        .filter((item: any) => status.includes(item.status))
-        .map((item) => ({
+        .filter((item: IDepartment) => status.includes(item.status))
+        .map((item: AnyElement) => ({
           label: item.name,
           value: item.id,
           code: item?.code,
