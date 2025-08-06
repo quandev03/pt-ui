@@ -107,7 +107,6 @@ export const ActionPage = () => {
         ...values,
         images: form.getFieldValue('images')?.file ?? undefined,
       };
-      console.log('data', data);
       if (actionMode === IModeAction.CREATE) {
         mutateAdd(data);
       } else {
@@ -131,7 +130,6 @@ export const ActionPage = () => {
       <TitleHeader>{`${getActionMode(actionMode)} gói cước`}</TitleHeader>
       <Spin spinning={false}>
         <Form
-          disabled={actionMode === IModeAction.READ}
           form={form}
           labelCol={{ span: 4 }}
           colon={false}
@@ -145,9 +143,6 @@ export const ActionPage = () => {
                   <CSwitch
                     disabled={actionMode !== IModeAction.UPDATE}
                     checked={true}
-                    onChange={(value) => {
-                      console.log('value', value);
-                    }}
                   />
                 </Form.Item>
               </Col>
@@ -158,7 +153,10 @@ export const ActionPage = () => {
                   label="Mã gói cước"
                   name="pckCode"
                 >
-                  <CInput placeholder="Nhập mã gói cước" />
+                  <CInput
+                    disabled={actionMode === IModeAction.READ}
+                    placeholder="Nhập mã gói cước"
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -167,7 +165,10 @@ export const ActionPage = () => {
                   label="Tên gói cước"
                   name="pckName"
                 >
-                  <CInput placeholder="Nhập tên gói cước" />
+                  <CInput
+                    disabled={actionMode === IModeAction.READ}
+                    placeholder="Nhập tên gói cước"
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -178,7 +179,11 @@ export const ActionPage = () => {
                   rules={[
                     {
                       validator(_, value) {
-                        if (!value || value.length === 0) {
+                        if (
+                          value === undefined ||
+                          value === null ||
+                          value === ''
+                        ) {
                           return Promise.reject(
                             'Không được để trống trường này'
                           );
@@ -261,16 +266,22 @@ export const ActionPage = () => {
               {actionMode === IModeAction.CREATE && (
                 <>
                   <CButtonSaveAndAdd
+                    disabled={false}
                     htmlType="submit"
                     onClick={() => setType(EActionSubmit.SAVE_AND_ADD)}
                   />
                   <CButtonSave
+                    disabled={false}
                     htmlType="submit"
                     onClick={() => setType(EActionSubmit.SAVE)}
                   >
                     Lưu
                   </CButtonSave>
-                  <CButtonClose type="default" onClick={() => navigate(-1)}>
+                  <CButtonClose
+                    disabled={false}
+                    type="default"
+                    onClick={() => navigate(-1)}
+                  >
                     Đóng
                   </CButtonClose>
                 </>
@@ -279,11 +290,18 @@ export const ActionPage = () => {
                 <>
                   <CButtonEdit
                     htmlType="submit"
-                    onClick={() => setType(EActionSubmit.SAVE)}
+                    onClick={() => {
+                      navigate(-1);
+                    }}
+                    disabled={false}
                   >
                     Sửa
                   </CButtonEdit>
-                  <CButtonClose type="default" onClick={() => navigate(-1)}>
+                  <CButtonClose
+                    disabled={false}
+                    type="default"
+                    onClick={() => navigate(-1)}
+                  >
                     Đóng
                   </CButtonClose>
                 </>
@@ -291,12 +309,17 @@ export const ActionPage = () => {
               {actionMode === IModeAction.UPDATE && (
                 <>
                   <CButtonSave
+                    disabled={false}
                     htmlType="submit"
                     onClick={() => setType(EActionSubmit.SAVE)}
                   >
                     Lưu
                   </CButtonSave>
-                  <CButtonClose type="default" onClick={() => navigate(-1)}>
+                  <CButtonClose
+                    disabled={false}
+                    type="default"
+                    onClick={() => navigate(-1)}
+                  >
                     Đóng
                   </CButtonClose>
                 </>

@@ -3,17 +3,17 @@ import { safeApiClient } from 'apps/Internal/src/services';
 import { IListOfServicePackageForm } from '../types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { REACT_QUERY_KEYS } from 'apps/Internal/src/constants/query-key';
-import { AnyElement } from '@vissoft-react/common';
+import { AnyElement, NotificationSuccess } from '@vissoft-react/common';
 
 const fetch = async (data: IListOfServicePackageForm & { id: string }) => {
   const formData = new FormData();
   const dataForm = {
-    packageName: data.packageName,
+    packageName: data.pckName,
     packagePrice: data.packagePrice,
     status: data.status,
-    packageCode: data.packageCode,
+    packageCode: data.pckCode,
   };
-  formData.append('image', data.image as File);
+  formData.append('image', data.images as File);
   formData.append(
     'data',
     new Blob([JSON.stringify(dataForm)], { type: 'application/json' })
@@ -38,9 +38,7 @@ export const useEdit = (onSuccess?: () => void) => {
   return useMutation({
     mutationFn: fetch,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [REACT_QUERY_KEYS.LIST_OF_SERVICE_PACKAGE],
-      });
+      NotificationSuccess('Cập nhật thành công');
       onSuccess?.();
     },
   });
