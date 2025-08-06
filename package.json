@@ -18,9 +18,12 @@
   },
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^5.5.2",
     "@react-oauth/google": "^0.12.2",
     "@tanstack/react-query": "5.69.0",
     "antd": "^5.26.0",
+    "axios": "^1.11.0",
+    "dayjs": "^1.11.13",
     "firebase": "^12.0.0",
     "husky": "9.1.7",
     "lodash": "^4.17.21",
