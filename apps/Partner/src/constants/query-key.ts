@@ -1,3 +1,6 @@
 export const REACT_QUERY_KEYS = {
   GET_MENU: 'GET_MENU',
+
+  // Danh sách eSIM
+  GET_ESIM_WAREHOUSE_LIST: 'GET_ESIM_WAREHOUSE_LIST',
 };

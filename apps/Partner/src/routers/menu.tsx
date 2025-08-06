@@ -24,6 +24,10 @@ export const routerItems: RouterItems[] = [
     label: 'Tài khoản',
     parentId: pathRoutes.accountAuthorization as string,
   },
+  {
+    key: pathRoutes.esimWarehouse as string,
+    label: 'Danh sách eSIM',
+  },
 ];
 
 export const singlePopActions = ['add'];

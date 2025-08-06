@@ -23,4 +23,8 @@ export const pathRoutes = {
   roleManagerView: (id?: IStringNumber) =>
     `/role-manager/view/${id ? id : ':id'}`,
   auditLog: '/audit-log',
+  esimWarehouse: '/esim-warehouse',
+  esimWarehouseAdd: '/esim-warehouse/add',
+  esimWarehouseView: (id?: IStringNumber) =>
+    `esim-warehouse/view/${id ? id : ':id'}`,
 };
