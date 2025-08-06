@@ -289,6 +289,7 @@ export const ActionPage = () => {
               {actionMode === IModeAction.READ && (
                 <>
                   <CButtonEdit
+                    disabled={false}
                     htmlType="submit"
                     onClick={() => {
                       navigate(-1);

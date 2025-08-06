@@ -15,11 +15,11 @@ import {
   Text,
   TitleHeader,
   useActionMode,
+  usePermissions,
   validateForm,
 } from '@vissoft-react/common';
 import { Col, Form, Row, Spin, Tree, Typography } from 'antd';
-import { useRolesByRouter } from 'apps/Internal/src/hooks';
-import { pathRoutes } from 'apps/Internal/src/routers';
+import { pathRoutes } from '../../../routers';
 import { includes } from 'lodash';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -31,6 +31,7 @@ import {
   useSupportUpdateRole,
 } from '../hooks';
 import { IFullMenu, PropsRole } from '../types';
+import useConfigAppStore from '../../Layouts/stores';
 
 const processTreeData = (data: IFullMenu[]): any => {
   return data.map((item) => ({
@@ -59,8 +60,8 @@ export const ActionRole: FC<PropsRole> = ({ isPartner }) => {
   const [showValidateTree, setShowValidateTree] = useState<boolean>(false);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [checkedKeys, setCheckedKeys] = useState<string[]>([]);
-  const actionByRole = useRolesByRouter();
-
+  const { menuData } = useConfigAppStore();
+  const permission = usePermissions(menuData);
   const actionMode = useActionMode();
 
   const { data: listRoleByIsPartner = [] } = useGetObjectList(isPartner);
@@ -313,8 +314,7 @@ export const ActionRole: FC<PropsRole> = ({ isPartner }) => {
               />
             )}
             {actionMode !== IModeAction.READ &&
-              (includes(actionByRole, ActionsTypeEnum.UPDATE) ||
-                includes(actionByRole, ActionsTypeEnum.CREATE)) && (
+              (permission.canUpdate || permission.canCreate) && (
                 <CButtonSave
                   onClick={() => {
                     if (!checkedKeys.length) {
@@ -330,9 +330,7 @@ export const ActionRole: FC<PropsRole> = ({ isPartner }) => {
             {actionMode === IModeAction.READ && (
               <>
                 <Show>
-                  <Show.When
-                    isTrue={includes(actionByRole, ActionsTypeEnum.DELETE)}
-                  >
+                  <Show.When isTrue={permission.canDelete}>
                     <CButtonDelete
                       onClick={() => {
                         ModalConfirm({
@@ -352,9 +350,7 @@ export const ActionRole: FC<PropsRole> = ({ isPartner }) => {
                   </Show.When>
                 </Show>
                 <Show>
-                  <Show.When
-                    isTrue={includes(actionByRole, ActionsTypeEnum.UPDATE)}
-                  >
+                  <Show.When isTrue={permission.canUpdate}>
                     <CButtonEdit
                       onClick={() => {
                         if (isPartner) {

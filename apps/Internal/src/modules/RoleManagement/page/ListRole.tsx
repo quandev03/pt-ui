@@ -1,37 +1,33 @@
 import {
-  ActionsTypeEnum,
   CButtonAdd,
-  CInput,
   decodeSearchParams,
   formatQueryParams,
   IModeAction,
   LayoutList,
   ModalConfirm,
+  usePermissions,
 } from '@vissoft-react/common';
-import { Form, Tooltip } from 'antd';
-import { ColumnsType } from 'antd/es/table';
-import { useRolesByRouter } from 'apps/Internal/src/hooks/useRolesByRouter';
-import { pathRoutes } from 'apps/Internal/src/routers';
-import { includes } from 'lodash';
+import { Form } from 'antd';
 import { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { getColumnsTableRole } from '../constants';
+import { pathRoutes } from '../../../routers';
+import useConfigAppStore from '../../Layouts/stores';
 import { useGetRoles, useSupportDeleteRole } from '../hooks';
-import { IRoleItem, IRoleParams, PropsRole } from '../types';
+import { useColumnsTableRole } from '../hooks/useColumnsTableRole';
 import { useFilters } from '../hooks/useFilters';
+import { IRoleItem, IRoleParams, PropsRole } from '../types';
 
 export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
-  const actionByRole = useRolesByRouter();
   const [searchParams] = useSearchParams();
   const { pathname } = useLocation();
   const params = decodeSearchParams(searchParams);
   const navigate = useNavigate();
   const [form] = Form.useForm();
-
+  const { menuData } = useConfigAppStore();
   useEffect(() => {
     form.setFieldsValue(params);
-  }, [pathname]);
-
+  }, [form, params, pathname]);
+  const permission = usePermissions(menuData);
   const handleAction = useCallback(
     (type: IModeAction, record: IRoleItem) => {
       switch (type) {
@@ -58,7 +54,7 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
           return;
       }
     },
-    [navigate]
+    [isPartner, navigate]
   );
 
   const { mutate: deleteRole } = useSupportDeleteRole();
@@ -79,7 +75,7 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
         },
       });
     },
-    [deleteRole]
+    [deleteRole, isPartner]
   );
   const handleAddRole = useCallback(() => {
     if (isPartner) {
@@ -89,40 +85,33 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
     }
   }, [isPartner, navigate]);
   const { filters } = useFilters();
-  const columns: ColumnsType<IRoleItem> = useMemo(() => {
-    return getColumnsTableRole(params, actionByRole, {
-      onAction: handleAction,
-      onDelete: handleDeleteRole,
-    });
-  }, [params, actionByRole, handleAction, handleDeleteRole]);
+  const columns = useColumnsTableRole(params, {
+    onAction: handleAction,
+    onDelete: handleDeleteRole,
+  });
   const actionComponent = useMemo(() => {
     return (
-      <CButtonAdd
-        onClick={handleAddRole}
-        disabled={!includes(actionByRole, ActionsTypeEnum.CREATE)}
-      />
+      <CButtonAdd onClick={handleAddRole} disabled={!permission.canCreate} />
     );
-  }, [handleAddRole]);
+  }, [permission.canCreate, handleAddRole]);
   return (
-    <>
-      <LayoutList
-        title={
-          isPartner ? 'Vai trò & Phân quyền đối tác' : 'Vai Trò & Phân Quyền'
-        }
-        filterItems={filters}
-        loading={loadingTable}
-        columns={columns}
-        data={listRole}
-        searchComponent={
-          <LayoutList.SearchComponent
-            name="q"
-            tooltip="Nhập mã hoặc tên vai trò"
-            placeholder="Nhập mã hoặc tên vai trò"
-            maxLength={100}
-          />
-        }
-        actionComponent={actionComponent}
-      />
-    </>
+    <LayoutList
+      title={
+        isPartner ? 'Vai trò & Phân quyền đối tác' : 'Vai Trò & Phân Quyền'
+      }
+      filterItems={filters}
+      loading={loadingTable}
+      columns={columns}
+      data={listRole}
+      searchComponent={
+        <LayoutList.SearchComponent
+          name="q"
+          tooltip="Nhập mã hoặc tên vai trò"
+          placeholder="Nhập mã hoặc tên vai trò"
+          maxLength={100}
+        />
+      }
+      actionComponent={actionComponent}
+    />
   );
 });
