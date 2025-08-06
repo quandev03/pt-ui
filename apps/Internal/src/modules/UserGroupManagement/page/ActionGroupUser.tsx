@@ -216,6 +216,7 @@ export const ActionGroupUser = () => {
                   <CSwitch disabled={IModeAction.UPDATE !== actionMode} />
                 </Form.Item>
               </Col>
+              <Col span={12}></Col>
               <Col span={12}>
                 <Form.Item
                   label="Mã nhóm"
