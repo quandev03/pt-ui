@@ -8,6 +8,7 @@ import {
   IModeAction,
   LayoutList,
   ModalConfirm,
+  usePermissions,
 } from '@vissoft-react/common';
 import { Form, Tooltip } from 'antd';
 import { useRolesByRouter } from 'apps/Internal/src/hooks/useRolesByRouter';
@@ -22,6 +23,7 @@ import {
 } from '../queryHooks';
 import usePartnerStore from '../stores';
 import { IOrganizationUnitDTO } from '../types';
+import { useColumnsTablePartnerCatalog } from '../hook/useColumnsTablePartnerCatalog';
 
 export const PartnerCatalogList = () => {
   const [searchParams] = useSearchParams();
@@ -42,45 +44,20 @@ export const PartnerCatalogList = () => {
   const { mutate: updateStatusPartner } = useUpdateStatusPartner();
   const { data: organizationPartner, isLoading: loadingTable } =
     useGetOrganizationPartner(formatQueryParams(cleanParams(params)));
-  const dataTable = useMemo(() => {
-    if (!organizationPartner) {
-      return [];
-    }
-    return organizationPartner.content;
-  }, [organizationPartner]);
-
   const {
-    params: {
-      PARTNER_TYPE = [],
-      PARTNER_APPROVAL_STATUS = [],
-      PARTNER_STATUS = [],
-    },
+    params: { PARTNER_STATUS = [] },
   } = useConfigAppStore();
   const filters: FilterItemProps[] = useMemo(() => {
     return [
       {
         type: 'Select',
-        label: 'Loại đối tác',
-        name: 'partnerType',
-        options: PARTNER_TYPE,
-        placeholder: 'Chọn loại đối tác',
-      },
-      {
-        type: 'Select',
-        label: 'Trạng thái phê duyệt',
-        name: 'approvalStatus',
-        options: PARTNER_APPROVAL_STATUS,
-        placeholder: 'Chọn trạng thái phê duyệt',
-      },
-      {
-        type: 'Select',
-        label: 'Trạng thái hoạt động',
+        label: 'Trạng thái',
         name: 'status',
         options: PARTNER_STATUS,
-        placeholder: 'Chọn trạng thái hoạt động',
+        placeholder: 'Chọn trạng thái',
       },
     ];
-  }, [PARTNER_TYPE, PARTNER_APPROVAL_STATUS, PARTNER_STATUS]);
+  }, [PARTNER_STATUS]);
   const handleAction = useCallback(
     (action: IModeAction, record: IOrganizationUnitDTO) => {
       switch (action) {
@@ -135,6 +112,12 @@ export const PartnerCatalogList = () => {
     },
     [navigate]
   );
+
+  const columns = useColumnsTablePartnerCatalog(
+    params,
+    PARTNER_STATUS,
+    handleAction
+  );
   const handleAdd = useCallback(() => {
     navigate(pathRoutes.partnerCatalogAdd);
   }, []);
@@ -146,30 +129,28 @@ export const PartnerCatalogList = () => {
         params.status === 0 || params.status ? String(params.status) : null,
     });
   }, []);
+  const { menuData } = useConfigAppStore();
+  const permission = usePermissions(menuData);
   const actionComponent = useMemo(() => {
     return (
-      <div>
-        {!includes(listRoles, IModeAction.CREATE) && (
-          <CButtonAdd onClick={handleAdd} />
-        )}
-      </div>
+      <div>{permission.canCreate && <CButtonAdd onClick={handleAdd} />}</div>
     );
-  }, [handleAdd, listRoles]);
+  }, [handleAdd, permission]);
   return (
-    <>
-      <LayoutList
-        title="Quản lý đối tác"
-        filterItems={filters}
-        actionComponent={actionComponent}
-        searchComponent={
-          <Tooltip title="Nhập tên hoặc mã đối tác" placement="right">
-            <Form.Item label="" name="q" className="!mb-0">
-              <CInput placeholder="Nhập tên hoặc mã đối tác" maxLength={100} />
-            </Form.Item>
-          </Tooltip>
-        }
-        // dataTable={dataTable}
-      />
-    </>
+    <LayoutList
+      loading={loadingTable}
+      title="Quản lý đối tác"
+      filterItems={filters}
+      actionComponent={actionComponent}
+      searchComponent={
+        <LayoutList.SearchComponent
+          name="q"
+          tooltip="Nhập tên hoặc mã đối tác"
+          placeholder="Nhập tên hoặc mã đối tác"
+        />
+      }
+      columns={columns}
+      data={organizationPartner}
+    />
   );
 };

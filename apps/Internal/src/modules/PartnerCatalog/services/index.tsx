@@ -1,6 +1,9 @@
+import { IPage } from '@vissoft-react/common';
+import { prefixSaleService } from 'apps/Internal/src/constants';
+import { safeApiClient } from 'apps/Internal/src/services';
+import type { AxiosRequestHeaders } from 'axios';
 import { Key } from 'react';
 import {
-  ICatalogPartner,
   ICCCDInfo,
   IOrganizationUnitDTO,
   IParamsProductByCategory,
@@ -10,17 +13,10 @@ import {
   IStockNumber,
   IStockNumberParams,
 } from '../types';
-import { safeApiClient } from 'apps/Internal/src/services';
-import { IPage } from '@vissoft-react/common';
-import {
-  prefixAuthService,
-  prefixSaleService,
-} from 'apps/Internal/src/constants';
-import type { AxiosRequestHeaders } from 'axios';
 export const PartnerCatalogService = {
   getOrganizationPartner: (params: IPartnerCatalogParams) => {
-    return safeApiClient.get<IPage<ICatalogPartner>>(
-      `${prefixAuthService}/api/organization-partner`,
+    return safeApiClient.get<IPage<IOrganizationUnitDTO>>(
+      `${prefixSaleService}/organization-partner`,
       {
         params,
       }
@@ -28,13 +24,13 @@ export const PartnerCatalogService = {
   },
   getProductByCategory: (params: IParamsProductByCategory) => {
     return safeApiClient.get<IPage<any>>(
-      `${prefixAuthService}/api/product/search-flat`,
+      `${prefixSaleService}/product/search-flat`,
       { params }
     );
   },
   getProductAuthorization: (id: string | number) => {
     return safeApiClient.get<IProductAuthorization[]>(
-      `${prefixAuthService}/api/organization-partner/${id}/organization-product`
+      `${prefixSaleService}/organization-partner/${id}/organization-product`
     );
   },
   createProductAuthorization: (data: {
@@ -43,13 +39,13 @@ export const PartnerCatalogService = {
   }) => {
     const { id, payload } = data;
     return safeApiClient.post(
-      `${prefixAuthService}/api/organization-partner/${id}/organization-product`,
+      `${prefixSaleService}/organization-partner/${id}/organization-product`,
       payload
     );
   },
   getOrganizationPartnerDetail: async (id: string | number) => {
     const res = await safeApiClient.get<IOrganizationUnitDTO>(
-      `${prefixAuthService}/api/organization-partner/${id}`
+      `${prefixSaleService}/organization-partner/${id}`
     );
     if (res.contractNoFileUrl) {
       const contractNoFileUrl = await PartnerCatalogService.getPreviewFile(
@@ -102,10 +98,10 @@ export const PartnerCatalogService = {
     orgCode: string;
   }) => {
     const resPromise = safeApiClient.put<IOrganizationUnitDTO>(
-      `${prefixAuthService}/api/organization-partner/${id}/update-status?status=${status}`
+      `${prefixSaleService}/organization-partner/${id}/update-status?status=${status}`
     );
     const updateStatusClientPromise = safeApiClient.put<IOrganizationUnitDTO>(
-      `${prefixAuthService}/private/api/clients/${orgCode}/status`,
+      `${prefixSaleService}/clients/${orgCode}/status`,
       { status }
     );
     const [res] = await Promise.all([resPromise, updateStatusClientPromise]);
@@ -133,7 +129,7 @@ export const PartnerCatalogService = {
     );
 
     return safeApiClient.post<any>(
-      `${prefixAuthService}/organization-partner`,
+      `${prefixSaleService}/organization-partner`,
       formData,
       {
         headers: {
@@ -176,7 +172,7 @@ export const PartnerCatalogService = {
     );
 
     return safeApiClient.put<any>(
-      `${prefixSaleService}/organization-partner/${payload.id}`,
+      `${prefixSaleService}/organization-partner/${payload.id}/update`,
       formData,
       {
         headers: {
@@ -192,7 +188,7 @@ export const PartnerCatalogService = {
     formData.append('portrait', payload.portrait as Blob);
 
     return safeApiClient.post<ICCCDInfo>(
-      `${prefixAuthService}/activation-info?cardType=1`,
+      `${prefixSaleService}/activation-info?cardType=1`,
       formData,
       {
         headers: {
@@ -203,11 +199,11 @@ export const PartnerCatalogService = {
   },
   getStockPermission: (id: string | number) => {
     return safeApiClient.get<IStockNumber[]>(
-      `${prefixAuthService}/organization-partner/${id}/stock-permission`
+      `${prefixSaleService}/organization-partner/${id}/stock-permission`
     );
   },
   getStockNumber: (params: IStockNumberParams) => {
-    const url = `${prefixAuthService}/stock-isdn-org/find/by-stock-type?${params}`;
+    const url = `${prefixSaleService}/stock-isdn-org/find/by-stock-type?${params}`;
     return safeApiClient.get<IPage<IStockNumber>>(url);
   },
   createStockPermission: (payload: {
@@ -216,12 +212,12 @@ export const PartnerCatalogService = {
   }) => {
     const { data, id } = payload;
     return safeApiClient.post<IStockNumber>(
-      `${prefixAuthService}/organization-partner/${id}/stock-permission`,
+      `${prefixSaleService}/organization-partner/${id}/stock-permission`,
       data
     );
   },
   getPreviewFile: (uri: string) => {
-    return safeApiClient.get<Blob>(`${prefixAuthService}/file/${uri}`, {
+    return safeApiClient.get<Blob>(`${prefixSaleService}/file/${uri}`, {
       responseType: 'blob',
     });
   },
