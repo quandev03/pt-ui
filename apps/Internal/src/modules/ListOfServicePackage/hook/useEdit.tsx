@@ -1,17 +1,16 @@
+import { useMutation } from '@tanstack/react-query';
+import { AnyElement, NotificationSuccess } from '@vissoft-react/common';
 import { prefixSaleService } from 'apps/Internal/src/constants';
 import { safeApiClient } from 'apps/Internal/src/services';
 import { IListOfServicePackageForm } from '../types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { REACT_QUERY_KEYS } from 'apps/Internal/src/constants/query-key';
-import { AnyElement, NotificationSuccess } from '@vissoft-react/common';
 
 const fetch = async (data: IListOfServicePackageForm & { id: string }) => {
   const formData = new FormData();
   const dataForm = {
-    packageName: data.pckName,
+    pckName: data.pckName,
     packagePrice: data.packagePrice,
     status: data.status,
-    packageCode: data.pckCode,
+    pckCode: data.pckCode,
   };
   formData.append('image', data.images as File);
   formData.append(
@@ -34,7 +33,6 @@ const fetch = async (data: IListOfServicePackageForm & { id: string }) => {
 };
 
 export const useEdit = (onSuccess?: () => void) => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: fetch,
     onSuccess: () => {

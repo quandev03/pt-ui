@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { IModeAction } from '@vissoft-react/common';
 import { prefixSaleService } from 'apps/Internal/src/constants';
 import { REACT_QUERY_KEYS } from 'apps/Internal/src/constants/query-key';
 import { safeApiClient } from 'apps/Internal/src/services';
@@ -15,9 +16,9 @@ const fetch = async (id: string) => {
   }
 };
 
-export const useView = (id: string) => {
+export const useView = (id: string, actionMode?: IModeAction) => {
   return useQuery({
-    queryKey: [REACT_QUERY_KEYS.LIST_OF_SERVICE_PACKAGE_VIEW, id],
+    queryKey: [REACT_QUERY_KEYS.LIST_OF_SERVICE_PACKAGE_VIEW, id, actionMode],
     queryFn: () => fetch(id),
     enabled: !!id,
   });

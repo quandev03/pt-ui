@@ -27,6 +27,7 @@ import { useAdd } from '../hook/useAdd';
 import { useEdit } from '../hook/useEdit';
 import { useView } from '../hook/useView';
 import { IListOfServicePackageForm } from '../types';
+import { pathRoutes } from 'apps/Internal/src/routers';
 
 export const ActionPage = () => {
   const actionMode = useActionMode();
@@ -34,8 +35,11 @@ export const ActionPage = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const { id } = useParams();
-  const { data: dataView } = useView(id ?? '');
-  const { mutate: mutateEdit } = useEdit();
+  const { data: dataView } = useView(id ?? '', actionMode);
+  const { mutate: mutateEdit } = useEdit(() => {
+    navigate(-1);
+    setImageUrl(null);
+  });
   const { mutate: mutateAdd } = useAdd(() => {
     if (type === EActionSubmit.SAVE_AND_ADD) {
       form.resetFields();
@@ -124,7 +128,7 @@ export const ActionPage = () => {
         ...dataView,
       });
     }
-  }, [dataView]);
+  }, [dataView, form]);
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{`${getActionMode(actionMode)} gói cước`}</TitleHeader>
@@ -277,52 +281,24 @@ export const ActionPage = () => {
                   >
                     Lưu
                   </CButtonSave>
-                  <CButtonClose
-                    disabled={false}
-                    type="default"
-                    onClick={() => navigate(-1)}
-                  >
-                    Đóng
-                  </CButtonClose>
+                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
                 </>
               )}
               {actionMode === IModeAction.READ && (
                 <>
                   <CButtonEdit
-                    disabled={false}
-                    htmlType="submit"
                     onClick={() => {
-                      navigate(-1);
+                      navigate(pathRoutes.listOfServicePackageEdit(id));
                     }}
                     disabled={false}
-                  >
-                    Sửa
-                  </CButtonEdit>
-                  <CButtonClose
-                    disabled={false}
-                    type="default"
-                    onClick={() => navigate(-1)}
-                  >
-                    Đóng
-                  </CButtonClose>
+                  />
+                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
                 </>
               )}
               {actionMode === IModeAction.UPDATE && (
                 <>
-                  <CButtonSave
-                    disabled={false}
-                    htmlType="submit"
-                    onClick={() => setType(EActionSubmit.SAVE)}
-                  >
-                    Lưu
-                  </CButtonSave>
-                  <CButtonClose
-                    disabled={false}
-                    type="default"
-                    onClick={() => navigate(-1)}
-                  >
-                    Đóng
-                  </CButtonClose>
+                  <CButtonSave disabled={false} htmlType="submit" />
+                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
                 </>
               )}
             </Space>

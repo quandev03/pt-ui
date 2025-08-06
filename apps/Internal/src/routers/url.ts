@@ -55,11 +55,11 @@ export const pathRoutes = {
   // Quản lý danh mục
   category: '/category',
 
-  list_of_service_package: '/list-of-service-package',
-  list_of_service_package_add: '/list-of-service-package/add',
-  list_of_service_package_edit: (id?: IStringNumber) =>
+  listOfServicePackage: '/list-of-service-package',
+  listOfServicePackageAdd: '/list-of-service-package/add',
+  listOfServicePackageEdit: (id?: IStringNumber) =>
     `/list-of-service-package/edit/${id ? id : ':id'}`,
-  list_of_service_package_view: (id?: IStringNumber) =>
+  listOfServicePackageView: (id?: IStringNumber) =>
     `/list-of-service-package/view/${id ? id : ':id'}`,
 
   //========= Danh mục đối tác
