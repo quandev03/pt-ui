@@ -13,7 +13,7 @@ RUN ls -la &&  \
     echo "Using npm repo: $NPM_CONFIG_REGISTRY" &&  \
     yarn config get npmRegistryServer &&  \
     yarn config get unsafeHttpWhitelist &&  \
-    yarn set version stable \
+    yarn set version stable && \
     yarn install
 COPY ./nx.json ./nx.json
 COPY ./apps/Partner/.env.production ./.env
