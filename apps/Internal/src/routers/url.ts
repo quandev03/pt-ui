@@ -52,6 +52,11 @@ export const pathRoutes = {
   // Quản lý số
   manageNumber: '/manage-number',
   lookupNumber: '/lookup-number', //tra cứu số
+
+  uploadNumber: '/upload-number',
+  uploadNumberView: (id?: string | number) =>
+    `/upload-number/view/${id ? id : ':id'}`,
+  uploadNumberAdd: '/upload-number/add',
   // Quản lý danh mục
   category: '/category',
 
@@ -77,4 +82,10 @@ export const pathRoutes = {
     `/partner-catalog/user-management/${orgCode}/edit/${id}`,
   partnerCatalogUserView: (orgCode = ':orgCode', id = ':id') =>
     `/partner-catalog/user-management/${orgCode}/view/${id}`,
+
+  // Danh sách kho eSIM
+  esimStock: '/esim-stock',
+  // Báo cáo
+  report: '/report',
+  reportPartner: '/report-partner',
 };

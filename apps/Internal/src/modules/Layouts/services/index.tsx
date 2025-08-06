@@ -64,7 +64,10 @@ export const layoutPageService: ILayoutService = {
     };
   },
   fetcherChangePassword: async (payload: PayloadType) => {
-    return safeApiClient.post(`/auth/change-password`, payload);
+    return safeApiClient.post(
+      `hvn-admin-service/private/api/auth/change-password`,
+      payload
+    );
   },
   logout: async (refreshToken: string) => {
     const formReq = new URLSearchParams();
