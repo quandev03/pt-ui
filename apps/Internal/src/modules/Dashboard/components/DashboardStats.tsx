@@ -28,10 +28,10 @@ export const DashboardStats = ({ data }: { data: IDataDashboardStats }) => {
     return num.toLocaleString('en-US');
   };
   const dataTest = [
-    { label: 'Tổng eSIM đã bán', value: data.totalESIM, icon: svgTotalESIM() },
-    { label: 'Tổng STB đã gọi 900', value: data.totalSTB, icon: svgTotalSTB() },
+    { label: 'Tổng eSIM đã đặt', value: data.totalESIM, icon: svgTotalESIM() },
+    { label: 'Tổng eSIM đã bán', value: data.totalSTB, icon: svgTotalSTB() },
     {
-      label: 'Tổng gói cước đã bán',
+      label: 'Tổng STB đã gọi 900',
       value: data.totalPackagesSold,
       icon: svgTotalPackagesSold(),
     },
@@ -51,10 +51,10 @@ export const DashboardStats = ({ data }: { data: IDataDashboardStats }) => {
               <div className="flex items-center gap-4 px-6">
                 {item.icon}
                 <div>
-                  <div className="font-medium text-lg">{item.label}</div>
+                  <div className="font-medium text-sm">{item.label}</div>
                 </div>
               </div>
-              <div className="text-3xl font-bold text-primary tracking-[2px]">
+              <div className="text-3xl ml-10 text-center mt-2 font-bold text-primary tracking-[2px]">
                 {formatNumber(item.value)}
               </div>
             </div>

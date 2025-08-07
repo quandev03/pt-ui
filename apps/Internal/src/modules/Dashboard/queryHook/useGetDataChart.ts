@@ -3,6 +3,36 @@ import { IChartItem, IChartParam } from '../type';
 import { safeApiClient } from 'apps/Internal/src/services';
 import { prefixSaleService } from 'apps/Internal/src/constants';
 import dayjs from 'dayjs';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+
+// Extend dayjs with weekOfYear plugin
+dayjs.extend(weekOfYear);
+
+// Helper function to format date based on period
+const formatDateByPeriod = (
+  date: dayjs.Dayjs,
+  period: 'week' | 'month' | 'year' | 'day'
+) => {
+  switch (period) {
+    case 'day':
+      return date.format('DD/MM/YYYY');
+    case 'month':
+      return `${date.month() + 1}/${date.year()}`;
+    case 'week':
+      // Calculate week number within the month (1-5)
+      const startOfMonth = date.startOf('month');
+      const dayOfMonth = date.date();
+      const weekOfMonth = Math.ceil(dayOfMonth / 7);
+      const month = date.month() + 1;
+      return `Tuần ${weekOfMonth.toString().padStart(2, '0')}/T${month
+        .toString()
+        .padStart(2, '0')}`;
+    case 'year':
+      return date.year().toString();
+    default:
+      return date.format('DD/MM/YYYY');
+  }
+};
 
 const fetcher = async (params: IChartParam) => {
   console.log('Fetching chart data with params:', params);
@@ -108,25 +138,47 @@ export const dataMock = {
 };
 
 // Mock data for donut chart (agent/dealer distribution)
-export const donutDataMock = [
-  { name: 'SUN', value: 70, color: '#3B82F6' },
-  { name: 'SUN 1', value: 10, color: '#F59E0B' },
-  { name: 'SUN 2', value: 20, color: '#EF4444' },
+export const donutDataMockLine = [
+  { name: 'SUN', value: 60, color: '#3B82F6' },
+  { name: 'SUN 1', value: 30, color: '#F59E0B' },
+  { name: 'SUN 2', value: 10, color: '#EF4444' },
 ];
-
+export const donutDataMockColumn = [
+  { name: 'SUN', value: 20, color: '#3B82F6' },
+  { name: 'SUN 1', value: 20, color: '#F59E0B' },
+  { name: 'SUN 2', value: 60, color: '#EF4444' },
+];
 // Helper function to get mock data based on period
 export const getMockData = (
-  period: 'week' | 'month' | 'year' = 'week'
+  period: 'day' | 'week' | 'month' | 'year' = 'week'
 ): IChartItem[] => {
-  if (period === 'week') {
-    // Generate dynamic week data based on current week
-    const today = dayjs();
-    const startOfWeek = today.startOf('week');
-    const weekData = [];
+  const today = dayjs();
 
-    for (let i = 0; i < 7; i++) {
-      const date = startOfWeek.add(i, 'day');
-      const dateStr = date.format('DD/MM');
+  if (period === 'day') {
+    // Generate day data for exactly 24 days
+    const dayData = [];
+    const startDate = today.subtract(23, 'day');
+
+    for (let i = 0; i < 24; i++) {
+      const date = startDate.add(i, 'day');
+      const dateStr = formatDateByPeriod(date, 'day');
+      dayData.push({
+        x: dateStr,
+        y: dataMock.month[i]?.y || Math.floor(Math.random() * 1000) + 100,
+      });
+    }
+
+    return dayData;
+  }
+
+  if (period === 'week') {
+    // Generate week data for exactly 24 weeks
+    const weekData = [];
+    const startDate = today.subtract(23, 'week');
+
+    for (let i = 0; i < 24; i++) {
+      const date = startDate.add(i, 'week');
+      const dateStr = formatDateByPeriod(date, 'week');
       weekData.push({
         x: dateStr,
         y: dataMock.week[i]?.y || Math.floor(Math.random() * 1000) + 100,
@@ -136,10 +188,47 @@ export const getMockData = (
     return weekData;
   }
 
+  if (period === 'month') {
+    // Generate month data for exactly 24 months (1/2025, 2/2025, etc.)
+    const monthData = [];
+    const startMonth = today.subtract(23, 'month').startOf('month');
+
+    for (let i = 0; i < 24; i++) {
+      const date = startMonth.add(i, 'month');
+      const dateStr = formatDateByPeriod(date, 'month');
+      monthData.push({
+        x: dateStr,
+        y: dataMock.year[i]?.y || Math.floor(Math.random() * 20000) + 10000,
+      });
+    }
+
+    return monthData;
+  }
+
+  if (period === 'year') {
+    // Generate year data for exactly 24 years
+    const yearData = [];
+    const currentYear = today.year();
+
+    for (let i = 0; i < 24; i++) {
+      const year = currentYear - 23 + i;
+      const dateStr = formatDateByPeriod(dayjs().year(year), 'year');
+      yearData.push({
+        x: dateStr,
+        y: dataMock.year[i]?.y || Math.floor(Math.random() * 20000) + 10000,
+      });
+    }
+
+    return yearData;
+  }
+
   return dataMock[period] || dataMock.week;
 };
 
 // Helper function to get donut chart data
 export const getDonutData = () => {
-  return donutDataMock;
+  return {
+    line: donutDataMockLine,
+    column: donutDataMockColumn,
+  };
 };
