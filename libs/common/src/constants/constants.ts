@@ -87,3 +87,11 @@ export enum ActionsTypeEnum {
 }
 export const TenMinutes = 10 * 60 * 1000;
 export const ImageFileType = ['image/png', 'image/jpeg', 'image/jpg'];
+export enum EStatus {
+  ACTIVE = 1,
+  INACTIVE = 0,
+}
+export enum EActionSubmit {
+  SAVE = 'SAVE',
+  SAVE_AND_ADD = 'SAVE_AND_ADD',
+}

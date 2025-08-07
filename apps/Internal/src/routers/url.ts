@@ -10,6 +10,7 @@ export interface ParamsType {
 }
 
 export const pathRoutes = {
+  dashboard: '/dashboard',
   home: '/',
   welcome: '/welcome',
   profile: '/profile',
@@ -17,7 +18,7 @@ export const pathRoutes = {
   forgotPassword: '/forgot-password',
   notFound: '/not-found',
 
-  // Quản trị hệ thống
+  // Quản lý tài khoản
   systemManager: '/system-manager',
   accountAuthorization: '/account-authorization',
   systemUserManager: '/user-manager',
@@ -33,23 +34,26 @@ export const pathRoutes = {
   roleManagerView: (id?: IStringNumber) =>
     `/role-manager/view/${id ? id : ':id'}`,
   auditLog: '/audit-log',
-
+  groupUserManager: '/group-user-manager',
+  groupUserManagerAdd: '/group-user-manager/add',
+  groupUserManagerEdit: (id?: IStringNumber) =>
+    `/group-user-manager/edit/${id ? id : ':id'}`,
+  groupUserManagerView: (id?: IStringNumber) =>
+    `/group-user-manager/view/${id ? id : ':id'}`,
   object: '/object-manager',
   object_add: '/object-manager/add',
   object_edit: (id = ':id') => `/object-manager/edit/${id}`,
   object_view: (id = ':id') => `/object-manager/view/${id}`,
+  rolePartnerManager: '/role-partner-manager',
+  rolePartnerManagerAdd: '/role-partner-manager/add',
+  rolePartnerManagerEdit: (id?: IStringNumber) =>
+    `/role-partner-manager/edit/${id ? id : ':id'}`,
+  rolePartnerManagerView: (id?: IStringNumber) =>
+    `/role-partner-manager/view/${id ? id : ':id'}`,
   // Quản lý số
   manageNumber: '/manage-number',
   lookupNumber: '/lookup-number', //tra cứu số
-  // Quản lý đối tác
-  partnerCatalog: '/partner-catalog',
-  partnerCatalogAdd: '/partner-catalog/add',
-  partnerCatalogEdit: (id?: IStringNumber) =>
-    `/partner-catalog/edit/${id ? id : ':id'}`,
-  partnerCatalogView: (id?: IStringNumber) =>
-    `/partner-catalog/view/${id ? id : ':id'}`,
-  partnerCatalogUserManagement: (orgCode = ':orgCode') =>
-    `/partner-catalog/user-management/${orgCode}`,
+
   // Quản lý danh mục
   category: '/category',
 
@@ -61,4 +65,38 @@ export const pathRoutes = {
     `/list-of-service-package/view/${id ? id : ':id'}`,
 
   //========= Danh mục đối tác
+
+  uploadNumber: '/upload-number',
+  uploadNumberView: (id?: string | number) =>
+    `/upload-number/view/${id ? id : ':id'}`,
+  uploadNumberAdd: '/upload-number/add',
+
+  list_of_service_package: '/list-of-service-package',
+  list_of_service_package_add: '/list-of-service-package/add',
+  list_of_service_package_edit: (id?: IStringNumber) =>
+    `/list-of-service-package/edit/${id ? id : ':id'}`,
+  list_of_service_package_view: (id?: IStringNumber) =>
+    `/list-of-service-package/view/${id ? id : ':id'}`,
+
+  //========= Danh mục đối tác
+  partnerCatalog: '/partner-catalog',
+  partnerCatalogAdd: '/partner-catalog/add',
+  partnerCatalogEdit: (id?: IStringNumber) =>
+    `/partner-catalog/edit/${id ? id : ':id'}`,
+  partnerCatalogView: (id?: IStringNumber) =>
+    `/partner-catalog/view/${id ? id : ':id'}`,
+  partnerCatalogUserManagement: (orgCode = ':orgCode') =>
+    `/partner-catalog/user-management/${orgCode}`,
+  partnerCatalogUserAdd: (orgCode = ':orgCode') =>
+    `/partner-catalog/user-management/${orgCode}/add`,
+  partnerCatalogUserEdit: (orgCode = ':orgCode', id = ':id') =>
+    `/partner-catalog/user-management/${orgCode}/edit/${id}`,
+  partnerCatalogUserView: (orgCode = ':orgCode', id = ':id') =>
+    `/partner-catalog/user-management/${orgCode}/view/${id}`,
+
+  // Danh sách kho eSIM
+  esimStock: '/esim-stock',
+  // Báo cáo
+  report: '/report',
+  reportPartner: '/report-partner',
 };
