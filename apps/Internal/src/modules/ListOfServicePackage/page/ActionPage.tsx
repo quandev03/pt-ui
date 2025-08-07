@@ -28,6 +28,7 @@ import { useEdit } from '../hook/useEdit';
 import { useView } from '../hook/useView';
 import { IListOfServicePackageForm } from '../types';
 import { pathRoutes } from 'apps/Internal/src/routers';
+import { useGetImage } from '../hook';
 
 export const ActionPage = () => {
   const actionMode = useActionMode();
@@ -52,6 +53,14 @@ export const ActionPage = () => {
   });
   const [imageUrl, setImageUrl] = useState<string | null | undefined>(null);
   const [isChangeImage, setIsChangeImage] = useState(false);
+  const { mutate: mutateGetImage } = useGetImage((blobData) => {
+    try {
+      const url = window.URL.createObjectURL(blobData);
+      setImageUrl(url);
+    } catch (error) {
+      console.error('Error creating object URL:', error);
+    }
+  });
   const beforeUpload = async (file: RcFile) => {
     if (!ImageFileType.includes(file.type || '')) {
       form.setFields([
@@ -95,6 +104,10 @@ export const ActionPage = () => {
     </button>
   );
   const handleDeleteImage = () => {
+    // Cleanup object URL if it exists
+    if (imageUrl && imageUrl.startsWith('blob:')) {
+      window.URL.revokeObjectURL(imageUrl);
+    }
     setImageUrl(undefined);
     setIsChangeImage(true);
     form.setFieldValue('images', null);
@@ -123,12 +136,23 @@ export const ActionPage = () => {
     [form, id, mutateAdd, mutateEdit]
   );
   useEffect(() => {
-    if (dataView) {
+    if (dataView && id) {
       form.setFieldsValue({
         ...dataView,
       });
+      mutateGetImage(id);
     }
-  }, [dataView, form]);
+  }, [dataView, form, id, mutateGetImage]);
+
+  // Cleanup object URL when component unmounts or imageUrl changes
+  useEffect(() => {
+    const currentImageUrl = imageUrl;
+    return () => {
+      if (currentImageUrl && currentImageUrl.startsWith('blob:')) {
+        window.URL.revokeObjectURL(currentImageUrl);
+      }
+    };
+  }, [imageUrl]);
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{`${getActionMode(actionMode)} gói cước`}</TitleHeader>
