@@ -1,6 +1,6 @@
 import { ColumnsType } from 'antd/es/table';
 import { IEsimWarehouseList } from '../types';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
   decodeSearchParams,
   IModeAction,
@@ -178,13 +178,14 @@ export const useColumnsEsimWarehouseList = ({
         return (
           <WrapperActionTable>
             <CButton
-              style={{
-                backgroundColor: '#FFFFFF',
-                color: '#616774',
-                fontWeight: 'bold',
-                borderRadius: '1px',
-                border: '1px radius #616774',
-              }}
+              type="default"
+              // style={{
+              //   backgroundColor: '#FFFFFF',
+              //   color: '#616774',
+              //   fontWeight: 'bold',
+              //   borderRadius: '1px',
+              //   border: '1px radius #616774',
+              // }}
               onClick={() => onGenQr(record)}
             >
               Gen QR

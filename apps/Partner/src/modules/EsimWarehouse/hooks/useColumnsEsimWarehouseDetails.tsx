@@ -1,6 +1,7 @@
 import { ColumnsType } from 'antd/es/table';
 import { IEsimWarehouseDetails } from '../types';
-import { RenderCell } from '@vissoft-react/common';
+import { formatDate, RenderCell } from '@vissoft-react/common';
+import dayjs from 'dayjs';
 
 export const useColumnsEsimWarehouseDetails =
   (): ColumnsType<IEsimWarehouseDetails> => {
@@ -41,7 +42,12 @@ export const useColumnsEsimWarehouseDetails =
         align: 'left',
         fixed: 'left',
         render(value) {
-          return <RenderCell value={value} tooltip={value} />;
+          return (
+            <RenderCell
+              value={dayjs(value).format(formatDate)}
+              tooltip={value}
+            />
+          );
         },
       },
     ];

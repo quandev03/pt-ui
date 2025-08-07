@@ -10,6 +10,14 @@ import { useColumnsEsimWarehouseList } from '../../hooks/useColumnsEsimWarehouse
 import { IEsimWarehouseList } from '../../types';
 import { ColumnsType } from 'antd/es/table';
 import { useGetEsimWarehouseList } from '../../hooks/useGetEsimWarehouseList';
+import { useGetPackageCodes } from '../../hooks/useGetPackagesCode';
+import { DefaultOptionType } from 'antd/es/select';
+import {
+  ActiveStatusEnum,
+  activeStatusMap,
+  Status900Enum,
+  status900Map,
+} from '../../constants/enum';
 
 // No props are needed here. The hook will manage its own state.
 export const useLogicListEsimWarehouse = () => {
@@ -55,32 +63,101 @@ export const useLogicListEsimWarehouse = () => {
     onGenQr: handleOpenGenQr,
     onViewDetails: handleShowDetails,
   });
+  const { data: packageCodeList } = useGetPackageCodes();
+
+  const packageOptions: DefaultOptionType[] = useMemo(() => {
+    return packageCodeList
+      ? packageCodeList
+          .filter((pkg) => pkg.pckCode)
+          .map((pkg) => ({
+            label: pkg.pckCode,
+            value: pkg.pckCode,
+          }))
+      : [];
+  }, [packageCodeList]);
+
+  const subStatusOptions: DefaultOptionType[] = useMemo(
+    () => [
+      {
+        value: Status900Enum.NOT_CALLED,
+        label: status900Map[Status900Enum.NOT_CALLED].text,
+      },
+      {
+        value: Status900Enum.CALLED,
+        label: status900Map[Status900Enum.CALLED].text,
+      },
+    ],
+    []
+  );
+  console.log(
+    '🚀 ~ useLogicListEsimWarehouse ~ subStatusOptions:',
+    subStatusOptions
+  );
+
+  const activeStatusOptions: DefaultOptionType[] = useMemo(
+    () => [
+      {
+        value: ActiveStatusEnum.NORMAL,
+        label: activeStatusMap[ActiveStatusEnum.NORMAL].text,
+      },
+      {
+        value: ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST,
+        label:
+          activeStatusMap[ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST].text,
+      },
+      {
+        value: ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_PROVIDER,
+        label:
+          activeStatusMap[ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_PROVIDER].text,
+      },
+      {
+        value: ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_REQUEST,
+        label:
+          activeStatusMap[ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_REQUEST].text,
+      },
+      {
+        value: ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_PROVIDER,
+        label:
+          activeStatusMap[ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_PROVIDER].text,
+      },
+    ],
+    []
+  );
+  console.log(
+    '🚀 ~ useLogicListEsimWarehouse ~ activeStatusOptions:',
+    activeStatusOptions
+  );
+
+  console.log(
+    '🚀 ~ useLogicListEsimWarehouse ~ packageOptions:',
+    packageOptions
+  );
 
   const filters: FilterItemProps[] = useMemo(() => {
     return [
       {
         type: 'Select',
-        name: 'agency',
+        name: 'pckCode',
         label: 'Chọn gói cước',
         placeholder: 'Chọn gói cước',
-        options: [],
+        options: packageOptions,
       },
       {
         type: 'Select',
-        name: 'status',
+        name: 'subStatus',
         label: 'Trạng thái thuê bao',
         placeholder: 'Trạng thái thuê bao',
-        options: [],
+        options: subStatusOptions,
       },
       {
         type: 'Select',
-        name: 'status',
+        name: 'activeStatus',
         label: 'Trạng thái chặn cắt',
         placeholder: 'Trạng thái chặn cắt',
-        options: [],
+        options: activeStatusOptions,
       },
     ];
-  }, []);
+  }, [activeStatusOptions, packageOptions, subStatusOptions]);
   return {
     columns,
     filters,
