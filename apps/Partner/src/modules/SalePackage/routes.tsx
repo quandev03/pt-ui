@@ -16,4 +16,11 @@ export const routesPackageSaleList: RouteObject[] = [
       return { Component: SingleSalePackageAction };
     },
   },
+  {
+    path: pathRoutes.salePackageAddBulk,
+    lazy: async () => {
+      const { BulkSalePackageAction } = await import('./pages');
+      return { Component: BulkSalePackageAction };
+    },
+  },
 ];

@@ -83,8 +83,7 @@ const ModalOtp = ({
       <div>
         <strong className="block text-center text-lg py-3">Xác nhận</strong>
         <p className="text-center mb-6 mx-16">
-          Nhập mã OTP gửi về SĐT ${userLogin?.phoneNumber} để xác nhận nạp gói
-          cho thuê bao:
+          Nhập mã PIN để xác nhận bán gói cho thuê bao:
         </p>
         <Form form={form} colon={false} onFinish={handleSubmit} labelWrap>
           <Row>
@@ -92,7 +91,7 @@ const ModalOtp = ({
               <Row>
                 <Form.Item
                   name="otp"
-                  label="Mã OTP"
+                  label="Mã PIN"
                   className="flex pl-10"
                   rules={[validateForm.required]}
                 >
@@ -103,26 +102,6 @@ const ModalOtp = ({
                     placeholder="Nhập mã OTP"
                   />
                 </Form.Item>
-                <Row
-                  align="middle"
-                  justify="center"
-                  style={{ flexDirection: 'column' }}
-                >
-                  <Col>
-                    <CButton
-                      disabled={isDisabled}
-                      onClick={() => {
-                        handleGenOtp();
-                      }}
-                      className="disabled:bg-[#C6C6C6] h-max-[90%] disabled:text-black font-medium"
-                    >
-                      Gửi lại
-                    </CButton>
-                  </Col>
-                  <p className="font-medium italic mt-[2px]">
-                    {formatTime(count)}
-                  </p>
-                </Row>
               </Row>
             </Col>
           </Row>

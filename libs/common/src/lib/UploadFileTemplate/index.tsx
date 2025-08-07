@@ -203,4 +203,4 @@ const UploadFileTemplate = ({
   );
 };
 
-export default UploadFileTemplate;
+export { UploadFileTemplate };
