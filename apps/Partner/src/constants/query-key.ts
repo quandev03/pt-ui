@@ -1,3 +1,4 @@
 export const REACT_QUERY_KEYS = {
   GET_MENU: 'GET_MENU',
+  GET_ALL_AGENCY: 'GET_ALL_AGENCY',
 };

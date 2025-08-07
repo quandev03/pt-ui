@@ -1,4 +1,10 @@
-import { DatePickerProps, FormItemProps, InputProps, SelectProps } from 'antd';
+import {
+  DatePickerProps,
+  FormItemProps,
+  InputProps,
+  SelectProps,
+  TreeSelectProps,
+} from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 import { AnyElement, IPage, IOption } from '../../types';
 
@@ -14,6 +20,15 @@ export interface InputFilterType extends InputProps {
 
 export interface SelectFilterType extends SelectProps {
   type: 'Select';
+  name: string;
+  label: string;
+  showDefault?: boolean;
+  propsFormItem?: FormItemProps;
+  stateKey?: string;
+}
+
+export interface TreeSelectFilterType extends TreeSelectProps {
+  type: 'TreeSelect';
   name: string;
   label: string;
   showDefault?: boolean;
@@ -82,6 +97,7 @@ export interface DebounceSearchFilterType<T = Record<string, unknown>> {
 }
 
 export type FilterItemProps =
+  | TreeSelectFilterType
   | InputFilterType
   | SelectFilterType
   | DateFilterType

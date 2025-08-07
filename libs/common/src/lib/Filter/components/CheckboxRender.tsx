@@ -82,6 +82,7 @@ export const CheckboxRender = ({
       <Checkbox.Group
         onChange={handleCheckboxChange}
         value={checkboxGroupValue}
+        className="flex-col gap-2"
       >
         {items.map((item) => {
           return (
