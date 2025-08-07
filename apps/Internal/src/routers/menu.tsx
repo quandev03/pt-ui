@@ -97,7 +97,7 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.reportPartner,
-    label: 'Báo cáo đối tác',
+    label: 'Báo cáo đơn hàng đối tác',
     parentId: pathRoutes.report,
   },
 ];
