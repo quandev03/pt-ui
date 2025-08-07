@@ -6,7 +6,6 @@ WORKDIR /workspace
 COPY package.json ./package.json
 COPY yarn.lock ./yarn.lock
 COPY .yarnrc.yml ./.yarnrc.yml
-# ARG NPM_CONFIG_REGISTRY="https://registry.npmjs.org"
 ARG YARN_NPM_REGISTRY_SERVER="https://registry.npmjs.org"
 
 # Cài đặt và cấu hình corepack
@@ -16,14 +15,17 @@ RUN npm install -g corepack
 RUN corepack enable && \
     corepack prepare --activate
 
-# Cấu hình yarn registry và install dependencies
+# Debug và cấu hình yarn registry
 RUN ls -la && \
+    echo "Yarn version:" && yarn --version && \
     echo "Using yarn repo: $YARN_NPM_REGISTRY_SERVER" && \
-    # echo "Using npm repo: $NPM_CONFIG_REGISTRY" && \
-    yarn config set npmRegistryServer $YARN_NPM_REGISTRY_SERVER && \
-    yarn config set npmAlwaysAuth false && \
+    yarn config set --home enableTelemetry 0 && \
+    yarn config set --home npmRegistryServer $YARN_NPM_REGISTRY_SERVER && \
+    yarn config set --home npmAlwaysAuth false && \
+    echo "Current yarn config:" && \
     yarn config get npmRegistryServer && \
-    yarn install --frozen-lockfile
+    echo "Starting yarn install..." && \
+    yarn install --frozen-lockfile --network-timeout 100000
 
 COPY ./nx.json ./nx.json
 COPY ./apps/Internal/.env.production ./.env
@@ -41,4 +43,4 @@ RUN yarn build:internal
 FROM $BASE_RUNNER AS runner
 ENV TZ=Asia/Ho_Chi_Minh
 WORKDIR /usr/share/nginx/html
-COPY --from=base --chown=nginx:nginx /workspace/dist/apps/internal /usr/share/nginx/html
+COPY --from=base --chown=nginx:nginx /workspace/dist/apps/Internal /usr/share/nginx/html
