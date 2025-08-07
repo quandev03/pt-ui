@@ -20,7 +20,7 @@ export const ListFreeEsim = memo(() => {
       data={listFreeEsimBooked}
       searchComponent={
         <LayoutList.SearchComponent
-          name="q"
+          name="textSearch"
           tooltip="Nhập tên user thực hiện"
           placeholder="Nhập tên user thực hiện"
         />

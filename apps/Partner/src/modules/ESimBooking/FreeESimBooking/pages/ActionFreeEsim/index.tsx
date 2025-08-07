@@ -38,6 +38,12 @@ export const ActionFreeEsim = memo(() => {
     }
   }, [actionMode, getFreeEsimList, id, form]);
 
+  useEffect(() => {
+    if (actionMode === IModeAction.CREATE && packageOptions?.length === 1) {
+      form.setFieldsValue({ packageCode: packageOptions[0].value });
+    }
+  }, [packageOptions, actionMode, form]);
+
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{Title}</TitleHeader>

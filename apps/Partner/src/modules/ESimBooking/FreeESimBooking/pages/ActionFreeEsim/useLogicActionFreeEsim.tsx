@@ -46,7 +46,6 @@ export const useLogicActionUser = () => {
     useGetListFreeEsimBooking(formatQueryParams<IParamsRequest>(params));
 
   const { data: packageCodeList } = useGetPackageCodes();
-
   const packageOptions = packageCodeList?.map((pkg) => ({
     key: pkg.id,
     value: pkg.pckCode,

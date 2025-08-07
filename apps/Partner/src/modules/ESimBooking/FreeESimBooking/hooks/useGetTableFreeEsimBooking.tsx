@@ -24,10 +24,8 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
   const handleAction = (action: IModeAction, record: IFreeEsimBooking) => {
     switch (action) {
       case IModeAction.READ: {
-        console.log('current action', action);
         const toView = pathRoutes.freeEsimBookingView;
         if (typeof toView === 'function') {
-          console.log('id is: ', record.id);
           navigate(toView(record.id));
         }
         break;
@@ -73,9 +71,8 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
     {
       title: 'User thực hiện',
       dataIndex: 'createdBy',
-      width: 250,
+      width: 300,
       align: 'left',
-      fixed: 'left',
       render(value) {
         return <RenderCell value={value} tooltip={value} />;
       },
@@ -83,9 +80,8 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
     {
       title: 'Thời gian tạo',
       dataIndex: 'createdDate',
-      width: 250,
+      width: 200,
       align: 'left',
-      fixed: 'left',
       render(value) {
         const textFormatDate = value ? dayjs(value).format(formatDateTime) : '';
         return <RenderCell value={textFormatDate} tooltip={textFormatDate} />;
@@ -94,9 +90,8 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
     {
       title: 'Thời gian hoàn thành',
       dataIndex: 'finishedDate',
-      width: 250,
+      width: 200,
       align: 'left',
-      fixed: 'left',
       render(value) {
         const textFormatDate = value ? dayjs(value).format(formatDateTime) : '';
         return <RenderCell value={textFormatDate} tooltip={textFormatDate} />;
@@ -107,7 +102,6 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
       dataIndex: 'status',
       width: 150,
       align: 'left',
-      fixed: 'left',
       render(value) {
         let displayText = '';
         let textColor = '';
@@ -131,9 +125,8 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
     {
       title: 'Kết quả',
       dataIndex: 'succeededNumber',
-      width: 300,
+      width: 230,
       align: 'left',
-      fixed: 'left',
       render(value, record) {
         return (
           <RenderCell
@@ -149,7 +142,7 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
       },
     },
     {
-      title: 'Thao tác',
+      title: 'Hành động',
       align: 'center',
       width: 150,
       fixed: 'right',

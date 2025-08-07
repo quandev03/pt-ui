@@ -40,18 +40,10 @@ export const useLogicListFreeEsimBooking = () => {
   const filters: FilterItemProps[] = useMemo(() => {
     return [
       {
-        type: 'Select',
-        name: 'agency',
-        label: 'Đại lý',
-        placeholder: 'Chọn đại lý',
-        options: [],
-      },
-
-      {
         type: 'DateRange',
         name: 'orderDate',
         label: 'Ngày đặt hàng',
-        keySearch: ['startDate', 'endDate'],
+        keySearch: ['from', 'to'],
         formatSearch: 'YYYY-MM-DD',
         placeholder: ['Từ ngày', 'Đến ngày'],
       },
