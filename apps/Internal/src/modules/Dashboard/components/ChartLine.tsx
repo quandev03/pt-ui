@@ -20,30 +20,6 @@ const chartPeriods: IChartPeriod[] = [
 ];
 
 // Helper function to format date based on period
-const formatDateByPeriod = (
-  date: Dayjs,
-  period: 'week' | 'month' | 'year' | 'day'
-) => {
-  switch (period) {
-    case 'day':
-      return date.format('DD/MM/YYYY');
-    case 'month':
-      return `${date.month() + 1}/${date.year()}`;
-    case 'week':
-      // Calculate week number within the month (1-5)
-      const startOfMonth = date.startOf('month');
-      const dayOfMonth = date.date();
-      const weekOfMonth = Math.ceil(dayOfMonth / 7);
-      const month = date.month() + 1;
-      return `Tuần ${weekOfMonth.toString().padStart(2, '0')}/T${month
-        .toString()
-        .padStart(2, '0')}`;
-    case 'year':
-      return date.year().toString();
-    default:
-      return date.format('DD/MM/YYYY');
-  }
-};
 
 // Helper function to get date range based on period
 const getDateRangeByPeriod = (period: 'week' | 'month' | 'year' | 'day') => {
@@ -118,13 +94,17 @@ export const ChartLine = () => {
       lineCap: 'round' as const,
     },
     xaxis: {
+      type: 'category' as const,
       categories: data.map((item: any) => item.x),
       labels: {
         style: {
           colors: '#6B7280',
-          fontSize: '12px',
+          fontSize: '13px',
           fontFamily: 'Inter, sans-serif',
         },
+        rotate: -45,
+        rotateAlways: false,
+        maxHeight: 60,
       },
       axisBorder: {
         show: false,
@@ -137,14 +117,14 @@ export const ChartLine = () => {
       title: {
         style: {
           color: '#6B7280',
-          fontSize: '14px',
+          fontSize: '13px',
           fontFamily: 'Inter, sans-serif',
         },
       },
       labels: {
         style: {
           colors: '#6B7280',
-          fontSize: '12px',
+          fontSize: '13px',
           fontFamily: 'Inter, sans-serif',
         },
         formatter: (value: number) => value.toLocaleString(),
@@ -173,7 +153,7 @@ export const ChartLine = () => {
         formatter: (value: number) => `${value.toLocaleString()} gói`,
       },
       style: {
-        fontSize: '12px',
+        fontSize: '13px',
         fontFamily: 'Inter, sans-serif',
       },
     },
@@ -256,19 +236,26 @@ export const ChartLine = () => {
       colors: ['#FFFFFF'],
     },
     colors: donutData.map((item: any) => item.color),
+    labels: donutData.map((item: any) => item.name),
     legend: {
-      position: 'bottom' as const,
+      position: 'right' as const,
       fontSize: '14px',
       fontFamily: 'Inter, sans-serif',
       fontWeight: 400,
       labels: {
         colors: '#1F2937',
+        formatter: (seriesName: string, opts: any) => {
+          const item = donutData[opts.seriesIndex];
+          return item ? `${item.name} ${item.value}%` : seriesName;
+        },
       },
       markers: {
         size: 8,
         strokeWidth: 0,
         fillColors: donutData.map((item: any) => item.color),
         radius: 4,
+        offsetX: -10,
+        offsetY: 2,
       },
       itemMargin: {
         horizontal: 20,
@@ -279,10 +266,6 @@ export const ChartLine = () => {
       },
       onItemHover: {
         highlightDataSeries: false,
-      },
-      formatter: (seriesName: string, opts: any) => {
-        const item = donutData.find((d: any) => d.name === seriesName);
-        return item ? `${seriesName} ${item.value}%` : seriesName;
       },
     },
     tooltip: {
@@ -316,21 +299,28 @@ export const ChartLine = () => {
 
   return (
     <Card className="mt-6 px-6 rounded-[10px] shadow-[10.7px_14.94px_37.35px_0px_#6c7e9314]">
-      <div className="flex flex-col space-y-6">
+      <div className="flex flex-col space-y-1">
         {/* Header with controls */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex flex-col sm:flex-row justify-center items-start sm:items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-gray-600">Chu kỳ:</span>
-              <Select
-                value={selectedPeriod}
-                onChange={handlePeriodChange}
-                style={{ width: 120 }}
-                options={chartPeriods.map((period) => ({
-                  label: period.label,
-                  value: period.value,
-                }))}
-              />
+              <span className="text-lg font-semibold text-center text-gray-800">
+                Số lượng gói cước đã bán
+              </span>
+              <div className="flex gap-4 ml-10 items-center">
+                <span className="text-sm font-medium text-gray-600">
+                  Chu kỳ:
+                </span>
+                <Select
+                  value={selectedPeriod}
+                  onChange={handlePeriodChange}
+                  style={{ width: 120 }}
+                  options={chartPeriods.map((period) => ({
+                    label: period.label,
+                    value: period.value,
+                  }))}
+                />
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <RangePicker
@@ -353,12 +343,6 @@ export const ChartLine = () => {
 
         {/* Charts */}
         <div className="w-full">
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold text-center text-gray-800">
-              Số lượng gói cước đã bán
-            </h3>
-          </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Line Chart */}
             <div className="lg:col-span-2 min-h-[400px] overflow-hidden">
@@ -371,12 +355,12 @@ export const ChartLine = () => {
             </div>
 
             {/* Donut Chart */}
-            <div className="lg:col-span-1 flex justify-center items-end">
-              <div className="mb-[22px]">
+            <div className="lg:col-span-1 mb-6 flex justify-center items-end">
+              <div className="text-center">
                 <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-center text-gray-800">
+                  <span className="text-lg mr-36 font-semibold text-gray-800">
                     Đại lý
-                  </h3>
+                  </span>
                 </div>
                 <div>
                   <ReactApexChart
@@ -384,6 +368,7 @@ export const ChartLine = () => {
                     series={donutSeries}
                     type="donut"
                     height={300}
+                    width={380}
                   />
                 </div>
               </div>
