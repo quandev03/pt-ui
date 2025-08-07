@@ -5,17 +5,26 @@ FROM node:20-alpine AS base
 WORKDIR /workspace
 COPY package.json ./package.json
 COPY yarn.lock ./yarn.lock
-ARG NPM_CONFIG_REGISTRY="https://registry.npmjs.org"
+COPY .yarnrc.yml ./.yarnrc.yml
+# ARG NPM_CONFIG_REGISTRY="https://registry.npmjs.org"
 ARG YARN_NPM_REGISTRY_SERVER="https://registry.npmjs.org"
+
+# Cài đặt và cấu hình corepack
 RUN npm install -g corepack
-RUN corepack enable
-RUN ls -la &&  \
-    echo "Using yarn repo: $YARN_NPM_REGISTRY_SERVER" &&  \
-    echo "Using npm repo: $NPM_CONFIG_REGISTRY" &&  \
-    yarn config get npmRegistryServer &&  \
-    yarn config get unsafeHttpWhitelist &&  \
-    yarn set version stable && \
-    yarn install
+
+# Enable corepack và sử dụng version từ package.json
+RUN corepack enable && \
+    corepack prepare --activate
+
+# Cấu hình yarn registry và install dependencies
+RUN ls -la && \
+    echo "Using yarn repo: $YARN_NPM_REGISTRY_SERVER" && \
+    # echo "Using npm repo: $NPM_CONFIG_REGISTRY" && \
+    yarn config set npmRegistryServer $YARN_NPM_REGISTRY_SERVER && \
+    yarn config set npmAlwaysAuth false && \
+    yarn config get npmRegistryServer && \
+    yarn install --frozen-lockfile
+
 COPY ./nx.json ./nx.json
 COPY ./apps/Internal/.env.production ./.env
 COPY ./tsconfig.base.json ./tsconfig.base.json
