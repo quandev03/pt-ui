@@ -83,7 +83,6 @@ const VerifyPassport: FC<Props> = ({ form }) => {
   };
   const beforeUpload = async (unCompressedFile: RcFile) => {
     if (!ImageFileType.includes(unCompressedFile.type || '')) {
-      console.log('err hereee');
       form.setFields([
         {
           name: 'image',
@@ -95,7 +94,7 @@ const VerifyPassport: FC<Props> = ({ form }) => {
     handlePressFile(unCompressedFile);
     return false;
   };
-
+  console.log('render');
   const renderImage = () => {
     if (!hasCamera && !imageSrc) {
       return (
@@ -108,11 +107,11 @@ const VerifyPassport: FC<Props> = ({ form }) => {
     } else {
       if (imageSrc) {
         return (
-          <div className="object-contain mt-1 mb-3 w-full overflow-hidden rounded-2xl  aspect-[4/3]">
+          <div className="mt-1 mb-3 w-full overflow-hidden rounded-2xl aspect-[4/3]">
             <img
               src={imageSrc}
               alt="ảnh được tải lên"
-              className="rounded-2xl"
+              className="rounded-2xl w-full h-full object-cover"
             />
           </div>
         );
@@ -125,7 +124,7 @@ const VerifyPassport: FC<Props> = ({ form }) => {
           videoConstraints={{
             facingMode: 'user',
           }}
-          className="rounded-2xl w-full mt-1 mb-3 object-cover	 aspect-[4/3]"
+          className="rounded-2xl w-full mt-1 mb-3 object-cover aspect-[4/3]"
         />
       );
     }
@@ -135,7 +134,7 @@ const VerifyPassport: FC<Props> = ({ form }) => {
   };
   return (
     <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
-      <div className="flex items-center flex-col">
+      <div className="flex items-center flex-col w-full">
         <p className="text-lg font-semibold mt-2">Xác thực hộ chiếu</p>
         <p className={`text-center ${imageSrc ? 'mb-6' : 'mb-3'} mt-4`}>
           {imageSrc

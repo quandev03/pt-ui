@@ -1,11 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
+import { AnyElement } from '@vissoft-react/common';
+import { notification } from 'antd';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export function useCameraStatus() {
   const [hasCamera, setHasCamera] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const requestedRef = useRef(false); // Đảm bảo chỉ request 1 lần
 
-  // Hàm yêu cầu camera
-  const requestCamera = async () => {
+  const requestCamera = useCallback(async () => {
+    if (requestedRef.current) return; // Nếu đã gọi rồi thì không gọi lại
+    requestedRef.current = true;
+
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: true,
@@ -15,37 +20,55 @@ export function useCameraStatus() {
       setStream(mediaStream);
       setHasCamera(true);
 
-      // Track sẽ gọi onended nếu bị tắt
       videoTrack.onended = () => {
-        console.log('Camera đã bị tắt');
+        notification.error({ message: 'Camera đã bị tắt hoặc ngắt kết nối.' });
         setHasCamera(false);
         setStream(null);
+        requestedRef.current = false; // Cho phép request lại nếu bị ngắt
       };
-    } catch (err) {
-      console.warn('Không thể truy cập camera:', err);
+    } catch (err: AnyElement) {
+      let message = 'Đã xảy ra lỗi khi truy cập camera.';
+
+      switch (err?.name) {
+        case 'NotAllowedError':
+          message = 'Bạn đã từ chối quyền truy cập camera.';
+          break;
+        case 'NotFoundError':
+          message = 'Không tìm thấy camera trên thiết bị.';
+          break;
+        case 'NotReadableError':
+        case 'TrackStartError':
+          message = 'Camera đang được sử dụng bởi ứng dụng khác.';
+          break;
+        case 'OverconstrainedError':
+          message = 'Không tìm thấy camera phù hợp với yêu cầu.';
+          break;
+        default:
+          message = err?.message || message;
+          break;
+      }
+
+      notification.error({ message });
       setHasCamera(false);
       setStream(null);
+      requestedRef.current = false;
     }
-  };
+  }, []);
 
-  // Kiểm tra có camera không
   const checkHasCamera = useCallback(async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const hasVideoInput = devices.some((d) => d.kind === 'videoinput');
 
     setHasCamera(hasVideoInput);
 
-    // Nếu camera có và chưa có stream → thử mở lại
     if (hasVideoInput && !stream) {
       await requestCamera();
     }
-  }, [stream]);
+  }, [stream, requestCamera]);
 
   useEffect(() => {
-    // Lần đầu khởi động
     requestCamera();
 
-    // Lắng nghe khi có thiết bị thay đổi (rút cắm, enable lại, cấp quyền lại)
     navigator.mediaDevices.addEventListener('devicechange', checkHasCamera);
 
     return () => {
@@ -55,7 +78,7 @@ export function useCameraStatus() {
       );
       stream?.getTracks().forEach((track) => track.stop());
     };
-  }, [stream, checkHasCamera]);
+  }, [checkHasCamera, stream, requestCamera]);
 
   return { hasCamera, stream, requestCamera };
 }

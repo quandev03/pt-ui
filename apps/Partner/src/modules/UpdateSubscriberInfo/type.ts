@@ -4,6 +4,7 @@ export enum StepEnum {
   STEP3 = 2,
   STEP4 = 3,
   STEP5 = 4,
+  STEP6 = 5,
 }
 export enum VerifyTypeEnum {
   FACE = 'FACE',
