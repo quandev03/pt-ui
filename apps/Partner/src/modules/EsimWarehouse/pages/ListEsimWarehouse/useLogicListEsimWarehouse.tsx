@@ -42,7 +42,8 @@ export const useLogicListEsimWarehouse = () => {
     setSendQrModalOpen(false);
   }, []);
 
-  const handleShowDetails = useCallback(() => {
+  const handleShowDetails = useCallback((record: IEsimWarehouseList) => {
+    setSelectedRecord(record);
     setShowEsimDetails(true);
   }, []);
   const handleCloseModal = useCallback(() => {

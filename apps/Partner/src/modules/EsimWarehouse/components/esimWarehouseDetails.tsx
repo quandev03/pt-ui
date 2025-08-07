@@ -1,35 +1,38 @@
 import { CModal, CTable } from '@vissoft-react/common';
-import { IEsimWarehouseDetails } from '../types';
+import { IEsimWarehouseList } from '../types';
 import { useColumnsEsimWarehouseDetails } from '../hooks/useColumnsEsimWarehouseDetails';
+import { useGetDetailsEsimWarehouse } from '../hooks/useGetDetailsEsimWarehouse';
 
 interface IModalEsimWarehouseDetails {
   showEsimDetails: boolean;
   onClose: () => void;
-  data?: IEsimWarehouseDetails[];
+  record: IEsimWarehouseList | null;
 }
 
 export const EsimWarehouseDetails = ({
   showEsimDetails,
   onClose,
-  data = [],
+  record,
 }: IModalEsimWarehouseDetails) => {
   const columns = useColumnsEsimWarehouseDetails();
+  const { data: detailEsim, isLoading: loadingEsimDetails } =
+    useGetDetailsEsimWarehouse(record?.subId);
 
   return (
     <CModal
       open={showEsimDetails}
       title="Xem chi tiết eSIM"
       footer={null}
-      width={700}
+      width={900}
       closable={true}
       onCancel={onClose}
     >
       <CTable
         columns={columns}
-        dataSource={data}
+        dataSource={detailEsim}
+        loading={loadingEsimDetails}
         rowKey="id"
         pagination={false}
-        scroll={{ x: 650 }}
       />
     </CModal>
   );

@@ -4,6 +4,7 @@ export interface IEsimWarehouseList {
   packCode: string;
   orderNo: string;
   orgCode: string;
+  orgName: string;
   status: number;
   status900: number;
   activeStatus: number;
@@ -25,4 +26,9 @@ export interface IEsimWarehouseDetails {
   reasonNote: string;
   createdDate: string;
   createdBy: string;
+}
+
+export interface IQrCodeSent {
+  subId: string;
+  email: string;
 }

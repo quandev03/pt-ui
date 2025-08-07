@@ -38,7 +38,7 @@ export const ListEsimWarehouse = memo(() => {
       <EsimWarehouseDetails
         showEsimDetails={showEsimDetails}
         onClose={handleCloseModal}
-        data={[]}
+        record={selectedRecord}
       />
       <GenQrPopup
         open={isGenQrModalOpen}

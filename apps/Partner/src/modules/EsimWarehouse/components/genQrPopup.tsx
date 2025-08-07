@@ -5,13 +5,11 @@ import { CModal } from '@vissoft-react/common';
 const { Text, Title } = Typography;
 
 interface GenQrPopupProps {
-  // Also good practice to capitalize type/interface names for components
   open: boolean;
   onCancel: () => void;
   record: IEsimWarehouseList | null;
 }
 
-// RENAME the component function to GenQrPopup (PascalCase)
 export const GenQrPopup = ({ open, onCancel, record }: GenQrPopupProps) => {
   const qrValue = record?.serial || `https://example.com/esim/${Math.random()}`;
 

@@ -1,6 +1,6 @@
 import { ColumnsType } from 'antd/es/table';
 import { IEsimWarehouseList } from '../types';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import {
   decodeSearchParams,
   IModeAction,
@@ -9,10 +9,20 @@ import {
   Text,
   WrapperActionTable,
   CButton,
+  CTag,
+  TypeTagEnum,
+  formatDate,
 } from '@vissoft-react/common';
 import useConfigAppStore from '../../Layouts/stores';
 import { Dropdown } from 'antd';
 import { MoreVertical } from 'lucide-react';
+import dayjs from 'dayjs';
+import {
+  ActiveStatusEnum,
+  activeStatusMap,
+  Status900Enum,
+  status900Map,
+} from '../constants/enum';
 interface useColumnsEsimWarehouseListProps {
   onGenQr: (record: IEsimWarehouseList) => void;
   onSendQr: (record: IEsimWarehouseList) => void;
@@ -83,7 +93,7 @@ export const useColumnsEsimWarehouseList = ({
     },
     {
       title: 'Đại lý',
-      dataIndex: 'orgCode',
+      dataIndex: 'orgName',
       width: 150,
       align: 'left',
       render(value, record) {
@@ -95,8 +105,17 @@ export const useColumnsEsimWarehouseList = ({
       dataIndex: 'status900',
       width: 200,
       align: 'left',
-      render(value, record) {
-        return <RenderCell value={value} tooltip={value} />;
+      render(value: Status900Enum, record) {
+        const { text, type, color } = status900Map[value] || {
+          text: 'Không rõ',
+          type: TypeTagEnum.DEFAULT,
+          color: '#000000',
+        };
+        return (
+          <CTag color={color} type={type}>
+            <RenderCell value={text} tooltip={text} />
+          </CTag>
+        );
       },
     },
     {
@@ -104,8 +123,17 @@ export const useColumnsEsimWarehouseList = ({
       dataIndex: 'activeStatus',
       width: 200,
       align: 'left',
-      render(value, record) {
-        return <RenderCell value={value} tooltip={value} />;
+      render(value: ActiveStatusEnum, record) {
+        const { text, type, color } = activeStatusMap[value] || {
+          text: 'Không rõ',
+          type: TypeTagEnum.DEFAULT,
+          color: '#000000',
+        };
+        return (
+          <CTag color={color} type={type}>
+            <RenderCell value={text} tooltip={text} />
+          </CTag>
+        );
       },
     },
     {
@@ -120,10 +148,12 @@ export const useColumnsEsimWarehouseList = ({
     {
       title: 'Thời gian cập nhật',
       dataIndex: 'modifiedDate',
-      width: 200,
+      width: 150,
       align: 'left',
       render(value, record) {
-        return <RenderCell value={value} tooltip={value} />;
+        return (
+          <RenderCell value={dayjs(value).format(formatDate)} tooltip={value} />
+        );
       },
     },
     {

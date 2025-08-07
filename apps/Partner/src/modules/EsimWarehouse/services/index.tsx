@@ -1,6 +1,10 @@
 import { IPage, IParamsRequest } from '@vissoft-react/common';
 import { safeApiClient } from '../../../../src/services';
-import { IEsimWarehouseList } from '../types';
+import {
+  IEsimWarehouseDetails,
+  IEsimWarehouseList,
+  IQrCodeSent,
+} from '../types';
 import { prefixSaleService } from '../../../../src/constants';
 
 export const esimWarehouseServices = {
@@ -24,6 +28,7 @@ export const esimWarehouseServices = {
           packCode: 'DATA_5GB',
           orderNo: 'ORD001',
           orgCode: 'ORG_VN1',
+          orgName: 'Vietnam Branch 1',
           status: 1,
           status900: 0,
           activeStatus: 1,
@@ -37,9 +42,10 @@ export const esimWarehouseServices = {
           packCode: 'DATA_10GB',
           orderNo: 'ORD002',
           orgCode: 'ORG_VN2',
+          orgName: 'Vietnam Branch 2',
           status: 0,
           status900: 1,
-          activeStatus: 0,
+          activeStatus: 10,
           modifiedDate: '2025-08-04T10:15:45.987654+07:00',
           genQrBy: 'user_01',
           subId: 'SUB654321',
@@ -50,9 +56,10 @@ export const esimWarehouseServices = {
           packCode: 'VOICE_500MIN',
           orderNo: 'ORD003',
           orgCode: 'ORG_VN3',
+          orgName: 'Vietnam Branch 3',
           status: 1,
           status900: 1,
-          activeStatus: 1,
+          activeStatus: 11,
           modifiedDate: '2025-08-03T08:22:33.456789+07:00',
           genQrBy: 'system_admin',
           subId: 'SUB789123',
@@ -63,9 +70,10 @@ export const esimWarehouseServices = {
           packCode: 'COMBO_5GB_100MIN',
           orderNo: 'ORD004',
           orgCode: 'ORG_VN1',
+          orgName: 'Vietnam Branch 1',
           status: 0,
           status900: 0,
-          activeStatus: 0,
+          activeStatus: 20,
           modifiedDate: '2025-08-02T14:50:11.654321+07:00',
           genQrBy: 'user_02',
           subId: 'SUB456789',
@@ -76,9 +84,10 @@ export const esimWarehouseServices = {
           packCode: 'DATA_2GB',
           orderNo: 'ORD005',
           orgCode: 'ORG_VN4',
+          orgName: 'Vietnam Branch 4',
           status: 1,
           status900: 0,
-          activeStatus: 1,
+          activeStatus: 21,
           modifiedDate: '2025-08-01T09:10:20.321654+07:00',
           genQrBy: 'system_admin',
           subId: 'SUB987654',
@@ -103,5 +112,19 @@ export const esimWarehouseServices = {
       },
     };
   },
-  getEsimWarehouseDetails: 
+
+  getDetailEsimWarehouse: async ({ subId }: { subId?: string }) => {
+    return await safeApiClient.get<IEsimWarehouseDetails>(
+      `${prefixSaleService}/esim-manager/${subId}`
+    );
+  },
+
+  getSendQrCode: async (data: IQrCodeSent) => {
+    const { ...payload } = data;
+    const createNewEsimRes = await safeApiClient.post<IQrCodeSent>(
+      `${prefixSaleService}/esim-free/book`,
+      payload
+    );
+    return createNewEsimRes;
+  },
 };
