@@ -18,16 +18,17 @@ import {
   useSupportUpdateUser,
 } from '../../hooks';
 import { IFormUser } from '../../types';
+import { useGetAgencyOptions } from '../../../../../src/hooks/useGetAgencyOptions';
 
 export const useLogicActionUser = () => {
   const [isSubmitBack, setIsSubmitBack] = useState(false);
   const navigate = useNavigate();
   const pathname = useLocation();
   const [form] = Form.useForm();
-  const loginMethod = Form.useWatch('loginMethod', form);
   const { id } = useParams();
   const [roleInActive, setRoleInActive] = useState<IRoleItem[]>([]);
   const actionMode = useActionMode();
+  const { data: agencyOptions = [] } = useGetAgencyOptions({ status: '1' });
   const {
     mutate: getUserAction,
     isPending: loadingGetUser,
@@ -166,8 +167,8 @@ export const useLogicActionUser = () => {
     Title,
     actionMode,
     setIsSubmitBack,
-    loginMethod,
     roleInActive,
     setRoleInActive,
+    agencyOptions,
   };
 };
