@@ -109,7 +109,7 @@ export const ChartColumn = () => {
         },
         rotate: -45,
         rotateAlways: false,
-        maxHeight: 60,
+        maxHeight: 65,
       },
       axisBorder: {
         show: false,
