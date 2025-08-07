@@ -5120,7 +5120,7 @@ __metadata:
     axios: "npm:^1.11.0"
     babel-jest: "npm:^29.4.1"
     dayjs: "npm:^1.11.13"
-    electron-to-chromium: "npm:1.5.197"
+    electron-to-chromium: "npm:^1.5.198"
     eslint: "npm:~8.57.0"
     eslint-config-prettier: "npm:^9.0.0"
     eslint-plugin-import: "npm:2.27.5"
@@ -7363,14 +7363,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:1.5.197":
-  version: 1.5.197
-  resolution: "electron-to-chromium@npm:1.5.197"
-  checksum: 10c0/2e48557a78bb17f1becdbcb4352ac570025cf7e304e5ad4657548a020c16646d1d5b00ffa149db3ebffb42a72981431305c566e7d7f971adaf5d15b9cb4c744a
-  languageName: node
-  linkType: hard
-
-"electron-to-chromium@npm:^1.5.173":
+"electron-to-chromium@npm:^1.5.173, electron-to-chromium@npm:^1.5.198":
   version: 1.5.198
   resolution: "electron-to-chromium@npm:1.5.198"
   checksum: 10c0/745ded4c4bf73c96d6a491c4ab6e573903242f3e414ebbaa27efbee7001a7a07e8f0f95bfea1b572e93e70a355caa65e5090f95a146e90bc397e8276d2da30de
