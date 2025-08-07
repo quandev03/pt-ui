@@ -91,11 +91,26 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
       },
     },
     {
+      title: 'Username',
+      dataIndex: 'username',
+      width: 200,
+      align: 'left',
+      fixed: 'left',
+      render(value, record) {
+        return (
+          <RenderCell
+            value={value}
+            tooltip={value}
+            disabled={record?.status !== 1}
+          />
+        );
+      },
+    },
+    {
       title: 'Email',
       dataIndex: 'email',
       width: 250,
       align: 'left',
-      fixed: 'left',
       render(value, record) {
         return (
           <RenderCell
