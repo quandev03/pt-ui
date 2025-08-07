@@ -4,15 +4,15 @@ import { RouterItems } from '@vissoft-react/common';
 
 export const routerItems: RouterItems[] = [
   {
-    key: pathRoutes.home as string,
-    icon: <House />,
-    label: 'Tổng quan',
-  },
-  {
     key: pathRoutes.systemManager as string,
-    icon: <Settings />,
+    icon: <Settings color="#000" />,
     label: 'Quản trị hệ thống',
     hasChild: true,
+  },
+  {
+    key: pathRoutes.dashboard as string,
+    label: 'Tổng quan',
+    parentId: pathRoutes.systemManager,
   },
   // quản lý tài khoản
   {
@@ -25,22 +25,6 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.systemUserManager as string,
     label: 'Tài khoản',
     parentId: pathRoutes.accountAuthorization as string,
-  },
-  {
-    key: pathRoutes.object as string,
-    label: 'Quản lý object',
-    parentId: pathRoutes.accountAuthorization as string,
-  },
-  // Quản lý số
-  {
-    key: pathRoutes.manageNumber as string,
-    label: 'Quản lý số',
-    parentId: pathRoutes.systemManager as string,
-  },
-  {
-    key: pathRoutes.lookupNumber as string,
-    label: 'Tra cứu số',
-    parentId: pathRoutes.manageNumber as string,
   },
   // Quản lý danh mục
   {
@@ -59,6 +43,24 @@ export const routerItems: RouterItems[] = [
     label: 'Danh mục đối tác',
     parentId: pathRoutes.category,
   },
+
+  // Quản lý số
+  {
+    key: pathRoutes.manageNumber as string,
+    label: 'Quản lý số',
+    parentId: pathRoutes.systemManager as string,
+    hasChild: true,
+  },
+  {
+    key: pathRoutes.uploadNumber,
+    parentId: pathRoutes.manageNumber,
+    label: 'Upload số',
+  },
+  {
+    key: pathRoutes.lookupNumber as string,
+    label: 'Tra cứu số',
+    parentId: pathRoutes.manageNumber as string,
+  },
   {
     key: pathRoutes.groupUserManager as string,
     label: 'Nhóm tài khoản',
@@ -73,6 +75,30 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.rolePartnerManager as string,
     label: 'Vai trò & Phân quyền đối tác',
     parentId: pathRoutes.accountAuthorization as string,
+  },
+  {
+    key: pathRoutes.object as string,
+    label: 'Quản lý object',
+    parentId: pathRoutes.accountAuthorization as string,
+  },
+  // danh sách kho esim
+  {
+    key: pathRoutes.esimStock,
+    label: 'Danh sách kho eSIM',
+    parentId: pathRoutes.systemManager,
+  },
+  // Báo cáo
+
+  {
+    key: pathRoutes.report,
+    label: 'Báo cáo',
+    hasChild: true,
+    parentId: pathRoutes.systemManager,
+  },
+  {
+    key: pathRoutes.reportPartner,
+    label: 'Báo cáo đối tác',
+    parentId: pathRoutes.report,
   },
 ];
 export const singlePopActions = ['add'];

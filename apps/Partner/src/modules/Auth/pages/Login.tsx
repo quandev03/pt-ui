@@ -15,8 +15,8 @@ import { Col, Divider, Form, Image, Row, Spin } from 'antd';
 import { FocusEvent, useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../../../assets/images/Logo-mini.svg';
-import BgLogin from '../../../assets/images/bg-login.png';
-import Smartphone from '../../../assets/images/smartphone.png';
+import BgLogin from '../../../assets/images/bg_banner.png';
+import Smartphone from '../../../assets/images/Thumb.png';
 import { ACCESS_TOKEN_KEY, GOOGLE_CLIENT_ID } from '../../../constants';
 import { pathRoutes } from '../../../routers/url';
 import useConfigAppStore from '../../Layouts/stores';
@@ -195,12 +195,11 @@ const LoginPage = () => {
         </Col>
         <Col span={12}>
           <div className="text-center flex flex-col gap-3">
-            <span className="text-white text-3xl font-semibold drop-shadow-md">
-              Hệ thống Kinh doanh và Dịch vụ khách hàng
+            <span className="text-[#005aaa] text-3xl font-semibold drop-shadow-md">
+              Hệ thống Kinh doanh eSIM
             </span>
             <span className="text-[#e50013] text-3xl font-semibold drop-shadow-md flex items-center justify-center gap-2">
-              <p className="text-white">-</p> BCSS
-              <p className="text-white">-</p>
+              Hi Vietnam
             </span>
           </div>
           <div className="flex justify-center mt-16">

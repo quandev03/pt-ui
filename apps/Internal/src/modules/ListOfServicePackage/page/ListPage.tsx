@@ -41,8 +41,6 @@ export const ListPage = () => {
     },
     [navigate]
   );
-  const { mutate: mutateDelete } = useDelete();
-  const handleDelete = useCallback((id: string) => {}, [mutateDelete]);
 
   const { columns } = useTable({
     handleView,

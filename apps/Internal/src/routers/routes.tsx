@@ -4,7 +4,7 @@ import { routesUserManagement } from '../modules/UserManagement/routes';
 import routesObjectManagement from '../modules/ObjectManagement/routes';
 import routesLookupNumber from '../modules/LookupNumber/routes';
 import routesListOfServicePackage from '../modules/ListOfServicePackage/routes';
-
+import routesDashboard from '../modules/Dashboard/routes';
 import routesRoleManagement from '../modules/RoleManagement/routes';
 import routesUserGroupManagement from '../modules/UserGroupManagement/routes';
 export const protectedRoutes: RouteObject[] = [
@@ -15,4 +15,5 @@ export const protectedRoutes: RouteObject[] = [
   ...routesListOfServicePackage,
   ...routesRoleManagement,
   ...routesUserGroupManagement,
+  ...routesDashboard,
 ];
