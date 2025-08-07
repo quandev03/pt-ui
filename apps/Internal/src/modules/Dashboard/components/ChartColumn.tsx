@@ -1,22 +1,77 @@
 import { Button, Card, DatePicker, Select } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
 import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { getMockData, getDonutData } from '../queryHook/useGetDataChart';
 import { IChartParam, IChartPeriod } from '../type';
 import { RotateCcw } from 'lucide-react';
 
+// Extend dayjs with weekOfYear plugin
+dayjs.extend(weekOfYear);
+
 const { RangePicker } = DatePicker;
 
 const chartPeriods: IChartPeriod[] = [
+  { label: 'Ngày', value: 'day' },
   { label: 'Tuần', value: 'week' },
   { label: 'Tháng', value: 'month' },
   { label: 'Năm', value: 'year' },
 ];
 
+// Helper function to format date based on period
+const formatDateByPeriod = (
+  date: Dayjs,
+  period: 'week' | 'month' | 'year' | 'day'
+) => {
+  switch (period) {
+    case 'day':
+      return date.format('DD/MM/YYYY');
+    case 'month':
+      return `${date.month() + 1}/${date.year()}`;
+    case 'week':
+      // Calculate week number within the month (1-5)
+      const startOfMonth = date.startOf('month');
+      const dayOfMonth = date.date();
+      const weekOfMonth = Math.ceil(dayOfMonth / 7);
+      const month = date.month() + 1;
+      return `Tuần ${weekOfMonth.toString().padStart(2, '0')}/T${month
+        .toString()
+        .padStart(2, '0')}`;
+    case 'year':
+      return date.year().toString();
+    default:
+      return date.format('DD/MM/YYYY');
+  }
+};
+
+// Helper function to get date range based on period
+const getDateRangeByPeriod = (period: 'week' | 'month' | 'year' | 'day') => {
+  const now = dayjs();
+
+  switch (period) {
+    case 'day':
+      // 24 days from today
+      return [now.subtract(23, 'day'), now];
+    case 'week':
+      // 24 weeks from today
+      return [now.subtract(23, 'week'), now];
+    case 'month':
+      // 24 months from current month
+      const startMonth = now.subtract(23, 'month').startOf('month');
+      const endMonth = now.endOf('month');
+      return [startMonth, endMonth];
+    case 'year':
+      // 24 years from current year
+      return [now.subtract(23, 'year').startOf('year'), now.endOf('year')];
+    default:
+      return [now.startOf('week'), now.endOf('week')];
+  }
+};
+
 export const ChartColumn = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<
-    'week' | 'month' | 'year'
+    'day' | 'week' | 'month' | 'year'
   >('week');
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs]>([
     dayjs().startOf('week'),
@@ -32,7 +87,7 @@ export const ChartColumn = () => {
 
   // Use actual API data if available, otherwise use mock data
   const data = getMockData(selectedPeriod);
-  const donutData = getDonutData();
+  const donutData = getDonutData().column;
 
   const chartOptions = {
     chart: {
@@ -221,29 +276,9 @@ export const ChartColumn = () => {
 
   const donutSeries = donutData.map((item: any) => item.value);
 
-  const handlePeriodChange = (value: 'week' | 'month' | 'year') => {
+  const handlePeriodChange = (value: 'day' | 'week' | 'month' | 'year') => {
     setSelectedPeriod(value);
-    let startDate: Dayjs;
-    let endDate: Dayjs;
-
-    switch (value) {
-      case 'week':
-        startDate = dayjs().startOf('week');
-        endDate = dayjs().endOf('week');
-        break;
-      case 'month':
-        startDate = dayjs().startOf('month');
-        endDate = dayjs().endOf('month');
-        break;
-      case 'year':
-        startDate = dayjs().startOf('year');
-        endDate = dayjs().endOf('year');
-        break;
-      default:
-        startDate = dayjs().startOf('week');
-        endDate = dayjs().endOf('week');
-    }
-
+    const [startDate, endDate] = getDateRangeByPeriod(value);
     setDateRange([startDate, endDate]);
   };
 
@@ -308,29 +343,33 @@ export const ChartColumn = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Bar Chart */}
-            <div className="lg:col-span-2">
+            {/* Line Chart */}
+            <div className="lg:col-span-2 min-h-[400px] overflow-hidden">
               <ReactApexChart
                 options={chartOptions}
                 series={chartSeries}
                 type="bar"
-                height={350}
+                height={400}
               />
             </div>
 
             {/* Donut Chart */}
-            <div className="lg:col-span-1">
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold text-center text-gray-800">
-                  Đại lý
-                </h3>
+            <div className="lg:col-span-1 flex justify-center mb-6 items-end">
+              <div>
+                <div>
+                  <h3 className="text-lg font-semibold text-center text-gray-800">
+                    Đại lý
+                  </h3>
+                </div>
+                <div>
+                  <ReactApexChart
+                    options={donutOptions}
+                    series={donutSeries}
+                    type="donut"
+                    height={300}
+                  />
+                </div>
               </div>
-              <ReactApexChart
-                options={donutOptions}
-                series={donutSeries}
-                type="donut"
-                height={350}
-              />
             </div>
           </div>
         </div>

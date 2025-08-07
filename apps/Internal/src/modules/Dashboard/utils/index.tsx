@@ -1,8 +1,8 @@
 export const svgTotalESIM = () => {
   return (
     <svg
-      width="50"
-      height="51"
+      width="30"
+      height="30"
       viewBox="0 0 30 31"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -49,8 +49,8 @@ export const svgTotalESIM = () => {
 export const svgTotalSTB = () => {
   return (
     <svg
-      width="50"
-      height="51"
+      width="30"
+      height="30"
       viewBox="0 0 30 31"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -104,8 +104,8 @@ export const svgTotalSTB = () => {
 export const svgTotalPackagesSold = () => {
   return (
     <svg
-      width="50"
-      height="51"
+      width="30"
+      height="30"
       viewBox="0 0 30 31"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -132,8 +132,8 @@ export const svgTotalPackagesSold = () => {
 export const svgTotalESIMsOrdered = () => {
   return (
     <svg
-      width="50"
-      height="51"
+      width="30"
+      height="30"
       viewBox="0 0 30 31"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
