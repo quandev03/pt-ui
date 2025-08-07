@@ -14,6 +14,7 @@ import {
   MESSAGE,
   NotificationError,
   NumberInput,
+  StatusEnum,
   TitleHeader,
   useActionMode,
   validateForm,
@@ -37,11 +38,11 @@ export const ActionPage = () => {
   const [form] = Form.useForm();
   const { id } = useParams();
   const { data: dataView } = useView(id ?? '', actionMode);
-  const { mutate: mutateEdit } = useEdit(() => {
+  const { mutate: mutateEdit } = useEdit(form, () => {
     navigate(-1);
     setImageUrl(null);
   });
-  const { mutate: mutateAdd } = useAdd(() => {
+  const { mutate: mutateAdd } = useAdd(form, () => {
     if (type === EActionSubmit.SAVE_AND_ADD) {
       form.resetFields();
       setImageUrl(null);
@@ -53,14 +54,25 @@ export const ActionPage = () => {
   });
   const [imageUrl, setImageUrl] = useState<string | null | undefined>(null);
   const [isChangeImage, setIsChangeImage] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const { mutate: mutateGetImage } = useGetImage((blobData) => {
     try {
-      const url = window.URL.createObjectURL(blobData);
-      setImageUrl(url);
+      if (blobData instanceof Blob) {
+        const url = window.URL.createObjectURL(blobData);
+        setImageUrl(url);
+        setImageError(false);
+      } else {
+        // Handle case when no image data is received
+        setImageError(true);
+        setImageUrl(null);
+      }
     } catch (error) {
       console.error('Error creating object URL:', error);
+      setImageError(true);
+      setImageUrl(null);
     }
   });
+
   const beforeUpload = async (file: RcFile) => {
     if (!ImageFileType.includes(file.type || '')) {
       form.setFields([
@@ -87,8 +99,10 @@ export const ActionPage = () => {
     form.setFieldValue('images', file);
     setImageUrl(url);
     setIsChangeImage(true);
+    setImageError(false);
     return false;
   };
+
   const uploadButton = (
     <button
       className={
@@ -103,6 +117,15 @@ export const ActionPage = () => {
       <div className="mt-2 text-cyan-700">Tải file lên</div>
     </button>
   );
+
+  // Placeholder component for when image fails to load
+  const imagePlaceholder = (
+    <div className="border-2 border-dashed border-gray-300 bg-gray-50 rounded-xl h-36 w-[200px] flex flex-col items-center justify-center">
+      <div className="text-gray-400 text-sm">Ảnh gói cước</div>
+      <div className="text-gray-300 text-xs">Không có ảnh</div>
+    </div>
+  );
+
   const handleDeleteImage = () => {
     // Cleanup object URL if it exists
     if (imageUrl && imageUrl.startsWith('blob:')) {
@@ -110,6 +133,7 @@ export const ActionPage = () => {
     }
     setImageUrl(undefined);
     setIsChangeImage(true);
+    setImageError(false);
     form.setFieldValue('images', null);
     form.setFields([
       {
@@ -118,6 +142,7 @@ export const ActionPage = () => {
       },
     ]);
   };
+
   const handleSubmit = useCallback(
     (values: IListOfServicePackageForm) => {
       const data = {
@@ -130,15 +155,19 @@ export const ActionPage = () => {
         mutateEdit({
           ...data,
           id: id ?? '',
+          images: form.getFieldValue('images')?.file ?? undefined,
+          status: values.status ? StatusEnum.ACTIVE : StatusEnum.INACTIVE,
         });
       }
     },
     [form, id, mutateAdd, mutateEdit]
   );
+
   useEffect(() => {
     if (dataView && id) {
       form.setFieldsValue({
         ...dataView,
+        status: dataView.status === StatusEnum.ACTIVE,
       });
       mutateGetImage(id);
     }
@@ -153,6 +182,7 @@ export const ActionPage = () => {
       }
     };
   }, [imageUrl]);
+
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{`${getActionMode(actionMode)} gói cước`}</TitleHeader>
@@ -168,10 +198,7 @@ export const ActionPage = () => {
             <Row className="mt-2" gutter={[30, 0]}>
               <Col span={12}>
                 <Form.Item label="Hoạt động" name="status">
-                  <CSwitch
-                    disabled={actionMode !== IModeAction.UPDATE}
-                    checked={true}
-                  />
+                  <CSwitch disabled={actionMode !== IModeAction.UPDATE} />
                 </Form.Item>
               </Col>
               <Col span={12} />
@@ -242,7 +269,7 @@ export const ActionPage = () => {
                     multiple={false}
                     maxCount={1}
                   >
-                    {imageUrl ? (
+                    {imageUrl && !imageError ? (
                       <div className="relative inline-block">
                         <img
                           src={imageUrl}
@@ -253,6 +280,7 @@ export const ActionPage = () => {
                               ? 'cursor-not-allowed'
                               : 'cursor-pointer')
                           }
+                          onError={() => setImageError(true)}
                         />
                         {actionMode !== IModeAction.READ && (
                           <div className="absolute top-2 right-2 flex gap-1">
@@ -281,8 +309,40 @@ export const ActionPage = () => {
                           </div>
                         )}
                       </div>
-                    ) : (
+                    ) : actionMode === IModeAction.CREATE &&
+                      !imageUrl &&
+                      !imageError ? (
                       uploadButton
+                    ) : (
+                      <div className="relative inline-block">
+                        {imagePlaceholder}
+                        {actionMode !== IModeAction.READ && (
+                          <div className="absolute top-2 right-2 flex gap-1">
+                            <Button
+                              type="primary"
+                              danger
+                              size="small"
+                              className="!p-1 !w-8 !h-8"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteImage();
+                              }}
+                            >
+                              <svg
+                                className="w-4 h-4"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </Button>
+                          </div>
+                        )}
+                      </div>
                     )}
                   </Upload>
                 </Form.Item>

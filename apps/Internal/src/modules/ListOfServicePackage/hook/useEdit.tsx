@@ -1,8 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
-import { AnyElement, NotificationSuccess } from '@vissoft-react/common';
+import {
+  AnyElement,
+  IErrorResponse,
+  NotificationSuccess,
+} from '@vissoft-react/common';
 import { prefixSaleService } from 'apps/Internal/src/constants';
 import { safeApiClient } from 'apps/Internal/src/services';
 import { IListOfServicePackageForm } from '../types';
+import { FormInstance } from 'antd';
 
 const fetch = async (data: IListOfServicePackageForm & { id: string }) => {
   const formData = new FormData();
@@ -12,7 +17,7 @@ const fetch = async (data: IListOfServicePackageForm & { id: string }) => {
     status: data.status,
     pckCode: data.pckCode,
   };
-  formData.append('image', data.images as File);
+  formData.append('images', data.images as File);
   formData.append(
     'data',
     new Blob([JSON.stringify(dataForm)], { type: 'application/json' })
@@ -32,12 +37,22 @@ const fetch = async (data: IListOfServicePackageForm & { id: string }) => {
   }
 };
 
-export const useEdit = (onSuccess?: () => void) => {
+export const useEdit = (form: FormInstance, onSuccess?: () => void) => {
   return useMutation({
     mutationFn: fetch,
     onSuccess: () => {
       NotificationSuccess('Cập nhật thành công');
       onSuccess?.();
+    },
+    onError: (error: IErrorResponse) => {
+      if (error.errors && error.errors.length > 0) {
+        form.setFields(
+          error.errors.map((item) => ({
+            name: item.field,
+            errors: [item.detail],
+          }))
+        );
+      }
     },
   });
 };
