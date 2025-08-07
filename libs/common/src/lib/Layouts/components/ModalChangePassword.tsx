@@ -91,6 +91,7 @@ export const ModalChangePassword = ({
         labelWrap
         onFinish={handleFinish}
         validateTrigger={['onSubmit', 'onBlur']}
+        labelAlign="left"
       >
         <div className="flex flex-col gap-4">
           <div className="rounded-md bg-white p-4">
