@@ -24,7 +24,7 @@ const formatDateByPeriod = (
       const dayOfMonth = date.date();
       const weekOfMonth = Math.ceil(dayOfMonth / 7);
       const month = date.month() + 1;
-      return `Tuần ${weekOfMonth.toString().padStart(2, '0')}/T${month
+      return `${weekOfMonth.toString().padStart(2, '0')}/T${month
         .toString()
         .padStart(2, '0')}`;
     case 'year':
@@ -139,14 +139,14 @@ export const dataMock = {
 
 // Mock data for donut chart (agent/dealer distribution)
 export const donutDataMockLine = [
-  { name: 'SUN', value: 60, color: '#3B82F6' },
-  { name: 'SUN 1', value: 30, color: '#F59E0B' },
-  { name: 'SUN 2', value: 10, color: '#EF4444' },
+  { name: 'Đại lý 1', value: 60, color: '#3B82F6' },
+  { name: 'Đại lý 2', value: 30, color: '#F59E0B' },
+  { name: 'Đại lý 3', value: 10, color: '#EF4444' },
 ];
 export const donutDataMockColumn = [
-  { name: 'SUN', value: 20, color: '#3B82F6' },
-  { name: 'SUN 1', value: 20, color: '#F59E0B' },
-  { name: 'SUN 2', value: 60, color: '#EF4444' },
+  { name: 'Đại lý 1', value: 20, color: '#3B82F6' },
+  { name: 'Đại lý 2', value: 20, color: '#F59E0B' },
+  { name: 'Đại lý 3', value: 60, color: '#EF4444' },
 ];
 // Helper function to get mock data based on period
 export const getMockData = (

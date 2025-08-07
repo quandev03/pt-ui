@@ -16,10 +16,12 @@ const CardStyle = styled(Card)`
 
   .ant-card-body {
     padding: 10px;
+    padding-top: 0px;
     height: 100%;
     display: flex;
     align-items: center;
-    min-height: 120px;
+    min-height: 150px;
+    margin-top: -10px;
   }
 `;
 
@@ -47,14 +49,14 @@ export const DashboardStats = ({ data }: { data: IDataDashboardStats }) => {
       {dataTest.map((item, idx) => (
         <Col span={6} key={idx}>
           <CardStyle>
-            <div className="flex flex-col justify-between h-full items-center">
-              <div className="flex items-center gap-4 px-6">
+            <div className="flex flex-col w-full justify-between h-full items-center">
+              <div className="flex self-start items-center gap-4 px-6">
                 {item.icon}
                 <div>
                   <div className="font-medium text-sm">{item.label}</div>
                 </div>
               </div>
-              <div className="text-3xl ml-10 text-center mt-2 font-bold text-primary tracking-[2px]">
+              <div className="text-3xl w-full ml-10 mt-4 text-center font-bold text-primary tracking-[2px]">
                 {formatNumber(item.value)}
               </div>
             </div>

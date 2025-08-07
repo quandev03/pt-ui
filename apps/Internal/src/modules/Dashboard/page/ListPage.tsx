@@ -13,7 +13,6 @@ export const ListPage = () => {
   };
   return (
     <>
-      <TitleHeader>Tổng quan</TitleHeader>
       <DashboardStats data={dataDashboardStats} />
       <ChartColumn />
       <ChartLine />
