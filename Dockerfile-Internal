@@ -1,20 +1,22 @@
 ARG BASE_BUILDER="harbor.vissoft.vn/vnsky/web-builder"
 ARG BASE_RUNNER="harbor.vissoft.vn/vnsky/web-runner"
 
-FROM $BASE_BUILDER AS base
+FROM node:20-alpine AS base
 WORKDIR /workspace
 COPY package.json ./package.json
 COPY yarn.lock ./yarn.lock
 ARG NPM_CONFIG_REGISTRY="https://registry.npmjs.org"
 ARG YARN_NPM_REGISTRY_SERVER="https://registry.npmjs.org"
+RUN npm install -g corepack
 RUN ls -la &&  \
     echo "Using yarn repo: $YARN_NPM_REGISTRY_SERVER" &&  \
     echo "Using npm repo: $NPM_CONFIG_REGISTRY" &&  \
     yarn config get npmRegistryServer &&  \
     yarn config get unsafeHttpWhitelist &&  \
+    yarn set version stable && \
     yarn install
 COPY ./nx.json ./nx.json
-COPY ./.env ./.env
+#COPY ./.env ./.env
 COPY ./tsconfig.base.json ./tsconfig.base.json
 COPY ./jest.config.ts ./jest.config.ts
 COPY ./jest.preset.js ./jest.preset.js

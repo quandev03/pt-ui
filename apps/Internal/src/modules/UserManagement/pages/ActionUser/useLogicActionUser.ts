@@ -1,5 +1,6 @@
 import {
   IModeAction,
+  MESSAGE,
   ModalConfirm,
   StatusEnum,
   cleanUpPhoneNumber,
@@ -15,6 +16,7 @@ import {
   useGetAllGroupUser,
   useGetAllRole,
   useSupportAddUser,
+  useSupportDeleteUser,
   useSupportGetUser,
   useSupportUpdateUser,
 } from '../../hooks';
@@ -199,7 +201,18 @@ export const useLogicActionUser = () => {
   const handleClose = useCallback(() => {
     navigate(-1);
   }, [navigate]);
-
+  const { mutate: deleteUser } = useSupportDeleteUser();
+  const handleDelete = useCallback(
+    (id: string) => {
+      ModalConfirm({
+        message: MESSAGE.G05,
+        handleConfirm: () => {
+          deleteUser(id);
+        },
+      });
+    },
+    [deleteUser]
+  );
   return {
     form,
     loadingGetUser,
@@ -218,5 +231,6 @@ export const useLogicActionUser = () => {
     handleFinish,
     handleClose,
     setIsSubmitBack,
+    handleDelete,
   };
 };
