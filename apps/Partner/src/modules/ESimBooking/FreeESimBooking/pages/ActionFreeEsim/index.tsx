@@ -52,6 +52,7 @@ export const ActionFreeEsim = memo(() => {
         onFinish={handleFinish}
         labelCol={{ span: 5 }}
         colon={false}
+        labelAlign="left"
       >
         <Row gutter={[24, 0]}>
           <Col span={12}>
