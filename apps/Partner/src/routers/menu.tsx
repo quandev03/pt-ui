@@ -11,7 +11,7 @@ export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.dashboard as string,
     label: 'Tổng quan',
-    hasChild: true,
+    icon: <House />,
   },
   {
     key: pathRoutes.accountAuthorization as string,
