@@ -30,12 +30,6 @@ export const routerItems: RouterItems[] = [
     parentId: pathRoutes.accountAuthorization as string,
   },
   {
-    key: pathRoutes.saleManagement as string,
-    icon: <Store />,
-    label: 'Quản lý bán hàng',
-    hasChild: true,
-  },
-  {
     key: pathRoutes.updateSubscriberInfo as string,
     label: 'Cập nhật thông tin thuê bao',
     parentId: pathRoutes.saleManagement as string,
