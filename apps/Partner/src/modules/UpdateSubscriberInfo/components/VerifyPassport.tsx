@@ -4,15 +4,17 @@ import {
   MESSAGE,
   UploadFileMax,
 } from '@vissoft-react/common';
-import { Form, FormInstance, Spin } from 'antd';
+import { Form, Spin } from 'antd';
+import useFormInstance from 'antd/es/form/hooks/useFormInstance';
 import { RcFile } from 'antd/es/upload';
 import imageCompression from 'browser-image-compression';
-import { FC, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import captureNote1 from '../../../../src/assets/images/captureImageNote1.png';
 import captureNote2 from '../../../../src/assets/images/captureImageNote2.png';
 import captureNote3 from '../../../../src/assets/images/captureImageNote3.png';
 import useCamera from '../../../../src/assets/images/userCamera.png';
+import { useCheckOcr } from '../hooks';
 import { useCameraStatus } from '../hooks/useCameraStatus';
 import { StyledUpload } from '../pages/styled';
 import { useUpdateSubscriberInfoStore } from '../store';
@@ -20,16 +22,20 @@ import { StepEnum } from '../type';
 import { base64ToFile } from '../utils';
 import CaptureNote from './CaptureNote';
 
-type Props = {
-  form: FormInstance;
-};
-const VerifyPassport: FC<Props> = ({ form }) => {
+const VerifyPassport = () => {
+  const form = useFormInstance();
   const webcamRef = useRef<Webcam>(null);
   const { hasCamera } = useCameraStatus();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [progressLoading, setProgressLoading] = useState<boolean>(false);
-  const { setStep } = useUpdateSubscriberInfoStore();
+  const { setStep, setOcrResponse } = useUpdateSubscriberInfoStore();
   const ImageFileType = ['image/png', 'image/jpeg', 'image/jpg'];
+  const { mutate: checkOcrPassport, isPending: loadingCheckOcr } = useCheckOcr(
+    (data) => {
+      setStep(StepEnum.STEP3);
+      setOcrResponse(data);
+    }
+  );
   const handleCapture = () => {
     const img = webcamRef.current?.getScreenshot();
     if (img) {
@@ -59,7 +65,7 @@ const VerifyPassport: FC<Props> = ({ form }) => {
       if (file.size && file.size > UploadFileMax) {
         form.setFields([
           {
-            name: 'image',
+            name: 'passport',
             errors: ['Nén không thành công'],
           },
         ]);
@@ -72,11 +78,12 @@ const VerifyPassport: FC<Props> = ({ form }) => {
       const url = await imageCompression.getDataUrlFromFile(file);
       form.setFields([
         {
-          name: 'image',
+          name: 'passport',
           errors: [],
         },
       ]);
-      form.setFieldValue('image', file);
+      form.setFieldValue('passport', file);
+      form.setFieldValue('passportUrl', url);
       setImageSrc(url);
       setProgressLoading(false);
     });
@@ -85,7 +92,7 @@ const VerifyPassport: FC<Props> = ({ form }) => {
     if (!ImageFileType.includes(unCompressedFile.type || '')) {
       form.setFields([
         {
-          name: 'image',
+          name: 'passport',
           errors: [MESSAGE.G31],
         },
       ]);
@@ -94,7 +101,6 @@ const VerifyPassport: FC<Props> = ({ form }) => {
     handlePressFile(unCompressedFile);
     return false;
   };
-  console.log('render');
   const renderImage = () => {
     if (!hasCamera && !imageSrc) {
       return (
@@ -130,7 +136,9 @@ const VerifyPassport: FC<Props> = ({ form }) => {
     }
   };
   const handleCheckPassport = () => {
-    setStep(StepEnum.STEP3);
+    const serial = form.getFieldValue('serial');
+    const passport = form.getFieldValue('passport');
+    checkOcrPassport({ serial: serial, passport: passport });
   };
   return (
     <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
@@ -144,11 +152,10 @@ const VerifyPassport: FC<Props> = ({ form }) => {
             {imageSrc ? 'Xác nhận' : 'Chụp ảnh'}
           </span>
         </p>
-        {/* <div className="w-full"> */}
-        <Form.Item name="image" className="w-full">
+        <Form.Item name="passport" className="w-full">
           <Spin spinning={progressLoading}>{renderImage()}</Spin>
         </Form.Item>
-        {/* </div> */}
+        <Form.Item hidden name="passportUrl"></Form.Item>
 
         {hasCamera && !imageSrc && (
           <div className="flex justify-center gap-3 mt-2">
@@ -173,6 +180,7 @@ const VerifyPassport: FC<Props> = ({ form }) => {
           <CButton
             className="rounded-full w-full py-6 flex-1"
             onClick={handleCheckPassport}
+            loading={loadingCheckOcr}
           >
             Kiểm tra
           </CButton>

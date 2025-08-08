@@ -48,7 +48,7 @@ export function useCameraStatus() {
           break;
       }
 
-      notification.error({ message });
+      notification.warning({ message });
       setHasCamera(false);
       setStream(null);
       requestedRef.current = false;

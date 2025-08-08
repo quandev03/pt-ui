@@ -4,10 +4,11 @@ import {
   MESSAGE,
   UploadFileMax,
 } from '@vissoft-react/common';
-import { Form, FormInstance, Spin } from 'antd';
+import { Form, Spin } from 'antd';
+import useFormInstance from 'antd/es/form/hooks/useFormInstance';
 import { RcFile } from 'antd/es/upload';
 import imageCompression from 'browser-image-compression';
-import { FC, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import useCamera from '../../../../src/assets/images/userCamera.png';
 import { useCameraStatus } from '../hooks/useCameraStatus';
@@ -15,18 +16,21 @@ import { StyledUpload } from '../pages/styled';
 import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
 import { base64ToFile } from '../utils';
+import { useCheckFace } from '../hooks';
 
-type Props = {
-  form: FormInstance;
-};
-const VerifyFace: FC<Props> = ({ form }) => {
+const VerifyFace = () => {
+  const form = useFormInstance();
   const webcamRef = useRef<Webcam>(null);
   const { hasCamera } = useCameraStatus();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [progressLoading, setProgressLoading] = useState<boolean>(false);
-  const { setStep } = useUpdateSubscriberInfoStore();
+  const { setStep, ocrResponse } = useUpdateSubscriberInfoStore();
   const ImageFileType = ['image/png', 'image/jpeg', 'image/jpg'];
-
+  const { mutate: checkFace, isPending: loadingCheckFace } = useCheckFace(
+    () => {
+      setStep(StepEnum.STEP4);
+    }
+  );
   const handleCapture = () => {
     const img = webcamRef.current?.getScreenshot();
     if (img) {
@@ -56,24 +60,21 @@ const VerifyFace: FC<Props> = ({ form }) => {
       if (file.size && file.size > UploadFileMax) {
         form.setFields([
           {
-            name: 'image',
+            name: 'portrait',
             errors: ['Nén không thành công'],
           },
         ]);
         return;
       }
-      // const fileFormBlob = new File([file], file.name, { type: file.type });
-      // form.setFieldsValue({
-      //   decree13: fileFormBlob,
-      // });
       const url = await imageCompression.getDataUrlFromFile(file);
       form.setFields([
         {
-          name: 'image',
+          name: 'portrait',
           errors: [],
         },
       ]);
-      form.setFieldValue('image', file);
+      form.setFieldValue('portrait', file);
+      form.setFieldValue('portraitUrl', url);
       setImageSrc(url);
       setProgressLoading(false);
     });
@@ -82,7 +83,7 @@ const VerifyFace: FC<Props> = ({ form }) => {
     if (!ImageFileType.includes(unCompressedFile.type || '')) {
       form.setFields([
         {
-          name: 'image',
+          name: 'portrait',
           errors: [MESSAGE.G31],
         },
       ]);
@@ -129,7 +130,9 @@ const VerifyFace: FC<Props> = ({ form }) => {
     }
   };
   const handleCheckFace = () => {
-    setStep(StepEnum.STEP4);
+    const transactionId = ocrResponse?.transactionId || '';
+    const portrait = form.getFieldValue('portrait');
+    checkFace({ portrait: portrait, transactionId: transactionId });
   };
   return (
     <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
@@ -145,6 +148,7 @@ const VerifyFace: FC<Props> = ({ form }) => {
           <Form.Item name="image">
             <Spin spinning={progressLoading}>{renderImage()}</Spin>
           </Form.Item>
+          <Form.Item hidden name="portraitUrl"></Form.Item>
         </div>
       </div>
       {imageSrc ? (
@@ -159,6 +163,8 @@ const VerifyFace: FC<Props> = ({ form }) => {
           <CButton
             className="rounded-full w-full py-6 flex-1"
             onClick={handleCheckFace}
+            loading={loadingCheckFace}
+            disabled={loadingCheckFace}
           >
             Kiểm tra
           </CButton>

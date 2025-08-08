@@ -1,28 +1,34 @@
 import { CButton } from '@vissoft-react/common';
-import { FormInstance } from 'antd';
 import { CircleCheckIcon } from 'lucide-react';
-import { FC } from 'react';
 import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
+import useFormInstance from 'antd/es/form/hooks/useFormInstance';
 
-type Props = {
-  form: FormInstance;
-};
-const VerifyInfo: FC<Props> = ({ form }) => {
+const VerifyInfo = () => {
+  const { ocrResponse } = useUpdateSubscriberInfoStore();
   const customerInfo = [
     { label: 'Loại giấy tờ', value: 'Passport' },
-    { label: 'Họ và tên', value: 'Happy Traveller' },
-    { label: 'Giới tính', value: 'Male' },
-    { label: 'Ngày sinh', value: '01/01/1981' },
-    { label: 'Số hộ chiếu', value: 'C03005988' },
-    { label: 'Ngày cấp', value: '30/11/2009' },
-    { label: 'Ngày hết hạn', value: '29/11/2019' },
-    { label: 'Quốc tịch', value: 'American' },
+    { label: 'Họ và tên', value: ocrResponse?.ocrData.fullname || '' },
+    {
+      label: 'Giới tính',
+      value:
+        ocrResponse?.ocrData.gender === 'Female'
+          ? 'Nữ'
+          : ocrResponse?.ocrData.gender === 'Male'
+          ? 'Nam'
+          : '',
+    },
+    { label: 'Ngày sinh', value: ocrResponse?.ocrData.dob || '' },
+    { label: 'Số hộ chiếu', value: ocrResponse?.ocrData.idNumber || '' },
+    { label: 'Ngày cấp', value: ocrResponse?.ocrData.issuedDate || '' },
+    { label: 'Ngày hết hạn', value: ocrResponse?.ocrData.expiredDate || '' },
+    { label: 'Quốc tịch', value: ocrResponse?.ocrData.nationality || '' },
   ];
   const { setStep } = useUpdateSubscriberInfoStore();
   const handleConfirm = () => {
     setStep(StepEnum.STEP5);
   };
+  const form = useFormInstance();
   return (
     <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
       <div className="flex items-center flex-col w-full">
@@ -48,10 +54,7 @@ const VerifyInfo: FC<Props> = ({ form }) => {
             <div className="flex-1">
               <div className="bg-[#EEF3FE] p-4 rounded-lg relative flex justify-center items-center flex-col">
                 <div>
-                  <img
-                    src="https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg"
-                    alt=""
-                  />
+                  <img src={form.getFieldValue('passportUrl')} alt="passport" />
                 </div>
                 <CircleCheckIcon
                   className="absolute -top-[5px] -right-[5px]"
@@ -64,8 +67,8 @@ const VerifyInfo: FC<Props> = ({ form }) => {
               <div className="bg-[#EEF3FE] p-4 rounded-lg relative flex justify-center items-center flex-col">
                 <div className="w-[70%] aspect-[4/4] overflow-hidden rounded-full">
                   <img
-                    src="https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg"
-                    alt=""
+                    src={form.getFieldValue('portraitUrl')}
+                    alt="portrait"
                     className="object-cover w-full h-full"
                   />
                 </div>

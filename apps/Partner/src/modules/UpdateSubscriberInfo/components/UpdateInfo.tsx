@@ -1,28 +1,35 @@
-import { CButton, CInput } from '@vissoft-react/common';
-import { Form, FormInstance } from 'antd';
-import { FC } from 'react';
+import { CButton } from '@vissoft-react/common';
+import { Form } from 'antd';
+import useFormInstance from 'antd/es/form/hooks/useFormInstance';
+import { useCheckIsdn } from '../hooks';
+import { StyledInput } from '../pages/styled';
 import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
 
-type Props = {
-  form: FormInstance;
-};
-const UpdateInfo: FC<Props> = ({ form }) => {
+// type Props = {};
+const UpdateInfo = () => {
+  const form = useFormInstance();
   const { setStep } = useUpdateSubscriberInfoStore();
-  const handleClick = () => {
+  const { mutate: checkIsdn } = useCheckIsdn((data) => {
     setStep(StepEnum.STEP2);
+    console.log('data', data);
+    form.setFieldValue('serial', data);
+  });
+  const handleClick = () => {
+    checkIsdn(form.getFieldValue('isdn'));
   };
   return (
     <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
       <div className="flex items-center flex-col">
         <p className="text-lg font-semibold mt-2">Cập nhật thông tin</p>
-        <Form.Item className="w-full mt-3">
-          <CInput
+        <Form.Item name="isdn" className="w-full mt-3">
+          <StyledInput
             onlyNumber
-            className="py-3"
+            className="py-3 text-sky-600 text-[20px] font-semibold placeholder-slate-50"
             placeholder="Nhập số điện thoại"
           />
         </Form.Item>
+        <Form.Item hidden name="serial"></Form.Item>
         <p className="text-lg font-semibold mt-4 mb-2">Thông báo</p>
         <div>
           <p>
