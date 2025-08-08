@@ -53,7 +53,9 @@ export function CTable<T = unknown>({
   return (
     <StyledCommonTable
       size="small"
-      locale={{ emptyText: 'Không có dữ liệu' }}
+      locale={{
+        emptyText: 'Không có dữ liệu',
+      }}
       scroll={{
         y: tableHeight > 0 ? tableHeight : undefined,
         x: 'max-content',
@@ -71,6 +73,10 @@ export function CTable<T = unknown>({
               onChange: pagination?.onChange ?? handleChangePagination,
               showTotal: TotalTableMessage,
               showQuickJumper: false,
+              locale: {
+                items_per_page: ' / trang',
+                page: 'Trang',
+              },
             }
           : false
       }

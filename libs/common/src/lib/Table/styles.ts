@@ -10,7 +10,7 @@ export const StyledCommonTable = styled<AnyElement>(Table)`
     border-radius: 8px;
   }
   .ant-table-tbody > tr > td {
-    padding: 1.5px !important;
+    padding: 1.5px 1.5px 1.5px 10px !important;
   }
   .ant-table-header {
     .ant-table-cell {
