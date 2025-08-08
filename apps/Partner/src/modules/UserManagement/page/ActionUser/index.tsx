@@ -18,7 +18,7 @@ import {
   phoneRegex,
   usePermissions,
 } from '@vissoft-react/common';
-import { Col, Form, Row, Spin } from 'antd';
+import { Col, Form, Row, Spin, TreeSelect } from 'antd';
 import { memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { pathRoutes } from '../../../../../src/routers';
@@ -30,7 +30,6 @@ export const ActionUser = memo(() => {
   const {
     form,
     loadingGetUser,
-    userDetail,
     optionListRole,
     handleFinish,
     roleInActive,
@@ -38,10 +37,10 @@ export const ActionUser = memo(() => {
     Title,
     actionMode,
     setIsSubmitBack,
-    loginMethod,
     loadingAdd,
     loadingUpdate,
     setRoleInActive,
+    agencyOptions,
   } = useLogicActionUser();
   const { id } = useParams();
   const { menuData } = useConfigAppStore();
@@ -63,24 +62,19 @@ export const ActionUser = memo(() => {
             status: 1,
             loginMethod: '2',
           }}
-          onValuesChange={(changedValues, allValues) => {
-            if (
-              changedValues.loginMethod &&
-              changedValues.loginMethod === '2' &&
-              allValues.email
-            ) {
-              form.setFieldsValue({ username: allValues.email });
-            } else if (
-              changedValues.loginMethod &&
-              changedValues.loginMethod === '1' &&
-              userDetail
-            ) {
-              form.setFieldsValue({ username: userDetail.username });
-            }
-          }}
         >
           <div className="bg-white rounded-[10px] px-6 pt-4 pb-8">
             <Row gutter={[30, 0]}>
+              <Col span={12}>
+                <Form.Item
+                  label="Hoạt động"
+                  name="status"
+                  valuePropName="checked"
+                >
+                  <CSwitch disabled={IModeAction.UPDATE !== actionMode} />
+                </Form.Item>
+              </Col>
+              <Col span={12}></Col>
               <Col span={12}>
                 <Form.Item
                   label="Họ và tên"
@@ -145,56 +139,28 @@ export const ActionUser = memo(() => {
                       const value = cleanUpPhoneNumber(e.target.value);
                       form.setFieldValue('email', value);
                       form.validateFields(['email']);
-                      if (loginMethod === '2') {
-                        form.setFieldValue('username', value);
-                      }
                     }}
                   />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
-                  label="SĐT"
-                  name="phoneNumber"
+                  label="Username"
+                  name="username"
                   rules={[
                     {
-                      validator(_, value) {
-                        if (!value || !cleanUpPhoneNumber(value)) {
-                          return Promise.resolve();
-                        } else if (!phoneRegex.test(value)) {
-                          return Promise.reject('SĐT không đúng định dạng');
-                        } else {
-                          return Promise.resolve();
-                        }
-                      },
+                      required: true,
+                      message: MESSAGE.G06,
                     },
                   ]}
                 >
                   <CInput
-                    maxLength={10}
-                    placeholder="Nhập SĐT"
+                    maxLength={50}
+                    placeholder="Nhập username"
                     disabled={actionMode === IModeAction.READ}
-                    onlyNumber
-                    onPaste={(event) =>
-                      handlePasteRemoveTextKeepNumber(event, 10)
-                    }
-                    onInput={(e: AnyElement) =>
-                      (e.target.value = e.target.value.replace(/[^0-9]/g, ''))
-                    }
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="Đại lý"
-                  name="agency"
-                  rules={[{ required: true, message: MESSAGE.G06 }]}
-                >
-                  <CSelect
-                    placeholder="Chọn đại lý"
-                    options={[]}
-                    maxRow={3}
-                    disabled={actionMode === IModeAction.READ}
+                    preventSpecialExceptHyphenAndUnderscore
+                    preventVietnamese
+                    preventSpace
                   />
                 </Form.Item>
               </Col>
@@ -234,11 +200,47 @@ export const ActionUser = memo(() => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  label="Hoạt động"
-                  name="status"
-                  valuePropName="checked"
+                  label="Đại lý"
+                  name="organizationId"
+                  rules={[{ required: true, message: MESSAGE.G06 }]}
                 >
-                  <CSwitch disabled={IModeAction.UPDATE !== actionMode} />
+                  <TreeSelect
+                    placeholder="Chọn đại lý"
+                    treeData={agencyOptions}
+                    disabled={actionMode === IModeAction.READ}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="SĐT"
+                  name="phoneNumber"
+                  rules={[
+                    {
+                      validator(_, value) {
+                        if (!value || !cleanUpPhoneNumber(value)) {
+                          return Promise.resolve();
+                        } else if (!phoneRegex.test(value)) {
+                          return Promise.reject('SĐT không đúng định dạng');
+                        } else {
+                          return Promise.resolve();
+                        }
+                      },
+                    },
+                  ]}
+                >
+                  <CInput
+                    maxLength={10}
+                    placeholder="Nhập SĐT"
+                    disabled={actionMode === IModeAction.READ}
+                    onlyNumber
+                    onPaste={(event) =>
+                      handlePasteRemoveTextKeepNumber(event, 10)
+                    }
+                    onInput={(e: AnyElement) =>
+                      (e.target.value = e.target.value.replace(/[^0-9]/g, ''))
+                    }
+                  />
                 </Form.Item>
               </Col>
             </Row>

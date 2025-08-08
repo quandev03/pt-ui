@@ -14,6 +14,8 @@ import useConfigAppStore from '../../../Layouts/stores';
 import { useCallback, useMemo } from 'react';
 import { pathRoutes } from '../../../../../src/routers';
 import { useGetTableList } from '../../hooks/useGetTableList';
+import { STATUS_OPTIONS } from '../../../../../src/constants';
+import { useGetAgencyOptions } from '../../../../../src/hooks/useGetAgencyOptions';
 
 export const useLogicListUser = () => {
   const [searchParams] = useSearchParams();
@@ -25,7 +27,7 @@ export const useLogicListUser = () => {
   const { data: listUser, isLoading: loadingTable } = useGetUsers(
     formatQueryParams<IUserParams>(params)
   );
-
+  const { data: agencyOptions = [] } = useGetAgencyOptions();
   const handleDelete = useCallback(
     (record: IUserItem) => {
       ModalConfirm({
@@ -53,21 +55,21 @@ export const useLogicListUser = () => {
   const filters: FilterItemProps[] = useMemo(() => {
     return [
       {
-        type: 'Select',
+        type: 'TreeSelect',
         name: 'agency',
         label: 'Đại lý',
         placeholder: 'Đại lý',
-        options: [],
+        treeData: agencyOptions,
       },
       {
         type: 'Select',
         name: 'status',
         label: 'Trạng thái',
         placeholder: 'Trạng thái',
-        options: [],
+        options: STATUS_OPTIONS,
       },
     ];
-  }, []);
+  }, [agencyOptions]);
 
   return {
     listUser,
