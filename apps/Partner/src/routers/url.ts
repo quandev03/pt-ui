@@ -29,6 +29,7 @@ export const pathRoutes = {
     `/partner_configuration/view/${id ? id : ':id'}`,
   agencyEdit: (id?: IStringNumber) =>
     `/partner_configuration/edit/${id ? id : ':id'}`,
+  saleManagement: '/sale-management',
   freeEsimBooking: `/free-esim-booking`,
   freeEsimBookingAdd: `/free-esim-booking/add`,
   freeEsimBookingView: (id?: IStringNumber) =>
