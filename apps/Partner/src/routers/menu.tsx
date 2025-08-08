@@ -42,6 +42,10 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.buyBundleWithEsim as string,
     label: 'Book eSIM kèm gói',
   },
+  {
+    key: pathRoutes.esimWarehouse as string,
+    label: 'Danh sách eSIM',
+  },
 ];
 
 export const singlePopActions = ['add'];

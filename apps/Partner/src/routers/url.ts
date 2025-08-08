@@ -37,4 +37,8 @@ export const pathRoutes = {
   buyBundleWithEsimAdd: `/buy-bundle-with-esim/add`,
   buyBundleWithEsimView: (id?: IStringNumber) =>
     `/buy-bundle-with-esim/view/${id ? id : ':id'}`,
+  esimWarehouse: '/esim-warehouse',
+  esimWarehouseAdd: '/esim-warehouse/add',
+  esimWarehouseView: (id?: IStringNumber) =>
+    `esim-warehouse/view/${id ? id : ':id'}`,
 };
