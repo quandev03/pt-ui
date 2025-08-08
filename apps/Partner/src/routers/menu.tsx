@@ -11,7 +11,7 @@ export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.dashboard as string,
     label: 'Tổng quan',
-    hasChild: true,
+    icon: <House />,
   },
   {
     key: pathRoutes.accountAuthorization as string,
@@ -33,6 +33,14 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.agencyList as string,
     label: 'Cấu hình đại lý',
     parentId: pathRoutes.accountAuthorization as string,
+  },
+  {
+    key: pathRoutes.freeEsimBooking as string,
+    label: 'Book eSIM miễn phí',
+  },
+  {
+    key: pathRoutes.buyBundleWithEsim as string,
+    label: 'Book eSIM kèm gói',
   },
 ];
 

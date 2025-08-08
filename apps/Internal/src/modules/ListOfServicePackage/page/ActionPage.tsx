@@ -14,6 +14,7 @@ import {
   MESSAGE,
   NotificationError,
   NumberInput,
+  StatusEnum,
   TitleHeader,
   useActionMode,
   validateForm,
@@ -27,6 +28,8 @@ import { useAdd } from '../hook/useAdd';
 import { useEdit } from '../hook/useEdit';
 import { useView } from '../hook/useView';
 import { IListOfServicePackageForm } from '../types';
+import { pathRoutes } from 'apps/Internal/src/routers';
+import { useGetImage } from '../hook';
 
 export const ActionPage = () => {
   const actionMode = useActionMode();
@@ -34,9 +37,12 @@ export const ActionPage = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const { id } = useParams();
-  const { data: dataView } = useView(id ?? '');
-  const { mutate: mutateEdit } = useEdit();
-  const { mutate: mutateAdd } = useAdd(() => {
+  const { data: dataView } = useView(id ?? '', actionMode);
+  const { mutate: mutateEdit } = useEdit(form, () => {
+    navigate(-1);
+    setImageUrl(null);
+  });
+  const { mutate: mutateAdd } = useAdd(form, () => {
     if (type === EActionSubmit.SAVE_AND_ADD) {
       form.resetFields();
       setImageUrl(null);
@@ -48,6 +54,25 @@ export const ActionPage = () => {
   });
   const [imageUrl, setImageUrl] = useState<string | null | undefined>(null);
   const [isChangeImage, setIsChangeImage] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const { mutate: mutateGetImage } = useGetImage((blobData) => {
+    try {
+      if (blobData instanceof Blob) {
+        const url = window.URL.createObjectURL(blobData);
+        setImageUrl(url);
+        setImageError(false);
+      } else {
+        // Handle case when no image data is received
+        setImageError(true);
+        setImageUrl(null);
+      }
+    } catch (error) {
+      console.error('Error creating object URL:', error);
+      setImageError(true);
+      setImageUrl(null);
+    }
+  });
+
   const beforeUpload = async (file: RcFile) => {
     if (!ImageFileType.includes(file.type || '')) {
       form.setFields([
@@ -74,8 +99,10 @@ export const ActionPage = () => {
     form.setFieldValue('images', file);
     setImageUrl(url);
     setIsChangeImage(true);
+    setImageError(false);
     return false;
   };
+
   const uploadButton = (
     <button
       className={
@@ -90,9 +117,23 @@ export const ActionPage = () => {
       <div className="mt-2 text-cyan-700">Tải file lên</div>
     </button>
   );
+
+  // Placeholder component for when image fails to load
+  const imagePlaceholder = (
+    <div className="border-2 border-dashed border-gray-300 bg-gray-50 rounded-xl h-36 w-[200px] flex flex-col items-center justify-center">
+      <div className="text-gray-400 text-sm">Ảnh gói cước</div>
+      <div className="text-gray-300 text-xs">Không có ảnh</div>
+    </div>
+  );
+
   const handleDeleteImage = () => {
+    // Cleanup object URL if it exists
+    if (imageUrl && imageUrl.startsWith('blob:')) {
+      window.URL.revokeObjectURL(imageUrl);
+    }
     setImageUrl(undefined);
     setIsChangeImage(true);
+    setImageError(false);
     form.setFieldValue('images', null);
     form.setFields([
       {
@@ -101,37 +142,52 @@ export const ActionPage = () => {
       },
     ]);
   };
+
   const handleSubmit = useCallback(
     (values: IListOfServicePackageForm) => {
       const data = {
         ...values,
         images: form.getFieldValue('images')?.file ?? undefined,
       };
-      console.log('data', data);
       if (actionMode === IModeAction.CREATE) {
         mutateAdd(data);
       } else {
         mutateEdit({
           ...data,
           id: id ?? '',
+          images: form.getFieldValue('images')?.file ?? undefined,
+          status: values.status ? StatusEnum.ACTIVE : StatusEnum.INACTIVE,
         });
       }
     },
     [form, id, mutateAdd, mutateEdit]
   );
+
   useEffect(() => {
-    if (dataView) {
+    if (dataView && id) {
       form.setFieldsValue({
         ...dataView,
+        status: dataView.status === StatusEnum.ACTIVE,
       });
+      mutateGetImage(id);
     }
-  }, [dataView]);
+  }, [dataView, form, id, mutateGetImage]);
+
+  // Cleanup object URL when component unmounts or imageUrl changes
+  useEffect(() => {
+    const currentImageUrl = imageUrl;
+    return () => {
+      if (currentImageUrl && currentImageUrl.startsWith('blob:')) {
+        window.URL.revokeObjectURL(currentImageUrl);
+      }
+    };
+  }, [imageUrl]);
+
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{`${getActionMode(actionMode)} gói cước`}</TitleHeader>
       <Spin spinning={false}>
         <Form
-          disabled={actionMode === IModeAction.READ}
           form={form}
           labelCol={{ span: 4 }}
           colon={false}
@@ -152,7 +208,10 @@ export const ActionPage = () => {
                   label="Mã gói cước"
                   name="pckCode"
                 >
-                  <CInput placeholder="Nhập mã gói cước" />
+                  <CInput
+                    disabled={actionMode === IModeAction.READ}
+                    placeholder="Nhập mã gói cước"
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -161,7 +220,10 @@ export const ActionPage = () => {
                   label="Tên gói cước"
                   name="pckName"
                 >
-                  <CInput placeholder="Nhập tên gói cước" />
+                  <CInput
+                    disabled={actionMode === IModeAction.READ}
+                    placeholder="Nhập tên gói cước"
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -172,7 +234,11 @@ export const ActionPage = () => {
                   rules={[
                     {
                       validator(_, value) {
-                        if (!value || value.length === 0) {
+                        if (
+                          value === undefined ||
+                          value === null ||
+                          value === ''
+                        ) {
                           return Promise.reject(
                             'Không được để trống trường này'
                           );
@@ -203,7 +269,7 @@ export const ActionPage = () => {
                     multiple={false}
                     maxCount={1}
                   >
-                    {imageUrl ? (
+                    {imageUrl && !imageError ? (
                       <div className="relative inline-block">
                         <img
                           src={imageUrl}
@@ -214,6 +280,7 @@ export const ActionPage = () => {
                               ? 'cursor-not-allowed'
                               : 'cursor-pointer')
                           }
+                          onError={() => setImageError(true)}
                         />
                         {actionMode !== IModeAction.READ && (
                           <div className="absolute top-2 right-2 flex gap-1">
@@ -242,8 +309,40 @@ export const ActionPage = () => {
                           </div>
                         )}
                       </div>
-                    ) : (
+                    ) : actionMode === IModeAction.CREATE &&
+                      !imageUrl &&
+                      !imageError ? (
                       uploadButton
+                    ) : (
+                      <div className="relative inline-block">
+                        {imagePlaceholder}
+                        {actionMode !== IModeAction.READ && (
+                          <div className="absolute top-2 right-2 flex gap-1">
+                            <Button
+                              type="primary"
+                              danger
+                              size="small"
+                              className="!p-1 !w-8 !h-8"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteImage();
+                              }}
+                            >
+                              <svg
+                                className="w-4 h-4"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </Button>
+                          </div>
+                        )}
+                      </div>
                     )}
                   </Upload>
                 </Form.Item>
@@ -266,48 +365,24 @@ export const ActionPage = () => {
                   >
                     Lưu
                   </CButtonSave>
-                  <CButtonClose
-                    disabled={false}
-                    type="default"
-                    onClick={() => navigate(-1)}
-                  >
-                    Đóng
-                  </CButtonClose>
+                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
                 </>
               )}
               {actionMode === IModeAction.READ && (
                 <>
                   <CButtonEdit
+                    onClick={() => {
+                      navigate(pathRoutes.listOfServicePackageEdit(id));
+                    }}
                     disabled={false}
-                    htmlType="submit"
-                    onClick={() => setType(EActionSubmit.SAVE)}
-                  >
-                    Sửa
-                  </CButtonEdit>
-                  <CButtonClose
-                    disabled={false}
-                    type="default"
-                    onClick={() => navigate(-1)}
-                  >
-                    Đóng
-                  </CButtonClose>
+                  />
+                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
                 </>
               )}
               {actionMode === IModeAction.UPDATE && (
                 <>
-                  <CButtonSave
-                    htmlType="submit"
-                    onClick={() => setType(EActionSubmit.SAVE)}
-                  >
-                    Lưu
-                  </CButtonSave>
-                  <CButtonClose
-                    disabled={false}
-                    type="default"
-                    onClick={() => navigate(-1)}
-                  >
-                    Đóng
-                  </CButtonClose>
+                  <CButtonSave disabled={false} htmlType="submit" />
+                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
                 </>
               )}
             </Space>

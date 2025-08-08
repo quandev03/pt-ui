@@ -34,7 +34,7 @@ export const routerItems: RouterItems[] = [
     hasChild: true,
   },
   {
-    key: pathRoutes.list_of_service_package,
+    key: pathRoutes.listOfServicePackage,
     label: 'Danh mục gói cước',
     parentId: pathRoutes.category,
   },

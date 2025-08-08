@@ -5,21 +5,21 @@ import { ActionPage } from './page';
 
 const listOfServicePackageRoutes: RouteObject[] = [
   {
-    path: pathRoutes.list_of_service_package,
+    path: pathRoutes.listOfServicePackage,
     lazy: async () => {
       const { ListPage } = await import('./page');
       return { Component: ListPage };
     },
   },
   {
-    path: pathRoutes.list_of_service_package_add,
+    path: pathRoutes.listOfServicePackageAdd,
     lazy: async () => {
       const { ActionPage } = await import('./page');
       return { Component: ActionPage };
     },
   },
   {
-    path: pathRoutes.list_of_service_package_edit(':id'),
+    path: pathRoutes.listOfServicePackageEdit(':id'),
     element: <ActionPage />,
     lazy: async () => {
       const { ActionPage } = await import('./page');
@@ -27,7 +27,7 @@ const listOfServicePackageRoutes: RouteObject[] = [
     },
   },
   {
-    path: pathRoutes.list_of_service_package_view(':id'),
+    path: pathRoutes.listOfServicePackageView(':id'),
     element: <ActionPage />,
     lazy: async () => {
       const { ActionPage } = await import('./page');
