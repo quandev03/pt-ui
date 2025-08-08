@@ -1,22 +1,53 @@
 import { Button, Card, DatePicker, Select } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
 import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { getMockData, getDonutData } from '../queryHook/useGetDataChart';
 import { IChartParam, IChartPeriod } from '../type';
 import { RotateCcw } from 'lucide-react';
 
+// Extend dayjs with weekOfYear plugin
+dayjs.extend(weekOfYear);
+
 const { RangePicker } = DatePicker;
 
 const chartPeriods: IChartPeriod[] = [
+  { label: 'Ngày', value: 'day' },
   { label: 'Tuần', value: 'week' },
   { label: 'Tháng', value: 'month' },
   { label: 'Năm', value: 'year' },
 ];
 
+// Helper function to format date based on period
+
+// Helper function to get date range based on period
+const getDateRangeByPeriod = (period: 'week' | 'month' | 'year' | 'day') => {
+  const now = dayjs();
+
+  switch (period) {
+    case 'day':
+      // 24 days from today
+      return [now.subtract(23, 'day'), now];
+    case 'week':
+      // 24 weeks from today
+      return [now.subtract(23, 'week'), now];
+    case 'month':
+      // 24 months from current month
+      const startMonth = now.subtract(23, 'month').startOf('month');
+      const endMonth = now.endOf('month');
+      return [startMonth, endMonth];
+    case 'year':
+      // 24 years from current year
+      return [now.subtract(23, 'year').startOf('year'), now.endOf('year')];
+    default:
+      return [now.startOf('week'), now.endOf('week')];
+  }
+};
+
 export const ChartColumn = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<
-    'week' | 'month' | 'year'
+    'day' | 'week' | 'month' | 'year'
   >('week');
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs]>([
     dayjs().startOf('week'),
@@ -32,7 +63,7 @@ export const ChartColumn = () => {
 
   // Use actual API data if available, otherwise use mock data
   const data = getMockData(selectedPeriod);
-  const donutData = getDonutData();
+  const donutData = getDonutData().column;
 
   const chartOptions = {
     chart: {
@@ -68,13 +99,17 @@ export const ChartColumn = () => {
       colors: ['transparent'],
     },
     xaxis: {
+      type: 'category' as const,
       categories: data.map((item: any) => item.x),
       labels: {
         style: {
           colors: '#6B7280',
-          fontSize: '12px',
+          fontSize: '13px',
           fontFamily: 'Inter, sans-serif',
         },
+        rotate: -45,
+        rotateAlways: false,
+        maxHeight: 65,
       },
       axisBorder: {
         show: false,
@@ -87,14 +122,14 @@ export const ChartColumn = () => {
       title: {
         style: {
           color: '#6B7280',
-          fontSize: '14px',
+          fontSize: '13px',
           fontFamily: 'Inter, sans-serif',
         },
       },
       labels: {
         style: {
           colors: '#6B7280',
-          fontSize: '12px',
+          fontSize: '13px',
           fontFamily: 'Inter, sans-serif',
         },
         formatter: (value: number) => value.toLocaleString(),
@@ -109,7 +144,7 @@ export const ChartColumn = () => {
         formatter: (value: number) => `${value.toLocaleString()} eSIM`,
       },
       style: {
-        fontSize: '12px',
+        fontSize: '13px',
         fontFamily: 'Inter, sans-serif',
       },
     },
@@ -142,7 +177,7 @@ export const ChartColumn = () => {
   const donutOptions = {
     chart: {
       type: 'donut' as const,
-      height: 350,
+      height: 400,
       toolbar: {
         show: false,
       },
@@ -183,19 +218,27 @@ export const ChartColumn = () => {
       colors: ['#FFFFFF'],
     },
     colors: donutData.map((item: any) => item.color),
+    labels: donutData.map((item: any) => item.name),
     legend: {
-      position: 'bottom' as const,
+      position: 'right' as const,
       fontSize: '14px',
       fontFamily: 'Inter, sans-serif',
       fontWeight: 400,
       labels: {
         colors: '#1F2937',
+        formatter: (seriesName: string, opts: any) => {
+          const item = donutData[opts.seriesIndex];
+          return item ? `${item.name} ${item.value}%` : seriesName;
+        },
       },
+
       markers: {
         size: 8,
         strokeWidth: 0,
         fillColors: donutData.map((item: any) => item.color),
         radius: 4,
+        offsetX: -10,
+        offsetY: 2,
       },
       itemMargin: {
         horizontal: 20,
@@ -207,10 +250,6 @@ export const ChartColumn = () => {
       onItemHover: {
         highlightDataSeries: false,
       },
-      formatter: (seriesName: string, opts: any) => {
-        const item = donutData.find((d: any) => d.name === seriesName);
-        return item ? `${seriesName} ${item.value}%` : seriesName;
-      },
     },
     tooltip: {
       y: {
@@ -221,29 +260,9 @@ export const ChartColumn = () => {
 
   const donutSeries = donutData.map((item: any) => item.value);
 
-  const handlePeriodChange = (value: 'week' | 'month' | 'year') => {
+  const handlePeriodChange = (value: 'day' | 'week' | 'month' | 'year') => {
     setSelectedPeriod(value);
-    let startDate: Dayjs;
-    let endDate: Dayjs;
-
-    switch (value) {
-      case 'week':
-        startDate = dayjs().startOf('week');
-        endDate = dayjs().endOf('week');
-        break;
-      case 'month':
-        startDate = dayjs().startOf('month');
-        endDate = dayjs().endOf('month');
-        break;
-      case 'year':
-        startDate = dayjs().startOf('year');
-        endDate = dayjs().endOf('year');
-        break;
-      default:
-        startDate = dayjs().startOf('week');
-        endDate = dayjs().endOf('week');
-    }
-
+    const [startDate, endDate] = getDateRangeByPeriod(value);
     setDateRange([startDate, endDate]);
   };
 
@@ -263,74 +282,80 @@ export const ChartColumn = () => {
 
   return (
     <Card className="mt-6 px-6 rounded-[10px] shadow-[10.7px_14.94px_37.35px_0px_#6c7e9314]">
-      <div className="flex flex-col space-y-6">
+      <div className="flex flex-col space-y-1">
         {/* Header with controls */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex flex-col sm:flex-row justify-center items-start sm:items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-gray-600">Chu kỳ:</span>
-              <Select
-                value={selectedPeriod}
-                onChange={handlePeriodChange}
-                style={{ width: 120 }}
-                options={chartPeriods.map((period) => ({
-                  label: period.label,
-                  value: period.value,
-                }))}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <RangePicker
-                value={dateRange}
-                onChange={handleDateRangeChange}
-                format="DD/MM/YYYY"
-                style={{ width: 240 }}
-                placeholder={['Từ ngày', 'Đến ngày']}
-              />
-            </div>
+              <span className="text-lg font-semibold text-center text-gray-800">
+                Số lượng eSIM đã bán
+              </span>
+              <div className="ml-10 flex gap-4 items-center">
+                <span className="text-sm font-medium text-gray-600">
+                  Chu kỳ:
+                </span>
+                <Select
+                  value={selectedPeriod}
+                  onChange={handlePeriodChange}
+                  style={{ width: 120 }}
+                  options={chartPeriods.map((period) => ({
+                    label: period.label,
+                    value: period.value,
+                  }))}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <RangePicker
+                  value={dateRange}
+                  onChange={handleDateRangeChange}
+                  format="DD/MM/YYYY"
+                  style={{ width: 240 }}
+                  placeholder={['Từ ngày', 'Đến ngày']}
+                />
+              </div>
 
-            <Button
-              icon={<RotateCcw size={20} />}
-              onClick={handleRefresh}
-              // loading={isLoading}
-              type="text"
-              className="flex items-center justify-center mt-1.5"
-            />
+              <Button
+                icon={<RotateCcw size={20} />}
+                onClick={handleRefresh}
+                // loading={isLoading}
+                type="text"
+                className="flex items-center justify-center mt-1.5"
+              />
+            </div>
           </div>
         </div>
 
         {/* Charts */}
-        <div className="w-full">
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold text-center text-gray-800">
-              Số lượng eSIM đã bán
-            </h3>
-          </div>
-
+        <div className="w-full mt-0">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Bar Chart */}
-            <div className="lg:col-span-2">
+            {/* Line Chart */}
+            <div className="lg:col-span-2 min-h-[400px] overflow-hidden">
               <ReactApexChart
                 options={chartOptions}
                 series={chartSeries}
                 type="bar"
-                height={350}
+                height={400}
               />
             </div>
 
             {/* Donut Chart */}
-            <div className="lg:col-span-1">
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold text-center text-gray-800">
-                  Đại lý
-                </h3>
+            <div className="lg:col-span-1 flex justify-center mb-6 items-end">
+              <div className="text-center">
+                <div className="mb-4">
+                  <span className="text-lg mr-36 font-semibold text-gray-800">
+                    Đại lý
+                  </span>
+                </div>
+                <div>
+                  <ReactApexChart
+                    options={donutOptions}
+                    series={donutSeries}
+                    type="donut"
+                    height={300}
+                    width={380}
+                  />
+                </div>
               </div>
-              <ReactApexChart
-                options={donutOptions}
-                series={donutSeries}
-                type="donut"
-                height={350}
-              />
             </div>
           </div>
         </div>

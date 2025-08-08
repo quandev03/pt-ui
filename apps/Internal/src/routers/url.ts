@@ -10,7 +10,6 @@ export interface ParamsType {
 }
 
 export const pathRoutes = {
-  dashboard: '/dashboard',
   home: '/',
   welcome: '/welcome',
   profile: '/profile',
@@ -19,6 +18,7 @@ export const pathRoutes = {
   notFound: '/not-found',
 
   // Quản lý tài khoản
+  dashboard: '/dashboard',
   systemManager: '/system-manager',
   accountAuthorization: '/account-authorization',
   systemUserManager: '/user-manager',

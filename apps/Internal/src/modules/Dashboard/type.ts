@@ -1,6 +1,6 @@
 export interface IChartParam {
   date: string;
-  period?: 'week' | 'month' | 'year';
+  period?: 'day' | 'week' | 'month' | 'year';
   startDate?: string;
   endDate?: string;
 }
@@ -19,5 +19,5 @@ export interface IDataDashboardStats {
 
 export interface IChartPeriod {
   label: string;
-  value: 'week' | 'month' | 'year';
+  value: 'day' | 'week' | 'month' | 'year';
 }
