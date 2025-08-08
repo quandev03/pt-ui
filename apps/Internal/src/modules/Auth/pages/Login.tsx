@@ -38,18 +38,22 @@ const LoginPage = () => {
   const { state: locationState } = useLocation();
   const permission = usePermissions(menuData, pathRoutes.dashboard);
   const handleRedirect = useCallback(() => {
-    if (permission.canRead) {
+    if (locationState) {
+      const { pathname, search } = locationState;
+      navigate(`${pathname}${search}`);
+    } else if (permission.canRead) {
       navigate(pathRoutes.dashboard);
     } else {
       navigate(pathRoutes.welcome);
     }
-  }, [permission, navigate]);
+  }, [locationState, permission, navigate]);
 
   useEffect(() => {
     if (isAuthenticated && token) {
       handleRedirect();
     }
-  }, [isAuthenticated, token, handleRedirect]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, token]);
 
   const { mutate: loginLocal, isPending: loadingLoginLocal } =
     useSupportLoginLocal(
