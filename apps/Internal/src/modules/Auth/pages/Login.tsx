@@ -37,8 +37,6 @@ const LoginPage = () => {
   const token = StorageService.get(ACCESS_TOKEN_KEY);
   const { state: locationState } = useLocation();
   const permission = usePermissions(menuData, pathRoutes.dashboard);
-  console.log('permission', permission);
-  console.log('menuData', menuData);
   const handleRedirect = useCallback(() => {
     if (permission.canRead) {
       navigate(pathRoutes.dashboard);
@@ -51,7 +49,6 @@ const LoginPage = () => {
     if (isAuthenticated && token) {
       handleRedirect();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, token, handleRedirect]);
 
   const { mutate: loginLocal, isPending: loadingLoginLocal } =
@@ -60,7 +57,6 @@ const LoginPage = () => {
         const menuData = await globalService.getMenu();
         setMenuData(menuData);
         setIsAuthenticated(true);
-        handleRedirect();
       },
       (err: IErrorResponse) => {
         if (err.errors) {
@@ -113,9 +109,7 @@ const LoginPage = () => {
               form={form}
               layout="vertical"
               initialValues={{ remember: true }}
-              onFinish={(values: ILoginDataRequest) => {
-                loginLocal(values);
-              }}
+              onFinish={loginLocal}
               autoComplete="off"
               className="!w-full"
             >
