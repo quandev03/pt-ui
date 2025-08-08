@@ -25,7 +25,7 @@ export const DashboardStats = ({ data }: { data: IDataDashboardStats }) => {
     return num.toLocaleString('en-US');
   };
   const dataTest = [
-    // { label: 'Tổng eSIM đã đặt', value: data.totalESIM, icon: svgTotalESIM() },
+    { label: 'Tổng eSIM đã đặt', value: data.totalESIM, icon: svgTotalESIM() },
     { label: 'Tổng eSIM đã bán', value: data.totalSTB, icon: svgTotalESIM() },
     {
       label: 'Tổng STB đã gọi 900',

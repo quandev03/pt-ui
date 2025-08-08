@@ -5,17 +5,14 @@ import { RouterItems } from '@vissoft-react/common';
 export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.home as string,
-    icon: <House />,
     label: 'Tổng quan',
   },
   {
     key: pathRoutes.dashboard as string,
     label: 'Tổng quan',
-    icon: <ChartNoAxesGantt />,
   },
   {
     key: pathRoutes.accountAuthorization as string,
-    icon: <Settings />,
     label: 'Quản Trị Hệ Thống',
     hasChild: true,
   },
@@ -36,7 +33,6 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.saleManagement as string,
-    icon: <Store />,
     label: 'Quản Lý Bán Hàng',
     hasChild: true,
   },

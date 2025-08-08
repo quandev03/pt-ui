@@ -9,6 +9,7 @@ import {
   StorageService,
   cleanUpPhoneNumber,
   setFieldError,
+  usePermissions,
   validateForm,
 } from '@vissoft-react/common';
 import { Col, Divider, Form, Image, Row, Spin } from 'antd';
@@ -30,18 +31,20 @@ const LoginPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [openForgot, setForgot] = useState(false);
-  const { setIsAuthenticated, isAuthenticated } = useConfigAppStore();
+  const { setIsAuthenticated, isAuthenticated, menuData } = useConfigAppStore();
   const token = StorageService.get(ACCESS_TOKEN_KEY);
   const { state: locationState } = useLocation();
+  const permission = usePermissions(menuData, pathRoutes.dashboard);
   const handleRedirect = useCallback(() => {
-    navigate(pathRoutes.welcome);
     if (locationState) {
       const { pathname, search } = locationState;
       navigate(`${pathname}${search}`);
+    } else if (permission.canRead) {
+      navigate(pathRoutes.dashboard);
     } else {
       navigate(pathRoutes.welcome);
     }
-  }, [locationState, navigate]);
+  }, [locationState, permission, navigate]);
 
   useEffect(() => {
     if (isAuthenticated && token) {

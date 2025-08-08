@@ -32,7 +32,7 @@ const LoginPage = () => {
   const token = StorageService.get(ACCESS_TOKEN_KEY);
   const { state: locationState } = useLocation();
   const handleRedirect = useCallback(() => {
-    navigate(pathRoutes.welcome as string);
+    navigate(pathRoutes.dashboard as string);
     if (locationState) {
       const { pathname, search } = locationState;
       navigate(`${pathname}${search}`);
