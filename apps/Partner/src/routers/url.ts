@@ -34,4 +34,8 @@ export const pathRoutes = {
   freeEsimBookingView: (id?: IStringNumber) =>
     `/free-esim-booking/view/${id ? id : ':id'}`,
   buyBundleWithEsim: 'buy-bundle-with-esim',
+  esimWarehouse: '/esim-warehouse',
+  esimWarehouseAdd: '/esim-warehouse/add',
+  esimWarehouseView: (id?: IStringNumber) =>
+    `esim-warehouse/view/${id ? id : ':id'}`,
 };
