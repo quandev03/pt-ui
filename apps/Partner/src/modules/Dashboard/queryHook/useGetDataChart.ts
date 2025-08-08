@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { IChartItem, IChartParam } from '../type';
-import { safeApiClient } from 'apps/Internal/src/services';
-import { prefixSaleService } from 'apps/Internal/src/constants';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
+import { prefixSaleService } from 'apps/Partner/src/constants';
+import { safeApiClient } from 'apps/Partner/src/services';
 
 // Extend dayjs with weekOfYear plugin
 dayjs.extend(weekOfYear);
@@ -80,20 +80,20 @@ export const useGetDataChart = (params: IChartParam) => {
 // Mock data for different periods
 export const dataMock = {
   week: [
-    { x: '01/07', y: 520 },
-    { x: '02/07', y: 630 },
-    { x: '03/07', y: 490 },
-    { x: '04/07', y: 700 },
-    { x: '05/07', y: 380 },
-    { x: '06/07', y: 920 },
-    { x: '07/07', y: 140 },
+    { x: '01/07', y: 371 },
+    { x: '02/07', y: 467 },
+    { x: '03/07', y: 392 },
+    { x: '04/07', y: 500 },
+    { x: '05/07', y: 400 },
+    { x: '06/07', y: 400 },
+    { x: '07/07', y: 400 },
   ],
   month: [
-    { x: '01/07', y: 520 },
-    { x: '02/07', y: 630 },
-    { x: '03/07', y: 490 },
-    { x: '04/07', y: 450 },
-    { x: '05/07', y: 700 },
+    { x: '01/07', y: 328 },
+    { x: '02/07', y: 900 },
+    { x: '03/07', y: 342 },
+    { x: '04/07', y: 328 },
+    { x: '05/07', y: 781 },
     { x: '06/07', y: 380 },
     { x: '07/07', y: 920 },
     { x: '08/07', y: 140 },
@@ -122,9 +122,9 @@ export const dataMock = {
     { x: '31/07', y: 420 },
   ],
   year: [
-    { x: 'T1', y: 15200 },
-    { x: 'T2', y: 16800 },
-    { x: 'T3', y: 14200 },
+    { x: 'T1', y: 73287 },
+    { x: 'T2', y: 38732 },
+    { x: 'T3', y: 32382 },
     { x: 'T4', y: 18900 },
     { x: 'T5', y: 20100 },
     { x: 'T6', y: 17800 },
@@ -139,14 +139,14 @@ export const dataMock = {
 
 // Mock data for donut chart (agent/dealer distribution)
 export const donutDataMockLine = [
-  { name: 'Đại lý 1', value: 60, color: '#3B82F6' },
-  { name: 'Đại lý 2', value: 30, color: '#F59E0B' },
-  { name: 'Đại lý 3', value: 10, color: '#EF4444' },
+  { name: 'Đại lý 1', value: 65, color: '#3B82F6' },
+  { name: 'Đại lý 2', value: 15, color: '#F59E0B' },
+  { name: 'Đại lý 3', value: 20, color: '#EF4444' },
 ];
 export const donutDataMockColumn = [
-  { name: 'Đại lý 1', value: 20, color: '#3B82F6' },
-  { name: 'Đại lý 2', value: 20, color: '#F59E0B' },
-  { name: 'Đại lý 3', value: 60, color: '#EF4444' },
+  { name: 'Đại lý 1', value: 30, color: '#3B82F6' },
+  { name: 'Đại lý 2', value: 30, color: '#F59E0B' },
+  { name: 'Đại lý 3', value: 40, color: '#EF4444' },
 ];
 // Helper function to get mock data based on period
 export const getMockData = (
