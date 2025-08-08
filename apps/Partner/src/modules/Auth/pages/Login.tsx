@@ -13,9 +13,9 @@ import {
 import { Col, Form, Image, Row, Spin } from 'antd';
 import { FocusEvent, useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import BgLogin from '../../../assets/images/bg_banner.png';
 import Logo from '../../../assets/images/Logo-mini.svg';
-import BgLogin from '../../../assets/images/background.png';
-import Smartphone from '../../../assets/images/smartphone.png';
+import Smartphone from '../../../assets/images/Thumb.png';
 import { ACCESS_TOKEN_KEY } from '../../../constants';
 import { pathRoutes } from '../../../routers/url';
 import useConfigAppStore from '../../Layouts/stores';
@@ -190,8 +190,16 @@ const LoginPage = () => {
             </Form>
           </div>
         </Col>
-        <Col span={12} className="flex justify-center items-center">
-          <div>
+        <Col span={12}>
+          <div className="text-center flex flex-col gap-3">
+            <span className="text-[#005aaa] text-3xl font-semibold drop-shadow-md">
+              Hệ thống Kinh doanh eSIM
+            </span>
+            <span className="text-[#e50013] text-3xl font-semibold drop-shadow-md flex items-center justify-center gap-2">
+              Hi Vietnam
+            </span>
+          </div>
+          <div className="flex justify-center mt-16">
             <Image src={Smartphone} preview={false} />
           </div>
         </Col>
