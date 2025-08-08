@@ -7,7 +7,7 @@ export const pathRoutes = {
   login: '/login',
   forgotPassword: '/forgot-password',
   notFound: '/not-found',
-
+  dashboard: '/dashboard',
   // Quản trị hệ thống
   accountAuthorization: '/account-authorization',
   userManager: '/user-management',

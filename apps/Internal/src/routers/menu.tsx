@@ -84,7 +84,7 @@ export const routerItems: RouterItems[] = [
   // danh sách kho esim
   {
     key: pathRoutes.esimStock,
-    label: 'Danh sách kho eSIM',
+    label: 'Danh sách eSIM',
     parentId: pathRoutes.systemManager,
   },
   // Báo cáo
