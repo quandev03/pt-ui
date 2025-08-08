@@ -9,6 +9,11 @@ export const routerItems: RouterItems[] = [
     label: 'Tổng quan',
   },
   {
+    key: pathRoutes.dashboard as string,
+    label: 'Tổng quan',
+    icon: <House />,
+  },
+  {
     key: pathRoutes.accountAuthorization as string,
     icon: <Settings />,
     label: 'Quản Trị Hệ Thống',
@@ -20,8 +25,8 @@ export const routerItems: RouterItems[] = [
     parentId: pathRoutes.accountAuthorization as string,
   },
   {
-    key: pathRoutes.systemUserManager as string,
-    label: 'Tài khoản',
+    key: pathRoutes.userManager as string,
+    label: 'Quản lý user đại lý',
     parentId: pathRoutes.accountAuthorization as string,
   },
   {
@@ -34,6 +39,19 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.updateSubscriberInfo as string,
     label: 'Cập nhật thông tin thuê bao',
     parentId: pathRoutes.saleManagement as string,
+  },
+  {
+    key: pathRoutes.agencyList as string,
+    label: 'Cấu hình đại lý',
+    parentId: pathRoutes.accountAuthorization as string,
+  },
+  {
+    key: pathRoutes.freeEsimBooking as string,
+    label: 'Book eSIM miễn phí',
+  },
+  {
+    key: pathRoutes.buyBundleWithEsim as string,
+    label: 'Book eSIM kèm gói',
   },
 ];
 
