@@ -88,7 +88,9 @@ export const ListRole: FC<PropsRole> = memo(({ isPartner }) => {
   });
   const actionComponent = useMemo(() => {
     return (
-      <CButtonAdd onClick={handleAddRole} disabled={!permission.canCreate} />
+      <div>
+        {permission.canCreate && <CButtonAdd onClick={handleAddRole} />}
+      </div>
     );
   }, [permission.canCreate, handleAddRole]);
   return (
