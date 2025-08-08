@@ -111,3 +111,13 @@ export interface ILoginResponse {
   token_type: string;
   expires_in: number;
 }
+
+export interface IParamItem {
+  label: string;
+  value: string;
+}
+
+export interface IAllParamResponse {
+  CLIENT_TYPE: IParamItem[];
+  GENDER: IParamItem[];
+}

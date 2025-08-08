@@ -12,7 +12,7 @@ import { IAgency, IAgencyParams } from '../types';
 
 export const useGetAgencies = (params: IAgencyParams) => {
   return useQuery({
-    queryKey: [REACT_QUERY_KEYS.GET_ALL_USERS, params],
+    queryKey: [REACT_QUERY_KEYS.GET_ALL_AGENCY, params],
     queryFn: () => agencyListService.getAgencies(params),
   });
 };

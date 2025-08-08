@@ -21,6 +21,7 @@ export const AgencyList = memo(() => {
           name="textSearch"
           tooltip="Nhập mã hoặc tên đại lý để tìm kiếm"
           placeholder="Nhập mã hoặc tên đại lý để tìm kiếm"
+          maxLength={100}
         />
       }
     />
