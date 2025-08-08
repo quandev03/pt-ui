@@ -1,19 +1,18 @@
 import { TitleHeader } from '@vissoft-react/common';
 import { DashboardStats } from '../components/DashboardStats';
 import { IDataDashboardStats } from '../type';
-import { ChartColumn } from '../components/ChartColumn';
 import { ChartLine } from '../components/ChartLine';
+import { ChartColumn } from '../components/ChartColumn';
 
 export const ListPage = () => {
   const dataDashboardStats: IDataDashboardStats = {
-    totalESIM: 1,
-    totalSTB: 2,
-    totalPackagesSold: 3,
-    totalESIMsOrdered: 4,
+    totalESIM: 1000000,
+    totalSTB: 3200000,
+    totalPackagesSold: 2030000,
+    totalESIMsOrdered: 1203000,
   };
   return (
     <>
-      <TitleHeader>Tổng quan</TitleHeader>
       <DashboardStats data={dataDashboardStats} />
       <ChartColumn />
       <ChartLine />

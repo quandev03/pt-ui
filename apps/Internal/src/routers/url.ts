@@ -10,7 +10,6 @@ export interface ParamsType {
 }
 
 export const pathRoutes = {
-  dashboard: '/dashboard',
   home: '/',
   welcome: '/welcome',
   profile: '/profile',
@@ -19,6 +18,7 @@ export const pathRoutes = {
   notFound: '/not-found',
 
   // Quản lý tài khoản
+  dashboard: '/dashboard',
   systemManager: '/system-manager',
   accountAuthorization: '/account-authorization',
   systemUserManager: '/user-manager',
@@ -71,11 +71,11 @@ export const pathRoutes = {
     `/upload-number/view/${id ? id : ':id'}`,
   uploadNumberAdd: '/upload-number/add',
 
-  list_of_service_package: '/list-of-service-package',
-  list_of_service_package_add: '/list-of-service-package/add',
-  list_of_service_package_edit: (id?: IStringNumber) =>
+  listOfServicePackage: '/list-of-service-package',
+  listOfServicePackageAdd: '/list-of-service-package/add',
+  listOfServicePackageEdit: (id?: IStringNumber) =>
     `/list-of-service-package/edit/${id ? id : ':id'}`,
-  list_of_service_package_view: (id?: IStringNumber) =>
+  listOfServicePackageView: (id?: IStringNumber) =>
     `/list-of-service-package/view/${id ? id : ':id'}`,
 
   //========= Danh mục đối tác

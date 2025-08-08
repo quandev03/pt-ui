@@ -68,7 +68,7 @@ export const AgencyAction = memo(() => {
               <Col span={12}></Col>
               <Col span={12}>
                 <Form.Item
-                  label="Mã đối tác"
+                  label="Mã đại lý"
                   name="orgCode"
                   required
                   rules={[
@@ -86,7 +86,7 @@ export const AgencyAction = memo(() => {
                   ]}
                 >
                   <CInput
-                    placeholder="Nhập mã đối tác"
+                    placeholder="Nhập mã đại lý"
                     maxLength={30}
                     disabled={actionMode === IModeAction.READ}
                     preventSpecialExceptHyphenAndUnderscore
@@ -98,7 +98,7 @@ export const AgencyAction = memo(() => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  label="Tên đối tác"
+                  label="Tên đại lý"
                   name="orgName"
                   required
                   rules={[
@@ -116,7 +116,7 @@ export const AgencyAction = memo(() => {
                   ]}
                 >
                   <CInput
-                    placeholder="Nhập tên đối tác"
+                    placeholder="Nhập tên đại lý"
                     maxLength={100}
                     disabled={actionMode === IModeAction.READ}
                     onBlur={(e) => {

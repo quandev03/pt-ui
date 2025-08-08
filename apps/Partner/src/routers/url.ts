@@ -7,7 +7,7 @@ export const pathRoutes = {
   login: '/login',
   forgotPassword: '/forgot-password',
   notFound: '/not-found',
-
+  dashboard: '/dashboard',
   // Quản trị hệ thống
   accountAuthorization: '/account-authorization',
   userManager: '/user-management',
@@ -29,4 +29,9 @@ export const pathRoutes = {
     `/partner_configuration/view/${id ? id : ':id'}`,
   agencyEdit: (id?: IStringNumber) =>
     `/partner_configuration/edit/${id ? id : ':id'}`,
+  freeEsimBooking: `/free-esim-booking`,
+  freeEsimBookingAdd: `/free-esim-booking/add`,
+  freeEsimBookingView: (id?: IStringNumber) =>
+    `/free-esim-booking/view/${id ? id : ':id'}`,
+  buyBundleWithEsim: 'buy-bundle-with-esim',
 };

@@ -122,3 +122,13 @@ export interface IErrorResponse {
   code?: string;
   errors: IFieldErrorsItem[];
 }
+
+export interface IParamItem {
+  label: string;
+  value: string;
+}
+
+export interface IAllParamResponse {
+  CLIENT_TYPE: IParamItem[];
+  GENDER: IParamItem[];
+}

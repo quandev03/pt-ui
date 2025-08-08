@@ -1,31 +1,30 @@
 import {
-  CInput,
-  CInputNumber,
-  CSwitch,
-  decodeSearchParams,
-  IModeAction,
-  ModalConfirm,
-  MESSAGE,
-  TitleHeader,
-  validateForm,
-  CSelect,
-  useActionMode,
-  Show,
-  getActionMode,
   ActionsTypeEnum,
   AnyElement,
+  CInput,
+  CInputNumber,
+  CSelect,
+  decodeSearchParams,
+  getActionMode,
+  IModeAction,
+  MESSAGE,
+  ModalConfirm,
+  Show,
+  TitleHeader,
+  useActionMode,
+  validateForm,
 } from '@vissoft-react/common';
 import { Card, Col, Form, Row, Spin, Typography } from 'antd';
+import { pathRoutes } from 'apps/Internal/src/routers';
 import { useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import FormFooterDetail from '../components/FormFooterDetail';
 import { useCreateObject } from '../hooks/useCreateObject';
 import { useDeleteObject } from '../hooks/useDeleteObject';
 import { useDetailObject } from '../hooks/useDetailObject';
 import { useEditObject } from '../hooks/useEditObject';
 import { useListAction } from '../hooks/useListAction';
 import { useListObject } from './useListObject';
-import { pathRoutes } from 'apps/Internal/src/routers';
-import FormFooterDetail from '../components/FormFooterDetail';
 
 export const AddEditView = () => {
   const actionMode = useActionMode();
