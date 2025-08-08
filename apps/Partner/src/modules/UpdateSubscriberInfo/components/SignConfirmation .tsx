@@ -5,21 +5,51 @@ import {
   NotificationSuccess,
 } from '@vissoft-react/common';
 import { Form } from 'antd';
+import useFormInstance from 'antd/es/form/hooks/useFormInstance';
 import { Copy } from 'lucide-react';
 import { useState } from 'react';
+import {
+  useGenContract,
+  useGetPreviewConfirmContract,
+  useGetPreviewND13,
+} from '../hooks';
 import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
 import Decree13Modal from './Decree13Modal';
 import PreviewPdf from './PreviewPdf';
 
 const SignConfirmation = () => {
-  const { setStep } = useUpdateSubscriberInfoStore();
+  const form = useFormInstance();
+  const isAgreeND13 = Form.useWatch('agreeND13', form);
+  const { setStep, ocrResponse } = useUpdateSubscriberInfoStore();
   const handleUpdate = () => {
     setStep(StepEnum.STEP6);
   };
   const [isOpenDecree13, setIsOpenDecree13] = useState(false);
+  const { mutate: getND13Pdf, data: degree13Url } = useGetPreviewND13();
+  const { mutate: getConfirmContractPdf, data: contractUrl } =
+    useGetPreviewConfirmContract();
+  const { mutate: genContract, isPending: loadingGenContract } = useGenContract(
+    () => {
+      getND13Pdf(ocrResponse?.transactionId || '');
+      getConfirmContractPdf(ocrResponse?.transactionId || '');
+    }
+  );
   const handleOpenDecree13 = () => {
     setIsOpenDecree13(true);
+  };
+  const handleGenContract = () => {
+    const agreedTerms = form.getFieldValue('terms');
+    genContract({
+      transactionId: ocrResponse?.transactionId || '',
+      agreeDegree13: {
+        agreeDk1: true,
+        agreeDk2: true,
+        agreeDk3: true,
+        agreeDk4: agreedTerms.includes(4),
+        agreeDk5: agreedTerms.includes(5),
+      },
+    });
   };
   return (
     <>
@@ -31,10 +61,6 @@ const SignConfirmation = () => {
           <div className="w-full">
             <p className="text-[15px] mb-2 font-medium">Link ký online</p>
             <div className="flex justify-between gap-4 items-center">
-              {/* <div className="flex justify-between items-center px-4 py-2 bg-[#D8D8D8] rounded-lg h-10 overflow-hidden flex-1">
-              <p className="text-[#1C9BE4]">https://sign.bcss-vnsky-test</p>
-              <Copy size={22} className="cursor-pointer" />
-            </div> */}
               <Form.Item
                 name="signLink"
                 initialValue={'https://sign.bcss-vnsky-test'}
@@ -44,7 +70,6 @@ const SignConfirmation = () => {
                   disabled={true}
                   placeholder="Link ký"
                   suffix={
-                    // signLink ? (
                     <Copy
                       size={22}
                       onClick={() => {
@@ -56,30 +81,31 @@ const SignConfirmation = () => {
                       className="cursor-pointer"
                       color="#444444"
                     />
-                    // ) : undefined
                   }
                 />
               </Form.Item>
-              <CButton>Tạo link ký</CButton>
+              <CButton
+                disabled={!isAgreeND13}
+                onClick={handleGenContract}
+                loading={loadingGenContract}
+              >
+                Tạo link ký
+              </CButton>
             </div>
             <div className="flex gap-3 mt-3">
-              <div>
+              <div className="flex-1">
                 <p className="mb-1">Biên bản xác nhận</p>
-                <PreviewPdf
-                  fileUrl="https://drive.google.com/file/d/1sgf6tNfuoOFomEXvmTxsstYN3kOq6so_/view?usp=sharing"
-                  title="Biên bản xác nhận"
-                />
+                <PreviewPdf fileUrl={contractUrl} title="Biên bản xác nhận" />
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="mb-1">BBXN NĐ13</p>
-                <PreviewPdf
-                  fileUrl="https://drive.google.com/file/d/1sgf6tNfuoOFomEXvmTxsstYN3kOq6so_/view?usp=sharing"
-                  title="BBXN NĐ13"
-                />
+                <PreviewPdf fileUrl={degree13Url} title="BBXN NĐ13" />
               </div>
             </div>
             <div className="flex gap-2 mt-5">
-              <CCheckbox />
+              <Form.Item name="agreeND13" valuePropName="checked">
+                <CCheckbox />
+              </Form.Item>
               <p>
                 Tôi đã đọc và đồng ý với{' '}
                 <span

@@ -48,7 +48,10 @@ export const UpdateSubscriberInfo = () => {
       <div className="flex justify-center">
         <div className="w-1/3">
           <Card>
-            <Form form={form} initialValues={{ terms: [1, 2, 3] }}>
+            <Form
+              form={form}
+              initialValues={{ terms: [1, 2, 3, 4, 5], agreeND13: true }}
+            >
               {step < StepEnum.STEP6 && (
                 <div className="flex gap-[10px] justify-between mt-1 mb-4">
                   {Array.from({ length: 5 }).map((_, index) => (

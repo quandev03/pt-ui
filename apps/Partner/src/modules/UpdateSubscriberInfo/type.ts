@@ -41,3 +41,13 @@ export interface IPayloadVerifyFaceCheck {
   transactionId: string;
   portrait: File;
 }
+export interface IGenContractPayload {
+  transactionId: string;
+  agreeDegree13: {
+    agreeDk1: boolean;
+    agreeDk2: boolean;
+    agreeDk3: boolean;
+    agreeDk4: boolean;
+    agreeDk5: boolean;
+  };
+}

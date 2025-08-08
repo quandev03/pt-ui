@@ -13,3 +13,10 @@ export const base64ToFile = (dataUrl: string, fileName: string): File => {
 
   return new File([u8arr], fileName, { type: mime });
 };
+
+export const blobToIframeUrl = (blob: Blob): string => {
+  if (!blob) return '';
+  console.log('blob', blob);
+  const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+  return window.URL.createObjectURL(pdfBlob);
+};

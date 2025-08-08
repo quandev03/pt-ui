@@ -32,7 +32,7 @@ const VerifyPassport = () => {
   const ImageFileType = ['image/png', 'image/jpeg', 'image/jpg'];
   const { mutate: checkOcrPassport, isPending: loadingCheckOcr } = useCheckOcr(
     (data) => {
-      setStep(StepEnum.STEP3);
+      if (data.status === 1) setStep(StepEnum.STEP3);
       setOcrResponse(data);
     }
   );
