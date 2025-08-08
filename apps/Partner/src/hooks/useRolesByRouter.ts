@@ -1,5 +1,5 @@
+import { IModeAction } from '@vissoft-react/common';
 import useConfigAppStore from '../modules/Layouts/stores';
-import { ActionsTypeEnum } from '../modules/Layouts/types';
 import { useLocation } from 'react-router-dom';
 
 export const useRolesByRouter = (path?: string) => {
@@ -7,7 +7,7 @@ export const useRolesByRouter = (path?: string) => {
   const location = useLocation();
   const pathname = location.pathname;
 
-  const actions: ActionsTypeEnum[] =
+  const actions: IModeAction[] =
     menuData.filter((item) => (path ?? pathname).includes(item?.uri ?? ''))?.[0]
       ?.actions || [];
 

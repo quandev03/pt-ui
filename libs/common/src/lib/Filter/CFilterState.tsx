@@ -15,6 +15,7 @@ import {
   SelectDateRangeFilter,
 } from './components';
 import { FilterPropsWithState } from './types';
+import { FormItemTreeSelect } from './components/FormItemTreeSelect';
 
 export const CFilterState = memo(
   ({
@@ -54,6 +55,8 @@ export const CFilterState = memo(
               return <FormItemInput key={item.name + index} {...item} />;
             case 'Select':
               return <FormItemSelect key={item.name + index} {...item} />;
+            case 'TreeSelect':
+              return <FormItemTreeSelect key={item.name + index} {...item} />;
             case 'Date':
               return <FormItemDate key={item.name + index} {...item} />;
             case 'DateRange':

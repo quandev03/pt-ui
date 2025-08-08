@@ -1,19 +1,28 @@
+import { useMutation } from '@tanstack/react-query';
+import {
+  AnyElement,
+  IErrorResponse,
+  NotificationSuccess,
+} from '@vissoft-react/common';
 import { prefixSaleService } from 'apps/Internal/src/constants';
 import { safeApiClient } from 'apps/Internal/src/services';
 import { IListOfServicePackageForm } from '../types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { REACT_QUERY_KEYS } from 'apps/Internal/src/constants/query-key';
-import { AnyElement } from '@vissoft-react/common';
+import { FormInstance } from 'antd';
 
 const fetch = async (data: IListOfServicePackageForm & { id: string }) => {
   const formData = new FormData();
   const dataForm = {
-    packageName: data.packageName,
+    pckName: data.pckName,
     packagePrice: data.packagePrice,
     status: data.status,
-    packageCode: data.packageCode,
+    pckCode: data.pckCode,
   };
-  formData.append('image', data.image as File);
+
+  // Only append image if it's actually a File (new image uploaded)
+  if (data.images instanceof File) {
+    formData.append('images', data.images);
+  }
+
   formData.append(
     'data',
     new Blob([JSON.stringify(dataForm)], { type: 'application/json' })
@@ -33,15 +42,22 @@ const fetch = async (data: IListOfServicePackageForm & { id: string }) => {
   }
 };
 
-export const useEdit = (onSuccess?: () => void) => {
-  const queryClient = useQueryClient();
+export const useEdit = (form: FormInstance, onSuccess?: () => void) => {
   return useMutation({
     mutationFn: fetch,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [REACT_QUERY_KEYS.LIST_OF_SERVICE_PACKAGE],
-      });
+      NotificationSuccess('Cập nhật thành công');
       onSuccess?.();
+    },
+    onError: (error: IErrorResponse) => {
+      if (error.errors && error.errors.length > 0) {
+        form.setFields(
+          error.errors.map((item) => ({
+            name: item.field,
+            errors: [item.detail],
+          }))
+        );
+      }
     },
   });
 };

@@ -16,8 +16,9 @@ export const ListUser = memo(() => {
       searchComponent={
         <LayoutList.SearchComponent
           name="q"
-          tooltip="Nhập username hoặc tên tài khoản"
-          placeholder="Nhập username hoặc tên tài khoản"
+          tooltip="Nhập họ và tên, username hoặc tên tài khoản"
+          placeholder="Nhập họ và tên, username hoặc tên tài khoản"
+          maxLength={100}
         />
       }
     />

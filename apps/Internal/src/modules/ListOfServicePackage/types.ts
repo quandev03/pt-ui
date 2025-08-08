@@ -1,3 +1,5 @@
+import { StatusEnum } from '@vissoft-react/common';
+
 export interface IListOfServicePackage {
   createdBy: string;
   createdDate: string;
@@ -14,6 +16,6 @@ export interface IListOfServicePackageForm {
   pckCode: string;
   pckName: string;
   packagePrice: number;
-  status: boolean;
+  status: boolean | StatusEnum;
   images: File | null;
 }

@@ -1,4 +1,4 @@
-import { House, Settings } from 'lucide-react';
+import { ChartNoAxesGantt, House, Settings } from 'lucide-react';
 import { pathRoutes } from './url';
 import { RouterItems } from '@vissoft-react/common';
 
@@ -7,6 +7,11 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.home as string,
     icon: <House />,
     label: 'Tổng quan',
+  },
+  {
+    key: pathRoutes.dashboard as string,
+    label: 'Tổng quan',
+    icon: <ChartNoAxesGantt />,
   },
   {
     key: pathRoutes.accountAuthorization as string,
@@ -28,6 +33,18 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.agencyList as string,
     label: 'Cấu hình đại lý',
     parentId: pathRoutes.accountAuthorization as string,
+  },
+  {
+    key: pathRoutes.freeEsimBooking as string,
+    label: 'Book eSIM miễn phí',
+  },
+  {
+    key: pathRoutes.buyBundleWithEsim as string,
+    label: 'Book eSIM kèm gói',
+  },
+  {
+    key: pathRoutes.esimWarehouse as string,
+    label: 'Danh sách eSIM',
   },
 ];
 

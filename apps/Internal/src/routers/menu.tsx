@@ -1,18 +1,19 @@
-import { BarChart3, House, Settings, ShoppingCart } from 'lucide-react';
-import { pathRoutes } from './url';
+import { BarChart3, House, ShoppingCart } from 'lucide-react';
 import { RouterItems } from '@vissoft-react/common';
+import { ChartNoAxesGantt, Settings } from 'lucide-react';
+import { pathRoutes } from './url';
 
 export const routerItems: RouterItems[] = [
   {
-    key: pathRoutes.systemManager as string,
-    icon: <Settings color="#000" />,
-    label: 'Quản trị hệ thống',
-    hasChild: true,
-  },
-  {
     key: pathRoutes.dashboard as string,
     label: 'Tổng quan',
-    parentId: pathRoutes.systemManager,
+    icon: <ChartNoAxesGantt />,
+  },
+  {
+    key: pathRoutes.systemManager as string,
+    icon: <Settings />,
+    label: 'Quản trị hệ thống',
+    hasChild: true,
   },
   // quản lý tài khoản
   {
@@ -34,7 +35,7 @@ export const routerItems: RouterItems[] = [
     hasChild: true,
   },
   {
-    key: pathRoutes.list_of_service_package,
+    key: pathRoutes.listOfServicePackage,
     label: 'Danh mục gói cước',
     parentId: pathRoutes.category,
   },
@@ -84,7 +85,7 @@ export const routerItems: RouterItems[] = [
   // danh sách kho esim
   {
     key: pathRoutes.esimStock,
-    label: 'Danh sách kho eSIM',
+    label: 'Danh sách eSIM',
     parentId: pathRoutes.systemManager,
   },
   // Báo cáo
