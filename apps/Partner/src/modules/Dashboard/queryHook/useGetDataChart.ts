@@ -2,8 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { IChartItem, IChartParam } from '../type';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
-import { prefixSaleService } from 'apps/Partner/src/constants';
-import { safeApiClient } from 'apps/Partner/src/services';
 
 // Extend dayjs with weekOfYear plugin
 dayjs.extend(weekOfYear);
