@@ -142,13 +142,7 @@ export const ActionPage = () => {
             <Row className="mt-2" gutter={[30, 0]}>
               <Col span={12}>
                 <Form.Item label="Hoạt động" name="status">
-                  <CSwitch
-                    disabled={actionMode !== IModeAction.UPDATE}
-                    checked={true}
-                    onChange={(value) => {
-                      console.log('value', value);
-                    }}
-                  />
+                  <CSwitch disabled={actionMode !== IModeAction.UPDATE} />
                 </Form.Item>
               </Col>
               <Col span={12} />
