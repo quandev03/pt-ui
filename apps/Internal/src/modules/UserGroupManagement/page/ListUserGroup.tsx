@@ -109,7 +109,9 @@ export const ListUserGroup = () => {
     ];
   }, []);
   const actionComponent = useMemo(() => {
-    return <CButtonAdd onClick={handleAdd} disabled={!permission.canCreate} />;
+    return (
+      <div>{permission.canCreate && <CButtonAdd onClick={handleAdd} />}</div>
+    );
   }, [permission.canCreate, handleAdd]);
   return (
     <LayoutList

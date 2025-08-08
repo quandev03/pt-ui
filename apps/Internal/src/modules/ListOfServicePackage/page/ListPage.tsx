@@ -4,6 +4,7 @@ import {
   decodeSearchParams,
   formatQueryParams,
   LayoutList,
+  usePermissions,
 } from '@vissoft-react/common';
 import { useTable } from '../hook/useTable';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -12,7 +13,7 @@ import { IListOfServicePackage } from '../types';
 import { useCallback, useMemo } from 'react';
 import { pathRoutes } from 'apps/Internal/src/routers';
 import { useFilters } from '../hook/useFilters';
-import { useDelete } from '../hook/useDelete';
+import useConfigAppStore from '../../Layouts/stores';
 
 export const ListPage = () => {
   const navigate = useNavigate();
@@ -21,11 +22,19 @@ export const ListPage = () => {
   const { data, isPending } = useList(
     formatQueryParams<IListOfServicePackage>(params)
   );
+  const { menuData } = useConfigAppStore();
+
+  const permission = usePermissions(menuData);
+
   const actionComponent = useMemo(() => {
     return (
-      <CButtonAdd
-        onClick={() => navigate(pathRoutes.listOfServicePackageAdd)}
-      />
+      <div>
+        {permission.canCreate && (
+          <CButtonAdd
+            onClick={() => navigate(pathRoutes.listOfServicePackageAdd)}
+          />
+        )}
+      </div>
     );
   }, [navigate]);
   const filters = useFilters();

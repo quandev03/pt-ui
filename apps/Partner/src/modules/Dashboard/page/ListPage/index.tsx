@@ -6,10 +6,10 @@ import { IDataDashboardStats } from '../../type';
 
 export const ListPage = memo(() => {
   const dataDashboardStats: IDataDashboardStats = {
-    totalESIM: 1000000,
-    totalSTB: 12909320,
-    totalPackagesSold: 362136712,
-    totalESIMsOrdered: 3173237,
+    totalESIM: 3123331,
+    totalSTB: 2231263,
+    totalPackagesSold: 32137622,
+    totalESIMsOrdered: 1232321,
   };
   return (
     <>

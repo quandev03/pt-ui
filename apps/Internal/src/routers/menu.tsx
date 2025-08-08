@@ -1,18 +1,18 @@
-import { ChartNoAxesGantt, House, Settings } from 'lucide-react';
+import { RouterItems } from '@vissoft-react/common';
+import { ChartNoAxesGantt, Settings } from 'lucide-react';
 import { pathRoutes } from './url';
-import { COLORS, RouterItems } from '@vissoft-react/common';
 
 export const routerItems: RouterItems[] = [
+  {
+    key: pathRoutes.dashboard as string,
+    label: 'Tổng quan',
+    icon: <ChartNoAxesGantt />,
+  },
   {
     key: pathRoutes.systemManager as string,
     icon: <Settings />,
     label: 'Quản trị hệ thống',
     hasChild: true,
-  },
-  {
-    key: pathRoutes.dashboard as string,
-    label: 'Tổng quan',
-    icon: <ChartNoAxesGantt />,
   },
   // quản lý tài khoản
   {
