@@ -9,12 +9,14 @@ export const StyledCommonTable = styled<AnyElement>(Table)`
     border-right: 1px solid ${({ theme }) => theme.strokeLineLight};
     border-radius: 8px;
   }
-
+  .ant-table-tbody > tr > td {
+    padding: 1.5px !important;
+  }
   .ant-table-header {
     .ant-table-cell {
       width: 200px;
       background-color: ${({ theme }) => theme.strokeLineLight};
-
+      max-height: 40px;
       .ant-typography {
         color: ${({ theme }) => theme.titleTable} !important;
       }

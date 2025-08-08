@@ -185,7 +185,6 @@ const LoginPage = () => {
               Hệ thống Kinh doanh eSIM
             </span>
             <span className="text-[#e50013] text-3xl font-semibold drop-shadow-md flex items-center justify-center gap-2">
-              {' '}
               Hi Vietnam
             </span>
           </div>

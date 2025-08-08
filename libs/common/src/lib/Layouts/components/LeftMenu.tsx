@@ -52,39 +52,15 @@ export const LeftMenu: FC<ILeftMenuProps> = memo(
       };
 
       if (pathNameSplit.some((item) => singlePopActions.includes(item))) {
-        if (specialActions.every((action) => pathNameSplit.includes(action))) {
-          pathNameSplit.pop();
-          pathNameSplit.pop();
-          pathNameSplit.pop();
-        } else {
-          pathNameSplit.pop();
-        }
-        const name = pathNameSplit.join('/');
-        setSelectedMenuKeys([pathNameSplit.join('/')]);
-        findParent(name);
+        const basePath = pathNameSplit.slice(0, -1).join('/');
+        setSelectedMenuKeys([basePath]);
+        findParent(basePath);
       } else if (
         pathNameSplit.some((item) => doublePopActions.includes(item))
       ) {
-        if (specialActions.every((action) => pathNameSplit.includes(action))) {
-          if (
-            pathNameSplit.includes('view') ||
-            pathNameSplit.includes('edit')
-          ) {
-            pathNameSplit.pop();
-            pathNameSplit.pop();
-            pathNameSplit.pop();
-            pathNameSplit.pop();
-          } else {
-            pathNameSplit.pop();
-            pathNameSplit.pop();
-          }
-        } else {
-          pathNameSplit.pop();
-          pathNameSplit.pop();
-        }
-        const name = pathNameSplit.join('/');
-        setSelectedMenuKeys([pathNameSplit.join('/')]);
-        findParent(name);
+        const basePath = pathNameSplit.slice(0, -2).join('/');
+        setSelectedMenuKeys([basePath]);
+        findParent(basePath);
       } else {
         setSelectedMenuKeys([pathname]);
         result.push(pathname);
