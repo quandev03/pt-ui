@@ -27,8 +27,8 @@ const VerifyFace = () => {
   const { setStep, ocrResponse } = useUpdateSubscriberInfoStore();
   const ImageFileType = ['image/png', 'image/jpeg', 'image/jpg'];
   const { mutate: checkFace, isPending: loadingCheckFace } = useCheckFace(
-    () => {
-      setStep(StepEnum.STEP4);
+    (data) => {
+      if (data.status === 1) setStep(StepEnum.STEP4);
     }
   );
   const handleCapture = () => {

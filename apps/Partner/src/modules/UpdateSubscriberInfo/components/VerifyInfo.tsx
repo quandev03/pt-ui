@@ -1,8 +1,8 @@
 import { CButton } from '@vissoft-react/common';
+import useFormInstance from 'antd/es/form/hooks/useFormInstance';
 import { CircleCheckIcon } from 'lucide-react';
 import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
-import useFormInstance from 'antd/es/form/hooks/useFormInstance';
 
 const VerifyInfo = () => {
   const { ocrResponse } = useUpdateSubscriberInfoStore();

@@ -1,7 +1,11 @@
 import { AnyElement } from '@vissoft-react/common';
 import { prefixSaleService } from '../../../../src/constants';
 import { axiosClient, safeApiClient } from '../../../../src/services';
-import { IPayloadVerifyFaceCheck, IPayloadVerifyOCR } from '../type';
+import {
+  IGenContractPayload,
+  IPayloadVerifyFaceCheck,
+  IPayloadVerifyOCR,
+} from '../type';
 
 export const UpdateSubscriberInfo = {
   checkIsdn: (isdn: string) => {
@@ -40,5 +44,28 @@ export const UpdateSubscriberInfo = {
       }
     );
     return res.data;
+  },
+  previewConfirmContract: async (transactionId: string) => {
+    const res = await safeApiClient.get<Blob>(
+      `${prefixSaleService}/update-subscriber-information/preview-confirm-contract/${transactionId}`,
+      { responseType: 'blob' }
+    );
+    const blob = new Blob([res], { type: 'application/pdf' });
+    return window.URL.createObjectURL(blob);
+  },
+  previewND13: async (transactionId: string) => {
+    const res = await safeApiClient.get<Blob>(
+      `${prefixSaleService}/update-subscriber-information/preview-decre13/${transactionId}`,
+      { responseType: 'blob' }
+    );
+    const blob = new Blob([res], { type: 'application/pdf' });
+    return window.URL.createObjectURL(blob);
+  },
+  gencontract: async (data: IGenContractPayload) => {
+    const res = await safeApiClient.post<AnyElement>(
+      `${prefixSaleService}/update-subscriber-information/gen-contract`,
+      data
+    );
+    return res;
   },
 };

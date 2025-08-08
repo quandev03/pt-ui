@@ -6,6 +6,8 @@ interface IUpdateSubscriberInfoStore {
   setStep: (step: number) => void;
   ocrResponse: OcrResponse | undefined;
   setOcrResponse: (data: OcrResponse) => void;
+  contractUrl: string | undefined;
+  setContractUrl: (url: string) => void;
 }
 
 export const useUpdateSubscriberInfoStore = create<IUpdateSubscriberInfoStore>(
@@ -17,6 +19,10 @@ export const useUpdateSubscriberInfoStore = create<IUpdateSubscriberInfoStore>(
     ocrResponse: undefined,
     setOcrResponse(data) {
       set(() => ({ ocrResponse: data }));
+    },
+    contractUrl: undefined,
+    setContractUrl(url) {
+      set(() => ({ contractUrl: url }));
     },
   })
 );
