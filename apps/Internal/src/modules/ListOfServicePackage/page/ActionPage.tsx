@@ -145,22 +145,32 @@ export const ActionPage = () => {
 
   const handleSubmit = useCallback(
     (values: IListOfServicePackageForm) => {
+      let imageData = form.getFieldValue('images')?.file ?? undefined;
+
+      // If editing and image hasn't changed, don't send image data
+      if (actionMode === IModeAction.UPDATE && !isChangeImage) {
+        // Don't send image data if it hasn't changed
+        // The useEdit hook will handle this by not appending to FormData
+        imageData = undefined;
+      }
+
       const data = {
         ...values,
-        images: form.getFieldValue('images')?.file ?? undefined,
+        images: imageData,
       };
+
       if (actionMode === IModeAction.CREATE) {
         mutateAdd(data);
       } else {
         mutateEdit({
           ...data,
           id: id ?? '',
-          images: form.getFieldValue('images')?.file ?? undefined,
+          images: imageData,
           status: values.status ? StatusEnum.ACTIVE : StatusEnum.INACTIVE,
         });
       }
     },
-    [form, id, mutateAdd, mutateEdit]
+    [form, id, mutateAdd, mutateEdit, actionMode, isChangeImage]
   );
 
   useEffect(() => {
@@ -182,7 +192,11 @@ export const ActionPage = () => {
       }
     };
   }, [imageUrl]);
-
+  useEffect(() => {
+    if (actionMode === IModeAction.CREATE) {
+      form.setFieldValue('status', true);
+    }
+  }, [actionMode, form]);
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{`${getActionMode(actionMode)} gói cước`}</TitleHeader>
