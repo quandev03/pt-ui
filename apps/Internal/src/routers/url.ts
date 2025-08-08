@@ -71,13 +71,6 @@ export const pathRoutes = {
     `/upload-number/view/${id ? id : ':id'}`,
   uploadNumberAdd: '/upload-number/add',
 
-  listOfServicePackage: '/list-of-service-package',
-  listOfServicePackageAdd: '/list-of-service-package/add',
-  listOfServicePackageEdit: (id?: IStringNumber) =>
-    `/list-of-service-package/edit/${id ? id : ':id'}`,
-  listOfServicePackageView: (id?: IStringNumber) =>
-    `/list-of-service-package/view/${id ? id : ':id'}`,
-
   //========= Danh mục đối tác
   partnerCatalog: '/partner-catalog',
   partnerCatalogAdd: '/partner-catalog/add',

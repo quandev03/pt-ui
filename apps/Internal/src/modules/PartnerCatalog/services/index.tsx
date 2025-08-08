@@ -47,43 +47,45 @@ export const PartnerCatalogService = {
     const res = await safeApiClient.get<IOrganizationUnitDTO>(
       `${prefixSaleService}/organization-partner/${id}`
     );
-    if (res.contractNoFileUrl) {
-      const contractNoFileUrl = await PartnerCatalogService.getPreviewFile(
-        res.contractNoFileUrl
-      );
-      res.contractNoFileLink = contractNoFileUrl;
-    }
-    if (res.businessLicenseFileUrl) {
-      const businessLicenseFileLink =
-        await PartnerCatalogService.getPreviewFile(res.businessLicenseFileUrl);
-      res.businessLicenseFileLink = businessLicenseFileLink;
-    }
+    console.log('res', res);
+
+    // if (res.contractNoFileUrl) {
+    //   const contractNoFileUrl = await PartnerCatalogService.getPreviewFile(
+    //     res.contractNoFileUrl
+    //   );
+    //   res.contractNoFileLink = contractNoFileUrl;
+    // }
+    // if (res.businessLicenseFileUrl) {
+    //   const businessLicenseFileLink =
+    //     await PartnerCatalogService.getPreviewFile(res.businessLicenseFileUrl);
+    //   res.businessLicenseFileLink = businessLicenseFileLink;
+    // }
     if (
       res?.deliveryInfos &&
       res?.deliveryInfos?.length > 0 &&
       res?.deliveryInfos[0]
     ) {
       const deliveryInfos = res?.deliveryInfos[0];
-      if (deliveryInfos?.idCardFrontSiteFileUrl) {
-        const idCardFrontSiteFileLink =
-          await PartnerCatalogService.getPreviewFile(
-            deliveryInfos?.idCardFrontSiteFileUrl
-          );
-        deliveryInfos.idCardFrontSiteFileLink = idCardFrontSiteFileLink;
-      }
-      if (deliveryInfos?.idCardBackSiteFileUrl) {
-        const idCardBackSiteFileLink =
-          await PartnerCatalogService.getPreviewFile(
-            deliveryInfos?.idCardBackSiteFileUrl
-          );
-        deliveryInfos.idCardBackSiteFileLink = idCardBackSiteFileLink;
-      }
-      if (deliveryInfos?.multiFileUrl) {
-        const multiFileLink = await PartnerCatalogService.getPreviewFile(
-          deliveryInfos?.multiFileUrl
-        );
-        deliveryInfos.multiFileLink = multiFileLink;
-      }
+      // if (deliveryInfos?.idCardFrontSiteFileUrl) {
+      //   const idCardFrontSiteFileLink =
+      //     await PartnerCatalogService.getPreviewFile(
+      //       deliveryInfos?.idCardFrontSiteFileUrl
+      //     );
+      //   deliveryInfos.idCardFrontSiteFileLink = idCardFrontSiteFileLink;
+      // }
+      // if (deliveryInfos?.idCardBackSiteFileUrl) {
+      //   const idCardBackSiteFileLink =
+      //     await PartnerCatalogService.getPreviewFile(
+      //       deliveryInfos?.idCardBackSiteFileUrl
+      //     );
+      //   deliveryInfos.idCardBackSiteFileLink = idCardBackSiteFileLink;
+      // }
+      // if (deliveryInfos?.multiFileUrl) {
+      //   const multiFileLink = await PartnerCatalogService.getPreviewFile(
+      //     deliveryInfos?.multiFileUrl
+      //   );
+      //   deliveryInfos.multiFileLink = multiFileLink;
+      // }
       res.deliveryInfos = [deliveryInfos];
     }
     return res;
@@ -172,7 +174,7 @@ export const PartnerCatalogService = {
     );
 
     return safeApiClient.put<any>(
-      `${prefixSaleService}/organization-partner/${payload.id}/update`,
+      `${prefixSaleService}/organization-partner/${payload.id}`,
       formData,
       {
         headers: {
@@ -188,7 +190,9 @@ export const PartnerCatalogService = {
     formData.append('portrait', payload.portrait as Blob);
 
     return safeApiClient.post<ICCCDInfo>(
-      `${prefixSaleService}/activation-info?cardType=1`,
+      // `${prefixSaleService}/activation-info?cardType=1`,
+      `${prefixSaleService}/organization-partner/delivery/info`,
+
       formData,
       {
         headers: {

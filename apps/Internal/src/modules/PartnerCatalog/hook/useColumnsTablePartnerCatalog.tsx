@@ -17,9 +17,7 @@ import {
 import { Dropdown, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
-import { includes } from 'lodash';
 import { MoreVertical } from 'lucide-react';
-import { ApprovedStatusEnum } from '../constants';
 import { IOrganizationUnitDTO } from '../types';
 import { useMemo } from 'react';
 import useConfigAppStore from '../../Layouts/stores';
@@ -176,7 +174,7 @@ export const useColumnsTablePartnerCatalog = (
         fixed: 'right',
         render(_, record) {
           const items = [];
-          if (includes(permission, ActionsTypeEnum.UPDATE)) {
+          if (permission.canUpdate) {
             items.push({
               key: ActionsTypeEnum.UPDATE,
               onClick: () => {
@@ -188,8 +186,9 @@ export const useColumnsTablePartnerCatalog = (
 
           // Quản lý user đối tác
           if (
-            includes(permission, ActionsTypeEnum.PARTNER_USER_MANAGER) &&
-            record.approvalStatus == ApprovedStatusEnum.APPROVED
+            permission
+              .getAllPermissions()
+              .includes(IModeAction.PARTNER_USER_MANAGER)
           ) {
             items.push({
               key: ActionsTypeEnum.PARTNER_USER_MANAGER,
@@ -201,7 +200,7 @@ export const useColumnsTablePartnerCatalog = (
           }
           return (
             <WrapperActionTable>
-              {includes(permission, ActionsTypeEnum.READ) && (
+              {permission.canRead && (
                 <CButtonDetail
                   onClick={() => {
                     onAction(IModeAction.READ, record);
@@ -220,6 +219,6 @@ export const useColumnsTablePartnerCatalog = (
         },
       },
     ];
-  }, [permission, PARTNER_STATUS, onAction, params]);
+  }, [permission, onAction, params]);
   return columns;
 };

@@ -234,3 +234,27 @@ interface IProductCategoryAttributeValueDTOS {
   associateWithProduct: boolean;
   valueEn?: string;
 }
+
+export interface IUserPartnerCatalog {
+  id: string | undefined;
+  fullName: string;
+  userName: string;
+  status: boolean;
+  createdBy: string;
+  createdDate: string | Date | null;
+  lastModifiedBy: string;
+  lastModifiedDate: string | Date | null;
+  role: string;
+}
+
+export interface DataPayloadCreateUpdateUserPartnerCatalog {
+  username: string;
+  password: string;
+  fullname: string;
+  status: number;
+  roleIds: string[];
+  samplingDivision: string;
+  samplingUnitId: string;
+  id?: string;
+  type?: string;
+}

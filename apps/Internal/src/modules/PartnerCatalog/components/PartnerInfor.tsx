@@ -54,19 +54,60 @@ const PartnerInfor = () => {
   };
 
   return (
-    <div className="border rounded-md p-5 relative">
+    <div className="relative p-5 border rounded-md">
       <div className="text-lg !text-[#076AB3] font-bold flex gap-4 bg-white absolute -top-[15px]">
-        <div>Thông Tin</div>
+        <div>Thông tin đối tác</div>
         {actionMode !== IModeAction.READ && (
           <Tooltip title="Làm mới">
             <RotateCcw
-              className="cursor-pointer self-center"
+              className="self-center cursor-pointer"
               onClick={handleRefreshPartnerInfor}
             />
           </Tooltip>
         )}
       </div>
       <Row gutter={[30, 0]}>
+        <Col span={12}>
+          <Form.Item
+            label="Mã đối tác"
+            name="orgCode"
+            required
+            rules={[validateForm.required]}
+          >
+            <CInput
+              placeholder="Nhập mã đối tác"
+              maxLength={5}
+              disabled={actionMode !== IModeAction.CREATE}
+              preventSpecial
+              preventVietnamese
+              uppercase
+            />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            label="Tên đối tác"
+            name="orgName"
+            required
+            rules={[
+              {
+                validator(_, value) {
+                  if (!value) {
+                    return Promise.reject('Không được để trống trường này');
+                  } else {
+                    return Promise.resolve();
+                  }
+                },
+              },
+            ]}
+          >
+            <CInput
+              placeholder="Nhập tên đối tác"
+              maxLength={100}
+              disabled={actionMode === IModeAction.READ}
+            />
+          </Form.Item>
+        </Col>
         <Col span={24}>
           <div className="w-full ">
             <div className="flex !w-2/4 m-auto">
@@ -102,107 +143,7 @@ const PartnerInfor = () => {
             </div>
           </div>
         </Col>
-        <Col span={8}>
-          <Form.Item
-            label="Loại đối tác"
-            name="orgSubType"
-            required
-            rules={[
-              {
-                validator(_, value) {
-                  if (!value) {
-                    return Promise.reject('Không được để trống trường này');
-                  } else {
-                    return Promise.resolve();
-                  }
-                },
-              },
-            ]}
-          >
-            <CSelect
-              placeholder="Chọn loại đối tác"
-              options={PARTNER_TYPE ?? []}
-              disabled={actionMode === IModeAction.READ}
-              allowClear={false}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item
-            label="Kiểu đối tác"
-            name="orgPartnerType"
-            required
-            rules={[
-              {
-                validator(_, value) {
-                  if (!value) {
-                    return Promise.reject('Không được để trống trường này');
-                  } else {
-                    return Promise.resolve();
-                  }
-                },
-              },
-            ]}
-          >
-            <CSelect
-              placeholder="Chọn kiểu đối tác"
-              options={PARTNER_SUB_TYPE ?? []}
-              disabled={actionMode === IModeAction.READ}
-              allowClear={false}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item
-            label="Mã đối tác"
-            name="orgCode"
-            required
-            rules={[validateForm.required]}
-          >
-            <CInput
-              placeholder="Nhập mã đối tác"
-              maxLength={5}
-              disabled={actionMode !== IModeAction.CREATE}
-              preventSpecial
-              preventVietnamese
-              uppercase
-            />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item
-            label="Tên đối tác"
-            name="orgName"
-            required
-            rules={[
-              {
-                validator(_, value) {
-                  if (!value) {
-                    return Promise.reject('Không được để trống trường này');
-                  } else {
-                    return Promise.resolve();
-                  }
-                },
-              },
-            ]}
-          >
-            <CInput
-              placeholder="Nhập tên đối tác"
-              maxLength={100}
-              disabled={actionMode === IModeAction.READ}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item label="Số hợp đồng" name="contractNo">
-            <CInput
-              placeholder="Nhập số hợp đồng"
-              maxLength={50}
-              disabled={actionMode === IModeAction.READ}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
+        <Col span={12}>
           <Form.Item
             label="Mã số thuế"
             name="taxCode"
@@ -244,7 +185,34 @@ const PartnerInfor = () => {
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
+
+        <Col span={12}>
+          <Form.Item
+            label="Số điện thoại"
+            name="phone"
+            required
+            rules={[validateForm.required]}
+          >
+            <CInput
+              onlyNumber
+              preventSpace
+              maxLength={12}
+              placeholder="Nhập số điện thoại"
+              disabled={actionMode === IModeAction.READ}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="Số hợp đồng" name="contractNo">
+            <CInput
+              placeholder="Nhập số hợp đồng"
+              maxLength={50}
+              disabled={actionMode === IModeAction.READ}
+            />
+          </Form.Item>
+        </Col>
+
+        <Col span={12}>
           <Form.Item
             label="Ngày hiệu lực hợp đồng"
             name="contractDate"
@@ -266,10 +234,11 @@ const PartnerInfor = () => {
               placeholder="Chọn ngày hiệu lực hợp đồng"
               format={formatDate}
               disabled={actionMode === IModeAction.READ}
+              style={{ width: '100%' }}
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={12}>
           <Form.Item
             label={'Email'}
             name="email"
@@ -302,7 +271,7 @@ const PartnerInfor = () => {
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={12}>
           <Form.Item label="TK ngân hàng" name="orgBankAccountNo">
             <CInput
               placeholder="Nhập tài khoản ngân hàng"
@@ -311,24 +280,9 @@ const PartnerInfor = () => {
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
-          <Form.Item
-            label="Số điện thoại"
-            name="phone"
-            required
-            rules={[validateForm.required]}
-          >
-            <CInput
-              onlyNumber
-              preventSpace
-              maxLength={12}
-              placeholder="Nhập số điện thoại"
-              disabled={actionMode === IModeAction.READ}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item label="Địa chỉ GPĐKKD" name="businessLicenseAddress">
+
+        <Col span={12}>
+          <Form.Item label="Địa chỉ theo GPĐKKD" name="businessLicenseAddress">
             <CInput
               maxLength={100}
               placeholder="Nhập địa chỉ GPĐKKD"
@@ -336,7 +290,7 @@ const PartnerInfor = () => {
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={24}>
           <Form.Item label="Mô tả" name="orgDescription">
             <CTextArea
               maxLength={200}

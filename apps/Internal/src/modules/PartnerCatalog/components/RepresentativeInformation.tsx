@@ -216,13 +216,13 @@ const RepresentativeInformation = () => {
   }, [idCardBackSite, requiredIdCardBackSite, partnerDetail]);
 
   return (
-    <div className="border rounded-md p-5 relative">
+    <div className="relative p-5 border rounded-md">
       <div className="text-lg !text-[#076AB3] font-bold flex gap-4 bg-white absolute -top-[15px]">
         <div>Thông tin người đại diện</div>
         {actionMode !== IModeAction.READ && (
           <Tooltip title="Làm mới">
             <RotateCcw
-              className="cursor-pointer self-center"
+              className="self-center cursor-pointer"
               onClick={handleRefreshRepresentativeInformation}
             />
           </Tooltip>
@@ -282,7 +282,7 @@ const RepresentativeInformation = () => {
             />
           </Col>
 
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item
               label="Tên người đại diện"
               name="consigneeName"
@@ -306,7 +306,7 @@ const RepresentativeInformation = () => {
               />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item
               label="Số CCCD/CMND"
               name="idNo"
@@ -332,7 +332,7 @@ const RepresentativeInformation = () => {
               />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item label="Nơi cấp" name="idPlace">
               <CInput
                 placeholder="Nhập nơi cấp"
@@ -341,16 +341,17 @@ const RepresentativeInformation = () => {
               />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item label="Ngày cấp" name="idDate">
               <CDatePicker
                 placeholder="Chọn ngày cấp"
                 format={formatDate}
                 disabled={actionMode === IModeAction.READ}
+                style={{ width: '100%' }}
               />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item label="Giới tính" name="gender">
               <CSelect
                 placeholder="Chọn giới tính"
@@ -368,16 +369,17 @@ const RepresentativeInformation = () => {
               />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item label="Ngày sinh" name="dateOfBirth">
               <CDatePicker
                 placeholder="Chọn ngày sinh"
                 format={formatDate}
                 disabled={actionMode === IModeAction.READ}
+                style={{ width: '100%' }}
               />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item label="Hộ chiếu" name="passportNo">
               <CInput
                 placeholder="Nhập hộ chiếu"
@@ -386,7 +388,7 @@ const RepresentativeInformation = () => {
               />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item
               label="Số điện thoại"
               name="phoneOrganizationDeliveryInfoDTO"
@@ -402,7 +404,7 @@ const RepresentativeInformation = () => {
               />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item
               label={'Email'}
               name="emailOrganizationDeliveryInfoDTO"
@@ -435,7 +437,7 @@ const RepresentativeInformation = () => {
               />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Form.Item label="Chức danh" name="orgTitle">
               <CInput
                 placeholder="Nhập chức danh"
@@ -444,7 +446,7 @@ const RepresentativeInformation = () => {
               />
             </Form.Item>
           </Col>
-          <Col span={16}>
+          <Col span={24}>
             <Form.Item label="Địa chỉ" name="consigneeAddress">
               <CInput
                 maxLength={250}

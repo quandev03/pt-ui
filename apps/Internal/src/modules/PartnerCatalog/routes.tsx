@@ -39,6 +39,42 @@ const partnerCatalogRoutes: RouteObject[] = [
       return { Component: ActionPartnerCatalog };
     },
   },
+  {
+    path: pathRoutes.partnerCatalogUserManagement(),
+    lazy: async () => {
+      const { PartnerCatalogUserManagement } = await import(
+        './pages/PartnerCatologUserManagement'
+      );
+      return { Component: PartnerCatalogUserManagement };
+    },
+  },
+  {
+    path: pathRoutes.partnerCatalogUserAdd(),
+    lazy: async () => {
+      const { ActionUserPartnerCatalog } = await import(
+        './pages/ActionUserPartnerCatalog'
+      );
+      return { Component: ActionUserPartnerCatalog };
+    },
+  },
+  {
+    path: pathRoutes.partnerCatalogUserEdit(),
+    lazy: async () => {
+      const { ActionUserPartnerCatalog } = await import(
+        './pages/ActionUserPartnerCatalog'
+      );
+      return { Component: ActionUserPartnerCatalog };
+    },
+  },
+  {
+    path: pathRoutes.partnerCatalogUserView(),
+    lazy: async () => {
+      const { ActionUserPartnerCatalog } = await import(
+        './pages/ActionUserPartnerCatalog'
+      );
+      return { Component: ActionUserPartnerCatalog };
+    },
+  },
 ];
 
 export default partnerCatalogRoutes;

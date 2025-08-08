@@ -312,6 +312,8 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         title: 'Xác nhận',
         message: 'Bạn có chắc chắn muốn cập nhật không?',
         handleConfirm: () => {
+          console.log('payload', payload);
+
           updatePartner(payload);
         },
       });
@@ -338,13 +340,13 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
           <div className="flex flex-col gap-[30px]">
             <div className="bg-white !p-5 rounded-md flex flex-col gap-6">
               <PartnerInfor />
-              <Address />
+              {/* <Address /> */}
               <RepresentativeInformation />
             </div>
 
             <Show>
               <Show.When isTrue={!isEnabledApproval}>
-                <div className="flex gap-4 flex-wrap justify-end mb-16">
+                <div className="flex flex-wrap justify-end gap-4 mb-16">
                   {actionMode === IModeAction.CREATE && (
                     <CButtonSaveAndAdd
                       loading={loadingCreate || loadingUpdate}
