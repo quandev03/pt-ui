@@ -17,7 +17,12 @@ const fetch = async (data: IListOfServicePackageForm & { id: string }) => {
     status: data.status,
     pckCode: data.pckCode,
   };
-  formData.append('images', data.images as File);
+
+  // Only append image if it's actually a File (new image uploaded)
+  if (data.images instanceof File) {
+    formData.append('images', data.images);
+  }
+
   formData.append(
     'data',
     new Blob([JSON.stringify(dataForm)], { type: 'application/json' })
