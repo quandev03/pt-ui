@@ -73,7 +73,7 @@ export const BreadcrumbComponent: React.FC<IBreadcrumbComponentProps> = memo(
     const breadcrumbItems = useMemo(() => {
       let pathSnippets = pathname.split('/').filter((i) => i);
       const parentItem = getParentItemFromMenuItems(`/${pathSnippets[0]}`);
-      if (parentItem.length > 1) parentItem.shift();
+      if (parentItem.length >= 1) parentItem.shift();
       parentItem.reverse();
       pathSnippets = parentItem.concat(pathSnippets);
 
@@ -86,7 +86,10 @@ export const BreadcrumbComponent: React.FC<IBreadcrumbComponentProps> = memo(
         };
         if (itemInMenus) {
           item.title = !itemInMenus.hasChild ? (
-            <Link to={itemInMenus.key}>
+            <Link
+              to={itemInMenus.key}
+              className="!flex items-center gap-1 text-sm"
+            >
               {itemInMenus.icon ? itemInMenus.icon : null} {itemInMenus.label}
             </Link>
           ) : (
@@ -124,6 +127,7 @@ export const BreadcrumbComponent: React.FC<IBreadcrumbComponentProps> = memo(
       getLabelFromMenuItems,
     ]);
 
+    console.log('🚀 ~ breadcrumbItems:', routerItems, breadcrumbItems);
     return <Breadcrumb className="mt-3 !pl-7" items={breadcrumbItems} />;
   }
 );
