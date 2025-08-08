@@ -115,7 +115,7 @@ const errInterceptor = async (
       const tokenError = new Error('Không tìm thấy refresh token');
       processQueue(tokenError, null);
       isRefreshing = false;
-      useConfigAppStore.getState().logoutStore();
+      await useConfigAppStore.getState().logoutStore();
       return Promise.reject(tokenError);
     }
 
@@ -155,7 +155,7 @@ const errInterceptor = async (
       if (axios.isAxiosError(refreshError)) {
         const refreshStatus = refreshError.response?.status;
         if (refreshStatus === STATUS_TOKEN_EXPIRED) {
-          useConfigAppStore.getState().logoutStore();
+          await useConfigAppStore.getState().logoutStore();
           NotificationWarning(
             'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại'
           );
