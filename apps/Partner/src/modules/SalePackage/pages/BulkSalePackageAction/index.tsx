@@ -2,7 +2,6 @@ import {
   CButton,
   CButtonClose,
   CInput,
-  CSelect,
   TitleHeader,
   UploadFileTemplate,
 } from '@vissoft-react/common';
@@ -10,7 +9,8 @@ import { Col, Form, Row } from 'antd';
 import { useLogicBulkSalePackageAction } from './useLogicBulkSalePackageAction';
 
 export const BulkSalePackageAction = () => {
-  const { form, handleClose } = useLogicBulkSalePackageAction();
+  const { form, handleClose, handleDownloadTemplate } =
+    useLogicBulkSalePackageAction();
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>Bán gói theo lô cho thuê bao</TitleHeader>
@@ -65,8 +65,7 @@ export const BulkSalePackageAction = () => {
             <Col span={12}>
               <UploadFileTemplate
                 required
-                // onDownloadTemplate={handleDownloadTemplate}
-                onDownloadTemplate={undefined}
+                onDownloadTemplate={handleDownloadTemplate}
                 accept={[
                   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 ]}
