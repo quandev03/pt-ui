@@ -6,13 +6,14 @@ import {
   IModeAction,
   TitleHeader,
 } from '@vissoft-react/common';
+import { Col, Form, Row } from 'antd';
 import { memo, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useLogicActionUser } from './useLogicActionFreeEsim';
-import { Col, Form, Row } from 'antd';
+import { useLogicActionPackagedEsim } from './useLogicActionPackagedEsim';
 
-export const ActionFreeEsim = memo(() => {
+export const ActionPackagedESim = memo(() => {
   const { id } = useParams();
+  console.log('🚀 ~ id:', id);
   const {
     Title,
     actionMode,
@@ -20,13 +21,13 @@ export const ActionFreeEsim = memo(() => {
     handleFinish,
     bookingInProcess,
     form,
-    getFreeEsimList,
     packageOptions,
-  } = useLogicActionUser();
+    getPackagedEsimList,
+  } = useLogicActionPackagedEsim();
 
   useEffect(() => {
-    if (actionMode === IModeAction.READ && getFreeEsimList?.content && id) {
-      const esimData = getFreeEsimList.content.find(
+    if (actionMode === IModeAction.READ && getPackagedEsimList?.content && id) {
+      const esimData = getPackagedEsimList.content.find(
         (item: { id: string }) => item.id === id
       );
       if (esimData) {
@@ -36,7 +37,7 @@ export const ActionFreeEsim = memo(() => {
         });
       }
     }
-  }, [actionMode, getFreeEsimList, id, form]);
+  }, [actionMode, getPackagedEsimList, id, form]);
 
   useEffect(() => {
     if (actionMode === IModeAction.CREATE && packageOptions?.length === 1) {
@@ -80,9 +81,19 @@ export const ActionFreeEsim = memo(() => {
               />
             </Form.Item>
           </Col>
+          <Col span={12}></Col>
+          <Col span={12}>
+            <Form.Item label="Gói cước miễn phí" name="packageCode">
+              <CSelect
+                placeholder="Chọn gói cước"
+                disabled={actionMode === IModeAction.READ}
+                options={packageOptions}
+              />
+            </Form.Item>
+          </Col>
           <Col span={12}>
             <Form.Item
-              label="Gói cước"
+              label="Gói cước có phí"
               name="packageCode"
               required
               rules={[
