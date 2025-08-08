@@ -9,6 +9,11 @@ export const routerItems: RouterItems[] = [
     label: 'Tổng quan',
   },
   {
+    key: pathRoutes.dashboard as string,
+    label: 'Tổng quan',
+    hasChild: true,
+  },
+  {
     key: pathRoutes.accountAuthorization as string,
     icon: <Settings />,
     label: 'Quản Trị Hệ Thống',
