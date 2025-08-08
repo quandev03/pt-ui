@@ -14,7 +14,6 @@ import { layoutPageService } from '../services';
 import useConfigAppStore from '../stores';
 
 export const LayoutPage = () => {
-  const { menus } = useGetLoaderData();
   const {
     userLogin,
     collapsedMenu,
@@ -23,15 +22,16 @@ export const LayoutPage = () => {
     setShowChangePassModal,
     logoutStore,
     isAuthenticated,
+    menuData,
   } = useConfigAppStore();
   console.log('isAuthenticated', isAuthenticated);
-  console.log('menus', menus);
+  console.log('menus', menuData);
   return (
     <LayoutPageCommon
       pathRoutes={pathRoutes}
       isAuthenticated={isAuthenticated}
       routerItems={routerItems}
-      menuData={menus}
+      menuData={menuData}
       specialActions={specialActions}
       singlePopActions={singlePopActions}
       doublePopActions={doublePopActions}

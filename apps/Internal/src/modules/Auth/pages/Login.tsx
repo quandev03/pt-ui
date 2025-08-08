@@ -25,26 +25,27 @@ import LoginButton from '../components/LoginButton';
 import ModalForgotPassword from '../components/ModalForgotPassword';
 import { useSupportLoginLocal } from '../hooks';
 import { ILoginDataRequest } from '../types';
+import { globalService } from 'apps/Internal/src/services/globalService';
 
 const LoginPage = () => {
   const totalMutating = useIsMutating({ mutationKey: ['login'] });
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [openForgot, setForgot] = useState(false);
-  const { setIsAuthenticated, isAuthenticated, menuData } = useConfigAppStore();
+  const { setIsAuthenticated, isAuthenticated, menuData, setMenuData } =
+    useConfigAppStore();
   const token = StorageService.get(ACCESS_TOKEN_KEY);
   const { state: locationState } = useLocation();
   const permission = usePermissions(menuData, pathRoutes.dashboard);
+  console.log('permission', permission);
+  console.log('menuData', menuData);
   const handleRedirect = useCallback(() => {
-    if (locationState) {
-      const { pathname, search } = locationState;
-      navigate(`${pathname}${search}`);
-    } else if (permission.canRead) {
+    if (permission.canRead) {
       navigate(pathRoutes.dashboard);
     } else {
       navigate(pathRoutes.welcome);
     }
-  }, [locationState, permission, navigate]);
+  }, [permission, navigate]);
 
   useEffect(() => {
     if (isAuthenticated && token) {
@@ -55,7 +56,9 @@ const LoginPage = () => {
 
   const { mutate: loginLocal, isPending: loadingLoginLocal } =
     useSupportLoginLocal(
-      () => {
+      async () => {
+        const menuData = await globalService.getMenu();
+        setMenuData(menuData);
         setIsAuthenticated(true);
         handleRedirect();
       },
