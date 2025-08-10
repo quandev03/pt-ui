@@ -4,7 +4,7 @@ import { CButton } from './CButton';
 
 export const CButtonSave: React.FC<ButtonProps> = ({ children, ...rest }) => {
   return (
-    <CButton icon={<Save />} {...rest}>
+    <CButton icon={<Save size={20} />} {...rest}>
       {children ?? 'Lưu'}
     </CButton>
   );

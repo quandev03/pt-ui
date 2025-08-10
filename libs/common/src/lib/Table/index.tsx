@@ -5,6 +5,7 @@ import { decodeSearchParams } from '../../utils';
 import { useTableHeight } from '../../hooks';
 import { TotalTableMessage } from '../TotalTableMessage';
 import { StyledCommonTable } from './styles';
+import { Loader } from '../NavigationLoader';
 
 // Interface để type cho refs
 interface TableRefs {
@@ -59,6 +60,10 @@ export function CTable<T = unknown>({
       scroll={{
         y: tableHeight > 0 ? tableHeight : undefined,
         x: 'max-content',
+      }}
+      loading={{
+        spinning: rest.loading,
+        indicator: <Loader />,
       }}
       {...rest}
       pagination={

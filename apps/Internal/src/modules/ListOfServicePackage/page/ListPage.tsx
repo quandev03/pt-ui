@@ -61,7 +61,7 @@ export const ListPage = () => {
         data={data as AnyElement}
         actionComponent={actionComponent}
         columns={columns}
-        title="Danh mục gói cước"
+        title="Danh sách gói cước"
         filterItems={filters}
         loading={isPending}
         searchComponent={
