@@ -4,7 +4,7 @@ import { CButton } from './CButton';
 
 export const CButtonDetail: React.FC<ButtonProps> = ({ ...rest }) => {
   return (
-    <CButton type="default" icon={<Info />} {...rest}>
+    <CButton type="default" icon={<Info size={20} />} {...rest}>
       Chi tiết
     </CButton>
   );

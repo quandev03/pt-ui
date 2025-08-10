@@ -4,7 +4,7 @@ import { CButton } from './CButton';
 
 export const CButtonSaveAndAdd: React.FC<ButtonProps> = ({ ...rest }) => {
   return (
-    <CButton icon={<Save />} {...rest}>
+    <CButton icon={<Save size={20} />} {...rest}>
       Lưu và thêm mới
     </CButton>
   );

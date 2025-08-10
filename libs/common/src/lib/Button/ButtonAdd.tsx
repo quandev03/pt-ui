@@ -4,7 +4,7 @@ import { CButton } from './CButton';
 
 export const CButtonAdd: React.FC<ButtonProps> = ({ ...rest }) => {
   return (
-    <CButton icon={<Plus size={18} />} {...rest}>
+    <CButton icon={<Plus size={20} />} {...rest}>
       Thêm mới
     </CButton>
   );

@@ -4,7 +4,7 @@ import { CButton } from '.';
 
 export const CButtonDelete: React.FC<ButtonProps> = ({
   children,
-  icon = <Trash2 />,
+  icon = <Trash2 size={20} />,
   ...rest
 }) => {
   return (

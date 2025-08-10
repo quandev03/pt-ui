@@ -1,5 +1,5 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { useIsMutating, useQueryClient } from '@tanstack/react-query';
+import { useIsMutating } from '@tanstack/react-query';
 import {
   AnyElement,
   CButton,
@@ -13,6 +13,7 @@ import {
   validateForm,
 } from '@vissoft-react/common';
 import { Col, Divider, Form, Image, Row, Spin } from 'antd';
+import { globalService } from 'apps/Internal/src/services/globalService';
 import { FocusEvent, useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BgLogin from '../../../assets/images/bg_banner.png';
@@ -24,8 +25,6 @@ import useConfigAppStore from '../../Layouts/stores';
 import LoginButton from '../components/LoginButton';
 import ModalForgotPassword from '../components/ModalForgotPassword';
 import { useSupportLoginLocal } from '../hooks';
-import { ILoginDataRequest } from '../types';
-import { globalService } from 'apps/Internal/src/services/globalService';
 
 const LoginPage = () => {
   const totalMutating = useIsMutating({ mutationKey: ['login'] });
