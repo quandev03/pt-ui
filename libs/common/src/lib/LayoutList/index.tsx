@@ -103,11 +103,19 @@ interface SearchComponentProps extends InputProps {
   tooltip: string;
   placeholder: string;
   stateKey?: string;
+  className?: string;
 }
 
 // Tạo SearchComponent riêng
 const SearchComponent = memo(
-  ({ name, tooltip, placeholder, stateKey, ...rest }: SearchComponentProps) => {
+  ({
+    name,
+    tooltip,
+    placeholder,
+    stateKey,
+    className,
+    ...rest
+  }: SearchComponentProps) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       // Tự động cắt ký tự nếu vượt quá maxLength
       if (e.target.value.length > 100) {
@@ -165,7 +173,10 @@ const SearchComponent = memo(
 
     return (
       <Tooltip title={tooltip} placement="top">
-        <Form.Item name={stateKey ? stateKey : name} className="min-w-42">
+        <Form.Item
+          name={stateKey ? stateKey : name}
+          className={`min-w-42 ${className}`}
+        >
           <CInput
             maxLength={100}
             placeholder={placeholder}
