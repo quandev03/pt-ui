@@ -71,13 +71,21 @@ export const routerItems: RouterItems[] = [
     label: 'Quản lý object',
     parentId: pathRoutes.accountAuthorization as string,
   },
+<<<<<<< HEAD
   // danh sách kho esim
   {
     key: pathRoutes.esimStock,
     label: 'Danh sách eSIM',
   },
-  // Báo cáo
+=======
+  //Danh sách eSIM
+  {
+    key: pathRoutes.eSIMStock as string,
+    label: 'Danh sách eSIM',
+  },
 
+>>>>>>> 74eadbd184cfb0b7465e239ecee473497f098d80
+  // Báo cáo
   {
     key: pathRoutes.report,
     label: 'Báo cáo',
