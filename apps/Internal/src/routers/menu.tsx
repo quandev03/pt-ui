@@ -1,6 +1,4 @@
-import { BarChart3, House, ShoppingCart } from 'lucide-react';
 import { RouterItems } from '@vissoft-react/common';
-import { ChartNoAxesGantt, Settings, User, User2 } from 'lucide-react';
 import { pathRoutes } from './url';
 
 export const routerItems: RouterItems[] = [
@@ -72,12 +70,11 @@ export const routerItems: RouterItems[] = [
     label: 'Quản lý object',
     parentId: pathRoutes.accountAuthorization as string,
   },
-  //Danh sách eSIM
+  // danh sách kho esim
   {
-    key: pathRoutes.eSIMStock as string,
+    key: pathRoutes.esimStock,
     label: 'Danh sách eSIM',
   },
-
   // Báo cáo
   {
     key: pathRoutes.report,
