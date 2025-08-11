@@ -3,6 +3,7 @@ import routesWelcome from '../modules/WelcomePage/routes';
 import { routesUserManagement } from '../modules/UserManagement/routes';
 import routesObjectManagement from '../modules/ObjectManagement/routes';
 import routesLookupNumber from '../modules/LookupNumber/routes';
+import routesPartnerCatalog from '../modules/PartnerCatalog/routes';
 import routesListOfServicePackage from '../modules/ListOfServicePackage/routes';
 import routesDashboard from '../modules/Dashboard/routes';
 import routesRoleManagement from '../modules/RoleManagement/routes';
@@ -15,6 +16,7 @@ export const protectedRoutes: RouteObject[] = [
   ...routesUserManagement,
   ...routesObjectManagement,
   ...routesLookupNumber,
+  ...routesPartnerCatalog,
   ...routesListOfServicePackage,
   ...routesRoleManagement,
   ...routesUserGroupManagement,

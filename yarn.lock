@@ -5145,6 +5145,7 @@ __metadata:
     react-infinite-scroll-component: "npm:^6.1.0"
     react-number-format: "npm:^5.4.4"
     react-router-dom: "npm:6.22.1"
+    react-webcam: "npm:^7.2.0"
     simple-zustand-devtools: "npm:^1.1.0"
     styled-components: "npm:6.1.16"
     tailwindcss: "npm:3.4.3"
@@ -13068,6 +13069,16 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
   checksum: 10c0/bb33c3a6457e73fa9977133be0c27b60accfc6452cc5d7b62c729cdd2d091a1345a9567cf852c651315548f1f16adac258eeab8ad193b46e4ce926c911dc857c
+  languageName: node
+  linkType: hard
+
+"react-webcam@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "react-webcam@npm:7.2.0"
+  peerDependencies:
+    react: ">=16.2.0"
+    react-dom: ">=16.2.0"
+  checksum: 10c0/d639a9e4cd545f66a5ecbfdc6c38344f6ae40e6609ba5fb26db730b48723158dedeeecdecba94e4d117517f4db0be828169db270c329b9b71d847e54aba6f7f0
   languageName: node
   linkType: hard
 
