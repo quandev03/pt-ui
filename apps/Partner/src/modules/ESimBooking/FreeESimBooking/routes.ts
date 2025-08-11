@@ -1,3 +1,4 @@
+import { ActionPackagedEsim } from './pages/ActionPackagedEsim/index';
 import { pathRoutes } from '../../../routers/url';
 import { RouteObject } from 'react-router-dom';
 
@@ -21,6 +22,20 @@ const freeEsimBookingRoutes: RouteObject[] = [
     lazy: async () => {
       const { ActionFreeEsim } = await import('./pages');
       return { Component: ActionFreeEsim };
+    },
+  },
+  {
+    path: pathRoutes.buyBundleWithEsimAdd,
+    lazy: async () => {
+      const { ActionPackagedEsim } = await import('./pages');
+      return { Component: ActionPackagedEsim };
+    },
+  },
+  {
+    path: pathRoutes.buyBundleWithEsimView(),
+    lazy: async () => {
+      const { ActionPackagedEsim } = await import('./pages');
+      return { Component: ActionPackagedEsim };
     },
   },
 ];

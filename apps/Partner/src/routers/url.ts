@@ -27,5 +27,8 @@ export const pathRoutes = {
   freeEsimBookingAdd: `/free-esim-booking/add`,
   freeEsimBookingView: (id?: IStringNumber) =>
     `/free-esim-booking/view/${id ? id : ':id'}`,
-  buyBundleWithEsim: 'buy-bundle-with-esim',
+  buyBundleWithEsim: '/buy-bundle-with-esim',
+  buyBundleWithEsimAdd: `/buy-bundle-with-esim/add`,
+  buyBundleWithEsimView: (id?: IStringNumber) =>
+    `/buy-bundle-with-esim/view/${id ? id : ':id'}`,
 };

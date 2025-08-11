@@ -61,9 +61,27 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
     {
       title: 'Gói cước',
       dataIndex: 'pckCode',
-      width: 200,
+      width: 150,
       align: 'left',
       fixed: 'left',
+      render(value, record) {
+        return <RenderCell value={value} tooltip={value} />;
+      },
+    },
+    {
+      title: 'Tổng tiền gói cước',
+      dataIndex: 'pckPrice',
+      width: 150,
+      align: 'left',
+      render(value, record) {
+        return <RenderCell value={value} tooltip={value} />;
+      },
+    },
+    {
+      title: 'Loại dịch vụ',
+      dataIndex: 'service',
+      width: 150,
+      align: 'left',
       render(value, record) {
         return <RenderCell value={value} tooltip={value} />;
       },
@@ -142,7 +160,7 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
       },
     },
     {
-      title: 'Hành động',
+      title: 'Thao tác',
       align: 'center',
       width: 150,
       fixed: 'right',
