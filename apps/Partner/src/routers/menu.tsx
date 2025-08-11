@@ -1,5 +1,5 @@
 import { RouterItems } from '@vissoft-react/common';
-import { ChartNoAxesGantt, Settings, Store } from 'lucide-react';
+import { ChartLine, ChartNoAxesGantt, Settings, Store } from 'lucide-react';
 import { pathRoutes } from './url';
 
 export const routerItems: RouterItems[] = [
@@ -10,7 +10,7 @@ export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.dashboard as string,
     label: 'Tổng quan',
-    icon: <ChartNoAxesGantt />,
+    icon: <ChartLine />,
   },
   {
     key: pathRoutes.accountAuthorization as string,

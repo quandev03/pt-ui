@@ -44,10 +44,10 @@ export const ActionPage = () => {
   });
   const { mutate: mutateAdd } = useAdd(form, () => {
     if (type === EActionSubmit.SAVE_AND_ADD) {
-      form.resetFields();
+      form.resetFields(['pckCode', 'pckName', 'packagePrice', 'images']);
       setImageUrl(null);
     } else {
-      form.resetFields();
+      form.resetFields(['pckCode', 'pckName', 'packagePrice', 'images']);
       setImageUrl(null);
       navigate(-1);
     }
@@ -333,33 +333,8 @@ export const ActionPage = () => {
                       uploadButton
                     ) : (
                       <div className="relative inline-block">
-                        {imagePlaceholder}
-                        {actionMode !== IModeAction.READ && (
-                          <div className="absolute top-2 right-2 flex gap-1">
-                            <Button
-                              type="primary"
-                              danger
-                              size="small"
-                              className="!p-1 !w-8 !h-8"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteImage();
-                              }}
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            </Button>
-                          </div>
-                        )}
+                        {actionMode !== IModeAction.READ && uploadButton}
+                        {actionMode === IModeAction.READ && imagePlaceholder}
                       </div>
                     )}
                   </Upload>
