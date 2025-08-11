@@ -1,6 +1,6 @@
-import { ChartNoAxesGantt, House, Settings, Store } from 'lucide-react';
-import { pathRoutes } from './url';
 import { RouterItems } from '@vissoft-react/common';
+import { ChartNoAxesGantt, Settings, Store } from 'lucide-react';
+import { pathRoutes } from './url';
 
 export const routerItems: RouterItems[] = [
   {
@@ -10,11 +10,13 @@ export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.dashboard as string,
     label: 'Tổng quan',
+    icon: <ChartNoAxesGantt />,
   },
   {
     key: pathRoutes.accountAuthorization as string,
     label: 'Quản Trị Hệ Thống',
     hasChild: true,
+    icon: <Settings />,
   },
   {
     key: pathRoutes.roleManager as string,
@@ -40,6 +42,7 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.saleManagement as string,
     label: 'Quản Lý Bán Hàng',
     hasChild: true,
+    icon: <Store />,
   },
   {
     key: pathRoutes.freeEsimBooking as string,
