@@ -6,10 +6,10 @@ import { ChartColumn } from '../components/ChartColumn';
 
 export const ListPage = () => {
   const dataDashboardStats: IDataDashboardStats = {
-    totalESIM: 1000000,
-    totalSTB: 3200000,
-    totalPackagesSold: 2030000,
-    totalESIMsOrdered: 1203000,
+    totalESIM: 1273822,
+    totalSTB: 3289322,
+    totalPackagesSold: 1237821,
+    totalESIMsOrdered: 2398121,
   };
   return (
     <>

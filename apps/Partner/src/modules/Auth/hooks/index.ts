@@ -67,6 +67,7 @@ function useSupportInitFcm() {
 }
 
 function useSupportInitForgotPassword(
+  onSuccess: () => void,
   onError: (errorField: IFieldErrorsItem[]) => void
 ) {
   return useMutation({
@@ -75,6 +76,7 @@ function useSupportInitForgotPassword(
       NotificationSuccess(
         'Vui lòng kiểm tra email và làm theo hướng dẫn để lấy lại mật khẩu.'
       );
+      onSuccess();
     },
     onError(error: IErrorResponse) {
       if (error.errors) {

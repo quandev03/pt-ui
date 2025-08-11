@@ -1,9 +1,9 @@
-import BgLogin from '../../../assets/images/bg-login.png';
+import BgForgotPassword from '../../../assets/images/bg_banner.png';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useSupportGetNewPassword } from '../hooks';
-import Logo from '../../../assets/images/logo.svg';
+import Logo from '../../../assets/images/Logo-mini.svg';
 import { CButton, Text } from '@vissoft-react/common';
 import { Copy } from 'lucide-react';
 import { pathRoutes } from '../../../routers/url';
@@ -48,7 +48,7 @@ const ForgotPassword = () => {
     <div
       className="h-screen w-screen bg-inherit !m-0 p-12 sm:px-28 md:px-36 lg:px-40 xl:px-48 2xl:px-56 text-left bg-cover flex justify-center gap-[300px]"
       style={{
-        backgroundImage: `url(${BgLogin})`,
+        backgroundImage: `url(${BgForgotPassword})`,
       }}
     >
       <div className="mt-52 flex">

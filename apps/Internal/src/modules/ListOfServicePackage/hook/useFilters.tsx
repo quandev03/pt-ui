@@ -9,10 +9,6 @@ export const useFilters = (): FilterItemProps[] => {
       placeholder: 'Chọn trạng thái',
       options: [
         {
-          label: 'Tất cả',
-          value: '',
-        },
-        {
           label: 'Hoạt động',
           value: String(StatusEnum.ACTIVE),
         },

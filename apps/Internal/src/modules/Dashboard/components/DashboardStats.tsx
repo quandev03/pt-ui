@@ -1,7 +1,12 @@
 import { Card, Col, Row } from 'antd';
 import styled from 'styled-components';
 import { IDataDashboardStats } from '../type';
-import { svgTotalESIM, svgTotalPackagesSold, svgTotalSTB } from '../utils';
+import {
+  svgTotalESIM,
+  svgTotalESIMsOrdered,
+  svgTotalPackagesSold,
+  svgTotalSTB,
+} from '../utils';
 import { CountUp } from './CountUp';
 const CardStyle = styled(Card)`
   width: 100%;
@@ -21,11 +26,15 @@ const CardStyle = styled(Card)`
 `;
 
 export const DashboardStats = ({ data }: { data: IDataDashboardStats }) => {
-  const formatNumber = (num: number): string => {
-    return num.toLocaleString('en-US');
-  };
+  // const formatNumber = (num: number): string => {
+  //   return num.toLocaleString('en-US');
+  // };
   const dataTest = [
-    { label: 'Tổng eSIM đã đặt', value: data.totalESIM, icon: svgTotalESIM() },
+    {
+      label: 'Tổng eSIM đã đặt',
+      value: data.totalESIM,
+      icon: svgTotalESIMsOrdered(),
+    },
     { label: 'Tổng eSIM đã bán', value: data.totalSTB, icon: svgTotalESIM() },
     {
       label: 'Tổng STB đã gọi 900',
@@ -52,20 +61,9 @@ export const DashboardStats = ({ data }: { data: IDataDashboardStats }) => {
                 </div>
               </div>
               <div className="text-3xl w-full ml-10 mr-16 mt-4 text-center font-bold text-primary tracking-[2px]">
-                <span className="mr-12">{formatNumber(item.value)}</span>
-                {/* <CountUp
-                  from={0}
-                  to={item.value}
-                  separator=","
-                  direction="up"
-                  duration={1}
-                  className="count-up-text mr-12"
-                  delay={0}
-                  startWhen={true}
-                  onStart={() => {}}
-                  onEnd={() => {}}
-                  step={100000}
-                /> */}
+                <span className="mr-12">
+                  <CountUp to={item.value} duration={2} />
+                </span>
               </div>
             </div>
           </CardStyle>

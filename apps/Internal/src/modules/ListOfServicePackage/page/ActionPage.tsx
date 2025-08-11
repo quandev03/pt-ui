@@ -225,6 +225,9 @@ export const ActionPage = () => {
                   <CInput
                     disabled={actionMode === IModeAction.READ}
                     placeholder="Nhập mã gói cước"
+                    maxLength={20}
+                    preventVietnamese
+                    preventOnlyWhitespace
                   />
                 </Form.Item>
               </Col>
@@ -236,6 +239,7 @@ export const ActionPage = () => {
                 >
                   <CInput
                     disabled={actionMode === IModeAction.READ}
+                    maxLength={100}
                     placeholder="Nhập tên gói cước"
                   />
                 </Form.Item>

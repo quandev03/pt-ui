@@ -23,7 +23,7 @@ import useConfigAppStore from '../../Layouts/stores';
 import ModalForgotPassword from '../components/ModalForgotPassword';
 import { useSupportLoginLocal } from '../hooks';
 import { ILoginDataRequest } from '../types';
-import { globalService } from 'apps/Partner/src/services';
+import { globalService } from '../../../../src/services';
 
 const LoginPage = () => {
   const totalMutating = useIsMutating({ mutationKey: ['login'] });
