@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC } from 'react';
 
 type Props = {
   fileUrl?: string;
@@ -18,4 +18,4 @@ const PreviewPdf: FC<Props> = ({ fileUrl, title }) => {
     </div>
   );
 };
-export default PreviewPdf;
+export default React.memo(PreviewPdf);
