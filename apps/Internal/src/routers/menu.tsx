@@ -72,11 +72,7 @@ export const routerItems: RouterItems[] = [
     label: 'Quản lý object',
     parentId: pathRoutes.accountAuthorization as string,
   },
-  // danh sách kho esim
-  {
-    key: pathRoutes.esimStock,
-    label: 'Danh sách eSIM',
-  },
+
   // Báo cáo
 
   {
@@ -92,27 +88,14 @@ export const routerItems: RouterItems[] = [
 
   {
     key: pathRoutes.salesManager as string,
-    icon: <ShoppingCart />,
     label: 'Quản lý bán hàng',
     hasChild: true,
   },
 
   {
     key: pathRoutes.eSIMStock as string,
-    label: 'Kho eSIM',
+    label: 'Danh sách eSIM',
     parentId: pathRoutes.salesManager as string,
-  },
-  {
-    key: pathRoutes.report as string,
-    icon: <BarChart3 />,
-    label: 'Báo cáo',
-    hasChild: true,
-  },
-
-  {
-    key: pathRoutes.reportPartner as string,
-    label: 'Báo cáo đơn hàng đối tác',
-    parentId: pathRoutes.report as string,
   },
 ];
 export const singlePopActions = ['add'];
