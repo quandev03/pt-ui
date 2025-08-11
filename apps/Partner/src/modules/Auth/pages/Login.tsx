@@ -40,7 +40,6 @@ const LoginPage = () => {
       navigate(pathRoutes.welcome as string);
     }
   }, [locationState, navigate]);
-
   useEffect(() => {
     if (isAuthenticated && token) {
       handleRedirect();
