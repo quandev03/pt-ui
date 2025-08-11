@@ -4,7 +4,7 @@ import {
   formatQueryParams,
   IParamsRequest,
 } from '@vissoft-react/common';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useColumnsEsimWarehouseList } from '../../hooks/useColumnsEsimWarehouseList';
 import { IEsimWarehouseList } from '../../types';
@@ -18,6 +18,8 @@ import {
   Status900Enum,
   status900Map,
 } from '../../constants/enum';
+import { message } from 'antd';
+import { useGetGenQrCode } from '../../hooks/useGetGenQrCode';
 
 // No props are needed here. The hook will manage its own state.
 export const useLogicListEsimWarehouse = () => {
@@ -32,15 +34,7 @@ export const useLogicListEsimWarehouse = () => {
   const [showEsimDetails, setShowEsimDetails] = useState(false);
   const [isGenQrModalOpen, setGenQrModalOpen] = useState(false);
   const [isSendQrModalOpen, setSendQrModalOpen] = useState(false);
-
-  const handleOpenGenQr = useCallback((record: IEsimWarehouseList) => {
-    setSelectedRecord(record);
-    setGenQrModalOpen(true);
-  }, []);
-
-  const handleCloseGenQr = useCallback(() => {
-    setGenQrModalOpen(false);
-  }, []);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
 
   const handleOpenSendQr = useCallback((record: IEsimWarehouseList) => {
     setSelectedRecord(record);
@@ -58,9 +52,50 @@ export const useLogicListEsimWarehouse = () => {
     setShowEsimDetails(false);
   }, []);
 
+  const onGenQrSuccess = (imageBlob: Blob) => {
+    const url = URL.createObjectURL(imageBlob);
+
+    setQrCodeUrl(url);
+  };
+  const onGenQrError = () => {
+    message.error('Không tạo được mã QR. Vui lòng thử lại');
+  };
+
+  const { mutate: genQrCode, isPending: genQrCodeInProcess } = useGetGenQrCode(
+    onGenQrSuccess,
+    onGenQrError
+  );
+
+  const handleOpenGenQrModal = useCallback(
+    (record: IEsimWarehouseList) => {
+      setSelectedRecord(record);
+      setGenQrModalOpen(true);
+      genQrCode({
+        subId: record.subId,
+        size: '200x200',
+      });
+    },
+    [genQrCode]
+  );
+
+  const handleCloseGenQrModal = useCallback(() => {
+    setGenQrModalOpen(false);
+    setSelectedRecord(null);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (qrCodeUrl) {
+        console.log('Revoking old Blob URL:', qrCodeUrl);
+        URL.revokeObjectURL(qrCodeUrl);
+        setQrCodeUrl(null);
+      }
+    };
+  }, [qrCodeUrl]);
+
   const columns: ColumnsType<IEsimWarehouseList> = useColumnsEsimWarehouseList({
     onSendQr: handleOpenSendQr,
-    onGenQr: handleOpenGenQr,
+    onGenQr: handleOpenGenQrModal,
     onViewDetails: handleShowDetails,
   });
   const { data: packageCodeList } = useGetPackageCodes();
@@ -88,10 +123,6 @@ export const useLogicListEsimWarehouse = () => {
       },
     ],
     []
-  );
-  console.log(
-    '🚀 ~ useLogicListEsimWarehouse ~ subStatusOptions:',
-    subStatusOptions
   );
 
   const activeStatusOptions: DefaultOptionType[] = useMemo(
@@ -122,15 +153,6 @@ export const useLogicListEsimWarehouse = () => {
       },
     ],
     []
-  );
-  console.log(
-    '🚀 ~ useLogicListEsimWarehouse ~ activeStatusOptions:',
-    activeStatusOptions
-  );
-
-  console.log(
-    '🚀 ~ useLogicListEsimWarehouse ~ packageOptions:',
-    packageOptions
   );
 
   const filters: FilterItemProps[] = useMemo(() => {
@@ -168,7 +190,11 @@ export const useLogicListEsimWarehouse = () => {
     isGenQrModalOpen,
     isSendQrModalOpen,
     handleCloseSendQr,
-    handleCloseGenQr,
     handleCloseModal,
+    genQrCodeInProcess,
+    onGenQrSuccess,
+    handleCloseGenQrModal,
+    genQrCode,
+    qrCodeUrl,
   };
 };
