@@ -18,7 +18,12 @@ type Props = {
 
 const ModalForgotPassword = ({ open, onClose }: Props) => {
   const [form] = Form.useForm();
+  const handleClose = () => {
+    form.resetFields();
+    onClose();
+  };
   const { mutate: initForgotPassword } = useSupportInitForgotPassword(
+    handleClose,
     (fieldErrors) => {
       setFieldError(form, fieldErrors);
     }
@@ -34,10 +39,12 @@ const ModalForgotPassword = ({ open, onClose }: Props) => {
       callbackUri: `/#/forgot-password?token=`,
     });
   };
-
-  const handleClose = () => {
-    form.resetFields();
-    onClose();
+  const handlePaste = async (
+    e: React.ClipboardEvent<HTMLInputElement>,
+    field: string
+  ) => {
+    const value = (e.target as HTMLInputElement).value;
+    form.setFieldValue(field, value.trim());
   };
 
   return (
@@ -57,8 +64,44 @@ const ModalForgotPassword = ({ open, onClose }: Props) => {
           labelCol={{ span: 6 }}
           onFinish={handleFinish}
           validateTrigger={['onSubmit', 'onFinish']}
+          labelAlign="left"
+          colon={false}
         >
           <Row gutter={[16, 0]}>
+            <Col span={24}>
+              <Form.Item
+                label={<div className="font-bold">Mã đối tác</div>}
+                name="clientIdentity"
+                required
+                rules={[
+                  {
+                    validator: (_, value) => {
+                      if (!value) {
+                        return Promise.reject('Không được để trống trường này');
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
+                <CInput
+                  onBlur={(e) => {
+                    handleBlur(e, 'clientIdentity');
+                  }}
+                  onPaste={(e) => {
+                    handlePaste(e, 'clientIdentity');
+                  }}
+                  className="login-form__input"
+                  placeholder={'Nhập mã đối tác'}
+                  maxLength={30}
+                  onInput={(e: AnyElement) =>
+                    (e.target.value = cleanUpPhoneNumber(
+                      e.target.value
+                    ).toUpperCase())
+                  }
+                />
+              </Form.Item>
+            </Col>
             <Col span={24}>
               <Form.Item
                 label={<div className="font-bold">Email</div>}

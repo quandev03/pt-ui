@@ -201,7 +201,7 @@ export const ActionUser = memo(() => {
               <Col span={12}>
                 <Form.Item
                   label="Đại lý"
-                  name="organizationId"
+                  name="orgId"
                   rules={[{ required: true, message: MESSAGE.G06 }]}
                 >
                   <TreeSelect
