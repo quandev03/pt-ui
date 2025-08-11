@@ -33,6 +33,11 @@ export interface IQrCodeSent {
   email: string;
 }
 
+export interface IQrCodeGen {
+  subId: string;
+  size: string;
+}
+
 export interface IPackage {
   createdBy: string;
   createdDate: string;

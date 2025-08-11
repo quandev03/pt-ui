@@ -1,4 +1,4 @@
-import { Typography, Form } from 'antd';
+import { Typography, Form, message } from 'antd';
 import { IEsimWarehouseList } from '../types';
 import { CInput, CModal, IFieldErrorsItem } from '@vissoft-react/common';
 import { useCallback } from 'react';
@@ -18,8 +18,8 @@ export const SendQrPopup = ({ open, onCancel, record }: SendQrPopupProps) => {
   const [form] = Form.useForm();
 
   const onSuccess = useCallback(() => {
-    navigate(-1); // Navigate back on success
-  }, [navigate]);
+    onCancel();
+  }, [onCancel]);
 
   const onError = useCallback(
     (errorField: IFieldErrorsItem[]) => {

@@ -169,7 +169,7 @@ export const useColumnsEsimWarehouseList = ({
             label: <Text>Gửi QR</Text>,
           },
           {
-            key: IModeAction.DELETE,
+            key: IModeAction.READ,
             onClick: () => onViewDetails(record),
             label: <Text>Xem chi tiết eSIM</Text>,
           },
@@ -177,17 +177,7 @@ export const useColumnsEsimWarehouseList = ({
 
         return (
           <WrapperActionTable>
-            <CButton
-              type="default"
-              // style={{
-              //   backgroundColor: '#FFFFFF',
-              //   color: '#616774',
-              //   fontWeight: 'bold',
-              //   borderRadius: '1px',
-              //   border: '1px radius #616774',
-              // }}
-              onClick={() => onGenQr(record)}
-            >
+            <CButton type="default" onClick={() => onGenQr(record)}>
               Gen QR
             </CButton>
             <div className="w-5">
