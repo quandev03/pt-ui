@@ -89,7 +89,14 @@ export const pathRoutes = {
 
   // Danh sách kho eSIM
   esimStock: '/esim-stock',
+
+  //Quản lý bán hàng
+  salesManager: '/sales-manager',
+  eSIMStock: '/esim-stock',
+  eSIMStockView: (id?: IStringNumber) => `/esim-stock/view/${id ? id : ':id'}`,
   // Báo cáo
   report: '/report',
   reportPartner: '/report-partner',
+  reportPartnerView: (id?: IStringNumber) =>
+    `/report-partner/view/${id ? id : ':id'}`,
 };

@@ -54,7 +54,7 @@ export interface IFormUser {
   status: number;
   roleIds: string[];
   phoneNumber?: string;
-  organizationId?: string;
+  orgId?: string;
   clientId: string;
   email?: string;
 }
