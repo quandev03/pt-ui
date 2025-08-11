@@ -54,15 +54,15 @@ export const DashboardStats = ({ data }: { data: IDataDashboardStats }) => {
       {dataTest.map((item, idx) => (
         <Col span={6} key={idx}>
           <CardStyle>
-            <div className="flex flex-col w-full justify-between h-full items-center">
-              <div className="flex self-start items-center gap-4 px-6">
+            <div className="flex flex-col w-full px-8 justify-between h-full items-center">
+              <div className="flex self-start items-center gap-4">
                 {item.icon}
                 <div>
                   <div className="font-medium text-sm">{item.label}</div>
                 </div>
               </div>
-              <div className="text-3xl w-full ml-10 mr-16 mt-4 text-center font-bold text-primary tracking-[2px]">
-                <span className="mr-12">
+              <div className="text-3xl mt-4 px-12 self-start font-bold text-primary tracking-[2px]">
+                <span>
                   <CountUp to={item.value} duration={2} />
                 </span>
               </div>
