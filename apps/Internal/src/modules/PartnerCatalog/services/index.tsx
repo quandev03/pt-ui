@@ -1,5 +1,8 @@
-import { IPage } from '@vissoft-react/common';
-import { prefixSaleService } from 'apps/Internal/src/constants';
+import { IPage, IParamsRequest } from '@vissoft-react/common';
+import {
+  prefixAuthService,
+  prefixSaleService,
+} from 'apps/Internal/src/constants';
 import { safeApiClient } from 'apps/Internal/src/services';
 import type { AxiosRequestHeaders } from 'axios';
 import { Key } from 'react';
@@ -10,6 +13,7 @@ import {
   IPartnerCatalogParams,
   IPayloadPartner,
   IProductAuthorization,
+  IRoleItem,
   IStockNumber,
   IStockNumberParams,
 } from '../types';
@@ -224,5 +228,48 @@ export const PartnerCatalogService = {
     return safeApiClient.get<Blob>(`${prefixSaleService}/file/${uri}`, {
       responseType: 'blob',
     });
+  },
+  getOrganizationUsersByOrgId: (
+    partnerCode: string,
+    params: IParamsRequest
+  ) => {
+    return safeApiClient.get<any>(
+      `${prefixAuthService}/api/users/partner/${partnerCode}`,
+      {
+        params,
+      }
+    );
+  },
+  getUnitByCode: (code: string) => {
+    return safeApiClient.get<any>(
+      `${prefixSaleService}/organization-partner/get-by-code/${code}`
+    );
+  },
+
+  createOrganizationUserByClientIdentity: (
+    clientIdentity: string,
+    payload: any
+  ) => {
+    return safeApiClient.post<any>(
+      `${prefixAuthService}/api/users/partner/${clientIdentity}`,
+      payload
+    );
+  },
+  getAllPartnerRoles: () => {
+    return safeApiClient.get<IRoleItem[]>(
+      `${prefixAuthService}/api/roles/partner/all`
+    );
+  },
+
+  getOrganizationUserDetail: (clientIdentity: string, id: string) => {
+    return safeApiClient.get<any>(
+      `${prefixAuthService}/api/users/partner/${clientIdentity}/${id}`
+    );
+  },
+  updatePartnerUser: (clientIdentity: string, id: string, payload: any) => {
+    return safeApiClient.put(
+      `${prefixAuthService}/api/users/partner/${clientIdentity}/${id}`,
+      payload
+    );
   },
 };

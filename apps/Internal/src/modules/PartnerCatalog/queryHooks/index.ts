@@ -16,6 +16,7 @@ import { REACT_QUERY_KEYS } from 'apps/Internal/src/constants/query-key';
 import {
   IErrorResponse,
   IFieldErrorsItem,
+  IParamsRequest,
   NotificationSuccess,
 } from '@vissoft-react/common';
 
@@ -190,6 +191,98 @@ export const useGetCCCDInfo = (onSuccess: (data: ICCCDInfo) => void) => {
     mutationFn: PartnerCatalogService.getCCCDInfor,
     onSuccess(data) {
       onSuccess(data);
+    },
+  });
+};
+
+export const useGetOrganizationUsersByOrgCode = (
+  partnerCode: string,
+  params: IParamsRequest
+) => {
+  return useQuery({
+    queryKey: ['organizationUsersByOrgId', partnerCode, params],
+    queryFn: () =>
+      PartnerCatalogService.getOrganizationUsersByOrgId(partnerCode, params),
+    enabled: !!partnerCode,
+  });
+};
+
+export const useGetDetailByCode = (code: string) => {
+  return useQuery({
+    queryKey: ['unitByCode', code],
+    queryFn: () => PartnerCatalogService.getUnitByCode(code),
+    enabled: !!code,
+  });
+};
+
+export const useCreateOrganizationUserByClientIdentity = (
+  onSuccess?: (data: any) => void,
+  onFail?: (error: IFieldErrorsItem[]) => void
+) => {
+  return useMutation({
+    mutationFn: ({
+      clientIdentity,
+      payload,
+    }: {
+      clientIdentity: string;
+      payload: any;
+    }) =>
+      PartnerCatalogService.createOrganizationUserByClientIdentity(
+        clientIdentity,
+        payload
+      ),
+    onSuccess(data) {
+      NotificationSuccess('Thêm mới người dùng thành công');
+      onSuccess && onSuccess(data);
+    },
+    onError(error: IErrorResponse) {
+      if (error?.errors) {
+        onFail && onFail(error.errors);
+      }
+    },
+  });
+};
+export const useGetAllPartnerRoles = () => {
+  return useQuery({
+    queryKey: ['get-all-partner-roles'],
+    queryFn: () => PartnerCatalogService.getAllPartnerRoles(),
+  });
+};
+
+export const useGetOrganizationUserDetail = (
+  clientIdentity: string,
+  id: string
+) => {
+  return useQuery({
+    queryKey: ['organization-user-detail', clientIdentity, id],
+    queryFn: () =>
+      PartnerCatalogService.getOrganizationUserDetail(clientIdentity, id),
+    enabled: !!clientIdentity && !!id,
+  });
+};
+
+export const useUpdatePartnerUser = (
+  onSuccess?: (data: any) => void,
+  onError?: (error: any) => void
+) => {
+  return useMutation({
+    mutationFn: ({
+      clientIdentity,
+      id,
+      payload,
+    }: {
+      clientIdentity: string;
+      id: string;
+      payload: any;
+    }) => PartnerCatalogService.updatePartnerUser(clientIdentity, id, payload),
+
+    onSuccess: (data) => {
+      onSuccess?.(data);
+      NotificationSuccess('Cập nhật người dùng thành công');
+    },
+
+    onError: (error) => {
+      onError?.(error);
     },
   });
 };

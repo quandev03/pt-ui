@@ -29,70 +29,83 @@ import {
 import { pathRoutes } from 'apps/Internal/src/routers';
 import useConfigAppStore from '../../Layouts/stores';
 import { DataPayloadCreateUpdateUserPartnerCatalog } from '../types';
+import {
+  useCreateOrganizationUserByClientIdentity,
+  useGetAllPartnerRoles,
+  useGetOrganizationUserDetail,
+  useUpdatePartnerUser,
+} from '../queryHooks';
 
 export const ActionUserPartnerCatalog = () => {
   const [isSubmitBack, setIsSubmitBack] = useState(false);
   const { orgCode, id } = useParams<{ orgCode: string; id: string }>();
-  // const { data: userDetail } = useGetDetailUser(id ?? '');
+
+  const { data: listRoles, isLoading } = useGetAllPartnerRoles();
+
+  const { data: userDetail } = useGetOrganizationUserDetail(
+    orgCode ?? '',
+    id ?? ''
+  );
+
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const actionMode = useActionMode();
   const { menuData } = useConfigAppStore();
   const permissions = usePermissions(menuData);
-  // useEffect(() => {
-  //   if (userDetail) {
-  //     form.setFieldsValue({
-  //       ...userDetail,
-  //     });
-  //   }
-  // }, [userDetail, form]);
+  useEffect(() => {
+    if (userDetail) {
+      form.setFieldsValue({
+        ...userDetail,
+        roleIds: userDetail.roles?.map((role: any) => role.id),
+      });
+    }
+  }, [userDetail, form]);
 
   const handleClose = () => {
     navigate(-1);
   };
-  // const { mutate: updateUser, isPending: loadingUpdate } = useUpdateUser(
-  //   () => {
-  //     navigate(-1);
-  //   },
-  //   (errors) => {
-  //     setFieldError(form, errors);
-  //   }
-  // );
 
-  // const { mutate: createUser, isPending: loadingAdd } = useAddUser(
-  //   () => {
-  //     if (isSubmitBack) {
-  //       handleClose();
-  //     } else {
-  //       form.resetFields();
-  //       form.setFieldValue('status', 1);
-  //     }
-  //   },
-  //   (errors) => {
-  //     setFieldError(form, errors);
-  //   }
-  // );
+  const { mutate: updateUser, isPending: loadingUpdate } = useUpdatePartnerUser(
+    () => {
+      navigate(-1);
+    },
+    (errors) => {
+      setFieldError(form, errors);
+    }
+  );
+
+  const { mutate: createUser, isPending: loadingAdd } =
+    useCreateOrganizationUserByClientIdentity(
+      () => {
+        if (isSubmitBack) {
+          handleClose();
+        } else {
+          form.resetFields();
+          form.setFieldValue('status', 1);
+        }
+      },
+      (errors) => {
+        setFieldError(form, errors);
+      }
+    );
 
   const handleFinish = useCallback(
     (values: DataPayloadCreateUpdateUserPartnerCatalog) => {
       if (actionMode === IModeAction.CREATE) {
-        // createUser({
-        //   ...values,
-        //   samplingUnitId: orgCode ?? '',
-        //   type: 'sampling_staff',
-        // });
+        createUser({
+          payload: values,
+          clientIdentity: orgCode ?? '',
+        });
       } else if (actionMode === IModeAction.UPDATE) {
         ModalConfirm({
           title: 'Xác nhận',
           message: 'Bạn có chắc chắn muốn cập nhật không?',
           handleConfirm: () => {
-            // updateUser({
-            //   ...values,
-            //   samplingUnitId: orgCode ?? '',
-            //   id: userDetail?.id,
-            //   type: 'sampling_staff',
-            //   status: values?.status ? 1 : 0,
-            // });
+            updateUser({
+              payload: { ...values, status: values?.status ? 1 : 0 },
+              id: id ?? '',
+              clientIdentity: orgCode ?? '',
+            });
           },
         });
       }
@@ -129,9 +142,7 @@ export const ActionUserPartnerCatalog = () => {
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{renderTitle}</TitleHeader>
-      <Spin
-      // spinning={loadingAdd || loadingUpdate}
-      >
+      <Spin spinning={loadingAdd || loadingUpdate}>
         <Form
           form={form}
           onFinish={handleFinish}
@@ -278,13 +289,39 @@ export const ActionUserPartnerCatalog = () => {
               <Col span={12}>
                 <Form.Item
                   label="Vai trò"
-                  name="role"
+                  name="roleIds"
                   rules={[validateForm.required]}
                 >
                   <CSelect
-                    options={[]}
+                    mode="multiple"
+                    options={listRoles
+                      ?.filter((role) => role?.status !== 0)
+                      .map((role) => ({
+                        value: role?.id,
+                        label: role?.name,
+                      }))}
                     placeholder="Chọn vai trò"
                     disabled={actionMode === IModeAction.READ}
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col span={12}>
+                <Form.Item
+                  label="Số điện thoại"
+                  name="phoneNumber"
+                  required
+                  rules={[validateForm.required, {}]}
+                >
+                  <CInput
+                    placeholder="Nhập số điện thoại"
+                    maxLength={10}
+                    disabled={actionMode !== IModeAction.CREATE}
+                    onlyNumber
+                    onBlur={(e) => {
+                      const value = cleanUpPhoneNumber(e.target.value);
+                      form.setFieldValue('phoneNumber', value);
+                    }}
                   />
                 </Form.Item>
               </Col>
@@ -314,12 +351,12 @@ export const ActionUserPartnerCatalog = () => {
             {actionMode === IModeAction.READ && permissions.canUpdate && (
               <CButtonEdit
                 onClick={() => {
-                  // navigate(
-                  //   pathRoutes.partnerCatalogUserEdit(
-                  //     orgCode ?? '',
-                  //     userDetail?.id
-                  //   )
-                  // );
+                  navigate(
+                    pathRoutes.partnerCatalogUserEdit(
+                      orgCode ?? '',
+                      userDetail?.id
+                    )
+                  );
                 }}
               />
             )}

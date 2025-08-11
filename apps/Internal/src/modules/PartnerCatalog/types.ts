@@ -258,3 +258,10 @@ export interface DataPayloadCreateUpdateUserPartnerCatalog {
   id?: string;
   type?: string;
 }
+
+export interface IRoleItem {
+  code: string;
+  id: string;
+  name: string;
+  status: number;
+}

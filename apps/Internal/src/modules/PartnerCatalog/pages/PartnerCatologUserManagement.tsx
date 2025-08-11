@@ -12,7 +12,7 @@ import {
 import { pathRoutes } from '../../../routers/url';
 
 import { ColumnsType } from 'antd/es/table';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import {
   useNavigate,
   useNavigation,
@@ -24,12 +24,19 @@ import { IUserPartnerCatalog } from '../types';
 import { notification } from 'antd';
 import useConfigAppStore from '../../Layouts/stores';
 import { useColumnsTableUserManagement } from '../hook/useColumnsTableUserManagement';
+import {
+  useGetDetailByCode,
+  useGetOrganizationUsersByOrgCode,
+} from '../queryHooks';
 
 export const PartnerCatalogUserManagement = () => {
   const { menuData } = useConfigAppStore();
   const permissions = usePermissions(menuData);
+  const { orgCode } = useParams<{ orgCode: string }>();
 
-  const filters: FilterItemProps[] = useMemo(() => {
+  const { data: detailPartner } = useGetDetailByCode(orgCode ?? '');
+
+  const filtersItem: FilterItemProps[] = useMemo(() => {
     return [
       {
         type: 'Select',
@@ -53,25 +60,20 @@ export const PartnerCatalogUserManagement = () => {
         label: 'Đối tác',
         disabled: true,
         showDefault: true,
-        // tooltip: detailUnit?.name,
-        // defaultValue: detailUnit?.name,
-        // value: detailUnit?.name,
+        tooltip: detailPartner?.orgName,
+        defaultValue: detailPartner?.orgName,
+        value: detailPartner?.orgName,
       },
     ];
-  }, []);
+  }, [detailPartner?.orgName]);
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
-  const { unitId } = useParams<{ unitId: string }>();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { sampleCollectionUnitName, ...rest } = params;
+  const { filters, requestTime, ...rest } = params;
 
-  // const listUser = useGetAllUserByUnitId({
-  //   ...formatQueryParams({
-  //     ...rest,
-  //     samplingUnitId: unitId,
-  //     type: 'sampling_staff',
-  //   }),
-  // });
+  const { data: listUser, isLoading } = useGetOrganizationUsersByOrgCode(
+    orgCode ?? '',
+    rest
+  );
 
   const navigation = useNavigation();
   const navigate = useNavigate();
@@ -81,14 +83,14 @@ export const PartnerCatalogUserManagement = () => {
     (action: IModeAction, record: IUserPartnerCatalog) => {
       switch (action) {
         case IModeAction.UPDATE:
-          navigate(pathRoutes.partnerCatalogUserEdit(unitId ?? '', record.id));
+          navigate(pathRoutes.partnerCatalogUserEdit(orgCode ?? '', record.id));
           break;
         case IModeAction.READ:
-          navigate(pathRoutes.partnerCatalogUserView(unitId ?? '', record.id));
+          navigate(pathRoutes.partnerCatalogUserView(orgCode ?? '', record.id));
           break;
       }
     },
-    [navigate, unitId]
+    [navigate, orgCode]
   );
 
   const columns: ColumnsType<IUserPartnerCatalog> =
@@ -97,8 +99,8 @@ export const PartnerCatalogUserManagement = () => {
     });
 
   const handleAdd = useCallback(() => {
-    navigate(pathRoutes.partnerCatalogUserAdd(unitId));
-  }, [navigate, unitId]);
+    navigate(pathRoutes.partnerCatalogUserAdd(orgCode));
+  }, [navigate, orgCode]);
 
   const actionComponent = useMemo(() => {
     return (
@@ -123,14 +125,11 @@ export const PartnerCatalogUserManagement = () => {
   return (
     <LayoutList
       actionComponent={actionComponent}
-      data={[]}
+      data={listUser}
       columns={columns}
       title="Danh sách user"
-      filterItems={filters}
-      loading={
-        loadingTable
-        // || listUser.isLoading || listUser.isFetching
-      }
+      filterItems={filtersItem}
+      loading={loadingTable || isLoading}
       searchComponent={searchComponent}
     />
   );
