@@ -1,3 +1,5 @@
+import { AnyElement } from '@vissoft-react/common';
+
 export const base64ToFile = (dataUrl: string, fileName: string): File => {
   const arr = dataUrl.split(',');
   const mimeMatch = arr[0].match(/:(.*?);/);
@@ -20,3 +22,6 @@ export const blobToIframeUrl = (blob: Blob): string => {
   const pdfBlob = new Blob([blob], { type: 'application/pdf' });
   return window.URL.createObjectURL(pdfBlob);
 };
+export function arraysHaveSameElements(a: AnyElement[], b: AnyElement[]) {
+  return a.length === b.length && a.every((val) => b.includes(val));
+}

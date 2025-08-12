@@ -20,17 +20,23 @@ import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
 import Decree13Modal from './Decree13Modal';
 import PreviewPdf from './PreviewPdf';
+import ModalPreviewPdf from './ModalPreviewPdf';
 
 const SignConfirmation = () => {
   const form = useFormInstance();
   const isAgreeND13 = Form.useWatch('agreeND13', form);
-  const { setStep, ocrResponse, setIntervalApi, interval } =
+  const { setStep, ocrResponse, setIntervalApi, interval, agreeDegree13 } =
     useUpdateSubscriberInfoStore();
   const [isSignSuccess, setIsSignSuccess] = useState(false);
   const [isOpenDecree13, setIsOpenDecree13] = useState(false);
-  const { mutate: getND13Pdf, data: degree13Url } = useGetPreviewND13();
-  const { mutate: getConfirmContractPdf, data: contractUrl } =
-    useGetPreviewConfirmContract();
+  const [isOpenModalContract, setIsOpenModalContract] = useState(false);
+  const [isOpenModalDegree, setIsOpenModalDegree] = useState(false);
+  const { mutate: getND13Pdf } = useGetPreviewND13((data) =>
+    form.setFieldValue('degree13Url', data)
+  );
+  const { mutate: getConfirmContractPdf } = useGetPreviewConfirmContract(
+    (data) => form.setFieldValue('contractUrl', data)
+  );
   const { mutate: checkSignedContract } = useCheckSignedContract((data) => {
     if (data) {
       setIsSignSuccess(true);
@@ -55,7 +61,8 @@ const SignConfirmation = () => {
   const { mutate: submitInfo, isPending: loadingSubmit } = useSubmitInfo(() =>
     setStep(StepEnum.STEP6)
   );
-
+  const contractUrl = Form.useWatch('contractUrl', form);
+  const degree13Url = Form.useWatch('degree13Url', form);
   const handleUpdate = () => {
     submitInfo(ocrResponse?.transactionId || '');
   };
@@ -63,15 +70,14 @@ const SignConfirmation = () => {
     setIsOpenDecree13(true);
   };
   const handleGenContract = () => {
-    const agreedTerms = form.getFieldValue('terms');
     genContract({
       transactionId: ocrResponse?.transactionId || '',
       agreeDegree13: {
         agreeDk1: true,
         agreeDk2: true,
         agreeDk3: true,
-        agreeDk4: agreedTerms.includes(4),
-        agreeDk5: agreedTerms.includes(5),
+        agreeDk4: agreeDegree13.includes(4),
+        agreeDk5: agreeDegree13.includes(5),
       },
     });
   };
@@ -132,17 +138,32 @@ const SignConfirmation = () => {
             <div className="flex gap-3 mt-3">
               <div className="flex-1">
                 <p className="mb-1">Biên bản xác nhận</p>
-                <PreviewPdf fileUrl={contractUrl} title="Biên bản xác nhận" />
+                <div className="relative">
+                  <PreviewPdf fileUrl={contractUrl} title="Biên bản xác nhận" />
+                  <div
+                    className="absolute cursor-pointer top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2"
+                    onClick={() => setIsOpenModalContract(true)}
+                  ></div>
+                </div>
               </div>
               <div className="flex-1">
                 <p className="mb-1">BBXN NĐ13</p>
-                <PreviewPdf fileUrl={degree13Url} title="BBXN NĐ13" />
+                <div className="relative">
+                  <PreviewPdf fileUrl={degree13Url} title="BBXN NĐ13" />
+                  <div
+                    className="absolute cursor-pointer top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2"
+                    onClick={() => setIsOpenModalDegree(true)}
+                  ></div>
+                </div>
               </div>
             </div>
             <div className="flex gap-2 mt-5">
               <Form.Item name="agreeND13" valuePropName="checked">
                 <CCheckbox />
               </Form.Item>
+              <Form.Item name="contractUrl" hidden></Form.Item>
+
+              <Form.Item name="degree13Url" hidden></Form.Item>
               <p>
                 Tôi đã đọc và đồng ý với{' '}
                 <span
@@ -166,6 +187,18 @@ const SignConfirmation = () => {
       <Decree13Modal
         open={isOpenDecree13}
         onClose={() => setIsOpenDecree13(false)}
+      />
+      <ModalPreviewPdf
+        open={isOpenModalContract}
+        onClose={() => setIsOpenModalContract(false)}
+        title="Biên bản xác nhận"
+        url={contractUrl}
+      />
+      <ModalPreviewPdf
+        open={isOpenModalDegree}
+        onClose={() => setIsOpenModalDegree(false)}
+        title="BBXN NĐ13"
+        url={degree13Url}
       />
     </>
   );

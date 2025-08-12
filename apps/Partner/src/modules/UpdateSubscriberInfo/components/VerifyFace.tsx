@@ -18,6 +18,7 @@ import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
 import { base64ToFile } from '../utils';
 import ViewImages from './ViewImages';
+import { blobToFile } from '../../../../src/services';
 
 const VerifyFace = () => {
   const form = useFormInstance();
@@ -79,7 +80,7 @@ const VerifyFace = () => {
           errors: [],
         },
       ]);
-      form.setFieldValue('portrait', file);
+      form.setFieldValue('portrait', blobToFile(file, 'portrait.jpg'));
       form.setFieldValue('portraitUrl', url);
       setImageSrc(url);
       setProgressLoading(false);
@@ -167,7 +168,17 @@ const VerifyFace = () => {
           </div>
         )}
       </div>
-      {imageSrc ? (
+      {errMessage ? (
+        <div className="w-full">
+          <CButton
+            className="rounded-full w-full py-6 mb-4 flex-1"
+            onClick={handleResetImage}
+            type="primary"
+          >
+            Chụp lại
+          </CButton>
+        </div>
+      ) : imageSrc ? (
         <div className="flex justify-between gap-5 w-full">
           <CButton
             className="rounded-full w-full py-6 mb-4 flex-1"
