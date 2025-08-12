@@ -42,4 +42,6 @@ export const pathRoutes = {
   esimWarehouseAdd: '/esim-warehouse/add',
   esimWarehouseView: (id?: IStringNumber) =>
     `esim-warehouse/view/${id ? id : ':id'}`,
+  report: `/report`,
+  partnerOrderReport: `/partner-order-report`,
 };

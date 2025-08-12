@@ -1,5 +1,11 @@
 import { RouterItems } from '@vissoft-react/common';
-import { ChartLine, ChartNoAxesGantt, Settings, Store } from 'lucide-react';
+import {
+  ChartLine,
+  ChartNoAxesGantt,
+  ClipboardList,
+  Settings,
+  Store,
+} from 'lucide-react';
 import { pathRoutes } from './url';
 
 export const routerItems: RouterItems[] = [
@@ -53,6 +59,17 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.esimWarehouse as string,
     label: 'Danh sách eSIM',
     parentId: pathRoutes.saleManagement as string,
+  },
+  {
+    key: pathRoutes.report as string,
+    label: 'Báo cáo',
+    hasChild: true,
+    icon: <ClipboardList />,
+  },
+  {
+    key: pathRoutes.partnerOrderReport as string,
+    label: 'Báo cáo đơn hàng book eSIM',
+    parentId: pathRoutes.report as string,
   },
 ];
 
