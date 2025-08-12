@@ -1,4 +1,3 @@
-import { ActionPackagedEsim } from './pages/ActionPackagedEsim/index';
 import { pathRoutes } from '../../../routers/url';
 import { RouteObject } from 'react-router-dom';
 

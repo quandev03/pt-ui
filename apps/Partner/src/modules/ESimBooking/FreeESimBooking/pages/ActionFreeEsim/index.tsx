@@ -1,4 +1,5 @@
 import {
+  AnyElement,
   CButton,
   CInputNumber,
   CSelect,
@@ -47,13 +48,7 @@ export const ActionFreeEsim = memo(() => {
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{Title}</TitleHeader>
-      <Form
-        form={form}
-        onFinish={handleFinish}
-        // labelCol={{ span: 5 }}
-        colon={false}
-        labelAlign="left"
-      >
+      <Form form={form} onFinish={handleFinish} colon={false} labelAlign="left">
         <Row gutter={[24, 0]}>
           <Col span={12}>
             <Form.Item
@@ -85,7 +80,7 @@ export const ActionFreeEsim = memo(() => {
                 formatter={(value) =>
                   `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                 }
-                parser={(value: any) => value.replace(/\$\s?|(,*)/g, '')}
+                parser={(value: AnyElement) => value.replace(/\$\s?|(,*)/g, '')}
               />
             </Form.Item>
           </Col>
