@@ -26,11 +26,7 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.freeEsimBooking as string,
-    label: 'Book eSIM miễn phí',
-  },
-  {
-    key: pathRoutes.buyBundleWithEsim as string,
-    label: 'Book eSIM kèm gói',
+    label: 'Book eSIM',
   },
 ];
 
