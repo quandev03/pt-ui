@@ -28,9 +28,12 @@ const SignConfirmation = () => {
     useUpdateSubscriberInfoStore();
   const [isSignSuccess, setIsSignSuccess] = useState(false);
   const [isOpenDecree13, setIsOpenDecree13] = useState(false);
-  const { mutate: getND13Pdf, data: degree13Url } = useGetPreviewND13();
-  const { mutate: getConfirmContractPdf, data: contractUrl } =
-    useGetPreviewConfirmContract();
+  const { mutate: getND13Pdf } = useGetPreviewND13((data) =>
+    form.setFieldValue('degree13Url', data)
+  );
+  const { mutate: getConfirmContractPdf } = useGetPreviewConfirmContract(
+    (data) => form.setFieldValue('contractUrl', data)
+  );
   const { mutate: checkSignedContract } = useCheckSignedContract((data) => {
     if (data) {
       setIsSignSuccess(true);
@@ -55,7 +58,8 @@ const SignConfirmation = () => {
   const { mutate: submitInfo, isPending: loadingSubmit } = useSubmitInfo(() =>
     setStep(StepEnum.STEP6)
   );
-
+  const contractUrl = Form.useWatch('contractUrl', form);
+  const degree13Url = Form.useWatch('degree13Url', form);
   const handleUpdate = () => {
     submitInfo(ocrResponse?.transactionId || '');
   };
@@ -143,6 +147,9 @@ const SignConfirmation = () => {
               <Form.Item name="agreeND13" valuePropName="checked">
                 <CCheckbox />
               </Form.Item>
+              <Form.Item name="contractUrl" hidden></Form.Item>
+
+              <Form.Item name="degree13Url" hidden></Form.Item>
               <p>
                 Tôi đã đọc và đồng ý với{' '}
                 <span

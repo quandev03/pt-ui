@@ -21,6 +21,7 @@ import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
 import { base64ToFile } from '../utils';
 import CaptureNote from './CaptureNote';
+import { blobToFile } from '../../../../src/services';
 
 const VerifyPassport = () => {
   const form = useFormInstance();
@@ -80,7 +81,7 @@ const VerifyPassport = () => {
           errors: [],
         },
       ]);
-      form.setFieldValue('passport', file);
+      form.setFieldValue('passport', blobToFile(file, 'passport.jpg'));
       form.setFieldValue('passportUrl', url);
       setImageSrc(url);
       setProgressLoading(false);
@@ -172,7 +173,17 @@ const VerifyPassport = () => {
           </div>
         )}
       </div>
-      {imageSrc ? (
+      {ocrResponse && ocrResponse.status === 0 ? (
+        <div className="w-full">
+          <CButton
+            className="rounded-full w-full py-6 mb-4 flex-1"
+            onClick={handleResetImage}
+            type="primary"
+          >
+            Chụp lại
+          </CButton>
+        </div>
+      ) : imageSrc ? (
         <div className="flex justify-between gap-5 w-full">
           <CButton
             className="rounded-full w-full py-6 mb-4 flex-1"
@@ -212,6 +223,7 @@ const VerifyPassport = () => {
           </div>
         </div>
       )}
+      {}
     </div>
   );
 };

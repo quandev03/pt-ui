@@ -3,18 +3,25 @@ import { Checkbox, Form } from 'antd';
 import { X } from 'lucide-react';
 import { FC, useState } from 'react';
 import { terms } from '../constants';
+import useFormInstance from 'antd/es/form/hooks/useFormInstance';
 type Props = {
   open: boolean;
   onClose: () => void;
 };
 const Decree13Modal: FC<Props> = ({ open, onClose }) => {
   const [isViewDetail, setIsViewDetail] = useState(false);
+  const form = useFormInstance();
   const handleViewDetail = () => {
     setIsViewDetail(true);
   };
   const handleCancel = () => {
     setIsViewDetail(false);
     onClose();
+  };
+  const handleChange = () => {
+    form.setFieldValue('signLink', undefined);
+    form.setFieldValue('contractUrl', undefined);
+    form.setFieldValue('degree13Url', undefined);
   };
   return (
     <CModal
@@ -49,6 +56,7 @@ const Decree13Modal: FC<Props> = ({ open, onClose }) => {
                 value={term.id}
                 disabled={term.id < 4}
                 className="gap-3 py-3 items-start flex border-b border-b-[#EEF3FE]"
+                onChange={handleChange}
               >
                 <div className="text-black">
                   <p className="font-semibold">Điều {term.id}</p>
