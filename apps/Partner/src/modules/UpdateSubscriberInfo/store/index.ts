@@ -11,6 +11,8 @@ interface IUpdateSubscriberInfoStore {
   setContractUrl: (url: string) => void;
   interval: AnyElement;
   setIntervalApi: (data: AnyElement) => void;
+  agreeDegree13: number[];
+  setAgreeDegree13: (data: number[]) => void;
   resetStore: () => void;
 }
 
@@ -31,6 +33,10 @@ export const useUpdateSubscriberInfoStore = create<IUpdateSubscriberInfoStore>(
     interval: undefined,
     setIntervalApi(value) {
       set(() => ({ interval: value }));
+    },
+    agreeDegree13: [1, 2, 3, 4, 5],
+    setAgreeDegree13(data) {
+      set(() => ({ agreeDegree13: data }));
     },
     resetStore() {
       set(() => ({

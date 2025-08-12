@@ -4,24 +4,34 @@ import { X } from 'lucide-react';
 import { FC, useState } from 'react';
 import { terms } from '../constants';
 import useFormInstance from 'antd/es/form/hooks/useFormInstance';
+import { useUpdateSubscriberInfoStore } from '../store';
+import { arraysHaveSameElements } from '../utils';
 type Props = {
   open: boolean;
   onClose: () => void;
 };
 const Decree13Modal: FC<Props> = ({ open, onClose }) => {
   const [isViewDetail, setIsViewDetail] = useState(false);
+  const { agreeDegree13, setAgreeDegree13 } = useUpdateSubscriberInfoStore();
   const form = useFormInstance();
   const handleViewDetail = () => {
     setIsViewDetail(true);
   };
   const handleCancel = () => {
+    form.setFieldValue('terms', agreeDegree13);
     setIsViewDetail(false);
     onClose();
   };
-  const handleChange = () => {
-    form.setFieldValue('signLink', undefined);
-    form.setFieldValue('contractUrl', undefined);
-    form.setFieldValue('degree13Url', undefined);
+  const handleConfirm = () => {
+    const newAgree = form.getFieldValue('terms');
+    if (!arraysHaveSameElements(newAgree, agreeDegree13)) {
+      setAgreeDegree13(newAgree);
+      form.setFieldValue('signLink', undefined);
+      form.setFieldValue('contractUrl', undefined);
+      form.setFieldValue('degree13Url', undefined);
+    }
+    setIsViewDetail(false);
+    onClose();
   };
   return (
     <CModal
@@ -40,7 +50,7 @@ const Decree13Modal: FC<Props> = ({ open, onClose }) => {
               Xem chi tiết
             </CButton>
           )}
-          <CButton className="w-full rounded-full py-6" onClick={handleCancel}>
+          <CButton className="w-full rounded-full py-6" onClick={handleConfirm}>
             Xác nhận
           </CButton>
         </div>
@@ -56,7 +66,6 @@ const Decree13Modal: FC<Props> = ({ open, onClose }) => {
                 value={term.id}
                 disabled={term.id < 4}
                 className="gap-3 py-3 items-start flex border-b border-b-[#EEF3FE]"
-                onChange={handleChange}
               >
                 <div className="text-black">
                   <p className="font-semibold">Điều {term.id}</p>
