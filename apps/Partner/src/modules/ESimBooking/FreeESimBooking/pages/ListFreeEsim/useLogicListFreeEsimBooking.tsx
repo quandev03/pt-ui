@@ -15,6 +15,7 @@ import { ColumnsType } from 'antd/es/table';
 import { useGetTableFreeEsimBooking } from '../../hooks/useGetTableFreeEsimBooking';
 import { useGetListFreeEsimBooking } from '../../hooks/useGetListFreeEsimBooking';
 import { Dropdown } from 'antd';
+import dayjs from 'dayjs';
 
 export const useLogicListFreeEsimBooking = () => {
   const { menuData } = useConfigAppStore();
@@ -54,6 +55,9 @@ export const useLogicListFreeEsimBooking = () => {
   const columns: ColumnsType<IFreeEsimBooking> = useGetTableFreeEsimBooking();
 
   const filters: FilterItemProps[] = useMemo(() => {
+    const today = dayjs().endOf('day');
+    const startDate = today.subtract(29, 'day').startOf('day');
+
     return [
       {
         type: 'Select',
@@ -69,6 +73,7 @@ export const useLogicListFreeEsimBooking = () => {
         keySearch: ['from', 'to'],
         formatSearch: 'YYYY-MM-DD',
         placeholder: ['Từ ngày', 'Đến ngày'],
+        defaultValue: [startDate, today],
       },
     ];
   }, []);
