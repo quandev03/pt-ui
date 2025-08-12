@@ -1,4 +1,4 @@
-import BgLogin from '../../../assets/images/bg-login.png';
+import BgLogin from '../../../assets/images/background.png';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -97,5 +97,4 @@ const ForgotPassword = () => {
     </div>
   );
 };
-
-export default ForgotPassword;
+export default ForgotPassword
