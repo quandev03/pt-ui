@@ -7,11 +7,14 @@ import {
 import { Form } from 'antd';
 import useFormInstance from 'antd/es/form/hooks/useFormInstance';
 import { Copy } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { baseSignUrl } from '../../../../src/constants';
 import {
+  useCheckSignedContract,
   useGenContract,
   useGetPreviewConfirmContract,
   useGetPreviewND13,
+  useSubmitInfo,
 } from '../hooks';
 import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
@@ -21,20 +24,41 @@ import PreviewPdf from './PreviewPdf';
 const SignConfirmation = () => {
   const form = useFormInstance();
   const isAgreeND13 = Form.useWatch('agreeND13', form);
-  const { setStep, ocrResponse } = useUpdateSubscriberInfoStore();
-  const handleUpdate = () => {
-    setStep(StepEnum.STEP6);
-  };
+  const { setStep, ocrResponse, setIntervalApi, interval } =
+    useUpdateSubscriberInfoStore();
+  const [isSignSuccess, setIsSignSuccess] = useState(false);
   const [isOpenDecree13, setIsOpenDecree13] = useState(false);
   const { mutate: getND13Pdf, data: degree13Url } = useGetPreviewND13();
   const { mutate: getConfirmContractPdf, data: contractUrl } =
     useGetPreviewConfirmContract();
+  const { mutate: checkSignedContract } = useCheckSignedContract((data) => {
+    if (data) {
+      setIsSignSuccess(true);
+      NotificationSuccess('Ký thành công');
+    }
+  });
   const { mutate: genContract, isPending: loadingGenContract } = useGenContract(
     () => {
       getND13Pdf(ocrResponse?.transactionId || '');
       getConfirmContractPdf(ocrResponse?.transactionId || '');
+      const link = `${baseSignUrl || window.location.origin}/sign?id=${
+        ocrResponse?.transactionId || ''
+      }`;
+      form.setFieldValue('signLink', link);
+      window.open(link, '_blank', 'top=200,left=500,width=600,height=600');
+      const interval = setInterval(() => {
+        checkSignedContract(ocrResponse?.transactionId || '');
+      }, 5000);
+      setIntervalApi(interval);
     }
   );
+  const { mutate: submitInfo, isPending: loadingSubmit } = useSubmitInfo(() =>
+    setStep(StepEnum.STEP6)
+  );
+
+  const handleUpdate = () => {
+    submitInfo(ocrResponse?.transactionId || '');
+  };
   const handleOpenDecree13 = () => {
     setIsOpenDecree13(true);
   };
@@ -51,6 +75,12 @@ const SignConfirmation = () => {
       },
     });
   };
+  useEffect(() => {
+    if (isSignSuccess && interval) {
+      clearInterval(interval);
+      setIntervalApi(undefined);
+    }
+  }, [isSignSuccess, interval, setIntervalApi]);
   return (
     <>
       <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
@@ -61,11 +91,7 @@ const SignConfirmation = () => {
           <div className="w-full">
             <p className="text-[15px] mb-2 font-medium">Link ký online</p>
             <div className="flex justify-between gap-4 items-center">
-              <Form.Item
-                name="signLink"
-                initialValue={'https://sign.bcss-vnsky-test'}
-                className="flex-1 mb-0"
-              >
+              <Form.Item name="signLink" className="flex-1 mb-0">
                 <CInput
                   disabled={true}
                   placeholder="Link ký"
@@ -74,7 +100,7 @@ const SignConfirmation = () => {
                       size={22}
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          'https://sign.bcss-vnsky-test'
+                          form.getFieldValue('signLink')
                         );
                         NotificationSuccess('Copy thành công');
                       }}
@@ -121,6 +147,7 @@ const SignConfirmation = () => {
         <CButton
           className="rounded-full py-6 w-full mt-3"
           onClick={handleUpdate}
+          loading={loadingSubmit}
         >
           Cập nhật TTTB
         </CButton>

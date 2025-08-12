@@ -12,7 +12,6 @@ const UpdateInfo = () => {
   const { setStep } = useUpdateSubscriberInfoStore();
   const { mutate: checkIsdn } = useCheckIsdn((data) => {
     setStep(StepEnum.STEP2);
-    console.log('data', data);
     form.setFieldValue('serial', data);
   });
   const handleClick = () => {
@@ -27,6 +26,7 @@ const UpdateInfo = () => {
             onlyNumber
             className="py-3 text-sky-600 text-[20px] font-semibold placeholder-slate-50"
             placeholder="Nhập số điện thoại"
+            maxLength={10}
           />
         </Form.Item>
         <Form.Item hidden name="serial"></Form.Item>
