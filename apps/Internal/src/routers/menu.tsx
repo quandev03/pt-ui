@@ -1,4 +1,4 @@
-import { House, Settings } from 'lucide-react';
+import { FileDigit, House, Settings } from 'lucide-react';
 import { pathRoutes } from './url';
 import { RouterItems } from '@vissoft-react/common';
 
@@ -35,8 +35,15 @@ export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.manageNumber as string,
     label: 'Quản lý số',
-    parentId: pathRoutes.systemManager as string,
+    icon: <FileDigit />,
+    hasChild: true,
   },
+  {
+    key: pathRoutes.uploadNumber,
+    parentId: pathRoutes.manageNumber,
+    label: 'Upload số',
+  },
+
   {
     key: pathRoutes.lookupNumber as string,
     label: 'Tra cứu số',

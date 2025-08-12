@@ -52,6 +52,11 @@ export const pathRoutes = {
   // Quản lý số
   manageNumber: '/manage-number',
   lookupNumber: '/lookup-number', //tra cứu số
+  uploadNumber: '/upload-number',
+  uploadNumberView: (id?: string | number) =>
+    `/upload-number/view/${id ? id : ':id'}`,
+  uploadNumberAdd: '/upload-number/add',
+
   // Quản lý danh mục
   category: '/category',
 

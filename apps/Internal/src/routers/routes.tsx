@@ -7,6 +7,7 @@ import routesListOfServicePackage from '../modules/ListOfServicePackage/routes';
 
 import routesRoleManagement from '../modules/RoleManagement/routes';
 import routesUserGroupManagement from '../modules/UserGroupManagement/routes';
+import { routesUploadNumber } from '../modules/UploadNumber/routes';
 export const protectedRoutes: RouteObject[] = [
   ...routesWelcome,
   ...routesUserManagement,
@@ -15,4 +16,5 @@ export const protectedRoutes: RouteObject[] = [
   ...routesListOfServicePackage,
   ...routesRoleManagement,
   ...routesUserGroupManagement,
+  ...routesUploadNumber,
 ];
