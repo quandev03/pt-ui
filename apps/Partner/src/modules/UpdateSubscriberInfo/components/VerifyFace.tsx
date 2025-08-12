@@ -180,7 +180,6 @@ const VerifyFace = () => {
             className="rounded-full w-full py-6 flex-1"
             onClick={handleCheckFace}
             loading={loadingCheckFace}
-            disabled={loadingCheckFace}
           >
             Kiểm tra
           </CButton>

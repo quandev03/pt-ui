@@ -81,6 +81,17 @@ const SignConfirmation = () => {
       setIntervalApi(undefined);
     }
   }, [isSignSuccess, interval, setIntervalApi]);
+  useEffect(() => {
+    if (isSignSuccess) {
+      getND13Pdf(ocrResponse?.transactionId || '');
+      getConfirmContractPdf(ocrResponse?.transactionId || '');
+    }
+  }, [
+    isSignSuccess,
+    getConfirmContractPdf,
+    getND13Pdf,
+    ocrResponse?.transactionId,
+  ]);
   return (
     <>
       <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
