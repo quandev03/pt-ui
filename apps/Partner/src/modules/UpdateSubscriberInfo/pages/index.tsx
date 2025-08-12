@@ -11,7 +11,7 @@ import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
 
 export const UpdateSubscriberInfo = () => {
-  const { step, setStep } = useUpdateSubscriberInfoStore();
+  const { step, resetStore } = useUpdateSubscriberInfoStore();
   const [form] = Form.useForm();
   const stepComponents = [
     <UpdateInfo />,
@@ -37,11 +37,12 @@ export const UpdateSubscriberInfo = () => {
   useEffect(() => {
     if (step === StepEnum.STEP6) {
       const timer = setTimeout(() => {
-        setStep(StepEnum.STEP1);
+        resetStore();
+        form.resetFields();
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [step, setStep]);
+  }, [resetStore, form, step]);
   return (
     <Wrapper>
       <TitleHeader>Cập nhật thông tin thuê bao</TitleHeader>
