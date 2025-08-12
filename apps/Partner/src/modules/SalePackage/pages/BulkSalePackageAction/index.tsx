@@ -2,6 +2,7 @@ import {
   CButton,
   CButtonClose,
   CInput,
+  CInputNumber,
   TitleHeader,
   UploadFileTemplate,
 } from '@vissoft-react/common';
@@ -29,37 +30,13 @@ export const BulkSalePackageAction = () => {
         <div className="bg-white rounded-[10px] px-6 pt-4 pb-8">
           <Row gutter={[30, 0]}>
             <Col span={12}>
-              <Form.Item
-                label="Công nợ tạm tính"
-                name="isdn"
-                // required
-                // rules={[
-                //   validateForm.required,
-                //   validateForm.maxLength(11),
-                //   prefixIsdn,
-                // ]}
-              >
-                <CInput
-                  placeholder="Nhập công nợ tạm tính"
-                  maxLength={11}
-                  onlyNumber
-                  onChange={() => {
-                    // setOptionPackage([]);
-                    form.setFieldValue('idPackage', null);
-                  }}
-                  // onBlur={(e) => {
-                  //   handleCheckNumberPhone(e);
-                  // }}
-                />
+              <Form.Item label="Công nợ tạm tính" name="isdn">
+                <CInputNumber disabled />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
-                name="idPackage"
-                label="Công nợ với MBF"
-                // rules={[validateForm.required]}
-              >
-                <CInput className="min-w-[200px]" placeholder="Chọn gói cước" />
+              <Form.Item name="idPackage" label="Công nợ với MBF">
+                <CInputNumber disabled />
               </Form.Item>
             </Col>
             <Col span={12}>
