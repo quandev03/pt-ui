@@ -68,4 +68,15 @@ export const UpdateSubscriberInfo = {
     );
     return res;
   },
+  checkSignedContract: async (transactionId: string) => {
+    return safeApiClient.get<AnyElement>(
+      `${prefixSaleService}/update-subscriber-information/check-signed-contract/${transactionId}`
+    );
+  },
+  submit: async (transactionId: string) => {
+    const res = await safeApiClient.post<AnyElement>(
+      `${prefixSaleService}/update-subscriber-information/submit/${transactionId}`
+    );
+    return res;
+  },
 };

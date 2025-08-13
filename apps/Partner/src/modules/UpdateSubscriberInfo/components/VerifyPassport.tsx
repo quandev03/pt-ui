@@ -21,6 +21,7 @@ import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
 import { base64ToFile } from '../utils';
 import CaptureNote from './CaptureNote';
+import { blobToFile } from '../../../../src/services';
 
 const VerifyPassport = () => {
   const form = useFormInstance();
@@ -28,7 +29,8 @@ const VerifyPassport = () => {
   const { hasCamera } = useCameraStatus();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [progressLoading, setProgressLoading] = useState<boolean>(false);
-  const { setStep, setOcrResponse } = useUpdateSubscriberInfoStore();
+  const { setStep, setOcrResponse, ocrResponse } =
+    useUpdateSubscriberInfoStore();
   const ImageFileType = ['image/png', 'image/jpeg', 'image/jpg'];
   const { mutate: checkOcrPassport, isPending: loadingCheckOcr } = useCheckOcr(
     (data) => {
@@ -45,6 +47,7 @@ const VerifyPassport = () => {
   };
   const handleResetImage = () => {
     setImageSrc(null);
+    setOcrResponse(undefined);
   };
   const handlePressFile = (unCompressedFile: File) => {
     const options = {
@@ -71,10 +74,6 @@ const VerifyPassport = () => {
         ]);
         return;
       }
-      // const fileFormBlob = new File([file], file.name, { type: file.type });
-      // form.setFieldsValue({
-      //   decree13: fileFormBlob,
-      // });
       const url = await imageCompression.getDataUrlFromFile(file);
       form.setFields([
         {
@@ -82,7 +81,7 @@ const VerifyPassport = () => {
           errors: [],
         },
       ]);
-      form.setFieldValue('passport', file);
+      form.setFieldValue('passport', blobToFile(file, 'passport.jpg'));
       form.setFieldValue('passportUrl', url);
       setImageSrc(url);
       setProgressLoading(false);
@@ -144,14 +143,20 @@ const VerifyPassport = () => {
     <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
       <div className="flex items-center flex-col w-full">
         <p className="text-lg font-semibold mt-2">Xác thực hộ chiếu</p>
-        <p className={`text-center ${imageSrc ? 'mb-6' : 'mb-3'} mt-4`}>
-          {imageSrc
-            ? 'Kiểm tra hình ảnh và nhấn '
-            : 'Đặt trang thông tin cá nhân của hộ chiếu vào khung bên dưới và nhấn '}
-          <span className="text-[#1062AD]">
-            {imageSrc ? 'Xác nhận' : 'Chụp ảnh'}
-          </span>
-        </p>
+        {ocrResponse && ocrResponse.status === 0 ? (
+          <p className="text-center text-[#E92429] mb-7 mt-4 font-medium">
+            {ocrResponse.message}
+          </p>
+        ) : (
+          <p className={`text-center ${imageSrc ? 'mb-6' : 'mb-3'} mt-4`}>
+            {imageSrc
+              ? 'Kiểm tra hình ảnh và nhấn '
+              : 'Đặt trang thông tin cá nhân của hộ chiếu vào khung bên dưới và nhấn '}
+            <span className="text-[#1062AD]">
+              {imageSrc ? 'Xác nhận' : 'Chụp ảnh'}
+            </span>
+          </p>
+        )}
         <Form.Item name="passport" className="w-full">
           <Spin spinning={progressLoading}>{renderImage()}</Spin>
         </Form.Item>
@@ -168,7 +173,17 @@ const VerifyPassport = () => {
           </div>
         )}
       </div>
-      {imageSrc ? (
+      {ocrResponse && ocrResponse.status === 0 ? (
+        <div className="w-full">
+          <CButton
+            className="rounded-full w-full py-6 mb-4 flex-1"
+            onClick={handleResetImage}
+            type="primary"
+          >
+            Chụp lại
+          </CButton>
+        </div>
+      ) : imageSrc ? (
         <div className="flex justify-between gap-5 w-full">
           <CButton
             className="rounded-full w-full py-6 mb-4 flex-1"
@@ -208,6 +223,7 @@ const VerifyPassport = () => {
           </div>
         </div>
       )}
+      {}
     </div>
   );
 };

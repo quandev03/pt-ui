@@ -12,7 +12,7 @@ export const ListFreeEsim = memo(() => {
   } = useLogicListFreeEsimBooking();
   return (
     <LayoutList
-      title="Danh sách book eSIM miễn phí"
+      title="Danh sách book eSIM"
       actionComponent={actionComponent}
       filterItems={filters}
       columns={columns}
@@ -21,8 +21,8 @@ export const ListFreeEsim = memo(() => {
       searchComponent={
         <LayoutList.SearchComponent
           name="textSearch"
-          tooltip="Nhập tên user thực hiện"
-          placeholder="Nhập tên user thực hiện"
+          tooltip="Nhập user thực hiện"
+          placeholder="Nhập user thực hiện"
         />
       }
     />

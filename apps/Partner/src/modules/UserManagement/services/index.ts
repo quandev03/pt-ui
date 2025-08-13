@@ -45,10 +45,9 @@ export const userServices = {
     return createUserRes;
   },
   updateUser: async (data: IFormUser) => {
-    const { orgId, ...payload } = data;
     const res = await safeApiClient.put<IUserItem>(
-      `${prefixAuthService}/api/users/${data.id}`,
-      payload
+      `${prefixAuthService}/api/users/partner/${data.id}`,
+      data
     );
     return res;
   },

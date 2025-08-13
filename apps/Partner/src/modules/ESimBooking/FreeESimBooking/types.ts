@@ -14,6 +14,7 @@ export interface IBookFreeEsim {
   id?: string;
   quantity: number;
   pckCode: string[];
+  description: string;
 }
 export interface IPackage {
   createdBy: string;
