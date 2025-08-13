@@ -1,11 +1,5 @@
 import { RouterItems } from '@vissoft-react/common';
-import {
-  ChartLine,
-  ChartNoAxesGantt,
-  ClipboardList,
-  Settings,
-  Store,
-} from 'lucide-react';
+import { ChartLine, ClipboardList, Settings, Store } from 'lucide-react';
 import { pathRoutes } from './url';
 
 export const routerItems: RouterItems[] = [
