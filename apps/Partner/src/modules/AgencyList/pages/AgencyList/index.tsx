@@ -11,7 +11,7 @@ export const AgencyList = memo(() => {
       actionComponent={actionComponent}
       dataNoPagination={convertArrToObj(listAgency || [], null) || []}
       columns={columns}
-      title="Cấu hình đại lý"
+      title="Danh sách đại lý"
       filterItems={filters}
       loading={loadingTable}
       expandable={{ defaultExpandAllRows: true }}
@@ -22,6 +22,7 @@ export const AgencyList = memo(() => {
           tooltip="Nhập mã hoặc tên đại lý để tìm kiếm"
           placeholder="Nhập mã hoặc tên đại lý để tìm kiếm"
           maxLength={100}
+          className="w-[300px]"
         />
       }
     />
