@@ -18,4 +18,5 @@ export interface IListOfServicePackageForm {
   packagePrice: number;
   status: boolean | StatusEnum;
   images: File | null;
+  description?: string;
 }

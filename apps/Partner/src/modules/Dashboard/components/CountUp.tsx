@@ -81,5 +81,3 @@ export const CountUp = ({
 
   return <span className={className}>{formatted}</span>;
 };
-
-export default CountUp;

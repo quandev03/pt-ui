@@ -9,14 +9,10 @@ export const StyledCommonTable = styled<AnyElement>(Table)`
     border-right: 1px solid ${({ theme }) => theme.strokeLineLight};
     border-radius: 8px;
   }
-  .ant-table-tbody > tr > td {
-    padding: 1.5px 1.5px 1.5px 10px !important;
-  }
   .ant-table-header {
     .ant-table-cell {
       width: 200px;
       background-color: ${({ theme }) => theme.strokeLineLight};
-      max-height: 40px;
       .ant-typography {
         color: ${({ theme }) => theme.titleTable} !important;
       }
@@ -35,7 +31,6 @@ export const StyledCommonTable = styled<AnyElement>(Table)`
     .ant-table-cell {
       overflow: hidden;
       white-space: nowrap;
-
       &:not(:has(.ant-tag, .ant-space)) {
         text-overflow: ellipsis;
       }
@@ -164,5 +159,11 @@ export const StyledCommonTable = styled<AnyElement>(Table)`
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .ant-table-row {
+    height: 48px !important;
+  }
+  .ant-table-tbody > tr > td {
+    padding: 0 8px !important;
   }
 `;

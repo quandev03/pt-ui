@@ -155,7 +155,7 @@ type Props = FormItemProps & {
   sizeMaxMB?: number;
 };
 
-const UploadFileTemplate = ({
+export const UploadFileTemplate = ({
   onDownloadTemplate,
   onDownloadFile,
   onPreview,
@@ -202,5 +202,3 @@ const UploadFileTemplate = ({
     </Form.Item>
   );
 };
-
-export default UploadFileTemplate;

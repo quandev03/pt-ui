@@ -7,7 +7,7 @@ import {
   svgTotalSTB,
 } from '../utils';
 import { IDataDashboardStats } from '../type';
-import CountUp from './CountUp';
+import { CountUp } from './CountUp';
 
 const CardStyle = styled(Card)`
   width: 100%;
@@ -61,7 +61,7 @@ export const DashboardStats = ({ data }: { data: IDataDashboardStats }) => {
                   <div className="font-medium text-sm">{item.label}</div>
                 </div>
               </div>
-              <div className="text-3xl mt-4 px-12 self-start font-bold text-primary tracking-[2px]">
+              <div className="text-3xl mt-4 text-center font-bold text-primary tracking-[2px]">
                 <span>
                   <CountUp to={item.value} duration={2} />
                 </span>
