@@ -1,5 +1,5 @@
 import { CModal } from '@vissoft-react/common';
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 
 type Props = {
   open: boolean;
@@ -8,6 +8,12 @@ type Props = {
   title: string;
 };
 const ModalPreviewPdf: FC<Props> = ({ open, onClose, url, title }) => {
+  const documentRef = useRef(null);
+  useEffect(() => {
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [url]);
   return (
     <CModal
       open={open}
@@ -16,8 +22,14 @@ const ModalPreviewPdf: FC<Props> = ({ open, onClose, url, title }) => {
       width={800}
       footer={null}
     >
-      <div className="w-full h-[70vh]">
-        <iframe src={url} title={title} className="w-full h-full" />
+      <div className="w-full h-[70vh]" id="report-embed" ref={documentRef}>
+        <iframe
+          src={url}
+          title={title}
+          width="100%"
+          className="h-full"
+          key={Math.random()}
+        />
       </div>
     </CModal>
   );

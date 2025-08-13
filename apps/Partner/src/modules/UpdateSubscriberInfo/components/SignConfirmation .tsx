@@ -98,6 +98,16 @@ const SignConfirmation = () => {
     getND13Pdf,
     ocrResponse?.transactionId,
   ]);
+  useEffect(() => {
+    return () => {
+      if (contractUrl) {
+        URL.revokeObjectURL(contractUrl);
+      }
+      if (degree13Url) {
+        URL.revokeObjectURL(degree13Url);
+      }
+    };
+  }, [contractUrl, degree13Url]);
   return (
     <>
       <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
