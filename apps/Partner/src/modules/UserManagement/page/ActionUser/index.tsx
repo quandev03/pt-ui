@@ -157,7 +157,7 @@ export const ActionUser = memo(() => {
                   <CInput
                     maxLength={50}
                     placeholder="Nhập username"
-                    disabled={actionMode === IModeAction.READ}
+                    disabled={actionMode !== IModeAction.CREATE}
                     preventSpecialExceptHyphenAndUnderscore
                     preventVietnamese
                     preventSpace
