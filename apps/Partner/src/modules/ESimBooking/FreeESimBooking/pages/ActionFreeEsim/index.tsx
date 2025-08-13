@@ -115,7 +115,6 @@ export const ActionFreeEsim = memo(() => {
               label="Ghi chú"
               name="description"
               labelCol={{ span: 3 }}
-              // wrapperCol={{ span: 15 }}
             >
               <CTextArea
                 placeholder="Nhập ghi chú"
