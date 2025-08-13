@@ -35,12 +35,18 @@ export const UpdateSubscriberInfo = () => {
     }
   }, []);
   useEffect(() => {
+    const contractUrl = form.getFieldValue('contractUrl');
+    const degree13Url = form.getFieldValue('degree13Url');
     if (step === StepEnum.STEP6) {
       const timer = setTimeout(() => {
         resetStore();
-        form.resetFields();
       }, 2000);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        contractUrl && URL.revokeObjectURL(contractUrl);
+        degree13Url && URL.revokeObjectURL(degree13Url);
+        form.resetFields();
+      };
     }
   }, [resetStore, form, step]);
   return (
