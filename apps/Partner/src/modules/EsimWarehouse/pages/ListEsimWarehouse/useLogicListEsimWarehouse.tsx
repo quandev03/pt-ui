@@ -20,6 +20,7 @@ import {
 } from '../../constants/enum';
 import { message } from 'antd';
 import { useGetGenQrCode } from '../../hooks/useGetGenQrCode';
+import { useGetAgencyOptions } from '../../../../hooks/useGetAgencyOptions';
 
 // No props are needed here. The hook will manage its own state.
 export const useLogicListEsimWarehouse = () => {
@@ -27,6 +28,7 @@ export const useLogicListEsimWarehouse = () => {
   const params = decodeSearchParams(searchParams);
   const { data: esimList, isLoading: loadingEsimList } =
     useGetEsimWarehouseList(formatQueryParams<IParamsRequest>(params));
+  const { data: agencyOptions = [] } = useGetAgencyOptions();
 
   // --- State for Modals and selected data ---
   const [selectedRecord, setSelectedRecord] =
@@ -165,6 +167,13 @@ export const useLogicListEsimWarehouse = () => {
         options: packageOptions,
       },
       {
+        type: 'TreeSelect',
+        name: 'orgCode',
+        label: 'Đại lý',
+        placeholder: 'Đại lý',
+        treeData: agencyOptions,
+      },
+      {
         type: 'Select',
         name: 'subStatus',
         label: 'Trạng thái thuê bao',
@@ -179,7 +188,7 @@ export const useLogicListEsimWarehouse = () => {
         options: activeStatusOptions,
       },
     ];
-  }, [activeStatusOptions, packageOptions, subStatusOptions]);
+  }, [activeStatusOptions, agencyOptions, packageOptions, subStatusOptions]);
   return {
     columns,
     filters,

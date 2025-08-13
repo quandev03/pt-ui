@@ -1,6 +1,7 @@
 import { IPage, IParamsRequest } from '@vissoft-react/common';
 import { safeApiClient } from '../../../../src/services';
 import {
+  ICustomerInfo,
   IEsimWarehouseDetails,
   IEsimWarehouseList,
   IPackage,
@@ -19,9 +20,15 @@ export const esimWarehouseServices = {
     );
   },
 
-  getDetailEsimWarehouse: async ({ subId }: { subId?: string }) => {
-    return await safeApiClient.get<IEsimWarehouseDetails>(
+  getDetailEsimWarehouse: async (subId?: string) => {
+    return await safeApiClient.get<IEsimWarehouseDetails[]>(
       `${prefixSaleService}/esim-manager/${subId}`
+    );
+  },
+
+  getCustomerInfo: async (subId?: string) => {
+    return await safeApiClient.get<ICustomerInfo>(
+      `${prefixSaleService}/esim-manager/detail/${subId}`
     );
   },
 
