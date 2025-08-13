@@ -67,7 +67,7 @@ export const useTableListPartnerOrder =
       },
       {
         title: 'Số lượng eSIM',
-        dataIndex: 'orderNo',
+        dataIndex: 'quantity',
         width: 150,
         align: 'left',
         render(value, record) {
@@ -76,7 +76,7 @@ export const useTableListPartnerOrder =
       },
       {
         title: 'eSIM book thành công',
-        dataIndex: 'orderNo',
+        dataIndex: 'succeededNumber',
         width: 150,
         align: 'left',
         render(value, record) {
@@ -85,7 +85,7 @@ export const useTableListPartnerOrder =
       },
       {
         title: 'Người tạo',
-        dataIndex: 'orderNo',
+        dataIndex: 'createdBy',
         width: 150,
         align: 'left',
         render(value, record) {

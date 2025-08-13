@@ -3,19 +3,18 @@ import {
   decodeSearchParams,
   FilterItemProps,
   formatQueryParams,
-  IParamsRequest,
   usePermissions,
 } from '@vissoft-react/common';
-import { useGetAgencyOptions } from '../../../../hooks/useGetAgencyOptions';
+import { useExportReport } from '../../hooks/useExportReport';
 import dayjs from 'dayjs';
 import { useCallback, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import useConfigAppStore from '../../../Layouts/stores';
+import { IPartnerOrderReport, IPartnerParams } from '../../type';
 import { useTableListPartnerOrder } from '../../hooks/useTableListPartnerOrder';
 import { ColumnsType } from 'antd/es/table';
-import { IPartnerOrderReport } from '../../type';
 import { useListPartnerOrder } from '../../hooks/useListPartnerOrder';
-import { useExportReport } from '../../hooks/useExportReport';
+import { useSearchParams } from 'react-router-dom';
+import { useGetAgencyOptions } from '../../../../hooks/useGetAgencyOptions';
+import useConfigAppStore from '../../../Layouts/stores';
 
 export const useLogicListPartnerOrder = () => {
   const [searchParams] = useSearchParams();
@@ -23,31 +22,29 @@ export const useLogicListPartnerOrder = () => {
   const { data: agencyOptions = [] } = useGetAgencyOptions();
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
-  const { mutate: exportReport } = useExportReport();
+
+  const { mutate: exportReport, isPending: isExporting } = useExportReport();
 
   const { data: listPartnerOrderReport, isLoading: loadingList } =
-    useListPartnerOrder(formatQueryParams<IParamsRequest>(params));
-
-  const handleExport = useCallback(
-    (type: string) => () => {
-      exportReport({
-        ...params,
-        page: undefined,
-        size: undefined,
-        fileFormat: type,
-      });
-    },
-    [exportReport, params]
-  );
-
+    useListPartnerOrder(formatQueryParams<IPartnerParams>(params));
   const columns: ColumnsType<IPartnerOrderReport> = useTableListPartnerOrder();
+
+  const handleExport = useCallback(() => {
+    exportReport({
+      ...params,
+      fileFormat: 'xlsx',
+    });
+  }, [exportReport, params]);
+
   const exportComponent = useMemo(() => {
     return (
       <div>
-        {permission.canCreate && <CButtonExport onClick={handleExport} />}
+        {permission.canCreate && (
+          <CButtonExport onClick={handleExport} loading={isExporting} />
+        )}
       </div>
     );
-  }, [handleExport, permission.canCreate]);
+  }, [handleExport, permission.canCreate, isExporting]);
 
   const filters: FilterItemProps[] = useMemo(() => {
     const today = dayjs().endOf('day');
@@ -55,7 +52,7 @@ export const useLogicListPartnerOrder = () => {
     return [
       {
         type: 'TreeSelect',
-        name: 'agency',
+        name: 'orgCode',
         label: 'Đại lý',
         placeholder: 'Đại lý',
         treeData: agencyOptions,

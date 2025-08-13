@@ -1,4 +1,10 @@
-import { AnyElement } from '@vissoft-react/common';
+import { AnyElement, IParamsRequest } from '@vissoft-react/common';
+
+export interface IPartnerParams extends IParamsRequest {
+  startDate: string;
+  endDate: string;
+  orgCode: string;
+}
 
 export interface IPartnerOrderReport {
   amountTotal: AnyElement;
