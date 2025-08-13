@@ -63,7 +63,7 @@ export const ActionFreeEsim = memo(() => {
                 },
                 {
                   type: 'number',
-                  max: 9999999999, // Giới hạn là số có 10 chữ số
+                  max: 9999999999,
                   message: 'Số lượng không được vượt quá 10 chữ số',
                 },
                 {

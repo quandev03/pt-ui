@@ -24,7 +24,7 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
   const handleAction = (action: IModeAction, record: IFreeEsimBooking) => {
     switch (action) {
       case IModeAction.READ: {
-        const toView = pathRoutes.freeEsimBookingView;
+        const toView = pathRoutes.buyBundleWithEsimView;
         if (typeof toView === 'function') {
           navigate(toView(record.id));
         }

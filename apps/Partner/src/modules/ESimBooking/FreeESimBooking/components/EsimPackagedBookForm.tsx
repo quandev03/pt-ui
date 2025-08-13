@@ -21,6 +21,8 @@ const BookPackagedEsimForm = () => {
       label: pkg.pckCode,
     })) || [];
 
+  const isReadOnly = actionMode === IModeAction.READ;
+
   return (
     <Form.List
       name="packages"
@@ -37,10 +39,9 @@ const BookPackagedEsimForm = () => {
           {fields.map((field, index) => (
             <Row
               key={field.key}
-              gutter={[15, 1]}
+              gutter={[16, 1]}
               style={{ alignItems: 'center' }}
             >
-              {/* === Quantity Input === */}
               <Col span={7}>
                 <Form.Item
                   {...field}
@@ -64,7 +65,7 @@ const BookPackagedEsimForm = () => {
                 >
                   <CInputNumber
                     placeholder="Nhập số lượng"
-                    disabled={actionMode === IModeAction.READ}
+                    disabled={isReadOnly}
                     style={{ width: '100%' }}
                     formatter={(value) =>
                       `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -85,15 +86,13 @@ const BookPackagedEsimForm = () => {
                 >
                   <CSelect
                     placeholder="Chọn gói cước"
-                    disabled={actionMode === IModeAction.READ}
+                    disabled={isReadOnly}
                     options={packageOptions}
                     allowClear
                   />
                 </Form.Item>
               </Col>
-
-              {/* === Paid Package Select === */}
-              <Col span={6}>
+              <Col span={7}>
                 <Form.Item
                   {...field}
                   label="Gói cước có phí"
@@ -106,19 +105,17 @@ const BookPackagedEsimForm = () => {
                 >
                   <CSelect
                     placeholder="Chọn gói cước"
-                    disabled={actionMode === IModeAction.READ}
+                    disabled={isReadOnly}
                     options={packageOptions}
                     allowClear
                   />
                 </Form.Item>
               </Col>
-              <Col span={1} />
               <Col
                 span={1}
                 style={{ display: 'flex', justifyContent: 'center' }}
               >
-                {/* Show Minus icon on every row except the first one */}
-                {fields.length > 1 && (
+                {fields.length > 1 && !isReadOnly && (
                   <Minus
                     className="cursor-pointer"
                     size={24}
@@ -130,7 +127,7 @@ const BookPackagedEsimForm = () => {
                 span={1}
                 style={{ display: 'flex', justifyContent: 'center' }}
               >
-                {index === fields.length - 1 && (
+                {index === fields.length - 1 && !isReadOnly && (
                   <Plus
                     className="cursor-pointer"
                     size={24}

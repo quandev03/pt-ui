@@ -17,13 +17,7 @@ export const ActionPackagedEsim = memo(() => {
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{Title}</TitleHeader>
-      <Form
-        form={form}
-        onFinish={undefined}
-        // labelCol={{ span: 5 }}
-        colon={false}
-        labelAlign="left"
-      >
+      <Form form={form} onFinish={undefined} colon={false} labelAlign="left">
         <Row gutter={[24, 0]}>
           {actionMode === IModeAction.CREATE && (
             <>
