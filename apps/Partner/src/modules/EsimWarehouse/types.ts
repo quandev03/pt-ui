@@ -51,3 +51,16 @@ export interface IPackage {
   status: number;
   urlImagePackage: string;
 }
+
+export interface ICustomerInfo {
+  nationality: string;
+  typeDocument: string;
+  contractCode: string;
+  gender: number;
+  customerCode: string;
+  fullName: string;
+  birthOfDate: string;
+  idNoExpireDate: string;
+  issuePlace: string;
+  idNumber: string;
+}
