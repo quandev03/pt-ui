@@ -77,18 +77,6 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.esimStock,
     label: 'Danh sách eSIM',
   },
-  // Báo cáo
-
-  {
-    key: pathRoutes.report,
-    label: 'Báo cáo',
-    hasChild: true,
-  },
-  {
-    key: pathRoutes.reportPartner,
-    label: 'Báo cáo đơn hàng đối tác',
-    parentId: pathRoutes.report,
-  },
 
   {
     key: pathRoutes.salesManager as string,

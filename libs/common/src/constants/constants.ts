@@ -84,6 +84,7 @@ export enum ActionsTypeEnum {
   RECREATE_ORDER = 'RECREATE_ORDER',
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
+  PACKAGE_AUTHORIZATION = 'PACKAGE_AUTHORIZATION',
 }
 export const TenMinutes = 10 * 60 * 1000;
 export const ImageFileType = ['image/png', 'image/jpeg', 'image/jpg'];

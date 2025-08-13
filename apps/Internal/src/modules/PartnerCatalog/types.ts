@@ -265,3 +265,15 @@ export interface IRoleItem {
   name: string;
   status: number;
 }
+export interface IListOfServicePackage {
+  createdBy: string;
+  createdDate: string;
+  modifiedBy: string;
+  modifiedDate: string;
+  id: string;
+  pckCode: string;
+  pckName: string;
+  packagePrice: number;
+  status: number;
+  description: string;
+}

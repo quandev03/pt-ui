@@ -1,6 +1,5 @@
 import {
   CButtonAdd,
-  CInput,
   cleanParams,
   decodeSearchParams,
   FilterItemProps,
@@ -10,26 +9,25 @@ import {
   ModalConfirm,
   usePermissions,
 } from '@vissoft-react/common';
-import { Form, Tooltip } from 'antd';
+import { Form } from 'antd';
 import { useRolesByRouter } from 'apps/Internal/src/hooks/useRolesByRouter';
 import { pathRoutes } from 'apps/Internal/src/routers';
-import { includes } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useConfigAppStore from '../../Layouts/stores';
+import { StatusEnum } from '../constants';
+import { useColumnsTablePartnerCatalog } from '../hook/useColumnsTablePartnerCatalog';
 import {
   useGetOrganizationPartner,
   useUpdateStatusPartner,
 } from '../queryHooks';
 import usePartnerStore from '../stores';
 import { IOrganizationUnitDTO } from '../types';
-import { useColumnsTablePartnerCatalog } from '../hook/useColumnsTablePartnerCatalog';
-import { StatusEnum } from '../constants';
+import ModalAssignPackage from '../components/ModalAssignPackage';
 
 export const PartnerCatalogList = () => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
-  const listRoles = useRolesByRouter();
   const {
     setOpenProductAuthorization,
     setPartnerTarget,
@@ -48,6 +46,7 @@ export const PartnerCatalogList = () => {
   const {
     params: { PARTNER_STATUS = [] },
   } = useConfigAppStore();
+  const [isOpenAssignModal, setIsOpenAssignModal] = useState(false);
   const filters: FilterItemProps[] = useMemo(() => {
     return [
       {
@@ -120,6 +119,8 @@ export const PartnerCatalogList = () => {
           setOpenViewProcessApproval(true);
           setIdViewProcessApproval(record.id);
           return;
+        case IModeAction.PACKAGE_AUTHORIZATION:
+          setIsOpenAssignModal(true);
         default:
           break;
       }
@@ -151,20 +152,26 @@ export const PartnerCatalogList = () => {
     );
   }, [handleAdd, permission]);
   return (
-    <LayoutList
-      loading={loadingTable}
-      title="Quản lý đối tác"
-      filterItems={filters}
-      actionComponent={actionComponent}
-      searchComponent={
-        <LayoutList.SearchComponent
-          name="q"
-          tooltip="Nhập tên hoặc mã đối tác"
-          placeholder="Nhập tên hoặc mã đối tác"
-        />
-      }
-      columns={columns}
-      data={organizationPartner}
-    />
+    <>
+      <LayoutList
+        loading={loadingTable}
+        title="Quản lý đối tác"
+        filterItems={filters}
+        actionComponent={actionComponent}
+        searchComponent={
+          <LayoutList.SearchComponent
+            name="q"
+            tooltip="Nhập tên hoặc mã đối tác"
+            placeholder="Nhập tên hoặc mã đối tác"
+          />
+        }
+        columns={columns}
+        data={organizationPartner}
+      />
+      <ModalAssignPackage
+        open={isOpenAssignModal}
+        onClose={() => setIsOpenAssignModal(false)}
+      />
+    </>
   );
 };

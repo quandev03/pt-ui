@@ -1,20 +1,4 @@
-import { useRolesByRouter } from 'apps/Internal/src/hooks/useRolesByRouter';
-import dayjs from 'dayjs';
-import { includes } from 'lodash';
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import Address from '../components/Address';
-import PartnerInfor from '../components/PartnerInfor';
-import RepresentativeInformation from '../components/RepresentativeInformation';
 import {
-  useCreatePartner,
-  useGetOrganizationPartnerDetail,
-  useUpdatePartner,
-} from '../queryHooks';
-import usePartnerStore from '../stores';
-import { IFormData, IPayloadPartner } from '../types';
-import {
-  ActionsTypeEnum,
   CButtonClose,
   CButtonEdit,
   CButtonSave,
@@ -26,9 +10,22 @@ import {
   Show,
   TitleHeader,
   useActionMode,
+  usePermissions,
 } from '@vissoft-react/common';
 import { Form, Spin } from 'antd';
 import { pathRoutes } from 'apps/Internal/src/routers';
+import dayjs from 'dayjs';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import useConfigAppStore from '../../Layouts/stores';
+import PartnerInfor from '../components/PartnerInfor';
+import {
+  useCreatePartner,
+  useGetOrganizationPartnerDetail,
+  useUpdatePartner,
+} from '../queryHooks';
+import usePartnerStore from '../stores';
+import { IFormData, IPayloadPartner } from '../types';
 
 const scrollToFirstError = () => {
   const firstErrorField = document.querySelector('.ant-form-item-has-error');
@@ -45,7 +42,8 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
   const { pathname } = useLocation();
   const { id } = useParams();
   const navigate = useNavigate();
-  const actionByRole = useRolesByRouter();
+  const { menuData } = useConfigAppStore();
+  const permission = usePermissions(menuData);
   const [isSubmitBack, setIsSubmitBack] = useState(false);
   const { setPartnerDetail, partnerDetail, resetOrderStore } =
     usePartnerStore();
@@ -312,14 +310,11 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         title: 'Xác nhận',
         message: 'Bạn có chắc chắn muốn cập nhật không?',
         handleConfirm: () => {
-          console.log('payload', payload);
-
           updatePartner(payload);
         },
       });
     }
   };
-
   return (
     <div className="flex flex-col w-full h-full mb-7 ">
       <TitleHeader>{Title}</TitleHeader>
@@ -340,8 +335,6 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
           <div className="flex flex-col gap-[30px]">
             <div className="bg-white !p-5 rounded-md flex flex-col gap-6">
               <PartnerInfor />
-              {/* <Address /> */}
-              <RepresentativeInformation />
             </div>
 
             <Show>
@@ -369,14 +362,13 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
                       }}
                     />
                   )}
-                  {actionMode === IModeAction.READ &&
-                    includes(actionByRole, ActionsTypeEnum.UPDATE) && (
-                      <CButtonEdit
-                        onClick={() => {
-                          navigate(pathRoutes.partnerCatalogEdit(id));
-                        }}
-                      />
-                    )}
+                  {actionMode === IModeAction.READ && permission.canUpdate && (
+                    <CButtonEdit
+                      onClick={() => {
+                        navigate(pathRoutes.partnerCatalogEdit(id));
+                      }}
+                    />
+                  )}
                   <CButtonClose onClick={handleClose} />
                 </div>
               </Show.When>
