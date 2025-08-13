@@ -43,4 +43,5 @@ export const pathRoutes = {
     `esim-warehouse/view/${id ? id : ':id'}`,
   report: `/report`,
   partnerOrderReport: `/partner-order-report`,
+  saleManagement: '/sale-management',
 };
