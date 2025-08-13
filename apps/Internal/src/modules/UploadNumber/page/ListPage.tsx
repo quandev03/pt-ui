@@ -9,10 +9,10 @@ import { pathRoutes } from 'apps/Internal/src/routers';
 import { useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useConfigAppStore from '../../Layouts/stores';
+import { useColumnTable } from '../hook/useColumnTable';
 import { useFilters } from '../hook/useFilters';
 import useGetListUploadNumber from '../hook/useGetListUploadNumber';
 import { IParamsRequestUploadDigitalResources } from '../types';
-import { useColumnTable } from '../hook/useColumnTable';
 
 export const ListPage = () => {
   const navigate = useNavigate();

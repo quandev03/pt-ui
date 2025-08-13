@@ -106,12 +106,8 @@ const useConfigAppStore = create(
         set(() => ({ urlsActive }));
       },
       params: {
-        STOCK_ISDN_STATUS: [],
-        STOCK_ISDN_TRANSFER_STATUS: [],
-        PARTNER_TYPE: [],
-        PARTNER_SUB_TYPE: [],
-        PARTNER_APPROVAL_STATUS: [],
-        PARTNER_STATUS: [],
+        ISDN_TRANSACTION_TRANS_STATUS: [],
+        ISDN_TRANSACTION_UPLOAD_STATUS: [],
       },
       setParams(params) {
         set(() => ({ params }));
@@ -121,6 +117,7 @@ const useConfigAppStore = create(
         set(() => ({
           userLogin: data.profile,
           menuData: data.menus,
+          params: data.params,
         }));
       },
 
@@ -149,8 +146,8 @@ const useConfigAppStore = create(
             menuData: [],
             urlsActive: ['/'],
             params: {
-              STOCK_ISDN_STATUS: [],
-              STOCK_ISDN_TRANSFER_STATUS: [],
+              ISDN_TRANSACTION_TRANS_STATUS: [],
+              ISDN_TRANSACTION_UPLOAD_STATUS: [],
             },
           });
         }

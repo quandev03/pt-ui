@@ -84,6 +84,10 @@ const errInterceptor = async (
 
   // Handle token refresh
   if (httpCode === STATUS_TOKEN_EXPIRED && config?.url !== authApi.tokenUrl) {
+    if ((config as any)?._retry) {
+      await useConfigAppStore.getState().logoutStore();
+      return Promise.reject(error);
+    }
     const refreshToken = StorageService.getRefreshToken(REFRESH_TOKEN_KEY);
 
     if (isRefreshing) {
@@ -100,6 +104,7 @@ const errInterceptor = async (
       })
         .then((token) => {
           if (config?.headers) {
+            (config as any)._retry = true;
             config.headers['Authorization'] = `Bearer ${token}`;
           }
           return axiosClient(config!);
