@@ -1,6 +1,7 @@
 import {
   AnyElement,
   CButtonDetail,
+  CTag,
   decodeSearchParams,
   formatDate,
   formatDateTime,
@@ -16,8 +17,19 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import useConfigAppStore from '../../Layouts/stores';
 import { IResponseUploadNumber } from '../types';
 import { pathRoutes } from 'apps/Internal/src/routers';
+import {
+  TransactionStatusCode,
+  TransactionStatusTagMap,
+  UploadStatus,
+  UploadStatusTagMap,
+} from '../../ListOfServicePackage/types';
 
 export const useColumnTable = () => {
+  const {
+    params: { ISDN_TRANSACTION_UPLOAD_STATUS, ISDN_TRANSACTION_TRANS_STATUS },
+  } = useConfigAppStore();
+  console.log('ISDN_TRANSACTION_UPLOAD_STATUS', ISDN_TRANSACTION_UPLOAD_STATUS);
+  console.log('ISDN_TRANSACTION_TRANS_STATUS', ISDN_TRANSACTION_TRANS_STATUS);
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const { menuData } = useConfigAppStore();
@@ -60,13 +72,11 @@ export const useColumnTable = () => {
         width: 120,
         align: 'left',
         render(value) {
-          const text = value ? dayjs(value).format(formatDate) : '';
-          return (
-            <RenderCell
-              value={text}
-              tooltip={value ? dayjs(value).format(formatDateTime) : ''}
-            />
-          );
+          const formatted = value
+            ? dayjs(value, 'DD/MM/YYYY HH:mm:ss').format(formatDate)
+            : '';
+
+          return <RenderCell value={formatted} tooltip={value ?? ''} />;
         },
       },
       {
@@ -75,7 +85,12 @@ export const useColumnTable = () => {
         width: 150,
         align: 'left',
         render: (value) => {
-          return <RenderCell value={value} tooltip={value} />;
+          const text = ISDN_TRANSACTION_UPLOAD_STATUS.find(
+            (item) => String(item.code) === String(value)
+          )?.value;
+          return (
+            <CTag type={UploadStatusTagMap[value as UploadStatus]}>{text}</CTag>
+          );
         },
       },
       {
@@ -125,7 +140,20 @@ export const useColumnTable = () => {
         align: 'left',
         render: (value) => {
           if (!value) return null;
-          return <RenderCell value={value} tooltip={value} />;
+          const text = ISDN_TRANSACTION_TRANS_STATUS.find(
+            (item) => String(item.code) === String(value)
+          )?.value;
+          return (
+            <CTag
+              type={
+                TransactionStatusTagMap[
+                  value as keyof typeof TransactionStatusTagMap
+                ]
+              }
+            >
+              {text}
+            </CTag>
+          );
         },
       },
       {
