@@ -56,7 +56,7 @@ export const useLogicListUser = () => {
     return [
       {
         type: 'TreeSelect',
-        name: 'agency',
+        name: 'orgId',
         label: 'Đại lý',
         placeholder: 'Đại lý',
         treeData: agencyOptions,
