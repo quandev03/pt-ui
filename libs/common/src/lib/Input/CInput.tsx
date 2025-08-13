@@ -4,7 +4,7 @@ import {
   RegSpecicalCharExceptUnderscore,
 } from '../../constants/regex';
 import { AnyElement } from '../../types';
-import { convertVietnameseToEnglish } from '../../utils';
+import { convertVietnameseToEnglish, removeVietnamese } from '../../utils';
 import { Form, Input, InputProps, InputRef } from 'antd';
 import React, { forwardRef, useCallback } from 'react';
 
@@ -77,7 +77,7 @@ export const CInput = forwardRef<InputRef, Props>(
       }
 
       if (preventVietnamese) {
-        value = convertVietnameseToEnglish(value);
+        value = removeVietnamese(value);
         form.setFieldValue(field, value);
       }
       if (uppercase) {

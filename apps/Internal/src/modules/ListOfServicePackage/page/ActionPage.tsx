@@ -5,6 +5,7 @@ import {
   CButtonSaveAndAdd,
   CInput,
   CSwitch,
+  CTextArea,
   CTextInfo,
   EActionSubmit,
   getActionMode,
@@ -44,10 +45,22 @@ export const ActionPage = () => {
   });
   const { mutate: mutateAdd } = useAdd(form, () => {
     if (type === EActionSubmit.SAVE_AND_ADD) {
-      form.resetFields(['pckCode', 'pckName', 'packagePrice', 'images']);
+      form.resetFields([
+        'pckCode',
+        'pckName',
+        'packagePrice',
+        'images',
+        'description',
+      ]);
       setImageUrl(null);
     } else {
-      form.resetFields(['pckCode', 'pckName', 'packagePrice', 'images']);
+      form.resetFields([
+        'pckCode',
+        'pckName',
+        'packagePrice',
+        'images',
+        'description',
+      ]);
       setImageUrl(null);
       navigate(-1);
     }
@@ -85,7 +98,7 @@ export const ActionPage = () => {
     }
     if (file.size && file.size / 1024 / 1024 > 5) {
       NotificationError({
-        message: MESSAGE.G31,
+        message: MESSAGE.G13,
       });
       return;
     }
@@ -203,9 +216,10 @@ export const ActionPage = () => {
       <Spin spinning={false}>
         <Form
           form={form}
-          labelCol={{ span: 4 }}
+          labelCol={{ flex: '120px' }}
           colon={false}
           onFinish={handleSubmit}
+          labelAlign="left"
         >
           <Card className="mb-2">
             <CTextInfo>Thông tin gói cước</CTextInfo>
@@ -338,6 +352,16 @@ export const ActionPage = () => {
                       </div>
                     )}
                   </Upload>
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item label="Mô tả" name="description">
+                  <CTextArea
+                    disabled={actionMode === IModeAction.READ}
+                    placeholder="Nhập mô tả"
+                    maxLength={200}
+                    rows={3}
+                  />
                 </Form.Item>
               </Col>
             </Row>

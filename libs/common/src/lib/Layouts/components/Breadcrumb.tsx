@@ -29,6 +29,10 @@ const specialPaths = [
     key: 'user-management',
     label: 'Danh sách user',
   },
+  {
+    key: 'profile',
+    label: 'Thông tin tài khoản',
+  },
 ];
 
 interface IBreadcrumbComponentProps {

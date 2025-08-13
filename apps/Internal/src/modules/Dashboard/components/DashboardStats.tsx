@@ -26,9 +26,6 @@ const CardStyle = styled(Card)`
 `;
 
 export const DashboardStats = ({ data }: { data: IDataDashboardStats }) => {
-  // const formatNumber = (num: number): string => {
-  //   return num.toLocaleString('en-US');
-  // };
   const dataTest = [
     {
       label: 'Tổng eSIM đã đặt',
@@ -60,7 +57,7 @@ export const DashboardStats = ({ data }: { data: IDataDashboardStats }) => {
                   <div className="font-medium text-sm">{item.label}</div>
                 </div>
               </div>
-              <div className="text-3xl mt-4 px-12 self-start font-bold text-primary tracking-[2px]">
+              <div className="text-3xl mt-4 text-center font-bold text-primary tracking-[2px]">
                 <span>
                   <CountUp to={item.value} duration={2} />
                 </span>
