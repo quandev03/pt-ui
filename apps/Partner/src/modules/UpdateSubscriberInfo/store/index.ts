@@ -9,6 +9,8 @@ interface IUpdateSubscriberInfoStore {
   setOcrResponse: (data: OcrResponse | undefined) => void;
   contractUrl: string | undefined;
   setContractUrl: (url: string) => void;
+  degreeUrl: string | undefined;
+  setDegreeUrl: (url: string) => void;
   interval: AnyElement;
   setIntervalApi: (data: AnyElement) => void;
   agreeDegree13: number[];
@@ -29,6 +31,10 @@ export const useUpdateSubscriberInfoStore = create<IUpdateSubscriberInfoStore>(
     contractUrl: undefined,
     setContractUrl(url) {
       set(() => ({ contractUrl: url }));
+    },
+    degreeUrl: undefined,
+    setDegreeUrl(url) {
+      set(() => ({ degreeUrl: url }));
     },
     interval: undefined,
     setIntervalApi(value) {

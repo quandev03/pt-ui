@@ -7,7 +7,7 @@ import {
 import { Form } from 'antd';
 import useFormInstance from 'antd/es/form/hooks/useFormInstance';
 import { Copy } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { baseSignUrl } from '../../../../src/constants';
 import {
   useCheckSignedContract,
@@ -19,8 +19,8 @@ import {
 import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
 import Decree13Modal from './Decree13Modal';
-import PreviewPdf from './PreviewPdf';
 import ModalPreviewPdf from './ModalPreviewPdf';
+import PreviewPdf from './PreviewPdf';
 
 const SignConfirmation = () => {
   const form = useFormInstance();
@@ -45,6 +45,7 @@ const SignConfirmation = () => {
   });
   const { mutate: genContract, isPending: loadingGenContract } = useGenContract(
     () => {
+      setIsSignSuccess(false);
       getND13Pdf(ocrResponse?.transactionId || '');
       getConfirmContractPdf(ocrResponse?.transactionId || '');
       const link = `${baseSignUrl || window.location.origin}/sign?id=${
@@ -98,16 +99,11 @@ const SignConfirmation = () => {
     getND13Pdf,
     ocrResponse?.transactionId,
   ]);
-  useEffect(() => {
-    return () => {
-      if (contractUrl) {
-        URL.revokeObjectURL(contractUrl);
-      }
-      if (degree13Url) {
-        URL.revokeObjectURL(degree13Url);
-      }
-    };
-  }, [contractUrl, degree13Url]);
+
+  const handleCloseModal = useCallback((isND13: boolean) => {
+    if (isND13) setIsOpenModalDegree(false);
+    else setIsOpenModalContract(false);
+  }, []);
   return (
     <>
       <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
@@ -200,17 +196,17 @@ const SignConfirmation = () => {
       />
       <ModalPreviewPdf
         open={isOpenModalContract}
-        onClose={() => setIsOpenModalContract(false)}
+        onClose={() => handleCloseModal(false)}
         title="Biên bản xác nhận"
-        url={contractUrl}
+        isND13={false}
       />
       <ModalPreviewPdf
         open={isOpenModalDegree}
-        onClose={() => setIsOpenModalDegree(false)}
+        onClose={() => handleCloseModal(true)}
         title="BBXN NĐ13"
-        url={degree13Url}
+        isND13={true}
       />
     </>
   );
 };
-export default SignConfirmation;
+export default React.memo(SignConfirmation);
