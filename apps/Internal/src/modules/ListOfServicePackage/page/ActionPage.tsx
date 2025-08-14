@@ -242,6 +242,8 @@ export const ActionPage = () => {
                     maxLength={20}
                     preventVietnamese
                     preventSpace
+                    uppercase
+                    preventSpecialExceptHyphenAndUnderscore
                   />
                 </Form.Item>
               </Col>

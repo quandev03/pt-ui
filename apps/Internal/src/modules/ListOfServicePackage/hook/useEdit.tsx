@@ -47,7 +47,7 @@ export const useEdit = (form: FormInstance, onSuccess?: () => void) => {
   return useMutation({
     mutationFn: fetch,
     onSuccess: () => {
-      NotificationSuccess('Cập nhật thành công');
+      NotificationSuccess('Cập nhật gói cước thành công');
       onSuccess?.();
     },
     onError: (error: IErrorResponse) => {
