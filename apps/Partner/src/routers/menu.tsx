@@ -1,6 +1,6 @@
-import { House, Settings } from 'lucide-react';
-import { pathRoutes } from './url';
 import { RouterItems } from '@vissoft-react/common';
+import { House, UserRoundCog } from 'lucide-react';
+import { pathRoutes } from './url';
 
 export const routerItems: RouterItems[] = [
   {
@@ -10,7 +10,7 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.accountAuthorization as string,
-    icon: <Settings />,
+    icon: <UserRoundCog />,
     label: 'Quản Trị Hệ Thống',
     hasChild: true,
   },
