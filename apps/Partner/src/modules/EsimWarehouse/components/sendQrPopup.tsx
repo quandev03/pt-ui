@@ -1,8 +1,7 @@
-import { Typography, Form, message } from 'antd';
+import { Typography, Form } from 'antd';
 import { IEsimWarehouseList } from '../types';
 import { CInput, CModal, IFieldErrorsItem } from '@vissoft-react/common';
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useGetSendQrCode } from '../hooks/useGetSendQrCode';
 
 const { Text } = Typography;
@@ -14,7 +13,6 @@ interface SendQrPopupProps {
 }
 
 export const SendQrPopup = ({ open, onCancel, record }: SendQrPopupProps) => {
-  const navigate = useNavigate();
   const [form] = Form.useForm();
 
   const onSuccess = useCallback(() => {
