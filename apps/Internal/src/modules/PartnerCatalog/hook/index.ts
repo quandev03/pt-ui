@@ -1,26 +1,17 @@
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import { PartnerCatalogService } from '../services';
-import {
-  ICCCDInfo,
-  IOrganizationUnitDTO,
-  IParamsProductByCategory,
-  IPartner,
-  IPartnerCatalogParams,
-  IStockNumberParams,
-} from '../types';
-import { REACT_QUERY_KEYS } from 'apps/Internal/src/constants/query-key';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   IErrorResponse,
   IFieldErrorsItem,
   IParamsRequest,
   NotificationSuccess,
 } from '@vissoft-react/common';
-import { FormInstance } from 'antd';
+import { REACT_QUERY_KEYS } from 'apps/Internal/src/constants/query-key';
+import { PartnerCatalogService } from '../services';
+import {
+  IOrganizationUnitDTO,
+  IPartner,
+  IPartnerCatalogParams,
+} from '../types';
 
 export const useGetOrganizationPartner = (params: IPartnerCatalogParams) => {
   return useQuery({
@@ -28,120 +19,6 @@ export const useGetOrganizationPartner = (params: IPartnerCatalogParams) => {
     queryFn: () => PartnerCatalogService.getOrganizationPartner(params),
   });
 };
-
-export const useGetStockNumber = (
-  params: IStockNumberParams,
-  isCall: boolean
-) => {
-  return useQuery({
-    queryKey: ['useGetStockNumber', params],
-    queryFn: () => PartnerCatalogService.getStockNumber(params),
-    enabled: isCall,
-  });
-};
-
-export const useInfinityProductByCategory = (
-  params: IParamsProductByCategory
-) => {
-  return useInfiniteQuery({
-    queryKey: [REACT_QUERY_KEYS.PARTNER_CATALOG_LIST_INFINITY, params],
-    initialPageParam: 0,
-    enabled: !!params.categoryId,
-    queryFn: ({ pageParam }) => {
-      return PartnerCatalogService.getProductByCategory({
-        ...params,
-        page: pageParam,
-      });
-    },
-    getNextPageParam: (lastPage) => {
-      return lastPage.last ? undefined : lastPage.number + 1;
-    },
-    select: (data) => {
-      const result = data.pages.flatMap((page) => page.content);
-      return result;
-    },
-  });
-};
-
-export const useGetProductAuthorization = (id: string | number) => {
-  return useQuery({
-    queryKey: ['useGetProductAuthorization', id],
-    enabled: !!id,
-    queryFn: () => PartnerCatalogService.getProductAuthorization(id),
-  });
-};
-
-export const useGetStockPermission = (
-  isCall: boolean,
-  id?: string | number
-) => {
-  return useQuery({
-    queryKey: ['useGetStockPermission', id],
-    enabled: !!id && isCall,
-    queryFn: () => PartnerCatalogService.getStockPermission(id!),
-  });
-};
-
-export const useCreateStockPermission = (
-  onSuccess?: (data: any) => void,
-  onFail?: () => void
-) => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: PartnerCatalogService.createStockPermission,
-    onSuccess(data) {
-      queryClient.invalidateQueries({
-        queryKey: ['useGetStockPermission'],
-      });
-      NotificationSuccess('Thêm mới thành công');
-      onSuccess && onSuccess(data);
-    },
-    onError() {
-      onFail && onFail();
-    },
-  });
-};
-
-export const useCreateProductAuthorization = (
-  onSuccess?: (data: any) => void,
-  onFail?: () => void
-) => {
-  return useMutation({
-    mutationFn: PartnerCatalogService.createProductAuthorization,
-    onSuccess(data) {
-      NotificationSuccess('Phân quyền sản phẩm thành công!');
-      onSuccess && onSuccess(data);
-    },
-    onError() {
-      onFail && onFail();
-    },
-  });
-};
-
-export const useUpdateStatusPartner = (
-  onSuccess?: (data: any) => void,
-  onFail?: () => void
-) => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: PartnerCatalogService.updateStatusPartner,
-    onSuccess(data, variables) {
-      if (variables.status === 0) {
-        NotificationSuccess('Khóa đối tác thành công');
-      } else if (variables.status === 1) {
-        NotificationSuccess('Mở khóa đối tác thành công');
-      }
-      queryClient.invalidateQueries({
-        queryKey: [REACT_QUERY_KEYS.PARTNER_CATALOG_LIST],
-      });
-      onSuccess && onSuccess(data);
-    },
-    onError() {
-      onFail && onFail();
-    },
-  });
-};
-
 export const useCreatePartner = (
   onSuccess?: (data: any) => void,
   onFail?: (error: IFieldErrorsItem[]) => void
@@ -294,6 +171,14 @@ export const useUpdatePartnerUser = (
 
     onError: (error) => {
       onError?.(error);
+    },
+  });
+};
+export const useAssignPackagePermission = () => {
+  return useMutation({
+    mutationFn: PartnerCatalogService.assignPackagePermission,
+    onSuccess: () => {
+      NotificationSuccess('Phân quyền gói cước thành công');
     },
   });
 };

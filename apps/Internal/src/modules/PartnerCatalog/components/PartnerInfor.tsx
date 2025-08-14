@@ -21,13 +21,15 @@ const PartnerInfor = () => {
       taxCode: data.taxCode,
       phone: data.phone,
       address: data.address,
-      contactPersonName: data.contactPersonName,
+      representative: data.representative,
       status: data.status,
-      description: data.description,
+      orgDescription: data.orgDescription,
     });
   };
   const onGetPartnerError = (error: IFieldErrorsItem[]) => {
-    console.log('error', error);
+    form.setFields(
+      error.map((err) => ({ name: err.field, error: err.detail }))
+    );
   };
   const { mutate: getPartnerInfoByCode } = useGetPartnerInfoByCode(
     (data) => onGetPartnerSuccess(data),
@@ -36,7 +38,7 @@ const PartnerInfor = () => {
   const handleGetPartnerInfo = () => {
     const orgCode = form.getFieldValue('orgCode');
     console.log('org code', form.getFieldValue('orgCode'));
-    getPartnerInfoByCode(orgCode);
+    if (orgCode) getPartnerInfoByCode(orgCode);
   };
   return (
     <div className="relative p-5 border rounded-md">
@@ -84,7 +86,7 @@ const PartnerInfor = () => {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Họ tên người liên hệ" name="contactPersonName">
+          <Form.Item label="Họ tên người liên hệ" name="representative">
             <CInput placeholder="Nhập họ tên người liên hệ" disabled />
           </Form.Item>
         </Col>
@@ -94,8 +96,12 @@ const PartnerInfor = () => {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Mô tả" name="description">
-            <CTextArea placeholder="Nhập mô tả" maxLength={200} />
+          <Form.Item label="Mô tả" name="orgDescription">
+            <CTextArea
+              placeholder="Nhập mô tả"
+              maxLength={200}
+              disabled={actionMode === IModeAction.READ}
+            />
           </Form.Item>
         </Col>
       </Row>

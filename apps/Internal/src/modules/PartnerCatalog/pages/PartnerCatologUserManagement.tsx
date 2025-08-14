@@ -1,18 +1,16 @@
 import {
-  decodeSearchParams,
-  IModeAction,
-  usePermissions,
   CButtonAdd,
-  CButtonExport,
-  formatQueryParams,
-  LayoutList,
+  decodeSearchParams,
   FilterItemProps,
+  IModeAction,
+  LayoutList,
   StatusEnum,
+  usePermissions,
 } from '@vissoft-react/common';
 import { pathRoutes } from '../../../routers/url';
 
 import { ColumnsType } from 'antd/es/table';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
   useNavigate,
   useNavigation,
@@ -20,11 +18,10 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import { IUserPartnerCatalog } from '../types';
-import { notification } from 'antd';
 import useConfigAppStore from '../../Layouts/stores';
-import { useColumnsTableUserManagement } from '../hook/useColumnsTableUserManagement';
 import { useGetDetailByCode, useGetOrganizationUsersByOrgCode } from '../hook';
+import { useColumnsTableUserManagement } from '../hook/useColumnsTableUserManagement';
+import { IUserPartnerCatalog } from '../types';
 
 export const PartnerCatalogUserManagement = () => {
   const { menuData } = useConfigAppStore();

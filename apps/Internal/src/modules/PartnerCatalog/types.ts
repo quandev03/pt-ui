@@ -20,13 +20,7 @@ export type ICatalogPartner = {
 
 export interface IPayloadPartner {
   id?: number | string;
-  organizationUnitDTO: IOrganizationUnitDTO;
-  contractFile: File;
-  businessLicenseFile: File;
-  organizationDeliveryInfoDTO: IDeliveryInfo;
-  idCardFrontSite: File;
-  idCardBackSite: File;
-  portrait: File;
+  organizationUnitDTO: IPartner;
 }
 
 export interface IOrganizationUnitDTO {
@@ -283,13 +277,17 @@ export interface IPartner {
   taxCode: string;
   phone: string;
   address: string;
-  contactPersonName: string;
+  representative: string;
   status: string;
-  description?: string;
+  orgDescription?: string;
 }
 export interface IRoleItem {
   code: string;
   id: string;
   name: string;
   status: number;
+}
+export interface IAssignPackagePayload {
+  id: string | number;
+  packageIds: string[];
 }
