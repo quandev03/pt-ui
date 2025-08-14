@@ -15,3 +15,6 @@ export const convertArrToObj = (arr: AnyElement[], parent: AnyElement) => {
 
   return newArr?.length > 0 ? newArr : undefined;
 };
+export const blobToFile = (blob: Blob, fileName: string): File => {
+  return new File([blob], fileName, { type: blob.type });
+};
