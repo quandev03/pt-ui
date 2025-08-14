@@ -5,7 +5,6 @@ type Props = {
   title: string;
 };
 const PreviewPdf: FC<Props> = ({ fileUrl, title }) => {
-  console.log('fileurl', fileUrl);
   return (
     <div className="border border-dashed rounded-lg border-[#999999] w-full h-[30vh] p-1">
       {fileUrl && (
@@ -18,4 +17,4 @@ const PreviewPdf: FC<Props> = ({ fileUrl, title }) => {
     </div>
   );
 };
-export default React.memo(PreviewPdf);
+export default PreviewPdf;

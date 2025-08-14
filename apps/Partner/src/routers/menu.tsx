@@ -1,5 +1,11 @@
 import { RouterItems } from '@vissoft-react/common';
-import { ChartLine, ClipboardList, Settings, Store } from 'lucide-react';
+import {
+  ChartLine,
+  ClipboardList,
+  Settings,
+  ShoppingCart,
+  Store,
+} from 'lucide-react';
 import { pathRoutes } from './url';
 
 export const routerItems: RouterItems[] = [
@@ -43,6 +49,17 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.updateSubscriberInfo as string,
     label: 'Cập nhật thông tin thuê bao',
     parentId: pathRoutes.saleManagement as string,
+  },
+  {
+    key: pathRoutes.agencyList as string,
+    label: 'Cấu hình đại lý',
+    parentId: pathRoutes.accountAuthorization as string,
+  },
+  {
+    key: pathRoutes.saleManagement as string,
+    icon: <ShoppingCart />,
+    label: 'Quản lý bán hàng',
+    hasChild: true,
   },
   {
     key: pathRoutes.freeEsimBooking as string,

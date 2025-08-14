@@ -1,6 +1,6 @@
 import useFormInstance from 'antd/es/form/hooks/useFormInstance';
 import { CircleCheckIcon } from 'lucide-react';
-import { FC } from 'react';
+import React, { FC } from 'react';
 type Props = {
   isSuccess?: boolean;
 };
@@ -9,9 +9,13 @@ const ViewImages: FC<Props> = ({ isSuccess }) => {
   return (
     <div className="flex justify-between gap-5">
       <div className="flex-1">
-        <div className="bg-[#EEF3FE] p-4 rounded-lg relative flex justify-center items-center flex-col">
-          <div>
-            <img src={form.getFieldValue('passportUrl')} alt="passport" />
+        <div className="bg-[#EEF3FE] p-4 rounded-lg relative flex justify-center items-center flex-col aspect-[4/3]">
+          <div className="aspect-[4/3] overflow-hidden">
+            <img
+              src={form.getFieldValue('passportUrl')}
+              alt="passport"
+              className="object-cover w-full h-full"
+            />
           </div>
           {isSuccess && (
             <CircleCheckIcon
@@ -23,8 +27,8 @@ const ViewImages: FC<Props> = ({ isSuccess }) => {
         <p className="text-center mt-2">Hộ chiếu</p>
       </div>
       <div className="flex-1">
-        <div className="bg-[#EEF3FE] p-4 rounded-lg relative flex justify-center items-center flex-col">
-          <div className="w-[70%] aspect-[4/4] overflow-hidden rounded-full">
+        <div className="bg-[#EEF3FE] p-4 rounded-lg relative flex justify-center items-center flex-col aspect-[4/3]">
+          <div className="w-[75%] aspect-[4/4] overflow-hidden rounded-full">
             <img
               src={form.getFieldValue('portraitUrl')}
               alt="portrait"
@@ -43,4 +47,4 @@ const ViewImages: FC<Props> = ({ isSuccess }) => {
     </div>
   );
 };
-export default ViewImages;
+export default React.memo(ViewImages);
