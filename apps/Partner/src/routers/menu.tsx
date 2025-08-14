@@ -29,11 +29,6 @@ export const routerItems: RouterItems[] = [
     parentId: pathRoutes.accountAuthorization as string,
   },
   {
-    key: pathRoutes.updateSubscriberInfo as string,
-    label: 'Cập nhật thông tin thuê bao',
-    parentId: pathRoutes.saleManagement as string,
-  },
-  {
     key: pathRoutes.agencyList as string,
     label: 'Danh sách đại lý',
     parentId: pathRoutes.accountAuthorization as string,
@@ -43,6 +38,11 @@ export const routerItems: RouterItems[] = [
     label: 'Quản Lý Bán Hàng',
     hasChild: true,
     icon: <Store />,
+  },
+  {
+    key: pathRoutes.updateSubscriberInfo as string,
+    label: 'Cập nhật thông tin thuê bao',
+    parentId: pathRoutes.saleManagement as string,
   },
   {
     key: pathRoutes.freeEsimBooking as string,
