@@ -109,9 +109,11 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
       width: 120,
       align: 'left',
       render(value, record) {
-        const textformatDate = value ? dayjs(value).format(formatDate) : '';
+        const textformatDate = value
+          ? dayjs(value, formatDateTime).format(formatDate)
+          : '';
         const textformatDateTime = value
-          ? dayjs(value).format(formatDateTime)
+          ? dayjs(value, formatDateTime).format(formatDateTime)
           : '';
         return (
           <RenderCell
@@ -137,9 +139,11 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
       width: 120,
       align: 'left',
       render(value, record) {
-        const textformatDate = value ? dayjs(value).format(formatDate) : '';
+        const textformatDate = value
+          ? dayjs(value, formatDateTime).format(formatDate)
+          : '';
         const textformatDateTime = value
-          ? dayjs(value).format(formatDateTime)
+          ? dayjs(value, formatDateTime).format(formatDateTime)
           : '';
         return (
           <RenderCell
