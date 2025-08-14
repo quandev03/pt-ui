@@ -92,14 +92,14 @@ export const status900Map: Record<
     text: 'Đã cập nhật TTTB',
     type: TypeTagEnum.PROCESSING,
     color: '#D9E6F2',
-    textColor: '005AAA',
+    textColor: '#005AAA',
     fontWeight: 'bold',
   },
   [Status900Enum.REJECTED]: {
     text: 'Rejected',
     type: TypeTagEnum.ERROR,
-    color: 'E4F1FB',
-    textColor: '4EA3E2',
+    color: '#E4F1FB',
+    textColor: '#4EA3E2',
     fontWeight: 'bold',
   },
 };
