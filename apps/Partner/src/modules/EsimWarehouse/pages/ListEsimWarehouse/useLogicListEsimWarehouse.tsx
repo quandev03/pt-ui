@@ -116,12 +116,20 @@ export const useLogicListEsimWarehouse = () => {
   const subStatusOptions: DefaultOptionType[] = useMemo(
     () => [
       {
-        value: Status900Enum.NOT_CALLED,
-        label: status900Map[Status900Enum.NOT_CALLED].text,
+        value: Status900Enum.IN_STORE,
+        label: status900Map[Status900Enum.IN_STORE].text,
       },
       {
-        value: Status900Enum.CALLED,
-        label: status900Map[Status900Enum.CALLED].text,
+        value: Status900Enum.SOLD,
+        label: status900Map[Status900Enum.SOLD].text,
+      },
+      {
+        value: Status900Enum.INFO_UPDATED,
+        label: status900Map[Status900Enum.INFO_UPDATED].text,
+      },
+      {
+        value: Status900Enum.REJECTED,
+        label: status900Map[Status900Enum.REJECTED].text,
       },
     ],
     []
