@@ -237,11 +237,11 @@ export const ActionPage = () => {
                   name="pckCode"
                 >
                   <CInput
-                    disabled={actionMode === IModeAction.READ}
+                    disabled={actionMode !== IModeAction.CREATE}
                     placeholder="Nhập mã gói cước"
                     maxLength={20}
                     preventVietnamese
-                    preventOnlyWhitespace
+                    preventSpace
                   />
                 </Form.Item>
               </Col>
