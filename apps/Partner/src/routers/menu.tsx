@@ -3,7 +3,6 @@ import {
   ChartLine,
   ClipboardList,
   ShoppingCart,
-  Store,
   UserRoundCog,
 } from 'lucide-react';
 import { pathRoutes } from './url';
@@ -38,12 +37,6 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.agencyList as string,
     label: 'Danh sách đại lý',
     parentId: pathRoutes.accountAuthorization as string,
-  },
-  {
-    key: pathRoutes.saleManagement as string,
-    label: 'Quản Lý Bán Hàng',
-    hasChild: true,
-    icon: <Store />,
   },
   {
     key: pathRoutes.updateSubscriberInfo as string,
