@@ -4,7 +4,6 @@ import {
   CButtonSave,
   CButtonSaveAndAdd,
   CTextArea,
-  IErrorResponse,
   IFieldErrorsItem,
   IModeAction,
   TitleHeader,

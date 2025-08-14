@@ -1,9 +1,10 @@
-import { CModal, CTable } from '@vissoft-react/common';
+import { CModal, CTable, TitleHeader } from '@vissoft-react/common';
 import { IEsimWarehouseList } from '../types';
 import { useColumnsEsimWarehouseDetails } from '../hooks/useColumnsEsimWarehouseDetails';
 import { useGetDetailsEsimWarehouse } from '../hooks/useGetDetailsEsimWarehouse';
+import { CustomerInfoTable } from './customerInfoTable';
 
-interface IModalEsimWarehouseDetails {
+interface IModalEsimWarehouseProps {
   showEsimDetails: boolean;
   onClose: () => void;
   record: IEsimWarehouseList | null;
@@ -13,7 +14,7 @@ export const EsimWarehouseDetails = ({
   showEsimDetails,
   onClose,
   record,
-}: IModalEsimWarehouseDetails) => {
+}: IModalEsimWarehouseProps) => {
   const columns = useColumnsEsimWarehouseDetails();
   const { data: detailEsim, isLoading: loadingEsimDetails } =
     useGetDetailsEsimWarehouse(record?.subId);
@@ -27,6 +28,11 @@ export const EsimWarehouseDetails = ({
       closable={true}
       onCancel={onClose}
     >
+      <TitleHeader style={{ color: '#005AAA' }}>
+        Thông tin khách hàng
+      </TitleHeader>
+      <CustomerInfoTable subId={record?.subId} />
+      <TitleHeader style={{ color: '#005AAA' }}>Thông tin eSIM</TitleHeader>
       <CTable
         columns={columns}
         dataSource={detailEsim}
