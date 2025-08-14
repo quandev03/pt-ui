@@ -1,12 +1,7 @@
 import { AnyElement, useActionMode } from '@vissoft-react/common';
 import { Form } from 'antd';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  usePrefixIsdnQuery,
-  usePrefixIsdnRegex,
-} from '../../../../../src/hooks/usePrefixIsdnRegex';
-import { useCheckIsdnAndGetPackage } from '../../hooks/useCheckIsdnAndGetPackage';
 import { useGenOtp } from '../../hooks/useGenOtp';
 import { useSellSinglePackageStore } from '../../store';
 import { handleConvertIsdn } from '../../utils';
@@ -20,29 +15,6 @@ export const useLogicActionSingleSalePackage = () => {
     { label: string; value: string; cycle: number | string; unit: string }[]
   >([]);
   const { setDataGenOtp, setCount, reset } = useSellSinglePackageStore();
-  const prefixIsdn = usePrefixIsdnRegex();
-  const { data: prefixIsdnAll } = usePrefixIsdnQuery();
-  const regexPrefixIsdn = useMemo(() => {
-    if (!prefixIsdnAll) return;
-    const newData = (prefixIsdnAll ?? [])
-      ?.map((item) => item.substring(1))
-      ?.join('|');
-    const prefixIsdn = new RegExp(`^0?(${newData})`);
-    return prefixIsdn;
-  }, [prefixIsdnAll]);
-  const {
-    mutate: checkIsdnAndGetPackage,
-    isPending: loadingCheckIsdnAndGetPackage,
-  } = useCheckIsdnAndGetPackage((data) => {
-    setOptionPackage(
-      data.map((option) => ({
-        label: option.packageCode,
-        value: option.packageId,
-        cycle: option.cycle,
-        unit: option.unit,
-      }))
-    );
-  });
   const handleCancel = useCallback(() => {
     form.resetFields();
     setOpenOtp(false);
@@ -51,46 +23,27 @@ export const useLogicActionSingleSalePackage = () => {
   const handleCheckNumberPhone = useCallback(
     (e: AnyElement) => {
       const value = e.target.value.trim();
-      if (regexPrefixIsdn?.test(value) && value) {
-        if (value.startsWith('84')) {
-          form.setFieldValue('isdn', value.replace('84', '0'));
-          form.validateFields(['isdn']);
-          checkIsdnAndGetPackage({
-            isdn: handleConvertIsdn(value),
-            type: form.getFieldValue('typePayment'),
-          });
-        } else if (
-          !value.startsWith('0') &&
-          value.length > 0 &&
-          value.length < 11
-        ) {
-          form.setFieldValue('isdn', '0' + value);
-          form.validateFields(['isdn']);
-          checkIsdnAndGetPackage({
-            isdn: handleConvertIsdn(value),
-            type: form.getFieldValue('typePayment'),
-          });
-        } else if (
-          value.startsWith('0') &&
-          value.length > 0 &&
-          value.length <= 11
-        ) {
-          checkIsdnAndGetPackage({
-            isdn: handleConvertIsdn(value),
-            type: form.getFieldValue('typePayment'),
-          });
-        } else if (value.length === 11) {
-          form.setFields([
-            {
-              name: 'isdn',
-              errors: ['Số thuê bao không đúng định dạng'],
-            },
-          ]);
-          return;
-        }
+      if (value.startsWith('84')) {
+        form.setFieldValue('isdn', value.replace('84', '0'));
+        form.validateFields(['isdn']);
+      } else if (
+        !value.startsWith('0') &&
+        value.length > 0 &&
+        value.length < 11
+      ) {
+        form.setFieldValue('isdn', '0' + value);
+        form.validateFields(['isdn']);
+      } else if (value.length === 11) {
+        form.setFields([
+          {
+            name: 'isdn',
+            errors: ['Số thuê bao không đúng định dạng'],
+          },
+        ]);
+        return;
       }
     },
-    [form, checkIsdnAndGetPackage, regexPrefixIsdn]
+    [form]
   );
   const { mutate: genOtp } = useGenOtp((data) => {
     const { idPackage, isdn, typePayment } = form.getFieldsValue();
@@ -131,10 +84,8 @@ export const useLogicActionSingleSalePackage = () => {
     form,
     handleClose,
     actionMode,
-    prefixIsdn,
     optionPackage,
     setOptionPackage,
-    loadingCheckIsdnAndGetPackage,
     openOtp,
     setOpenOtp,
     handleOpenOtp,

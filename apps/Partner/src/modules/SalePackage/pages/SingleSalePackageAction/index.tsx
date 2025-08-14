@@ -15,10 +15,7 @@ export const SingleSalePackageAction = () => {
   const {
     form,
     handleClose,
-    prefixIsdn,
     setOptionPackage,
-    optionPackage,
-    loadingCheckIsdnAndGetPackage,
     handleOpenOtp,
     handleCancel,
     openOtp,
@@ -43,12 +40,12 @@ export const SingleSalePackageAction = () => {
         <div className="bg-white rounded-[10px] px-6 pt-4 pb-8">
           <Row gutter={[30, 0]}>
             <Col span={12}>
-              <Form.Item label="Công nợ tạm tính" name="isdn">
+              <Form.Item label="Hạn mức tạm tính" name="isdn">
                 <CInputNumber disabled />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="idPackage" label="Công nợ với MBF">
+              <Form.Item name="idPackage" label="Hạn mức với MBF">
                 <CInputNumber disabled />
               </Form.Item>
             </Col>
@@ -57,11 +54,7 @@ export const SingleSalePackageAction = () => {
                 label="Số thuê bao"
                 name="isdn"
                 required
-                rules={[
-                  validateForm.required,
-                  validateForm.maxLength(11),
-                  prefixIsdn,
-                ]}
+                rules={[validateForm.required, validateForm.maxLength(11)]}
               >
                 <CInput
                   placeholder="Nhập số thuê bao"
@@ -83,13 +76,14 @@ export const SingleSalePackageAction = () => {
                 label="Gói cước"
                 rules={[validateForm.required]}
               >
-                <CSelect
+                {/* <CSelect
                   loading={loadingCheckIsdnAndGetPackage}
                   allowClear={false}
                   options={optionPackage}
                   className="min-w-[200px]"
                   placeholder="Chọn gói cước"
-                />
+                /> */}
+                <CInput />
               </Form.Item>
             </Col>
           </Row>

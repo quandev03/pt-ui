@@ -1,4 +1,4 @@
-import { IParamsRequest, RcFile } from '@vissoft-react/common';
+import { IParamsRequest } from '@vissoft-react/common';
 
 export interface IPackageSaleItem {
   fileNameOrSubscriberNumber: string;
@@ -18,7 +18,7 @@ export interface ISinglePackageSalePayload {
   package: string[];
 }
 export interface IBulkPackageSalePayload {
-  file: RcFile;
+  attachment: File;
 }
 export interface IPayloadCheckIsdnAndGetPackage {
   isdn: string;

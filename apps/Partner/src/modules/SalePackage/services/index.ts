@@ -1,9 +1,6 @@
 import { IPage } from '@vissoft-react/common';
-import {
-  prefixAuthService,
-  prefixSaleService,
-} from '../../../../src/constants';
-import { safeApiClient } from '../../../../src/services';
+import { prefixSaleService } from '../../../../src/constants';
+import { axiosClient, safeApiClient } from '../../../../src/services';
 import {
   IPackage,
   IPackageSaleItem,
@@ -13,10 +10,11 @@ import {
   IPayloadRegister,
   IResGenOtp,
 } from '../types';
+import { RcFile } from 'antd/lib/upload';
 export const packageSaleService = {
   getPackageSales: (params: IPackageSaleParams) => {
     return safeApiClient.get<IPage<IPackageSaleItem>>(
-      `${prefixAuthService}/api/package-sale`,
+      `${prefixSaleService}/sale-package/batch-sales`,
       {
         params,
       }
@@ -34,6 +32,21 @@ export const packageSaleService = {
       `${prefixSaleService}/sale-package/check-isdn`,
       {
         params: payload,
+      }
+    );
+    return res;
+  },
+  checkDataFile: async (file: RcFile) => {
+    const formData = new FormData();
+    formData.append('attachment', file);
+    const res = await axiosClient.post<string, Blob>(
+      `${prefixSaleService}/sale-package/check-data`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        responseType: 'blob',
       }
     );
     return res;

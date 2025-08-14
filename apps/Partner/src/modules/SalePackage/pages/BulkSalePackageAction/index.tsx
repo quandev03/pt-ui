@@ -1,23 +1,30 @@
 import {
   CButton,
   CButtonClose,
-  CInput,
   CInputNumber,
   TitleHeader,
   UploadFileTemplate,
 } from '@vissoft-react/common';
 import { Col, Form, Row } from 'antd';
 import { useLogicBulkSalePackageAction } from './useLogicBulkSalePackageAction';
+import { ModalOtpMemo } from '../components/ModalOtp';
 
 export const BulkSalePackageAction = () => {
-  const { form, handleClose, handleDownloadTemplate } =
-    useLogicBulkSalePackageAction();
+  const {
+    form,
+    handleClose,
+    handleDownloadTemplate,
+    handleCancel,
+    openOtp,
+    handleOpenOtp,
+    loadingCheckData,
+  } = useLogicBulkSalePackageAction();
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>Bán gói theo lô cho thuê bao</TitleHeader>
       <Form
         form={form}
-        onFinish={undefined}
+        onFinish={handleOpenOtp}
         labelAlign="left"
         labelCol={{ span: 5 }}
         labelWrap={true}
@@ -30,12 +37,12 @@ export const BulkSalePackageAction = () => {
         <div className="bg-white rounded-[10px] px-6 pt-4 pb-8">
           <Row gutter={[30, 0]}>
             <Col span={12}>
-              <Form.Item label="Công nợ tạm tính" name="isdn">
+              <Form.Item label="Hạn mức tạm tính" name="isdn">
                 <CInputNumber disabled />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="idPackage" label="Công nợ với MBF">
+              <Form.Item name="idPackage" label="Hạn mức với MBF">
                 <CInputNumber disabled />
               </Form.Item>
             </Col>
@@ -46,7 +53,7 @@ export const BulkSalePackageAction = () => {
                 accept={[
                   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 ]}
-                label="Tải file"
+                label="File số"
                 name={'attachment'}
               />
             </Col>
@@ -54,6 +61,7 @@ export const BulkSalePackageAction = () => {
         </div>
         <div className="flex gap-4 flex-wrap justify-end mt-7">
           <CButton
+            loading={loadingCheckData}
             onClick={() => {
               form.submit();
             }}
@@ -63,12 +71,12 @@ export const BulkSalePackageAction = () => {
           <CButtonClose onClick={handleClose} />
         </div>
       </Form>
-      {/* <ModalOtpMemo
+      <ModalOtpMemo
         handleSuccess={handleCancel}
         handleGenOtp={form.submit}
         open={openOtp}
-        onClose={handleCloseOtp}
-      /> */}
+        onClose={handleClose}
+      />
     </div>
   );
 };
