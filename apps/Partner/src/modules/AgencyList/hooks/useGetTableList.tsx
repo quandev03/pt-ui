@@ -174,19 +174,23 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
       },
     },
     {
-      title: 'Hành động',
+      title: 'Thao tác',
       align: 'center',
       width: 150,
       fixed: 'right',
       render(_, record) {
         const items = [
-          {
-            key: IModeAction.UPDATE,
-            onClick: () => {
-              handleAction(IModeAction.UPDATE, record);
-            },
-            label: <Text>Sửa</Text>,
-          },
+          ...(record.parentId !== null
+            ? [
+                {
+                  key: IModeAction.UPDATE,
+                  onClick: () => {
+                    handleAction(IModeAction.UPDATE, record);
+                  },
+                  label: <Text>Sửa</Text>,
+                },
+              ]
+            : []),
           ...(record.parentId !== null
             ? [
                 {

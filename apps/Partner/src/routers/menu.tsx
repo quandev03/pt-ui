@@ -35,7 +35,7 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.agencyList as string,
-    label: 'Cấu hình đại lý',
+    label: 'Danh sách đại lý',
     parentId: pathRoutes.accountAuthorization as string,
   },
   {
