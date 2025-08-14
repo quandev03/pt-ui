@@ -78,15 +78,6 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
       },
     },
     {
-      title: 'Loại dịch vụ',
-      dataIndex: 'service',
-      width: 150,
-      align: 'left',
-      render(value, record) {
-        return <RenderCell value={value} tooltip={value} />;
-      },
-    },
-    {
       title: 'User thực hiện',
       dataIndex: 'createdBy',
       width: 300,

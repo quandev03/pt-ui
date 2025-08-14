@@ -44,13 +44,6 @@ export const useLogicListFreeEsimBooking = () => {
 
     return [
       {
-        type: 'Select',
-        name: 'services',
-        label: 'Loại dịch vụ',
-        placeholder: 'Loại dịch vụ',
-        options: [],
-      },
-      {
         type: 'DateRange',
         name: 'createdBy',
         label: 'Thời gian tạo',
