@@ -9,6 +9,7 @@ import {
   ICCCDInfo,
   IOrganizationUnitDTO,
   IParamsProductByCategory,
+  IPartner,
   IPartnerCatalogParams,
   IStockNumberParams,
 } from '../types';
@@ -19,6 +20,7 @@ import {
   IParamsRequest,
   NotificationSuccess,
 } from '@vissoft-react/common';
+import { FormInstance } from 'antd';
 
 export const useGetOrganizationPartner = (params: IPartnerCatalogParams) => {
   return useQuery({
@@ -186,14 +188,6 @@ export const useGetOrganizationPartnerDetail = (
     },
   });
 };
-export const useGetCCCDInfo = (onSuccess: (data: ICCCDInfo) => void) => {
-  return useMutation({
-    mutationFn: PartnerCatalogService.getCCCDInfor,
-    onSuccess(data) {
-      onSuccess(data);
-    },
-  });
-};
 
 export const useGetOrganizationUsersByOrgCode = (
   partnerCode: string,
@@ -204,6 +198,23 @@ export const useGetOrganizationUsersByOrgCode = (
     queryFn: () =>
       PartnerCatalogService.getOrganizationUsersByOrgId(partnerCode, params),
     enabled: !!partnerCode,
+  });
+};
+
+export const useGetPartnerInfoByCode = (
+  onSuccess: (data: IPartner) => void,
+  onError: (error: IFieldErrorsItem[]) => void
+) => {
+  return useMutation({
+    mutationFn: PartnerCatalogService.getPartnerInfoByCode,
+    onSuccess(data) {
+      onSuccess(data);
+    },
+    onError(error: IErrorResponse) {
+      if (error.errors) {
+        onError(error.errors);
+      }
+    },
   });
 };
 

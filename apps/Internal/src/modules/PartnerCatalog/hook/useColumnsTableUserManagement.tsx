@@ -11,6 +11,7 @@ import {
   TypeTagEnum,
   IModeAction,
   usePermissions,
+  AnyElement,
 } from '@vissoft-react/common';
 import { Dropdown } from 'antd';
 import { ColumnsType } from 'antd/es/table';
@@ -18,7 +19,7 @@ import { MoreVertical } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import useConfigAppStore from '../../Layouts/stores';
-import { IUserPartnerCatalog } from '../types';
+import { IRoleItem, IUserPartnerCatalog } from '../types';
 
 export const useColumnsTableUserManagement = ({
   onAction,
@@ -56,10 +57,13 @@ export const useColumnsTableUserManagement = ({
     },
     {
       title: 'Vai trò',
-      dataIndex: 'role',
+      dataIndex: 'roles',
       width: 150,
       align: 'left',
-      render: (text) => <RenderCell value={text} tooltip={text} />,
+      render: (roles: IRoleItem[]) => {
+        const renderedValue = roles.map((role) => role.name).join(', ');
+        return <RenderCell value={renderedValue} tooltip={renderedValue} />;
+      },
     },
 
     {

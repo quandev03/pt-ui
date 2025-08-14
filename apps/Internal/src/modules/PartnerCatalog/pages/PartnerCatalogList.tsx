@@ -17,10 +17,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import useConfigAppStore from '../../Layouts/stores';
 import { StatusEnum } from '../constants';
 import { useColumnsTablePartnerCatalog } from '../hook/useColumnsTablePartnerCatalog';
-import {
-  useGetOrganizationPartner,
-  useUpdateStatusPartner,
-} from '../queryHooks';
+import { useGetOrganizationPartner, useUpdateStatusPartner } from '../hook';
 import usePartnerStore from '../stores';
 import { IOrganizationUnitDTO } from '../types';
 import ModalAssignPackage from '../components/ModalAssignPackage';

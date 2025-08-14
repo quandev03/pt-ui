@@ -1,16 +1,42 @@
 import {
   CInput,
   CTextArea,
+  IFieldErrorsItem,
   IModeAction,
   useActionMode,
   validateForm,
 } from '@vissoft-react/common';
 import { Col, Form, Row } from 'antd';
+import useFormInstance from 'antd/es/form/hooks/useFormInstance';
+import { useGetPartnerInfoByCode } from '../hook';
+import { IPartner } from '../types';
 
 const PartnerInfor = () => {
   const actionMode = useActionMode();
-  const handleBlurOrgCode = () => {
-    console.log('blur');
+  const form = useFormInstance();
+  const onGetPartnerSuccess = (data: IPartner) => {
+    form.setFieldsValue({
+      orgCode: data.orgCode,
+      orgName: data.orgName,
+      taxCode: data.taxCode,
+      phone: data.phone,
+      address: data.address,
+      contactPersonName: data.contactPersonName,
+      status: data.status,
+      description: data.description,
+    });
+  };
+  const onGetPartnerError = (error: IFieldErrorsItem[]) => {
+    console.log('error', error);
+  };
+  const { mutate: getPartnerInfoByCode } = useGetPartnerInfoByCode(
+    (data) => onGetPartnerSuccess(data),
+    (error: IFieldErrorsItem[]) => onGetPartnerError(error)
+  );
+  const handleGetPartnerInfo = () => {
+    const orgCode = form.getFieldValue('orgCode');
+    console.log('org code', form.getFieldValue('orgCode'));
+    getPartnerInfoByCode(orgCode);
   };
   return (
     <div className="relative p-5 border rounded-md">
@@ -32,7 +58,7 @@ const PartnerInfor = () => {
               preventSpecial
               preventVietnamese
               uppercase
-              onBlur={handleBlurOrgCode}
+              onBlur={handleGetPartnerInfo}
             />
           </Form.Item>
         </Col>
@@ -58,7 +84,7 @@ const PartnerInfor = () => {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Họ tên người liên hệ" name="name">
+          <Form.Item label="Họ tên người liên hệ" name="contactPersonName">
             <CInput placeholder="Nhập họ tên người liên hệ" disabled />
           </Form.Item>
         </Col>
@@ -68,7 +94,7 @@ const PartnerInfor = () => {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Mô tả" name="name">
+          <Form.Item label="Mô tả" name="description">
             <CTextArea placeholder="Nhập mô tả" maxLength={200} />
           </Form.Item>
         </Col>

@@ -23,7 +23,7 @@ import {
   useCreatePartner,
   useGetOrganizationPartnerDetail,
   useUpdatePartner,
-} from '../queryHooks';
+} from '../hook';
 import usePartnerStore from '../stores';
 import { IFormData, IPayloadPartner } from '../types';
 

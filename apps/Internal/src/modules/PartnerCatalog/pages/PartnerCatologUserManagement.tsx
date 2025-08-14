@@ -24,10 +24,7 @@ import { IUserPartnerCatalog } from '../types';
 import { notification } from 'antd';
 import useConfigAppStore from '../../Layouts/stores';
 import { useColumnsTableUserManagement } from '../hook/useColumnsTableUserManagement';
-import {
-  useGetDetailByCode,
-  useGetOrganizationUsersByOrgCode,
-} from '../queryHooks';
+import { useGetDetailByCode, useGetOrganizationUsersByOrgCode } from '../hook';
 
 export const PartnerCatalogUserManagement = () => {
   const { menuData } = useConfigAppStore();

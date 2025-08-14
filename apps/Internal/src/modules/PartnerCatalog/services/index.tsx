@@ -10,6 +10,7 @@ import {
   ICCCDInfo,
   IOrganizationUnitDTO,
   IParamsProductByCategory,
+  IPartner,
   IPartnerCatalogParams,
   IPayloadPartner,
   IProductAuthorization,
@@ -187,24 +188,6 @@ export const PartnerCatalogService = {
       }
     );
   },
-  getCCCDInfor: (payload: any) => {
-    const formData = new FormData();
-    formData.append('cardFront', payload.cardFront as Blob);
-    formData.append('cardBack', payload.cardBack as Blob);
-    formData.append('portrait', payload.portrait as Blob);
-
-    return safeApiClient.post<ICCCDInfo>(
-      // `${prefixSaleService}/activation-info?cardType=1`,
-      `${prefixSaleService}/organization-partner/delivery/info`,
-
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        } as AxiosRequestHeaders,
-      }
-    );
-  },
   getStockPermission: (id: string | number) => {
     return safeApiClient.get<IStockNumber[]>(
       `${prefixSaleService}/organization-partner/${id}/stock-permission`
@@ -242,6 +225,12 @@ export const PartnerCatalogService = {
   },
   getUnitByCode: (code: string) => {
     return safeApiClient.get<any>(
+      `${prefixSaleService}/organization-partner/get-by-code/${code}`
+    );
+  },
+
+  getPartnerInfoByCode: (code: string) => {
+    return safeApiClient.get<IPartner>(
       `${prefixSaleService}/organization-partner/get-by-code/${code}`
     );
   },

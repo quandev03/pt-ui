@@ -1,4 +1,4 @@
-import { IParamsRequest } from '@vissoft-react/common';
+import { AnyElement, IParamsRequest } from '@vissoft-react/common';
 
 export type IPartnerCatalogParams = IParamsRequest & {
   partnerType?: string;
@@ -244,7 +244,7 @@ export interface IUserPartnerCatalog {
   createdDate: string | Date | null;
   lastModifiedBy: string;
   lastModifiedDate: string | Date | null;
-  role: string;
+  roles: IRoleItem[];
 }
 
 export interface DataPayloadCreateUpdateUserPartnerCatalog {
@@ -276,4 +276,20 @@ export interface IListOfServicePackage {
   packagePrice: number;
   status: number;
   description: string;
+}
+export interface IPartner {
+  orgCode: string;
+  orgName: string;
+  taxCode: string;
+  phone: string;
+  address: string;
+  contactPersonName: string;
+  status: string;
+  description?: string;
+}
+export interface IRoleItem {
+  code: string;
+  id: string;
+  name: string;
+  status: number;
 }
