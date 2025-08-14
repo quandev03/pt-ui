@@ -1,14 +1,10 @@
-import {
-  FilterItemProps,
-  IParamsRequest,
-  StatusEnum,
-} from '@vissoft-react/common';
-import { useGetAllOrg } from './useGetAllOrg';
-import { useCallback, useEffect, useState } from 'react';
+import { FilterItemProps, IParamsRequest } from '@vissoft-react/common';
 import { debounce } from 'lodash';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import useConfigAppStore from '../../Layouts/stores';
+import { useGetAllOrg } from './useGetAllOrg';
 
-export const useFilters = (): FilterItemProps[] => {
+export const useFilters = (): { filters: FilterItemProps[] } => {
   const {
     params: { SUBSCRIBER_SUBS_STATUS },
   } = useConfigAppStore();
@@ -45,27 +41,30 @@ export const useFilters = (): FilterItemProps[] => {
       setParams({ ...params, page: orgPartners.length });
     }
   }, [orgPartners]);
-  return [
-    {
-      name: 'status',
-      label: 'Trạng thái',
-      type: 'Select',
-      placeholder: 'Chọn trạng thái',
-      options: SUBSCRIBER_SUBS_STATUS.map((item) => {
-        return {
-          label: item.value as string,
-          value: item.code as string,
-        };
-      }),
-    },
-    {
-      name: 'orgCode',
-      label: 'Đại lý',
-      type: 'Select',
-      placeholder: 'Chọn đại lý',
-      options: orgPartners,
-      onPopupScroll: handleScrollDatasets,
-      onSearch: handleSearch,
-    },
-  ];
+  const filters = useMemo(() => {
+    return [
+      {
+        name: 'status',
+        label: 'Trạng thái',
+        type: 'Select',
+        placeholder: 'Chọn trạng thái',
+        options: SUBSCRIBER_SUBS_STATUS?.map((item) => {
+          return {
+            label: item.value as string,
+            value: item.code as string,
+          };
+        }),
+      },
+      {
+        name: 'orgCode',
+        label: 'Đại lý',
+        type: 'Select',
+        placeholder: 'Chọn đại lý',
+        options: orgPartners,
+        onPopupScroll: handleScrollDatasets,
+        onSearch: handleSearch,
+      },
+    ];
+  }, [orgPartners, handleScrollDatasets, handleSearch]);
+  return { filters: filters as FilterItemProps[] };
 };

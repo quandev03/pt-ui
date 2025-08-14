@@ -382,7 +382,10 @@ export const ActionPage = () => {
                   >
                     Lưu
                   </CButtonSave>
-                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
+                  <CButtonClose
+                    onClick={() => navigate(pathRoutes.listOfServicePackage)}
+                    disabled={false}
+                  />
                 </>
               )}
               {actionMode === IModeAction.READ && (
@@ -393,13 +396,19 @@ export const ActionPage = () => {
                     }}
                     disabled={false}
                   />
-                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
+                  <CButtonClose
+                    onClick={() => navigate(pathRoutes.listOfServicePackage)}
+                    disabled={false}
+                  />
                 </>
               )}
               {actionMode === IModeAction.UPDATE && (
                 <>
                   <CButtonSave disabled={false} htmlType="submit" />
-                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
+                  <CButtonClose
+                    onClick={() => navigate(pathRoutes.listOfServicePackage)}
+                    disabled={false}
+                  />
                 </>
               )}
             </Space>
