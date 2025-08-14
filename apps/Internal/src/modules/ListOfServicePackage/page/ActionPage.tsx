@@ -241,7 +241,9 @@ export const ActionPage = () => {
                     placeholder="Nhập mã gói cước"
                     maxLength={20}
                     preventVietnamese
-                    preventOnlyWhitespace
+                    preventSpace
+                    uppercase
+                    preventSpecialExceptHyphenAndUnderscore
                   />
                 </Form.Item>
               </Col>

@@ -46,7 +46,7 @@ export const useAdd = (form: FormInstance, onSuccess?: () => void) => {
   return useMutation({
     mutationFn: fetch,
     onSuccess: () => {
-      NotificationSuccess(MESSAGE.G01);
+      NotificationSuccess('Thêm mới gói cước thành công');
       queryClient.invalidateQueries({
         queryKey: [REACT_QUERY_KEYS.LIST_OF_SERVICE_PACKAGE],
       });
