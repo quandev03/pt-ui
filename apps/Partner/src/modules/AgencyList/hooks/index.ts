@@ -58,7 +58,7 @@ export function useSupportUpdateUser(
   return useMutation({
     mutationFn: agencyListService.updateAgency,
     onSuccess: () => {
-      NotificationSuccess('Cập nhật thành công');
+      NotificationSuccess('Cập nhật Đại lý thành công');
       queryClient.invalidateQueries({
         queryKey: [REACT_QUERY_KEYS.GET_ALL_AGENCY],
       });
