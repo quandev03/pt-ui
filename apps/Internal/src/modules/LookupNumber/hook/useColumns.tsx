@@ -1,13 +1,12 @@
-import { useMemo } from 'react';
-import { IResLookupNumber } from '../types';
-import { ColumnProps } from 'antd/es/table';
-import { TableColumnsType, Tag } from 'antd';
 import {
   decodeSearchParams,
   RenderCell,
   StatusEnum,
 } from '@vissoft-react/common';
+import { TableColumnsType } from 'antd';
+import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { IResLookupNumber } from '../types';
 
 export const useColumns = () => {
   const [searchParams] = useSearchParams();
