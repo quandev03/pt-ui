@@ -2,7 +2,7 @@ import { CModal, CTable, TitleHeader } from '@vissoft-react/common';
 import { IEsimWarehouseList } from '../types';
 import { useColumnsEsimWarehouseDetails } from '../hooks/useColumnsEsimWarehouseDetails';
 import { useGetDetailsEsimWarehouse } from '../hooks/useGetDetailsEsimWarehouse';
-import { CustomerInfoTable } from './customerInfoTable';
+import { CustomerInfoTable } from './CustomerInfoTable';
 
 interface IModalEsimWarehouseProps {
   showEsimDetails: boolean;
