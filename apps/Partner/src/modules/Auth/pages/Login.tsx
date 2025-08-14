@@ -51,6 +51,10 @@ const LoginPage = () => {
   const { mutate: loginLocal, isPending: loadingLoginLocal } =
     useSupportLoginLocal(
       () => {
+        localStorage.setItem(
+          'partner_code',
+          form.getFieldValue('client_identity')
+        );
         setIsAuthenticated(true);
         handleRedirect();
       },
@@ -74,6 +78,13 @@ const LoginPage = () => {
     form.setFieldValue(field, value.trim());
     form.validateFields([field]);
   };
+  useEffect(() => {
+    const savedPartnerCode = localStorage.getItem('partner_code');
+    if (savedPartnerCode) {
+      form.setFieldsValue({ client_identity: savedPartnerCode });
+    }
+  }, [form]);
+
   return (
     <Spin spinning={!!totalMutating} wrapperClassName="flex-1">
       <Row
@@ -108,7 +119,7 @@ const LoginPage = () => {
               onFinish={(values: ILoginDataRequest) => {
                 loginLocal(values);
               }}
-              autoComplete="off"
+              autoComplete="on"
               className="!w-full"
             >
               <Form.Item
@@ -126,6 +137,8 @@ const LoginPage = () => {
                   className="login-form__input"
                   placeholder={'Nhập mã đối tác'}
                   maxLength={50}
+                  name="partner_code" // Đặt name khác để Chrome coi là field riêng
+                  autoComplete="on" // Nhóm riêng biệt
                 />
               </Form.Item>
               <Form.Item
