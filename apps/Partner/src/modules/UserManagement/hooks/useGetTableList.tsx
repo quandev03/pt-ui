@@ -19,11 +19,11 @@ import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { MoreVertical } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSupportDeleteUser } from '.';
 import { pathRoutes } from '../../../routers';
 import { IRoleItem } from '../../../types';
 import useConfigAppStore from '../../Layouts/stores';
-import { IGroups, IUserItem } from '../types';
-import { useSupportDeleteUser } from '.';
+import { IUserItem } from '../types';
 
 export const useGetTableList = (): ColumnsType<IUserItem> => {
   const [searchParams] = useSearchParams();
@@ -151,18 +151,14 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
     },
     {
       title: 'Đại lý',
-      dataIndex: 'groups',
+      dataIndex: 'orgName',
       width: 250,
       align: 'left',
-      render(value: IGroups[], record) {
-        const roleNames = value
-          ?.filter((item) => item.status !== StatusEnum.INACTIVE)
-          ?.map((item) => item.name)
-          ?.join(', ');
+      render(value, record) {
         return (
           <RenderCell
-            value={roleNames}
-            tooltip={roleNames}
+            value={value}
+            tooltip={value}
             disabled={record?.status !== 1}
           />
         );
@@ -252,7 +248,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
       },
     },
     {
-      title: 'Hành động',
+      title: 'Thao tác',
       align: 'center',
       width: 150,
       fixed: 'right',
@@ -264,13 +260,6 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
               handleAction(IModeAction.UPDATE, record);
             },
             label: <Text>Sửa</Text>,
-          },
-          {
-            key: IModeAction.DELETE,
-            onClick: () => {
-              handleAction(IModeAction.DELETE, record);
-            },
-            label: <Text type="danger">Xóa</Text>,
           },
         ].filter((item) => permission.getAllPermissions().includes(item.key));
 
@@ -284,7 +273,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
               />
             )}
             <div className="w-5">
-              {(permission.canUpdate || permission.canDelete) && (
+              {permission.canUpdate && (
                 <Dropdown
                   menu={{ items: items }}
                   placement="bottom"

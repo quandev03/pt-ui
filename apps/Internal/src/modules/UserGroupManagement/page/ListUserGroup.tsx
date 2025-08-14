@@ -125,6 +125,7 @@ export const ListUserGroup = () => {
           name="q"
           tooltip="Nhập mã hoặc tên nhóm tài khoản"
           placeholder="Nhập mã hoặc tên nhóm tài khoản"
+          className="!min-w-72"
         />
       }
       actionComponent={actionComponent}

@@ -6,6 +6,7 @@ import useConfigAppStore from '../modules/Layouts/stores';
 import { globalService } from '../services';
 import { protectedRoutes } from './routes';
 import { pathRoutes } from './url';
+import ForgotPassword from '../modules/Auth/pages/ForgotPassword';
 
 const mainRouterShouldRevalidate: ShouldRevalidateFunction = () => {
   return false;
@@ -57,7 +58,7 @@ export const routers = createHashRouter([
   },
   {
     path: pathRoutes.forgotPassword as string,
-    element: <div>ForgotPassword</div>,
+    element: <ForgotPassword />,
     errorElement: <ErrorPage />,
   },
   {

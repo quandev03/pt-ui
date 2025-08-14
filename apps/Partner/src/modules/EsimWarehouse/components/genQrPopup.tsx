@@ -1,37 +1,35 @@
-import { QRCode, Space, Typography } from 'antd';
 import { IEsimWarehouseList } from '../types';
 import { CModal } from '@vissoft-react/common';
-
-const { Text, Title } = Typography;
+import { Image } from 'antd';
 
 interface GenQrPopupProps {
   open: boolean;
   onCancel: () => void;
   record: IEsimWarehouseList | null;
+  loading: boolean;
+  qrCodeUrl: string | null;
 }
 
-export const GenQrPopup = ({ open, onCancel, record }: GenQrPopupProps) => {
-  const qrValue = record?.serial || `https://example.com/esim/${Math.random()}`;
-
+export const GenQrPopup = ({
+  open,
+  onCancel,
+  record,
+  loading,
+  qrCodeUrl,
+}: GenQrPopupProps) => {
   return (
     <CModal
+      title={'Gen QR code'}
       open={open}
       onCancel={onCancel}
-      title={<Title level={4}>Mã QR eSIM</Title>}
       footer={null}
       centered
+      loading={loading}
     >
-      {record && (
-        <Space direction="vertical" align="center" style={{ width: '100%' }}>
-          <QRCode value={qrValue} size={200} />
-          <Text style={{ marginTop: 16 }}>
-            Dành cho thuê bao: <Text strong>{record.isdn}</Text>
-          </Text>
-          <Text>
-            Serial SIM: <Text strong>{record.serial}</Text>
-          </Text>
-        </Space>
-      )}
+      <div style={{ textAlign: 'center', padding: '20px' }}>
+        {qrCodeUrl && <Image src={`${qrCodeUrl}`} width={200} />}
+        <p style={{ marginTop: '16px' }}>Quét mã QR này để kích hoạt eSIM</p>
+      </div>
     </CModal>
   );
 };

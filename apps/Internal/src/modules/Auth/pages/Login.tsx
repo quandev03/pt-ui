@@ -1,5 +1,5 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { useIsMutating, useQueryClient } from '@tanstack/react-query';
+import { useIsMutating } from '@tanstack/react-query';
 import {
   AnyElement,
   CButton,
@@ -9,9 +9,11 @@ import {
   StorageService,
   cleanUpPhoneNumber,
   setFieldError,
+  usePermissions,
   validateForm,
 } from '@vissoft-react/common';
 import { Col, Divider, Form, Image, Row, Spin } from 'antd';
+import { globalService } from 'apps/Internal/src/services/globalService';
 import { FocusEvent, useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BgLogin from '../../../assets/images/bg_banner.png';
@@ -23,38 +25,41 @@ import useConfigAppStore from '../../Layouts/stores';
 import LoginButton from '../components/LoginButton';
 import ModalForgotPassword from '../components/ModalForgotPassword';
 import { useSupportLoginLocal } from '../hooks';
-import { ILoginDataRequest } from '../types';
 
 const LoginPage = () => {
   const totalMutating = useIsMutating({ mutationKey: ['login'] });
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [openForgot, setForgot] = useState(false);
-  const { setIsAuthenticated, isAuthenticated } = useConfigAppStore();
+  const { setIsAuthenticated, isAuthenticated, menuData, setMenuData } =
+    useConfigAppStore();
   const token = StorageService.get(ACCESS_TOKEN_KEY);
   const { state: locationState } = useLocation();
+  const permission = usePermissions(menuData, pathRoutes.dashboard);
   const handleRedirect = useCallback(() => {
-    navigate(pathRoutes.welcome);
     if (locationState) {
       const { pathname, search } = locationState;
       navigate(`${pathname}${search}`);
+    } else if (permission.canRead) {
+      navigate(pathRoutes.dashboard);
     } else {
       navigate(pathRoutes.welcome);
     }
-  }, [locationState, navigate]);
+  }, [locationState, permission, navigate]);
 
   useEffect(() => {
     if (isAuthenticated && token) {
       handleRedirect();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated, token, handleRedirect]);
+  }, [isAuthenticated, token]);
 
   const { mutate: loginLocal, isPending: loadingLoginLocal } =
     useSupportLoginLocal(
-      () => {
+      async () => {
+        const menuData = await globalService.getMenu();
+        setMenuData(menuData);
         setIsAuthenticated(true);
-        handleRedirect();
       },
       (err: IErrorResponse) => {
         if (err.errors) {
@@ -107,9 +112,7 @@ const LoginPage = () => {
               form={form}
               layout="vertical"
               initialValues={{ remember: true }}
-              onFinish={(values: ILoginDataRequest) => {
-                loginLocal(values);
-              }}
+              onFinish={loginLocal}
               autoComplete="off"
               className="!w-full"
             >

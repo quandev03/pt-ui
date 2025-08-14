@@ -33,6 +33,11 @@ export interface IQrCodeSent {
   email: string;
 }
 
+export interface IQrCodeGen {
+  subId: string;
+  size: string;
+}
+
 export interface IPackage {
   createdBy: string;
   createdDate: string;
@@ -45,4 +50,17 @@ export interface IPackage {
   pckName: string;
   status: number;
   urlImagePackage: string;
+}
+
+export interface ICustomerInfo {
+  nationality: string;
+  typeDocument: string;
+  contractCode: string;
+  gender: number;
+  customerCode: string;
+  fullName: string;
+  birthOfDate: string;
+  idNoExpireDate: string;
+  issuePlace: string;
+  idNumber: string;
 }

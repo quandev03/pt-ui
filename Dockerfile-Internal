@@ -25,7 +25,8 @@ RUN ls -la && \
     echo "Current yarn config:" && \
     yarn config get npmRegistryServer && \
     echo "Starting yarn install..." && \
-    yarn install --frozen-lockfile --network-timeout 100000
+    rm -rf yarn.lock .yarn/cache && \
+    yarn install --network-timeout 100000
 
 COPY ./nx.json ./nx.json
 COPY ./apps/Internal/.env.production ./.env

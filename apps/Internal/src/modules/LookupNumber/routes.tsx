@@ -1,6 +1,5 @@
-import { lazy } from 'react';
-import { pathRoutes } from '../../routers/url';
 import { RouteObject } from 'react-router-dom';
+import { pathRoutes } from '../../routers/url';
 
 const routesLookupNumber: RouteObject[] = [
   {

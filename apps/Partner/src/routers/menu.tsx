@@ -1,23 +1,28 @@
 import { RouterItems } from '@vissoft-react/common';
-import { ChartNoAxesGantt, House, Settings, ShoppingCart } from 'lucide-react';
+import {
+  ChartLine,
+  ClipboardList,
+  Settings,
+  ShoppingCart,
+  Store,
+} from 'lucide-react';
 import { pathRoutes } from './url';
 
 export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.home as string,
-    icon: <House />,
     label: 'Tổng quan',
   },
   {
     key: pathRoutes.dashboard as string,
     label: 'Tổng quan',
-    icon: <ChartNoAxesGantt />,
+    icon: <ChartLine />,
   },
   {
     key: pathRoutes.accountAuthorization as string,
-    icon: <Settings />,
     label: 'Quản Trị Hệ Thống',
     hasChild: true,
+    icon: <Settings />,
   },
   {
     key: pathRoutes.roleManager as string,
@@ -28,6 +33,17 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.userManager as string,
     label: 'Quản lý user đại lý',
     parentId: pathRoutes.accountAuthorization as string,
+  },
+  {
+    key: pathRoutes.agencyList as string,
+    label: 'Danh sách đại lý',
+    parentId: pathRoutes.accountAuthorization as string,
+  },
+  {
+    key: pathRoutes.saleManagement as string,
+    label: 'Quản Lý Bán Hàng',
+    hasChild: true,
+    icon: <Store />,
   },
   {
     key: pathRoutes.updateSubscriberInfo as string,
@@ -47,18 +63,24 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.freeEsimBooking as string,
-    label: 'Book eSIM miễn phí',
-    parentId: pathRoutes.saleManagement as string,
-  },
-  {
-    key: pathRoutes.buyBundleWithEsim as string,
-    label: 'Book eSIM kèm gói',
+    label: 'Book eSIM',
     parentId: pathRoutes.saleManagement as string,
   },
   {
     key: pathRoutes.esimWarehouse as string,
     label: 'Danh sách eSIM',
     parentId: pathRoutes.saleManagement as string,
+  },
+  {
+    key: pathRoutes.report as string,
+    label: 'Báo cáo',
+    hasChild: true,
+    icon: <ClipboardList />,
+  },
+  {
+    key: pathRoutes.partnerOrderReport as string,
+    label: 'Báo cáo đơn hàng book eSIM',
+    parentId: pathRoutes.report as string,
   },
 ];
 

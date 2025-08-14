@@ -268,3 +268,72 @@ button {
     }
   }
 }
+
+/* loading custom */
+
+.logo-fade {
+  animation: fadeInOut 2s infinite;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.3;
+  }
+}
+
+.dot-flashing {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #4a6baf;
+  color: #4a6baf;
+  animation: dotFlashing 1s infinite linear alternate;
+  animation-delay: 0.5s;
+  margin-top: 20px;
+  margin-left: 50px;
+}
+
+.dot-flashing::before,
+.dot-flashing::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #4a6baf;
+  color: #4a6baf;
+}
+
+.dot-flashing::before {
+  left: -15px;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 0s;
+}
+
+.dot-flashing::after {
+  left: 15px;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 1s;
+}
+
+@keyframes dotFlashing {
+  0% {
+    background-color: #4a6baf;
+  }
+
+  50%,
+  100% {
+    background-color: rgba(74, 107, 175, 0.2);
+  }
+}

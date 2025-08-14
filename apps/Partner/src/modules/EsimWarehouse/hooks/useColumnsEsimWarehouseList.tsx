@@ -23,6 +23,7 @@ import {
   Status900Enum,
   status900Map,
 } from '../constants/enum';
+
 interface useColumnsEsimWarehouseListProps {
   onGenQr: (record: IEsimWarehouseList) => void;
   onSendQr: (record: IEsimWarehouseList) => void;
@@ -106,14 +107,26 @@ export const useColumnsEsimWarehouseList = ({
       width: 200,
       align: 'left',
       render(value: Status900Enum, record) {
-        const { text, type, color } = status900Map[value] || {
+        const { text, type, color, textColor, fontWeight } = status900Map[
+          value
+        ] || {
           text: 'Không rõ',
           type: TypeTagEnum.DEFAULT,
-          color: '#000000',
+          color: '#808080',
+          textColor: '#FFFFFF',
+          fontWeight: 'normal',
         };
         return (
           <CTag color={color} type={type}>
-            <RenderCell value={text} tooltip={text} />
+            {/* [FIX] Pass a styled <span> as the value to RenderCell */}
+            <RenderCell
+              value={
+                <span style={{ color: textColor, fontWeight: fontWeight }}>
+                  {text}
+                </span>
+              }
+              tooltip={text} // Tooltip should remain a plain string for best performance
+            />
           </CTag>
         );
       },
@@ -124,14 +137,26 @@ export const useColumnsEsimWarehouseList = ({
       width: 200,
       align: 'left',
       render(value: ActiveStatusEnum, record) {
-        const { text, type, color } = activeStatusMap[value] || {
+        const { text, type, color, textColor, fontWeight } = activeStatusMap[
+          value
+        ] || {
           text: 'Không rõ',
           type: TypeTagEnum.DEFAULT,
-          color: '#000000',
+          color: '#808080',
+          textColor: '#FFFFFF',
+          fontWeight: 'normal',
         };
         return (
           <CTag color={color} type={type}>
-            <RenderCell value={text} tooltip={text} />
+            {/* [FIX] Pass a styled <span> as the value to RenderCell */}
+            <RenderCell
+              value={
+                <span style={{ color: textColor, fontWeight: fontWeight }}>
+                  {text}
+                </span>
+              }
+              tooltip={text}
+            />
           </CTag>
         );
       },
@@ -169,7 +194,7 @@ export const useColumnsEsimWarehouseList = ({
             label: <Text>Gửi QR</Text>,
           },
           {
-            key: IModeAction.DELETE,
+            key: IModeAction.READ,
             onClick: () => onViewDetails(record),
             label: <Text>Xem chi tiết eSIM</Text>,
           },
@@ -177,17 +202,7 @@ export const useColumnsEsimWarehouseList = ({
 
         return (
           <WrapperActionTable>
-            <CButton
-              type="default"
-              // style={{
-              //   backgroundColor: '#FFFFFF',
-              //   color: '#616774',
-              //   fontWeight: 'bold',
-              //   borderRadius: '1px',
-              //   border: '1px radius #616774',
-              // }}
-              onClick={() => onGenQr(record)}
-            >
+            <CButton type="default" onClick={() => onGenQr(record)}>
               Gen QR
             </CButton>
             <div className="w-5">

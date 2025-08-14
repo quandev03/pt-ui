@@ -4,7 +4,7 @@ import { CButton } from './CButton';
 
 export const CButtonDownload: React.FC<ButtonProps> = ({ ...rest }) => {
   return (
-    <CButton icon={<Download />} {...rest}>
+    <CButton icon={<Download size={20} />} {...rest}>
       Tải file
     </CButton>
   );

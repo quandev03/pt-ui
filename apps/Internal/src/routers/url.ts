@@ -54,10 +54,6 @@ export const pathRoutes = {
   manageNumber: '/manage-number',
   lookupNumber: '/lookup-number', //tra cứu số
 
-  uploadNumber: '/upload-number',
-  uploadNumberView: (id?: string | number) =>
-    `/upload-number/view/${id ? id : ':id'}`,
-  uploadNumberAdd: '/upload-number/add',
   // Quản lý danh mục
   category: '/category',
 
@@ -67,6 +63,13 @@ export const pathRoutes = {
     `/list-of-service-package/edit/${id ? id : ':id'}`,
   listOfServicePackageView: (id?: IStringNumber) =>
     `/list-of-service-package/view/${id ? id : ':id'}`,
+
+  //========= Danh mục đối tác
+
+  uploadNumber: '/upload-number',
+  uploadNumberView: (id?: string | number) =>
+    `/upload-number/view/${id ? id : ':id'}`,
+  uploadNumberAdd: '/upload-number/add',
 
   //========= Danh mục đối tác
   partnerCatalog: '/partner-catalog',
@@ -86,7 +89,14 @@ export const pathRoutes = {
 
   // Danh sách kho eSIM
   esimStock: '/esim-stock',
+
+  //Quản lý bán hàng
+  salesManager: '/sales-manager',
+  eSIMStock: '/esim-stock',
+  eSIMStockView: (id?: IStringNumber) => `/esim-stock/view/${id ? id : ':id'}`,
   // Báo cáo
   report: '/report',
   reportPartner: '/report-partner',
+  reportPartnerView: (id?: IStringNumber) =>
+    `/report-partner/view/${id ? id : ':id'}`,
 };

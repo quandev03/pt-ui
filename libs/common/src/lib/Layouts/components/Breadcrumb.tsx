@@ -25,6 +25,14 @@ const specialPaths = [
     key: 'history',
     label: 'Lịch sử điểm',
   },
+  {
+    key: 'user-management',
+    label: 'Danh sách user',
+  },
+  {
+    key: 'profile',
+    label: 'Thông tin tài khoản',
+  },
 ];
 
 interface IBreadcrumbComponentProps {
@@ -34,7 +42,7 @@ interface IBreadcrumbComponentProps {
 export const BreadcrumbComponent: React.FC<IBreadcrumbComponentProps> = memo(
   ({ routerItems }) => {
     const { pathname } = useLocation();
-    const { unitId, id } = useParams<{ unitId: string; id: string }>();
+    const { orgCode, id } = useParams<{ orgCode: string; id: string }>();
     const getLabelFromMenuItems = useCallback(
       (key: string): string => {
         const menuItem = routerItems.find((item) => item.key === `/${key}`);
@@ -90,7 +98,8 @@ export const BreadcrumbComponent: React.FC<IBreadcrumbComponentProps> = memo(
               to={itemInMenus.key}
               className="!flex items-center gap-1 text-sm"
             >
-              {itemInMenus.icon ? itemInMenus.icon : null} {itemInMenus.label}
+              {/* {itemInMenus.icon ? itemInMenus.icon : null} {itemInMenus.label} */}
+              {itemInMenus.label}
             </Link>
           ) : (
             itemInMenus.label
@@ -100,7 +109,7 @@ export const BreadcrumbComponent: React.FC<IBreadcrumbComponentProps> = memo(
         }
         const nameSpecial = specialPaths.find((item) => _ === item.key);
         if (nameSpecial) item.title = nameSpecial.label;
-        if (_ === id || _ === unitId) {
+        if (_ === id || _ === orgCode) {
           item.title = '';
         }
 
@@ -123,7 +132,7 @@ export const BreadcrumbComponent: React.FC<IBreadcrumbComponentProps> = memo(
       getParentItemFromMenuItems,
       getItemFromMenuItems,
       id,
-      unitId,
+      orgCode,
       getLabelFromMenuItems,
     ]);
 

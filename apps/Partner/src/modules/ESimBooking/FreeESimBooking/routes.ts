@@ -23,6 +23,20 @@ const freeEsimBookingRoutes: RouteObject[] = [
       return { Component: ActionFreeEsim };
     },
   },
+  {
+    path: pathRoutes.buyBundleWithEsimAdd,
+    lazy: async () => {
+      const { ActionPackagedEsim } = await import('./pages');
+      return { Component: ActionPackagedEsim };
+    },
+  },
+  {
+    path: pathRoutes.buyBundleWithEsimView(),
+    lazy: async () => {
+      const { ActionPackagedEsim } = await import('./pages');
+      return { Component: ActionPackagedEsim };
+    },
+  },
 ];
 
 export default freeEsimBookingRoutes;

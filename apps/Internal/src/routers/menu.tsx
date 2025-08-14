@@ -1,25 +1,26 @@
 import { RouterItems } from '@vissoft-react/common';
-import { ChartNoAxesGantt, Settings } from 'lucide-react';
+import {
+  CardSim,
+  ChartLine,
+  FileDigit,
+  LayoutList,
+  NotebookPen,
+  Users,
+} from 'lucide-react';
 import { pathRoutes } from './url';
 
 export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.dashboard as string,
     label: 'Tổng quan',
-    icon: <ChartNoAxesGantt />,
-  },
-  {
-    key: pathRoutes.systemManager as string,
-    icon: <Settings />,
-    label: 'Quản trị hệ thống',
-    hasChild: true,
+    icon: <ChartLine />,
   },
   // quản lý tài khoản
   {
     key: pathRoutes.accountAuthorization as string,
-    label: 'Quản lý tài khoản',
+    label: 'Tài khoản và phân quyền',
     hasChild: true,
-    parentId: pathRoutes.systemManager,
+    icon: <Users />,
   },
   {
     key: pathRoutes.systemUserManager as string,
@@ -30,7 +31,7 @@ export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.category,
     label: 'Quản lý danh mục',
-    parentId: pathRoutes.systemManager,
+    icon: <LayoutList />,
     hasChild: true,
   },
   {
@@ -48,7 +49,7 @@ export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.manageNumber as string,
     label: 'Quản lý số',
-    parentId: pathRoutes.systemManager as string,
+    icon: <FileDigit />,
     hasChild: true,
   },
   {
@@ -84,16 +85,15 @@ export const routerItems: RouterItems[] = [
   // danh sách kho esim
   {
     key: pathRoutes.esimStock,
+    icon: <CardSim />,
     label: 'Danh sách eSIM',
-    parentId: pathRoutes.systemManager,
   },
   // Báo cáo
-
   {
     key: pathRoutes.report,
     label: 'Báo cáo',
+    icon: <NotebookPen />,
     hasChild: true,
-    parentId: pathRoutes.systemManager,
   },
   {
     key: pathRoutes.reportPartner,
