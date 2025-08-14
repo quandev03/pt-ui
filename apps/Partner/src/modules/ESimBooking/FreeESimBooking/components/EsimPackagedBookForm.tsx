@@ -6,7 +6,7 @@ import {
 } from '@vissoft-react/common';
 import { Col, Form, Row } from 'antd';
 import { memo } from 'react';
-import { useLogicActionPackagedEsim } from '../pages/ActionPackagedEsim/useLogicActionPackagedEsim';
+import { useLogicActionPackagedEsim } from '../pages/ActionBookEsim/useLogicActionPackagedEsim';
 import { useGetPackageCodes } from '../hooks/usePackageCodes';
 import { Minus, Plus } from 'lucide-react';
 
@@ -29,7 +29,6 @@ const BookPackagedEsimForm = () => {
       initialValue={[
         {
           quantity: null,
-          freePackageCode: undefined,
           paidPackageCode: undefined,
         },
       ]}
@@ -39,15 +38,15 @@ const BookPackagedEsimForm = () => {
           {fields.map((field, index) => (
             <Row
               key={field.key}
-              gutter={[16, 1]}
+              gutter={[24, 0]}
               style={{ alignItems: 'center' }}
             >
-              <Col span={7}>
+              <Col span={11}>
                 <Form.Item
                   {...field}
                   label="Số lượng eSIM"
                   name={[field.name, 'quantity']}
-                  labelCol={{ span: 10 }}
+                  labelCol={{ span: 6 }}
                   wrapperCol={{ span: 16 }}
                   rules={[
                     { required: true, message: 'Vui lòng nhập số lượng!' },
@@ -76,28 +75,12 @@ const BookPackagedEsimForm = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={7}>
+              <Col span={11}>
                 <Form.Item
                   {...field}
-                  label="Gói cước miễn phí"
-                  name={[field.name, 'freePackageCode']}
-                  labelCol={{ span: 10 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  <CSelect
-                    placeholder="Chọn gói cước"
-                    disabled={isReadOnly}
-                    options={packageOptions}
-                    allowClear
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={7}>
-                <Form.Item
-                  {...field}
-                  label="Gói cước có phí"
+                  label="Gói cước"
                   name={[field.name, 'paidPackageCode']}
-                  labelCol={{ span: 10 }}
+                  labelCol={{ span: 6 }}
                   wrapperCol={{ span: 16 }}
                   rules={[
                     { required: true, message: 'Vui lòng chọn gói cước!' },

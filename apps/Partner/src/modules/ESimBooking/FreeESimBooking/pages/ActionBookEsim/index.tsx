@@ -23,7 +23,7 @@ export const ActionPackagedEsim = memo(() => {
             <>
               <Col span={12}>
                 <Form.Item
-                  label="Công nợ tạm tính"
+                  label="Hạn mức tạm tính"
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
                   name="quantity"
@@ -42,7 +42,7 @@ export const ActionPackagedEsim = memo(() => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  label="Công nợ với MBF"
+                  label="Hạn mức với MBF"
                   name="packageCode"
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
@@ -66,7 +66,6 @@ export const ActionPackagedEsim = memo(() => {
               label="Ghi chú"
               name="description"
               labelCol={{ span: 3 }}
-              // wrapperCol={{ span: 15 }}
             >
               <CTextArea
                 placeholder="Nhập ghi chú"

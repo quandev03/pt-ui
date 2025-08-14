@@ -36,11 +36,11 @@ export const useLogicActionPackagedEsim = () => {
   const Title = useMemo(() => {
     switch (actionMode) {
       case IModeAction.READ:
-        return 'Xem chi tiết GD book eSIM';
+        return 'Xem chi tiết GD đặt hàng eSIM';
       case IModeAction.CREATE:
-        return 'Book eSIM';
+        return 'Đặt hàng eSIM';
       default:
-        return 'Xem chi tiết GD book eSIM';
+        return 'Xem chi tiết GD đặt hàng eSIM';
     }
   }, [actionMode]);
 
