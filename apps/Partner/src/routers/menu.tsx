@@ -2,9 +2,9 @@ import { RouterItems } from '@vissoft-react/common';
 import {
   ChartLine,
   ClipboardList,
-  Settings,
   ShoppingCart,
   Store,
+  UserRoundCog,
 } from 'lucide-react';
 import { pathRoutes } from './url';
 
@@ -20,9 +20,9 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.accountAuthorization as string,
+    icon: <UserRoundCog />,
     label: 'Quản Trị Hệ Thống',
     hasChild: true,
-    icon: <Settings />,
   },
   {
     key: pathRoutes.roleManager as string,
@@ -49,11 +49,6 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.updateSubscriberInfo as string,
     label: 'Cập nhật thông tin thuê bao',
     parentId: pathRoutes.saleManagement as string,
-  },
-  {
-    key: pathRoutes.agencyList as string,
-    label: 'Cấu hình đại lý',
-    parentId: pathRoutes.accountAuthorization as string,
   },
   {
     key: pathRoutes.saleManagement as string,
