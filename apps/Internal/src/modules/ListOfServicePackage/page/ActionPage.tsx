@@ -74,13 +74,17 @@ export const ActionPage = () => {
         const url = window.URL.createObjectURL(blobData);
         setImageUrl(url);
         setImageError(false);
+        const existingFile = new File([blobData], 'image.jpg', {
+          type: blobData.type || 'image/jpeg',
+        });
+        form.setFieldValue('images', {
+          file: existingFile,
+        });
       } else {
-        // Handle case when no image data is received
         setImageError(true);
         setImageUrl(null);
       }
     } catch (error) {
-      console.error('Error creating object URL:', error);
       setImageError(true);
       setImageUrl(null);
     }
@@ -158,15 +162,9 @@ export const ActionPage = () => {
 
   const handleSubmit = useCallback(
     (values: IListOfServicePackageForm) => {
-      let imageData = form.getFieldValue('images')?.file ?? undefined;
-
-      // If editing and image hasn't changed, don't send image data
-      if (actionMode === IModeAction.UPDATE && !isChangeImage) {
-        // Don't send image data if it hasn't changed
-        // The useEdit hook will handle this by not appending to FormData
-        imageData = undefined;
-      }
-
+      // The form stores the File directly in `images`
+      const imageData = form.getFieldValue('images')?.file ?? undefined;
+      console.log(imageData, 'imageData');
       const data = {
         ...values,
         images: imageData,

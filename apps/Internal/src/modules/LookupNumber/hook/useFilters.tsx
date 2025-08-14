@@ -6,8 +6,12 @@ import {
 import { useGetAllOrg } from './useGetAllOrg';
 import { useCallback, useEffect, useState } from 'react';
 import { debounce } from 'lodash';
+import useConfigAppStore from '../../Layouts/stores';
 
 export const useFilters = (): FilterItemProps[] => {
+  const {
+    params: { SUBSCRIBER_SUBS_STATUS },
+  } = useConfigAppStore();
   const [params, setParams] = useState<IParamsRequest>({
     page: 0,
     size: 20,
@@ -47,16 +51,12 @@ export const useFilters = (): FilterItemProps[] => {
       label: 'Trạng thái',
       type: 'Select',
       placeholder: 'Chọn trạng thái',
-      options: [
-        {
-          label: 'Hoạt động',
-          value: String(StatusEnum.ACTIVE),
-        },
-        {
-          label: 'Không hoạt động',
-          value: String(StatusEnum.INACTIVE),
-        },
-      ],
+      options: SUBSCRIBER_SUBS_STATUS.map((item) => {
+        return {
+          label: item.value as string,
+          value: item.code as string,
+        };
+      }),
     },
     {
       name: 'orgCode',

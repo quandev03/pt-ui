@@ -31,7 +31,7 @@ export const useGetAllOrg = (params: IParamsRequest) => {
       });
       return result.map((items) => {
         return {
-          value: items.id,
+          value: items.orgCode,
           label: items.orgName,
         };
       });
