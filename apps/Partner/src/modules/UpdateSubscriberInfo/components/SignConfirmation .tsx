@@ -25,9 +25,15 @@ import PreviewPdf from './PreviewPdf';
 const SignConfirmation = () => {
   const form = useFormInstance();
   const isAgreeND13 = Form.useWatch('agreeND13', form);
-  const { setStep, ocrResponse, setIntervalApi, interval, agreeDegree13 } =
-    useUpdateSubscriberInfoStore();
-  const [isSignSuccess, setIsSignSuccess] = useState(false);
+  const {
+    setStep,
+    ocrResponse,
+    setIntervalApi,
+    interval,
+    agreeDegree13,
+    isSignSuccess,
+    setIsSignSuccess,
+  } = useUpdateSubscriberInfoStore();
   const [isOpenDecree13, setIsOpenDecree13] = useState(false);
   const [isOpenModalContract, setIsOpenModalContract] = useState(false);
   const [isOpenModalDegree, setIsOpenModalDegree] = useState(false);
@@ -186,6 +192,7 @@ const SignConfirmation = () => {
           className="rounded-full py-6 w-full mt-3"
           onClick={handleUpdate}
           loading={loadingSubmit}
+          disabled={!isSignSuccess}
         >
           Cập nhật TTTB
         </CButton>

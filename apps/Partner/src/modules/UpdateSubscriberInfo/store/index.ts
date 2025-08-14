@@ -15,6 +15,8 @@ interface IUpdateSubscriberInfoStore {
   setIntervalApi: (data: AnyElement) => void;
   agreeDegree13: number[];
   setAgreeDegree13: (data: number[]) => void;
+  isSignSuccess: boolean;
+  setIsSignSuccess: (data: boolean) => void;
   resetStore: () => void;
 }
 
@@ -44,12 +46,19 @@ export const useUpdateSubscriberInfoStore = create<IUpdateSubscriberInfoStore>(
     setAgreeDegree13(data) {
       set(() => ({ agreeDegree13: data }));
     },
+    isSignSuccess: false,
+    setIsSignSuccess(data) {
+      set(() => ({
+        isSignSuccess: data,
+      }));
+    },
     resetStore() {
       set(() => ({
         step: StepEnum.STEP1,
         ocrResponse: undefined,
         interval: undefined,
         contractUrl: undefined,
+        isSignSuccess: false,
       }));
     },
   })

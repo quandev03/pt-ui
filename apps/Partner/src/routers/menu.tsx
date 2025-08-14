@@ -1,6 +1,6 @@
-import { House, Settings, Store } from 'lucide-react';
-import { pathRoutes } from './url';
 import { RouterItems } from '@vissoft-react/common';
+import { House, Settings, ShoppingCart } from 'lucide-react';
+import { pathRoutes } from './url';
 
 export const routerItems: RouterItems[] = [
   {
@@ -26,7 +26,7 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.saleManagement as string,
-    icon: <Store />,
+    icon: <ShoppingCart />,
     label: 'Quản lý bán hàng',
     hasChild: true,
   },
