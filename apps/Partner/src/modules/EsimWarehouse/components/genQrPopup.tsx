@@ -1,6 +1,4 @@
-// components/genQrPopup.tsx (Example implementation)
-
-import { IEsimWarehouseList } from '../types'; // Adjust path as needed
+import { IEsimWarehouseList } from '../types';
 import { CModal } from '@vissoft-react/common';
 import { Image } from 'antd';
 
