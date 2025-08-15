@@ -6,7 +6,7 @@ import { safeApiClient } from '../../../../services/axios';
 export const freeEsimBookingServices = {
   getListFreeEsimBooking: async (params: IParamsRequest) => {
     return safeApiClient.get<IPage<IFreeEsimBooking>>(
-      `${prefixSaleService}/esim-free/book-free`,
+      `${prefixSaleService}/esim`,
       {
         params,
       }

@@ -7,19 +7,57 @@ import {
   TitleHeader,
 } from '@vissoft-react/common';
 import { Col, Form, Row } from 'antd';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useLogicActionPackagedEsim } from './useLogicActionPackagedEsim';
 import EsimPackagedBookForm from '../../components/EsimPackagedBookForm';
+import { useGetPackageCodes } from '../../hooks/usePackageCodes';
 
 export const ActionPackagedEsim = memo(() => {
   const {
+    id,
     Title,
     form,
     handleClose,
     actionMode,
     handleFinish,
     bookingInProcess,
+    listEsimBooked,
   } = useLogicActionPackagedEsim();
+
+  const { data: packageCodeList } = useGetPackageCodes();
+  const packageOptions = packageCodeList?.map((pkg) => ({
+    key: pkg.id,
+    value: pkg.pckCode,
+    label: pkg.pckCode,
+  }));
+
+  useEffect(() => {
+    if (actionMode === IModeAction.CREATE && packageOptions?.length === 1) {
+      form.setFieldsValue({ packageCodes: packageOptions[0].value });
+    }
+  }, [actionMode, form, packageOptions]);
+
+  // FIX: This useEffect was updated to correctly populate the form in READ mode.
+  useEffect(() => {
+    if (actionMode === IModeAction.READ && listEsimBooked?.content && id) {
+      const esimData = listEsimBooked.content.find(
+        (item: any) => item.id === id
+      );
+      if (esimData) {
+        // The form values are set here.
+        // 1. Added the missing 'description' field.
+        // 2. Kept 'quantity' and 'packageCodes' as they were, assuming they are
+        //    used by the EsimPackagedBookForm component. If those fields are nested
+        //    in the form structure (e.g., under a 'packages' object), this part
+        //    would need to be adjusted to match that structure.
+        form.setFieldsValue({
+          description: esimData.description || '',
+          quantity: esimData.quantity || '',
+          packageCodes: esimData.packageCodes || '',
+        });
+      }
+    }
+  }, [actionMode, form, id, listEsimBooked?.content]);
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -33,7 +71,7 @@ export const ActionPackagedEsim = memo(() => {
                   label="Hạn mức tạm tính"
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
-                  name="quantity"
+                  name="temporaryLimit"
                 >
                   <CInputNumber
                     disabled
@@ -50,7 +88,7 @@ export const ActionPackagedEsim = memo(() => {
               <Col span={12}>
                 <Form.Item
                   label="Hạn mức với MBF"
-                  name="packageCode"
+                  name="mbfLimit"
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
                 >

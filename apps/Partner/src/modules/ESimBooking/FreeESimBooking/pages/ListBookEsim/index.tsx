@@ -3,13 +3,8 @@ import { memo } from 'react';
 import { useLogicListFreeEsimBooking } from './useLogicListFreeEsimBooking';
 
 export const ListFreeEsim = memo(() => {
-  const {
-    filters,
-    actionComponent,
-    columns,
-    loadingEsimList,
-    listFreeEsimBooked,
-  } = useLogicListFreeEsimBooking();
+  const { filters, actionComponent, columns, loadingEsimList, listEsimBooked } =
+    useLogicListFreeEsimBooking();
   return (
     <LayoutList
       title="Danh sách đặt hàng eSIM"
@@ -17,7 +12,7 @@ export const ListFreeEsim = memo(() => {
       filterItems={filters}
       columns={columns}
       loading={loadingEsimList}
-      data={listFreeEsimBooked}
+      data={listEsimBooked}
       searchComponent={
         <LayoutList.SearchComponent
           name="textSearch"

@@ -60,7 +60,7 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
     },
     {
       title: 'Gói cước',
-      dataIndex: 'pckCode',
+      dataIndex: 'packageCodes',
       width: 150,
       align: 'left',
       fixed: 'left',
@@ -70,11 +70,17 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
     },
     {
       title: 'Tổng tiền gói cước',
-      dataIndex: 'pckPrice',
+      dataIndex: 'amountTotal',
       width: 150,
       align: 'left',
       render(value, record) {
-        return <RenderCell value={value} tooltip={value} />;
+        // Kiểm tra nếu giá trị không hợp lệ (null, undefined) thì hiển thị gạch ngang
+        if (value === null || value === undefined) {
+          return <RenderCell value="-" tooltip="-" />;
+        }
+        const formattedValue = `${Number(value).toLocaleString('vi-VN')} đ`;
+
+        return <RenderCell value={formattedValue} tooltip={formattedValue} />;
       },
     },
     {
@@ -98,7 +104,7 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
     },
     {
       title: 'Thời gian hoàn thành',
-      dataIndex: 'finishedDate',
+      dataIndex: 'orderDate',
       width: 200,
       align: 'left',
       render(value) {
@@ -141,11 +147,11 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
           <RenderCell
             value={
               <div>
-                <div>Số lượng thành công: {record.succeededNumber}</div>
+                <div>Số lượng thành công: {record.successedNumber}</div>
                 <div>Số lượng thất bại: {record.failedNumber}</div>
               </div>
             }
-            tooltip={`Số lượng thành công: ${record.succeededNumber}\nSố lượng thất bại: ${record.failedNumber}`}
+            tooltip={`Số lượng thành công: ${record.successedNumber}\nSố lượng thất bại: ${record.failedNumber}`}
           />
         );
       },

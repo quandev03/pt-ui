@@ -1,8 +1,10 @@
 import {
   AnyElement,
   decodeSearchParams,
+  formatQueryParams,
   IFieldErrorsItem,
   IModeAction,
+  IParamsRequest,
   useActionMode,
 } from '@vissoft-react/common';
 import { Form } from 'antd';
@@ -10,6 +12,7 @@ import { useCallback, useMemo } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { IBookFreeEsimPayload } from '../../types';
 import { useBookFreeEsim } from '../../hooks/useBookFreeEsim';
+import { useGetListFreeEsimBooking } from '../../hooks/useGetListFreeEsimBooking';
 
 export const useLogicActionPackagedEsim = () => {
   const navigate = useNavigate();
@@ -18,6 +21,10 @@ export const useLogicActionPackagedEsim = () => {
   const [form] = Form.useForm();
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
+
+  const { data: listEsimBooked } = useGetListFreeEsimBooking(
+    formatQueryParams<IParamsRequest>(params)
+  );
 
   const onSuccess = useCallback(() => {
     navigate(-1);
@@ -51,7 +58,6 @@ export const useLogicActionPackagedEsim = () => {
   }, [actionMode]);
 
   const handleFinish = (values: AnyElement) => {
-    console.log('Original form values:', values);
     const payload: IBookFreeEsimPayload = values.packages;
     bookFreeEsim(payload);
   };
@@ -60,11 +66,13 @@ export const useLogicActionPackagedEsim = () => {
     navigate(-1);
   }, [navigate]);
   return {
+    id,
     Title,
     form,
     actionMode,
     handleClose,
     handleFinish,
     bookingInProcess,
+    listEsimBooked,
   };
 };

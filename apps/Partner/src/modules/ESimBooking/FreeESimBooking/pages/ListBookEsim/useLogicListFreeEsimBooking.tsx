@@ -33,7 +33,7 @@ export const useLogicListFreeEsimBooking = () => {
     );
   }, [handleAdd, permission.canCreate]);
 
-  const { data: listFreeEsimBooked, isLoading: loadingEsimList } =
+  const { data: listEsimBooked, isLoading: loadingEsimList } =
     useGetListFreeEsimBooking(formatQueryParams<IParamsRequest>(params));
 
   const columns: ColumnsType<IFreeEsimBooking> = useGetTableFreeEsimBooking();
@@ -48,17 +48,18 @@ export const useLogicListFreeEsimBooking = () => {
         name: 'createdBy',
         label: 'Thời gian tạo',
         keySearch: ['from', 'to'],
-        formatSearch: 'YYYY-MM-DD',
+        formatSearch: 'DD/MM/YYYY',
         placeholder: ['Từ ngày', 'Đến ngày'],
         defaultValue: [startDate, today],
       },
     ];
   }, []);
+
   return {
     filters,
     actionComponent,
     columns,
-    listFreeEsimBooked,
+    listEsimBooked,
     loadingEsimList,
   };
 };

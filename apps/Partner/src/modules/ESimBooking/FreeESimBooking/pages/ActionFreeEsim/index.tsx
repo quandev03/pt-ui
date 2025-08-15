@@ -33,7 +33,7 @@ export const ActionFreeEsim = memo(() => {
       if (esimData) {
         form.setFieldsValue({
           quantity: esimData.quantity || '',
-          packageCode: esimData.pckCode || '',
+          packageCode: esimData.packageCodes || '',
         });
       }
     }
@@ -87,7 +87,7 @@ export const ActionFreeEsim = memo(() => {
           <Col span={12}>
             <Form.Item
               label="Gói cước"
-              name="packageCode"
+              name="packageCodes"
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 18 }}
               required
@@ -115,7 +115,6 @@ export const ActionFreeEsim = memo(() => {
               label="Ghi chú"
               name="description"
               labelCol={{ span: 3 }}
-              // wrapperCol={{ span: 15 }}
             >
               <CTextArea
                 placeholder="Nhập ghi chú"

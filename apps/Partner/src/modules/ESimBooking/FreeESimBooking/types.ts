@@ -1,13 +1,23 @@
 export interface IFreeEsimBooking {
-  id: string;
-  quantity: number;
-  pckCode: string;
+  amountTotal: number;
+  cancelReason: string;
   createdBy: string;
   createdDate: string;
-  finishedDate: string;
-  status: number;
-  succeededNumber: string;
-  failedNumber: string;
+  customerEmail: string;
+  description: string;
+  failedNumber: number;
+  id: string;
+  modifiedBy: string;
+  modifiedDate: string;
+  note: string;
+  orderDate: string;
+  orderNo: any;
+  orderType: number;
+  orgId: string;
+  packageCodes: string;
+  quantity: number;
+  reasonId: string;
+  successedNumber: number;
 }
 
 export interface IBookFreeEsim {
