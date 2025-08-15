@@ -4,7 +4,7 @@ import {
   formatQueryParams,
   IParamsRequest,
 } from '@vissoft-react/common';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useColumnsEsimWarehouseList } from '../../hooks/useColumnsEsimWarehouseList';
 import { IEsimWarehouseList } from '../../types';
@@ -22,7 +22,6 @@ import { message } from 'antd';
 import { useGetGenQrCode } from '../../hooks/useGetGenQrCode';
 import { useGetAgencyOptions } from '../../../../hooks/useGetAgencyOptions';
 
-// No props are needed here. The hook will manage its own state.
 export const useLogicListEsimWarehouse = () => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
@@ -30,7 +29,6 @@ export const useLogicListEsimWarehouse = () => {
     useGetEsimWarehouseList(formatQueryParams<IParamsRequest>(params));
   const { data: agencyOptions = [] } = useGetAgencyOptions();
 
-  // --- State for Modals and selected data ---
   const [selectedRecord, setSelectedRecord] =
     useState<IEsimWarehouseList | null>(null);
   const [showEsimDetails, setShowEsimDetails] = useState(false);
@@ -56,7 +54,7 @@ export const useLogicListEsimWarehouse = () => {
 
   const onGenQrSuccess = (imageBlob: Blob) => {
     const url = URL.createObjectURL(imageBlob);
-
+    console.log('aaaaaaaaaaaaaaaaa: ', url);
     setQrCodeUrl(url);
   };
   const onGenQrError = () => {
@@ -83,17 +81,21 @@ export const useLogicListEsimWarehouse = () => {
   const handleCloseGenQrModal = useCallback(() => {
     setGenQrModalOpen(false);
     setSelectedRecord(null);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (qrCodeUrl) {
-        console.log('Revoking old Blob URL:', qrCodeUrl);
-        URL.revokeObjectURL(qrCodeUrl);
-        setQrCodeUrl(null);
-      }
-    };
+    if (qrCodeUrl) {
+      URL.revokeObjectURL(qrCodeUrl);
+      setQrCodeUrl(null);
+    }
   }, [qrCodeUrl]);
+
+  // useEffect(() => {
+  //   return () => {
+  //     if (qrCodeUrl) {
+  //       console.log('Revoking old Blob URL:', qrCodeUrl);
+  //       URL.revokeObjectURL(qrCodeUrl);
+  //       setQrCodeUrl(null);
+  //     }
+  //   };
+  // }, [qrCodeUrl]);
 
   const columns: ColumnsType<IEsimWarehouseList> = useColumnsEsimWarehouseList({
     onSendQr: handleOpenSendQr,
@@ -116,19 +118,19 @@ export const useLogicListEsimWarehouse = () => {
   const subStatusOptions: DefaultOptionType[] = useMemo(
     () => [
       {
-        value: Status900Enum.IN_STORE,
+        value: String(Status900Enum.IN_STORE),
         label: status900Map[Status900Enum.IN_STORE].text,
       },
       {
-        value: Status900Enum.SOLD,
+        value: String(Status900Enum.SOLD),
         label: status900Map[Status900Enum.SOLD].text,
       },
       {
-        value: Status900Enum.INFO_UPDATED,
+        value: String(Status900Enum.INFO_UPDATED),
         label: status900Map[Status900Enum.INFO_UPDATED].text,
       },
       {
-        value: Status900Enum.REJECTED,
+        value: String(Status900Enum.REJECTED),
         label: status900Map[Status900Enum.REJECTED].text,
       },
     ],
@@ -138,26 +140,26 @@ export const useLogicListEsimWarehouse = () => {
   const activeStatusOptions: DefaultOptionType[] = useMemo(
     () => [
       {
-        value: ActiveStatusEnum.NORMAL,
+        value: String(ActiveStatusEnum.NORMAL),
         label: activeStatusMap[ActiveStatusEnum.NORMAL].text,
       },
       {
-        value: ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST,
+        value: String(ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST),
         label:
           activeStatusMap[ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST].text,
       },
       {
-        value: ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_PROVIDER,
+        value: String(ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_PROVIDER),
         label:
           activeStatusMap[ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_PROVIDER].text,
       },
       {
-        value: ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_REQUEST,
+        value: String(ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_REQUEST),
         label:
           activeStatusMap[ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_REQUEST].text,
       },
       {
-        value: ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_PROVIDER,
+        value: String(ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_PROVIDER),
         label:
           activeStatusMap[ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_PROVIDER].text,
       },

@@ -105,6 +105,6 @@ export const status900Map: Record<
 };
 
 export const GENDER_MAP: { [key: number]: string } = {
-  1: 'Nam',
-  0: 'Nữ',
+  0: 'Nam',
+  1: 'Nữ',
 };

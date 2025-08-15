@@ -4,7 +4,6 @@ import { useLogicListEsimWarehouse } from './useLogicListEsimWarehouse';
 import { EsimWarehouseDetails } from '../../components/esimWarehouseDetails';
 import { GenQrPopup } from '../../components/genQrPopup';
 import { SendQrPopup } from '../../components/sendQrPopup';
-
 export const ListEsimWarehouse = memo(() => {
   const {
     columns,

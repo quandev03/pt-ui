@@ -86,7 +86,7 @@ export const useColumnsEsimWarehouseList = ({
     },
     {
       title: 'Mã đơn hàng',
-      dataIndex: 'orgCode',
+      dataIndex: 'orderNo',
       width: 200,
       render(value, record) {
         return <RenderCell value={value} tooltip={value} />;
@@ -110,7 +110,7 @@ export const useColumnsEsimWarehouseList = ({
         const { text, type, color, textColor, fontWeight } = status900Map[
           value
         ] || {
-          text: 'Không rõ',
+          text: '',
           type: TypeTagEnum.DEFAULT,
           color: '#808080',
           textColor: '#FFFFFF',
@@ -118,14 +118,13 @@ export const useColumnsEsimWarehouseList = ({
         };
         return (
           <CTag color={color} type={type}>
-            {/* [FIX] Pass a styled <span> as the value to RenderCell */}
             <RenderCell
               value={
                 <span style={{ color: textColor, fontWeight: fontWeight }}>
                   {text}
                 </span>
               }
-              tooltip={text} // Tooltip should remain a plain string for best performance
+              tooltip={text}
             />
           </CTag>
         );
@@ -140,11 +139,11 @@ export const useColumnsEsimWarehouseList = ({
         const { text, type, color, textColor, fontWeight } = activeStatusMap[
           value
         ] || {
-          text: 'Không rõ',
-          type: TypeTagEnum.DEFAULT,
-          color: '#808080',
-          textColor: '#FFFFFF',
-          fontWeight: 'normal',
+          text: '',
+          type: '',
+          color: '',
+          textColor: '',
+          fontWeight: '',
         };
         return (
           <CTag color={color} type={type}>
