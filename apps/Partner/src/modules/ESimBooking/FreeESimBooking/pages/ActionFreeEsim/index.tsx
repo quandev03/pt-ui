@@ -33,7 +33,7 @@ export const ActionFreeEsim = memo(() => {
       if (esimData) {
         form.setFieldsValue({
           quantity: esimData.quantity || '',
-          packageCode: esimData.pckCode || '',
+          packageCode: esimData.packageCodes || '',
         });
       }
     }
@@ -63,7 +63,7 @@ export const ActionFreeEsim = memo(() => {
                 },
                 {
                   type: 'number',
-                  max: 9999999999, // Giới hạn là số có 10 chữ số
+                  max: 9999999999,
                   message: 'Số lượng không được vượt quá 10 chữ số',
                 },
                 {
@@ -87,7 +87,7 @@ export const ActionFreeEsim = memo(() => {
           <Col span={12}>
             <Form.Item
               label="Gói cước"
-              name="packageCode"
+              name="packageCodes"
               labelCol={{ span: 6 }}
               wrapperCol={{ span: 18 }}
               required

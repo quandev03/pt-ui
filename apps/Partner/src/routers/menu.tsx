@@ -51,7 +51,7 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.freeEsimBooking as string,
-    label: 'Book eSIM',
+    label: 'Đặt hàng eSIM',
     parentId: pathRoutes.saleManagement as string,
   },
   {
