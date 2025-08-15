@@ -1,22 +1,21 @@
-import { IPage, IParamsRequest } from '@vissoft-react/common';
-import { IBookFreeEsim, IFreeEsimBooking, IPackage } from '../types';
+import { AnyElement, IPage, IParamsRequest } from '@vissoft-react/common';
+import { IBookFreeEsimPayload, IFreeEsimBooking, IPackage } from '../types';
 import { prefixSaleService } from '../../../../constants';
 import { safeApiClient } from '../../../../services/axios';
 
 export const freeEsimBookingServices = {
   getListFreeEsimBooking: async (params: IParamsRequest) => {
     return safeApiClient.get<IPage<IFreeEsimBooking>>(
-      `${prefixSaleService}/esim-free/book-free`,
+      `${prefixSaleService}/esim`,
       {
         params,
       }
     );
   },
-  getBookEsimFree: async (data: IBookFreeEsim) => {
-    const { ...payload } = data;
-    const createNewEsimRes = await safeApiClient.post<IBookFreeEsim>(
+  getBookEsimFree: async (data: IBookFreeEsimPayload) => {
+    const createNewEsimRes = await safeApiClient.post<AnyElement>(
       `${prefixSaleService}/esim-free/book`,
-      payload
+      data
     );
     return createNewEsimRes;
   },

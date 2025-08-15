@@ -7,49 +7,33 @@ import {
   usePermissions,
 } from '@vissoft-react/common';
 import { pathRoutes } from '../../../../../routers/url';
-import { useMemo } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useCallback, useMemo } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useConfigAppStore from '../../../../Layouts/stores';
 import { IFreeEsimBooking } from '../../types';
 import { ColumnsType } from 'antd/es/table';
 import { useGetTableFreeEsimBooking } from '../../hooks/useGetTableFreeEsimBooking';
 import { useGetListFreeEsimBooking } from '../../hooks/useGetListFreeEsimBooking';
-import { Dropdown } from 'antd';
 import dayjs from 'dayjs';
 
 export const useLogicListFreeEsimBooking = () => {
+  const navigate = useNavigate();
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
 
-  const actionComponent = useMemo(() => {
-    const dropdownItems = [
-      {
-        key: '1',
-        label: (
-          <Link to={pathRoutes.freeEsimBookingAdd}>Book eSIM miễn phí</Link>
-        ),
-      },
-      {
-        key: '2',
-        label: (
-          <Link to={pathRoutes.buyBundleWithEsimAdd}>Book eSIM kèm gói</Link>
-        ),
-      },
-    ];
-    return (
-      <div>
-        {permission.canCreate && (
-          <Dropdown trigger={['click']} menu={{ items: dropdownItems }}>
-            <CButtonAdd />
-          </Dropdown>
-        )}
-      </div>
-    );
-  }, [permission.canCreate]);
+  const handleAdd = useCallback(() => {
+    navigate(pathRoutes.buyBundleWithEsimAdd);
+  }, [navigate]);
 
-  const { data: listFreeEsimBooked, isLoading: loadingEsimList } =
+  const actionComponent = useMemo(() => {
+    return (
+      <div> {permission.canCreate && <CButtonAdd onClick={handleAdd} />}</div>
+    );
+  }, [handleAdd, permission.canCreate]);
+
+  const { data: listEsimBooked, isLoading: loadingEsimList } =
     useGetListFreeEsimBooking(formatQueryParams<IParamsRequest>(params));
 
   const columns: ColumnsType<IFreeEsimBooking> = useGetTableFreeEsimBooking();
@@ -60,28 +44,22 @@ export const useLogicListFreeEsimBooking = () => {
 
     return [
       {
-        type: 'Select',
-        name: 'services',
-        label: 'Loại dịch vụ',
-        placeholder: 'Loại dịch vụ',
-        options: [],
-      },
-      {
         type: 'DateRange',
         name: 'createdBy',
         label: 'Thời gian tạo',
         keySearch: ['from', 'to'],
-        formatSearch: 'YYYY-MM-DD',
+        formatSearch: 'DD/MM/YYYY',
         placeholder: ['Từ ngày', 'Đến ngày'],
         defaultValue: [startDate, today],
       },
     ];
   }, []);
+
   return {
     filters,
     actionComponent,
     columns,
-    listFreeEsimBooked,
+    listEsimBooked,
     loadingEsimList,
   };
 };
