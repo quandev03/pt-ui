@@ -84,8 +84,8 @@ export const status900Map: Record<
   [Status900Enum.IN_STORE]: {
     text: 'Trong kho',
     type: TypeTagEnum.DEFAULT,
-    color: '#C5254294',
-    textColor: '#9B1A32',
+    color: '#FFAC0026',
+    textColor: '#FFAC00',
     fontWeight: 'bold',
   },
   [Status900Enum.INFO_UPDATED]: {
