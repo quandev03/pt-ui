@@ -9,8 +9,10 @@ export enum ActiveStatusEnum {
 }
 
 export enum Status900Enum {
-  CALLED = 1,
-  NOT_CALLED = 0,
+  IN_STORE = 0,
+  SOLD = 1,
+  INFO_UPDATED = 2,
+  REJECTED = 3,
 }
 
 // Map for ActiveStatusEnum to display text, type, color, and font weight
@@ -72,18 +74,32 @@ export const status900Map: Record<
     fontWeight: string;
   }
 > = {
-  [Status900Enum.CALLED]: {
-    text: 'Đã gọi 900',
+  [Status900Enum.SOLD]: {
+    text: 'Đã bán',
     type: TypeTagEnum.DEFAULT,
     color: ColorList.SUCCESS,
     textColor: '#00CC00',
     fontWeight: 'bold',
   },
-  [Status900Enum.NOT_CALLED]: {
-    text: 'Chưa gọi 900',
+  [Status900Enum.IN_STORE]: {
+    text: 'Trong kho',
     type: TypeTagEnum.DEFAULT,
     color: '#C5254294',
     textColor: '#9B1A32',
+    fontWeight: 'bold',
+  },
+  [Status900Enum.INFO_UPDATED]: {
+    text: 'Đã cập nhật TTTB',
+    type: TypeTagEnum.DEFAULT,
+    color: '#D9E6F2',
+    textColor: '#005AAA',
+    fontWeight: 'bold',
+  },
+  [Status900Enum.REJECTED]: {
+    text: 'Rejected',
+    type: TypeTagEnum.DEFAULT,
+    color: '#E4F1FB',
+    textColor: '#4EA3E2',
     fontWeight: 'bold',
   },
 };
