@@ -74,11 +74,10 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
       width: 150,
       align: 'left',
       render(value, record) {
-        // Kiểm tra nếu giá trị không hợp lệ (null, undefined) thì hiển thị gạch ngang
         if (value === null || value === undefined) {
           return <RenderCell value="-" tooltip="-" />;
         }
-        const formattedValue = `${Number(value).toLocaleString('vi-VN')} đ`;
+        const formattedValue = `${Number(value).toLocaleString('vi-VN')} ₫`;
 
         return <RenderCell value={formattedValue} tooltip={formattedValue} />;
       },
