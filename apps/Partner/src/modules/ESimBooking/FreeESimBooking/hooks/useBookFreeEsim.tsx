@@ -1,36 +1,32 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  AnyElement,
   IErrorResponse,
   IFieldErrorsItem,
   NotificationSuccess,
 } from '@vissoft-react/common';
+import { IBookFreeEsimPayload } from '../types';
 import { freeEsimBookingServices } from '../services';
 import { REACT_QUERY_KEYS } from '../../../../constants/query-key';
-// Import the new payload type
-import { IBookFreeEsimPayload } from '../types';
 
 export const useBookFreeEsim = (
   onSuccess: () => void,
   onError: (errorField: IFieldErrorsItem[]) => void
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<
-    AnyElement,
-    IErrorResponse & { fieldErrors?: IFieldErrorsItem[] },
-    IBookFreeEsimPayload
-  >({
-    mutationFn: freeEsimBookingServices.getBookEsimFree,
+  return useMutation({
+    // Add the type here for clarity and safety
+    mutationFn: (data: IBookFreeEsimPayload) =>
+      freeEsimBookingServices.getBookEsimFree(data),
     onSuccess: () => {
-      NotificationSuccess('Hệ thống đang thực hiện đặt hàng eSIM miễn phí!');
+      NotificationSuccess('Hệ thống đang thực hiện book eSIM miễn phí!');
       queryClient.invalidateQueries({
         queryKey: [REACT_QUERY_KEYS.BOOK_NEW_ESIM],
       });
       onSuccess();
     },
-    onError(error) {
+    onError(error: IErrorResponse & { fieldErrors?: IFieldErrorsItem[] }) {
       if (error?.errors) {
-        onError(error.errors);
+        onError(error?.errors);
       }
     },
   });

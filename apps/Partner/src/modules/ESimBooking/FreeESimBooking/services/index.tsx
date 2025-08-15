@@ -14,7 +14,7 @@ export const freeEsimBookingServices = {
   },
   getBookEsimFree: async (data: IBookFreeEsimPayload) => {
     const createNewEsimRes = await safeApiClient.post<AnyElement>(
-      `${prefixSaleService}/esim-free/book`,
+      `${prefixSaleService}/esim/book`,
       data
     );
     return createNewEsimRes;

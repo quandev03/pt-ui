@@ -101,7 +101,7 @@ const BookPackagedEsimForm = () => {
                 {fields.length > 1 && !isReadOnly && (
                   <Minus
                     className="cursor-pointer"
-                    size={24}
+                    size={27}
                     onClick={() => remove(field.name)}
                   />
                 )}
@@ -113,7 +113,7 @@ const BookPackagedEsimForm = () => {
                 {index === fields.length - 1 && !isReadOnly && (
                   <Plus
                     className="cursor-pointer"
-                    size={24}
+                    size={27}
                     onClick={() => add()}
                   />
                 )}

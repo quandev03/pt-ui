@@ -143,17 +143,22 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
       width: 230,
       align: 'left',
       render(value, record) {
-        return (
-          <RenderCell
-            value={
-              <div>
-                <div>Số lượng thành công: {record.successedNumber}</div>
-                <div>Số lượng thất bại: {record.failedNumber}</div>
-              </div>
-            }
-            tooltip={`Số lượng thành công: ${record.successedNumber}\nSố lượng thất bại: ${record.failedNumber}`}
-          />
+        const cellContent = (
+          <div>
+            <div>Số lượng thành công: {record.successedNumber}</div>
+            <div>Số lượng thất bại: {record.failedNumber}</div>
+          </div>
         );
+
+        const tooltipContent = (
+          <span>
+            {`Số lượng thành công: ${record.successedNumber}`}
+            <br />
+            {`Số lượng thất bại: ${record.failedNumber}`}
+          </span>
+        );
+
+        return <RenderCell value={cellContent} tooltip={tooltipContent} />;
       },
     },
     {
