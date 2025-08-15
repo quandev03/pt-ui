@@ -58,7 +58,10 @@ export const useLogicActionPackagedEsim = () => {
   }, [actionMode]);
 
   const handleFinish = (values: AnyElement) => {
-    const payload: IBookFreeEsimPayload = values.packages;
+    const payload: IBookFreeEsimPayload = {
+      requests: values.packages,
+      note: values.note || '',
+    };
     bookFreeEsim(payload);
   };
 

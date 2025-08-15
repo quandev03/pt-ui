@@ -1,3 +1,5 @@
+import { AnyElement } from '@vissoft-react/common';
+
 export interface IFreeEsimBooking {
   amountTotal: number;
   cancelReason: string;
@@ -11,7 +13,7 @@ export interface IFreeEsimBooking {
   modifiedDate: string;
   note: string;
   orderDate: string;
-  orderNo: any;
+  orderNo: AnyElement;
   orderType: number;
   orgId: string;
   packageCodes: string;
@@ -26,8 +28,16 @@ export interface IBookFreeEsim {
   pckCode: string[];
   description: string;
 }
+interface IPackageRequest {
+  id?: string;
+  quantity: number;
+  packageCode: string;
+}
 
-export type IBookFreeEsimPayload = IBookFreeEsim[];
+export interface IBookFreeEsimPayload {
+  requests: IPackageRequest[];
+  note: string;
+}
 
 export interface IPackage {
   createdBy: string;
