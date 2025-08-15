@@ -79,7 +79,7 @@ const BookPackagedEsimForm = () => {
                 <Form.Item
                   {...field}
                   label="Gói cước"
-                  name={[field.name, 'paidPackageCode']}
+                  name={[field.name, 'packageCode']}
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 16 }}
                   rules={[

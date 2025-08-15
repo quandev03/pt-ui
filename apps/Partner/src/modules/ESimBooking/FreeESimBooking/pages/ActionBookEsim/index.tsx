@@ -12,12 +12,19 @@ import { useLogicActionPackagedEsim } from './useLogicActionPackagedEsim';
 import EsimPackagedBookForm from '../../components/EsimPackagedBookForm';
 
 export const ActionPackagedEsim = memo(() => {
-  const { Title, form, handleClose, actionMode } = useLogicActionPackagedEsim();
+  const {
+    Title,
+    form,
+    handleClose,
+    actionMode,
+    handleFinish,
+    bookingInProcess,
+  } = useLogicActionPackagedEsim();
 
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{Title}</TitleHeader>
-      <Form form={form} onFinish={undefined} colon={false} labelAlign="left">
+      <Form form={form} onFinish={handleFinish} colon={false} labelAlign="left">
         <Row gutter={[24, 0]}>
           {actionMode === IModeAction.CREATE && (
             <>
@@ -85,7 +92,7 @@ export const ActionPackagedEsim = memo(() => {
               onClick={() => {
                 form.submit();
               }}
-              loading={undefined}
+              loading={bookingInProcess}
             >
               Thực hiện
             </CButton>

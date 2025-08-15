@@ -1,4 +1,5 @@
 import {
+  AnyElement,
   decodeSearchParams,
   IFieldErrorsItem,
   IModeAction,
@@ -7,7 +8,8 @@ import {
 import { Form } from 'antd';
 import { useCallback, useMemo } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { IBookFreeEsim } from '../../types';
+import { IBookFreeEsimPayload } from '../../types';
+import { useBookFreeEsim } from '../../hooks/useBookFreeEsim';
 
 export const useLogicActionPackagedEsim = () => {
   const navigate = useNavigate();
@@ -17,22 +19,26 @@ export const useLogicActionPackagedEsim = () => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
 
-  // const onSuccess = useCallback(() => {
-  //   navigate(-1);
-  // }, [navigate]);
+  const onSuccess = useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
 
-  // const onError = useCallback(
-  //   (errorField: IFieldErrorsItem[]) => {
-  //     form.setFields(
-  //       errorField.map((error) => ({
-  //         name: error.field,
-  //         errors: [error.detail],
-  //       }))
-  //     );
-  //   },
-  //   [form]
-  // );
+  const onError = useCallback(
+    (errorField: IFieldErrorsItem[]) => {
+      form.setFields(
+        errorField.map((error) => ({
+          name: error.field,
+          errors: [error.detail],
+        }))
+      );
+    },
+    [form]
+  );
 
+  const { mutate: bookFreeEsim, isPending: bookingInProcess } = useBookFreeEsim(
+    onSuccess,
+    onError
+  );
   const Title = useMemo(() => {
     switch (actionMode) {
       case IModeAction.READ:
@@ -44,19 +50,11 @@ export const useLogicActionPackagedEsim = () => {
     }
   }, [actionMode]);
 
-  // const handleFinish = useCallback(
-  //   (values: IBookFreeEsim) => {
-  //     form.setFieldsValue({
-  //       ...values,
-  //       id: actionMode === IModeAction.CREATE ? id : undefined,
-  //       quantity: values.quantity,
-  //       packageCode: values.pckCode,
-  //     });
-  //     bookFreeEsim(values);
-  //   },
-
-  //   [actionMode, form, id]
-  // );
+  const handleFinish = (values: AnyElement) => {
+    console.log('Original form values:', values);
+    const payload: IBookFreeEsimPayload = values.packages;
+    bookFreeEsim(payload);
+  };
 
   const handleClose = useCallback(() => {
     navigate(-1);
@@ -66,5 +64,7 @@ export const useLogicActionPackagedEsim = () => {
     form,
     actionMode,
     handleClose,
+    handleFinish,
+    bookingInProcess,
   };
 };

@@ -16,6 +16,9 @@ export interface IBookFreeEsim {
   pckCode: string[];
   description: string;
 }
+
+export type IBookFreeEsimPayload = IBookFreeEsim[];
+
 export interface IPackage {
   createdBy: string;
   createdDate: string;
