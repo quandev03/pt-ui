@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { REACT_QUERY_KEYS } from '../../../constants/query-key';
 import { IeSIMStockParams } from '../types';
 import { eSIMStockServices } from '../services';
+import { AnyElement } from '@vissoft-react/common';
+import { apiUtils } from 'apps/Internal/src/services';
 
 export const useGeteSIMStock = (params: IeSIMStockParams) => {
   return useQuery({
@@ -30,5 +32,8 @@ export const useGetAllOrganizationUnit = () => {
   return useQuery({
     queryKey: [REACT_QUERY_KEYS.GET_ALL_ORGANIZATION_UNIT],
     queryFn: () => eSIMStockServices.getOrganizationUnit(),
+    select(data) {
+      return apiUtils.mapStockParent(apiUtils.convertArrToObj(data, null));
+    },
   });
 };

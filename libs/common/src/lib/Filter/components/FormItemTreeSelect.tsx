@@ -6,6 +6,7 @@ export const FormItemTreeSelect = ({
   propsFormItem = {},
   stateKey,
   label,
+  showSearch,
   ...props
 }: TreeSelectFilterType) => {
   return (
@@ -18,6 +19,8 @@ export const FormItemTreeSelect = ({
         <TreeSelect
           {...props}
           allowClear={props.defaultValue ? false : props.allowClear}
+          showSearch={showSearch}
+          treeNodeFilterProp="title"
         />
       </Form.Item>
     </Tooltip>

@@ -1,4 +1,5 @@
 import {
+  AnyElement,
   ApiError,
   CommonError,
   NotificationWarning,
@@ -354,5 +355,27 @@ export const apiUtils = {
     );
 
     return apiUtils.handleDownloadResponse(response, fallbackFilename);
+  },
+  convertArrToObj: (arr: AnyElement[], parent: AnyElement) => {
+    const newArr = arr
+      ?.filter(
+        (item) =>
+          item.parentId === parent ||
+          (!arr?.some((val: AnyElement) => val.id === item.parentId) &&
+            parent === null)
+      )
+      ?.reduce((acc, item) => {
+        acc.push({ ...item, children: apiUtils.convertArrToObj(arr, item.id) });
+        return acc;
+      }, []);
+
+    return newArr?.length > 0 ? newArr : undefined;
+  },
+  mapStockParent: (stocks: AnyElement) => {
+    return stocks?.map((item: AnyElement) => ({
+      title: item.orgName,
+      value: item.id,
+      children: apiUtils.mapStockParent(item.children),
+    }));
   },
 };

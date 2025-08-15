@@ -30,7 +30,6 @@ export const useLogicListeSIMStock = () => {
     formatQueryParams<IeSIMStockParams>(params)
   );
   const { data: listPackage } = useGetAllPackage();
-  const { data: listOrganizationUnit } = useGetAllOrganizationUnit();
 
   const handleOpenModal = (record: IeSIMStockItem) => {
     setOpenModal(true);
@@ -39,7 +38,7 @@ export const useLogicListeSIMStock = () => {
   const handleCloseModal = () => setOpenModal(false);
 
   const columns: ColumnsType<IeSIMStockItem> = useGetTableList(handleOpenModal);
-
+  const { data: agencyOptions = [] } = useGetAllOrganizationUnit();
   const filters: FilterItemProps[] = useMemo(() => {
     return [
       {
@@ -50,21 +49,18 @@ export const useLogicListeSIMStock = () => {
         showDefault: true,
         options: listPackage?.map((pkg) => ({
           label: pkg.pckCode,
-          value: pkg.pckCode,
+          value: pkg.pckCode + '',
         })),
         placeholder: 'Chọn gói cước',
       },
       {
         label: 'Đại lý',
-        type: 'Select',
+        type: 'TreeSelect',
         name: 'orgId',
-        stateKey: 'orgId',
         showDefault: true,
-        options: listOrganizationUnit?.map((org) => ({
-          label: org.orgName,
-          value: org.id,
-        })),
+        treeData: agencyOptions,
         placeholder: 'Đại lý',
+        showSearch: true,
       },
 
       {
@@ -74,8 +70,8 @@ export const useLogicListeSIMStock = () => {
         stateKey: 'subStatus',
         showDefault: true,
         options: [
-          { label: 'Hoạt động', value: 1 },
-          { label: 'Không hoạt động', value: 0 },
+          { label: 'Hoạt động', value: '1' },
+          { label: 'Không hoạt động', value: '0' },
         ],
         placeholder: 'Trạng thái thuê bao',
       },
@@ -87,12 +83,12 @@ export const useLogicListeSIMStock = () => {
         showDefault: true,
         options: Object.entries(ActiveStatusLabel).map(([value, label]) => ({
           label,
-          value: Number(value),
+          value: value,
         })),
         placeholder: 'Trạng thái chặn cắt',
       },
     ];
-  }, [listOrganizationUnit, listPackage]);
+  }, [listPackage, agencyOptions]);
 
   return {
     listeSIMStock,

@@ -34,6 +34,7 @@ export interface TreeSelectFilterType extends TreeSelectProps {
   showDefault?: boolean;
   propsFormItem?: FormItemProps;
   stateKey?: string;
+  showSearch?: boolean;
 }
 
 export interface DateFilterType extends DatePickerProps {
