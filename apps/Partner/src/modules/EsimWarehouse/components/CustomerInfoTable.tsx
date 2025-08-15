@@ -26,8 +26,12 @@ export const CustomerInfoTable = ({ subId }: CustomerInfoTableProps) => {
         gender: GENDER_MAP[customerInfo.gender] || 'Không xác định',
         customerCode: customerInfo.customerCode,
         fullName: customerInfo.fullName,
-        birthOfDate: dayjs(customerInfo.birthOfDate).format(formatDate),
-        idNoExpireDate: dayjs(customerInfo.idNoExpireDate).format(formatDate),
+        birthOfDate: customerInfo.birthOfDate
+          ? dayjs(customerInfo.birthOfDate).format(formatDate)
+          : '',
+        idNoExpireDate: customerInfo.idNoExpireDate
+          ? dayjs(customerInfo.idNoExpireDate).format(formatDate)
+          : '',
         issuePlace: customerInfo.issuePlace,
         idNumber: customerInfo.idNumber,
       });
