@@ -4,7 +4,7 @@ import {
   formatQueryParams,
   IParamsRequest,
 } from '@vissoft-react/common';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useColumnsEsimWarehouseList } from '../../hooks/useColumnsEsimWarehouseList';
 import { IEsimWarehouseList } from '../../types';
@@ -18,6 +18,9 @@ import {
   Status900Enum,
   status900Map,
 } from '../../constants/enum';
+import { message } from 'antd';
+import { useGetGenQrCode } from '../../hooks/useGetGenQrCode';
+import { useGetAgencyOptions } from '../../../../hooks/useGetAgencyOptions';
 
 // No props are needed here. The hook will manage its own state.
 export const useLogicListEsimWarehouse = () => {
@@ -25,6 +28,7 @@ export const useLogicListEsimWarehouse = () => {
   const params = decodeSearchParams(searchParams);
   const { data: esimList, isLoading: loadingEsimList } =
     useGetEsimWarehouseList(formatQueryParams<IParamsRequest>(params));
+  const { data: agencyOptions = [] } = useGetAgencyOptions();
 
   // --- State for Modals and selected data ---
   const [selectedRecord, setSelectedRecord] =
@@ -32,15 +36,7 @@ export const useLogicListEsimWarehouse = () => {
   const [showEsimDetails, setShowEsimDetails] = useState(false);
   const [isGenQrModalOpen, setGenQrModalOpen] = useState(false);
   const [isSendQrModalOpen, setSendQrModalOpen] = useState(false);
-
-  const handleOpenGenQr = useCallback((record: IEsimWarehouseList) => {
-    setSelectedRecord(record);
-    setGenQrModalOpen(true);
-  }, []);
-
-  const handleCloseGenQr = useCallback(() => {
-    setGenQrModalOpen(false);
-  }, []);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
 
   const handleOpenSendQr = useCallback((record: IEsimWarehouseList) => {
     setSelectedRecord(record);
@@ -58,9 +54,50 @@ export const useLogicListEsimWarehouse = () => {
     setShowEsimDetails(false);
   }, []);
 
+  const onGenQrSuccess = (imageBlob: Blob) => {
+    const url = URL.createObjectURL(imageBlob);
+
+    setQrCodeUrl(url);
+  };
+  const onGenQrError = () => {
+    message.error('Không tạo được mã QR. Vui lòng thử lại');
+  };
+
+  const { mutate: genQrCode, isPending: genQrCodeInProcess } = useGetGenQrCode(
+    onGenQrSuccess,
+    onGenQrError
+  );
+
+  const handleOpenGenQrModal = useCallback(
+    (record: IEsimWarehouseList) => {
+      setSelectedRecord(record);
+      setGenQrModalOpen(true);
+      genQrCode({
+        subId: record.subId,
+        size: '200x200',
+      });
+    },
+    [genQrCode]
+  );
+
+  const handleCloseGenQrModal = useCallback(() => {
+    setGenQrModalOpen(false);
+    setSelectedRecord(null);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (qrCodeUrl) {
+        console.log('Revoking old Blob URL:', qrCodeUrl);
+        URL.revokeObjectURL(qrCodeUrl);
+        setQrCodeUrl(null);
+      }
+    };
+  }, [qrCodeUrl]);
+
   const columns: ColumnsType<IEsimWarehouseList> = useColumnsEsimWarehouseList({
     onSendQr: handleOpenSendQr,
-    onGenQr: handleOpenGenQr,
+    onGenQr: handleOpenGenQrModal,
     onViewDetails: handleShowDetails,
   });
   const { data: packageCodeList } = useGetPackageCodes();
@@ -79,19 +116,23 @@ export const useLogicListEsimWarehouse = () => {
   const subStatusOptions: DefaultOptionType[] = useMemo(
     () => [
       {
-        value: Status900Enum.NOT_CALLED,
-        label: status900Map[Status900Enum.NOT_CALLED].text,
+        value: Status900Enum.IN_STORE,
+        label: status900Map[Status900Enum.IN_STORE].text,
       },
       {
-        value: Status900Enum.CALLED,
-        label: status900Map[Status900Enum.CALLED].text,
+        value: Status900Enum.SOLD,
+        label: status900Map[Status900Enum.SOLD].text,
+      },
+      {
+        value: Status900Enum.INFO_UPDATED,
+        label: status900Map[Status900Enum.INFO_UPDATED].text,
+      },
+      {
+        value: Status900Enum.REJECTED,
+        label: status900Map[Status900Enum.REJECTED].text,
       },
     ],
     []
-  );
-  console.log(
-    '🚀 ~ useLogicListEsimWarehouse ~ subStatusOptions:',
-    subStatusOptions
   );
 
   const activeStatusOptions: DefaultOptionType[] = useMemo(
@@ -123,15 +164,6 @@ export const useLogicListEsimWarehouse = () => {
     ],
     []
   );
-  console.log(
-    '🚀 ~ useLogicListEsimWarehouse ~ activeStatusOptions:',
-    activeStatusOptions
-  );
-
-  console.log(
-    '🚀 ~ useLogicListEsimWarehouse ~ packageOptions:',
-    packageOptions
-  );
 
   const filters: FilterItemProps[] = useMemo(() => {
     return [
@@ -141,6 +173,13 @@ export const useLogicListEsimWarehouse = () => {
         label: 'Chọn gói cước',
         placeholder: 'Chọn gói cước',
         options: packageOptions,
+      },
+      {
+        type: 'TreeSelect',
+        name: 'orgCode',
+        label: 'Đại lý',
+        placeholder: 'Đại lý',
+        treeData: agencyOptions,
       },
       {
         type: 'Select',
@@ -157,7 +196,7 @@ export const useLogicListEsimWarehouse = () => {
         options: activeStatusOptions,
       },
     ];
-  }, [activeStatusOptions, packageOptions, subStatusOptions]);
+  }, [activeStatusOptions, agencyOptions, packageOptions, subStatusOptions]);
   return {
     columns,
     filters,
@@ -168,7 +207,11 @@ export const useLogicListEsimWarehouse = () => {
     isGenQrModalOpen,
     isSendQrModalOpen,
     handleCloseSendQr,
-    handleCloseGenQr,
     handleCloseModal,
+    genQrCodeInProcess,
+    onGenQrSuccess,
+    handleCloseGenQrModal,
+    genQrCode,
+    qrCodeUrl,
   };
 };

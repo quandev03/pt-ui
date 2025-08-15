@@ -1,8 +1,8 @@
-import useConfigAppStore from '../modules/Layouts/stores';
 import { isPageReload } from '@vissoft-react/common';
 import { isEmpty } from 'lodash';
 import { createHashRouter, ShouldRevalidateFunction } from 'react-router-dom';
 import { ErrorPage, NotFoundPage } from '../modules/Errors/index';
+import useConfigAppStore from '../modules/Layouts/stores';
 import { globalService } from '../services';
 import { protectedRoutes } from './routes';
 import { pathRoutes } from './url';
@@ -60,7 +60,14 @@ export const routers = createHashRouter([
   },
   {
     path: pathRoutes.forgotPassword as string,
-    element: <div>ForgotPassword</div>,
+    lazy: async () => {
+      const { default: ForgotPassword } = await import(
+        '../modules/Auth/pages/ForgotPassword'
+      );
+      return {
+        element: <ForgotPassword />,
+      };
+    },
     errorElement: <ErrorPage />,
   },
   {

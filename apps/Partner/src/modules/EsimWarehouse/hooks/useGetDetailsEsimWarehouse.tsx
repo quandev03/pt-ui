@@ -5,7 +5,7 @@ import { esimWarehouseServices } from '../services';
 export const useGetDetailsEsimWarehouse = (subId?: string) => {
   return useQuery({
     queryKey: [REACT_QUERY_KEYS.GET_DETAIL_ESIM_WAREHOUSE, subId],
-    queryFn: () => esimWarehouseServices.getDetailEsimWarehouse({ subId }),
+    queryFn: () => esimWarehouseServices.getDetailEsimWarehouse(subId),
     enabled: !!subId,
   });
 };

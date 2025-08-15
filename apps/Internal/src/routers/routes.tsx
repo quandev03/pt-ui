@@ -10,6 +10,8 @@ import routesRoleManagement from '../modules/RoleManagement/routes';
 import routesUserGroupManagement from '../modules/UserGroupManagement/routes';
 import routesESIMStock from '../modules/eSIMStock/routes';
 import { routesReportPartner } from '../modules/ReportPartner/routes';
+import routesUploadNumber from '../modules/UploadNumber/routes';
+import routesPersonalInfo from '../modules/PersonalInfo/routes';
 
 export const protectedRoutes: RouteObject[] = [
   ...routesWelcome,
@@ -23,4 +25,6 @@ export const protectedRoutes: RouteObject[] = [
   ...routesDashboard,
   ...routesESIMStock,
   ...routesReportPartner,
+  ...routesUploadNumber,
+  ...routesPersonalInfo,
 ];
