@@ -86,7 +86,7 @@ export const useColumnsEsimWarehouseList = ({
     },
     {
       title: 'Mã đơn hàng',
-      dataIndex: 'orderNo',
+      dataIndex: 'orgCode',
       width: 200,
       render(value, record) {
         return <RenderCell value={value} tooltip={value} />;
@@ -103,7 +103,7 @@ export const useColumnsEsimWarehouseList = ({
     },
     {
       title: 'Trạng thái thuê bao',
-      dataIndex: 'status900',
+      dataIndex: 'statusSub',
       width: 200,
       align: 'left',
       render(value: Status900Enum, record) {
@@ -148,7 +148,6 @@ export const useColumnsEsimWarehouseList = ({
         };
         return (
           <CTag color={color} type={type}>
-            {/* [FIX] Pass a styled <span> as the value to RenderCell */}
             <RenderCell
               value={
                 <span style={{ color: textColor, fontWeight: fontWeight }}>
