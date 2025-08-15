@@ -51,6 +51,7 @@ const SignConfirmation = () => {
   });
   const { mutate: genContract, isPending: loadingGenContract } = useGenContract(
     () => {
+      if (interval) clearInterval(interval);
       setIsSignSuccess(false);
       getND13Pdf(ocrResponse?.transactionId || '');
       getConfirmContractPdf(ocrResponse?.transactionId || '');
@@ -59,10 +60,10 @@ const SignConfirmation = () => {
       }`;
       form.setFieldValue('signLink', link);
       window.open(link, '_blank', 'top=200,left=500,width=600,height=600');
-      const interval = setInterval(() => {
+      const newInterval = setInterval(() => {
         checkSignedContract(ocrResponse?.transactionId || '');
       }, 5000);
-      setIntervalApi(interval);
+      setIntervalApi(newInterval);
     }
   );
   const { mutate: submitInfo, isPending: loadingSubmit } = useSubmitInfo(() =>
@@ -88,12 +89,13 @@ const SignConfirmation = () => {
       },
     });
   };
+  console.log('isSignSuccess', isSignSuccess, 'interval', interval);
   useEffect(() => {
     if (isSignSuccess && interval) {
+      console.log('interval now', interval);
       clearInterval(interval);
-      setIntervalApi(undefined);
     }
-  }, [isSignSuccess, interval, setIntervalApi]);
+  }, [isSignSuccess, interval]);
   useEffect(() => {
     if (isSignSuccess) {
       getND13Pdf(ocrResponse?.transactionId || '');

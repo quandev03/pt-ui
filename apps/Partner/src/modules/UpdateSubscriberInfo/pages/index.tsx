@@ -11,7 +11,7 @@ import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
 
 export const UpdateSubscriberInfo = () => {
-  const { step, resetStore } = useUpdateSubscriberInfoStore();
+  const { step, resetStore, interval } = useUpdateSubscriberInfoStore();
   const [form] = Form.useForm();
   const stepComponents = [
     <UpdateInfo />,
@@ -48,7 +48,7 @@ export const UpdateSubscriberInfo = () => {
         form.resetFields();
       };
     }
-  }, [resetStore, form, step]);
+  }, [resetStore, form, step, interval]);
   return (
     <Wrapper>
       <TitleHeader>Cập nhật thông tin thuê bao</TitleHeader>
