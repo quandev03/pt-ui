@@ -34,7 +34,7 @@ import {
   useGetAllPartnerRoles,
   useGetOrganizationUserDetail,
   useUpdatePartnerUser,
-} from '../queryHooks';
+} from '../hook';
 
 export const ActionUserPartnerCatalog = () => {
   const [isSubmitBack, setIsSubmitBack] = useState(false);

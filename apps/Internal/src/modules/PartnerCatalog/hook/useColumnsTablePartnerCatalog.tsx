@@ -198,6 +198,19 @@ export const useColumnsTablePartnerCatalog = (
               label: <Text>Quản lý user đối tác</Text>,
             });
           }
+          if (
+            permission
+              .getAllPermissions()
+              .includes(IModeAction.PACKAGE_AUTHORIZATION)
+          ) {
+            items.push({
+              key: ActionsTypeEnum.PACKAGE_AUTHORIZATION,
+              onClick: () => {
+                onAction(IModeAction.PACKAGE_AUTHORIZATION, record);
+              },
+              label: <Text>Phân quyền gói cước</Text>,
+            });
+          }
           return (
             <WrapperActionTable>
               {permission.canRead && (
