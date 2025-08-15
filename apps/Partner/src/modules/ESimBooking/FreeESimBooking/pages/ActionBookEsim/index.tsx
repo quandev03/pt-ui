@@ -9,8 +9,8 @@ import {
 import { Col, Form, Row } from 'antd';
 import { memo, useEffect } from 'react';
 import { useLogicActionPackagedEsim } from './useLogicActionPackagedEsim';
-import EsimPackagedBookForm from '../../components/EsimPackagedBookForm';
 import { useGetPackageCodes } from '../../hooks/usePackageCodes';
+import EsimPackagedBookForm from '../../components/EsimPackagedBookForm';
 
 export const ActionPackagedEsim = memo(() => {
   const {
@@ -33,28 +33,28 @@ export const ActionPackagedEsim = memo(() => {
 
   useEffect(() => {
     if (actionMode === IModeAction.CREATE && packageOptions?.length === 1) {
-      form.setFieldsValue({ packageCodes: packageOptions[0].value });
+      form.setFieldsValue({
+        packages: [{ packageCode: packageOptions[0].value }],
+      });
     }
   }, [actionMode, form, packageOptions]);
 
-  // FIX: This useEffect was updated to correctly populate the form in READ mode.
   useEffect(() => {
     if (actionMode === IModeAction.READ && listEsimBooked?.content && id) {
       const esimData = listEsimBooked.content.find(
-        (item: any) => item.id === id
+        (item: AnyElement) => item.id === id
       );
       if (esimData) {
-        // The form values are set here.
-        // 1. Added the missing 'description' field.
-        // 2. Kept 'quantity' and 'packageCodes' as they were, assuming they are
-        //    used by the EsimPackagedBookForm component. If those fields are nested
-        //    in the form structure (e.g., under a 'packages' object), this part
-        //    would need to be adjusted to match that structure.
         form.setFieldsValue({
-          description: esimData.description || '',
-          quantity: esimData.quantity || '',
-          packageCodes: esimData.packageCodes || '',
+          note: esimData.note,
+          packages: [
+            {
+              quantity: esimData.quantity,
+              packageCode: esimData.packageCodes,
+            },
+          ],
         });
+        console.log('🚀 ~ form:', form);
       }
     }
   }, [actionMode, form, id, listEsimBooked?.content]);
@@ -107,11 +107,7 @@ export const ActionPackagedEsim = memo(() => {
             </>
           )}
           <Col span={24} style={{ marginTop: 11 }}>
-            <Form.Item
-              label="Ghi chú"
-              name="description"
-              labelCol={{ span: 3 }}
-            >
+            <Form.Item label="Ghi chú" name="note" labelCol={{ span: 3 }}>
               <CTextArea
                 placeholder="Nhập ghi chú"
                 disabled={actionMode === IModeAction.READ}
