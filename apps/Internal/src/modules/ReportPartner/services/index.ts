@@ -6,16 +6,10 @@ import { IReportPartnerItem, IReportPartnerParams } from '../types';
 export const reportPartnerServices = {
   getAllReportPartner: (params: IReportPartnerParams) => {
     return safeApiClient.get<IPage<IReportPartnerItem>>(
-      `${prefixAuthService}/api/users/internal`,
+      `${prefixAuthService}/api/orders-report`,
       {
         params,
       }
-    );
-  },
-
-  getDetailReportPartner: async (id: string) => {
-    return await safeApiClient.get<IReportPartnerItem>(
-      `${prefixAuthService}/api/users/internal/${id}`
     );
   },
 };

@@ -5,3 +5,10 @@ export type ParamKeys =
   | 'PARTNER_SUB_TYPE'
   | 'PARTNER_APPROVAL_STATUS'
   | 'PARTNER_STATUS';
+export interface IOrgItem {
+  id: string;
+  orgCode: string;
+  orgName: string;
+  parentId: string;
+  createdBy: string;
+}

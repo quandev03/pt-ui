@@ -5,7 +5,6 @@ import {
   IeSIMStockDetail,
   IeSIMStockItem,
   IeSIMStockParams,
-  IOrgItem,
   IPackage,
 } from '../types';
 
@@ -26,11 +25,6 @@ export const eSIMStockServices = {
   getPackage: async () => {
     return await safeApiClient.get<IPackage[]>(
       `${prefixSaleService}/esim-manager/package`
-    );
-  },
-  getOrganizationUnit: async () => {
-    return await safeApiClient.get<IOrgItem[]>(
-      `${prefixSaleService}/esim-manager/organization-unit`
     );
   },
 };

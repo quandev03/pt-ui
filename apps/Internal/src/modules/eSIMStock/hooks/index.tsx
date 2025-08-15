@@ -27,13 +27,3 @@ export const useGetAllPackage = () => {
     queryFn: () => eSIMStockServices.getPackage(),
   });
 };
-
-export const useGetAllOrganizationUnit = () => {
-  return useQuery({
-    queryKey: [REACT_QUERY_KEYS.GET_ALL_ORGANIZATION_UNIT],
-    queryFn: () => eSIMStockServices.getOrganizationUnit(),
-    select(data) {
-      return apiUtils.mapStockParent(apiUtils.convertArrToObj(data, null));
-    },
-  });
-};

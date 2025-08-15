@@ -14,11 +14,8 @@ import {
   IeSIMStockItem,
   IeSIMStockParams,
 } from '../../types';
-import {
-  useGetAllOrganizationUnit,
-  useGetAllPackage,
-  useGeteSIMStock,
-} from '../../hooks';
+import { useGetAllPackage, useGeteSIMStock } from '../../hooks';
+import { useGetAllOrganizationUnit } from 'apps/Internal/src/hooks/useGetAllPartners';
 
 export const useLogicListeSIMStock = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
