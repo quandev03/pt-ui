@@ -3,7 +3,7 @@ import { StoreValue } from 'antd/es/form/interface';
 import { FormListFieldData } from 'antd/lib';
 import { debounce } from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
-import { useInfinityProductByCategory } from '../queryHooks';
+import { useInfinityProductByCategory } from '../hook';
 import { ICategoryProduct, IProductAuthorization } from '../types';
 import {
   CSelect,

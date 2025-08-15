@@ -1,4 +1,4 @@
-import { IParamsRequest } from '@vissoft-react/common';
+import { AnyElement, IParamsRequest } from '@vissoft-react/common';
 
 export type IPartnerCatalogParams = IParamsRequest & {
   partnerType?: string;
@@ -20,13 +20,7 @@ export type ICatalogPartner = {
 
 export interface IPayloadPartner {
   id?: number | string;
-  organizationUnitDTO: IOrganizationUnitDTO;
-  contractFile: File;
-  businessLicenseFile: File;
-  organizationDeliveryInfoDTO: IDeliveryInfo;
-  idCardFrontSite: File;
-  idCardBackSite: File;
-  portrait: File;
+  organizationUnitDTO: IPartner;
 }
 
 export interface IOrganizationUnitDTO {
@@ -244,7 +238,7 @@ export interface IUserPartnerCatalog {
   createdDate: string | Date | null;
   lastModifiedBy: string;
   lastModifiedDate: string | Date | null;
-  role: string;
+  roles: IRoleItem[];
 }
 
 export interface DataPayloadCreateUpdateUserPartnerCatalog {
@@ -264,4 +258,37 @@ export interface IRoleItem {
   id: string;
   name: string;
   status: number;
+}
+export interface IListOfServicePackage {
+  createdBy: string;
+  createdDate: string;
+  modifiedBy: string;
+  modifiedDate: string;
+  id: string;
+  pckCode: string;
+  pckName: string;
+  packagePrice: number;
+  status: number;
+  description: string;
+}
+export interface IPartner {
+  id?: string;
+  orgCode: string;
+  orgName: string;
+  taxCode: string;
+  phone: string;
+  address: string;
+  representative: string;
+  status: number | string;
+  orgDescription?: string;
+}
+export interface IRoleItem {
+  code: string;
+  id: string;
+  name: string;
+  status: number;
+}
+export interface IAssignPackagePayload {
+  id: string | number;
+  packageIds: string[];
 }

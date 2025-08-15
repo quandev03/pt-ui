@@ -7,32 +7,71 @@ import {
   TitleHeader,
 } from '@vissoft-react/common';
 import { Col, Form, Row } from 'antd';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useLogicActionPackagedEsim } from './useLogicActionPackagedEsim';
+import { useGetPackageCodes } from '../../hooks/usePackageCodes';
 import EsimPackagedBookForm from '../../components/EsimPackagedBookForm';
 
 export const ActionPackagedEsim = memo(() => {
-  const { Title, form, handleClose, actionMode } = useLogicActionPackagedEsim();
+  const {
+    id,
+    Title,
+    form,
+    handleClose,
+    actionMode,
+    handleFinish,
+    bookingInProcess,
+    listEsimBooked,
+  } = useLogicActionPackagedEsim();
+
+  const { data: packageCodeList } = useGetPackageCodes();
+  const packageOptions = packageCodeList?.map((pkg) => ({
+    key: pkg.id,
+    value: pkg.pckCode,
+    label: pkg.pckCode,
+  }));
+
+  useEffect(() => {
+    if (actionMode === IModeAction.CREATE && packageOptions?.length === 1) {
+      form.setFieldsValue({
+        packages: [{ packageCode: packageOptions[0].value }],
+      });
+    }
+  }, [actionMode, form, packageOptions]);
+
+  useEffect(() => {
+    if (actionMode === IModeAction.READ && listEsimBooked?.content && id) {
+      const esimData = listEsimBooked.content.find(
+        (item: AnyElement) => item.id === id
+      );
+      if (esimData) {
+        form.setFieldsValue({
+          note: esimData.note,
+          packages: [
+            {
+              quantity: esimData.quantity,
+              packageCode: esimData.packageCodes,
+            },
+          ],
+        });
+        console.log('🚀 ~ form:', form);
+      }
+    }
+  }, [actionMode, form, id, listEsimBooked?.content]);
 
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{Title}</TitleHeader>
-      <Form
-        form={form}
-        onFinish={undefined}
-        // labelCol={{ span: 5 }}
-        colon={false}
-        labelAlign="left"
-      >
+      <Form form={form} onFinish={handleFinish} colon={false} labelAlign="left">
         <Row gutter={[24, 0]}>
           {actionMode === IModeAction.CREATE && (
             <>
               <Col span={12}>
                 <Form.Item
-                  label="Công nợ tạm tính"
+                  label="Hạn mức tạm tính"
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
-                  name="quantity"
+                  name="temporaryLimit"
                 >
                   <CInputNumber
                     disabled
@@ -48,8 +87,8 @@ export const ActionPackagedEsim = memo(() => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  label="Công nợ với MBF"
-                  name="packageCode"
+                  label="Hạn mức với MBF"
+                  name="mbfLimit"
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
                 >
@@ -68,12 +107,7 @@ export const ActionPackagedEsim = memo(() => {
             </>
           )}
           <Col span={24} style={{ marginTop: 11 }}>
-            <Form.Item
-              label="Ghi chú"
-              name="description"
-              labelCol={{ span: 3 }}
-              // wrapperCol={{ span: 15 }}
-            >
+            <Form.Item label="Ghi chú" name="note" labelCol={{ span: 3 }}>
               <CTextArea
                 placeholder="Nhập ghi chú"
                 disabled={actionMode === IModeAction.READ}
@@ -92,7 +126,7 @@ export const ActionPackagedEsim = memo(() => {
               onClick={() => {
                 form.submit();
               }}
-              loading={undefined}
+              loading={bookingInProcess}
             >
               Thực hiện
             </CButton>

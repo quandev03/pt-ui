@@ -12,7 +12,13 @@ type Props = {
 };
 const Decree13Modal: FC<Props> = ({ open, onClose }) => {
   const [isViewDetail, setIsViewDetail] = useState(false);
-  const { agreeDegree13, setAgreeDegree13 } = useUpdateSubscriberInfoStore();
+  const {
+    agreeDegree13,
+    setAgreeDegree13,
+    setIsSignSuccess,
+    interval,
+    setIntervalApi,
+  } = useUpdateSubscriberInfoStore();
   const form = useFormInstance();
   const handleViewDetail = () => {
     setIsViewDetail(true);
@@ -29,6 +35,11 @@ const Decree13Modal: FC<Props> = ({ open, onClose }) => {
       form.setFieldValue('signLink', undefined);
       form.setFieldValue('contractUrl', undefined);
       form.setFieldValue('degree13Url', undefined);
+      setIsSignSuccess(false);
+      if (interval) {
+        clearInterval(interval);
+        setIntervalApi(undefined);
+      }
     }
     setIsViewDetail(false);
     onClose();

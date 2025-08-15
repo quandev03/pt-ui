@@ -86,6 +86,8 @@ export const pathRoutes = {
     `/partner-catalog/user-management/${orgCode}/edit/${id}`,
   partnerCatalogUserView: (orgCode = ':orgCode', id = ':id') =>
     `/partner-catalog/user-management/${orgCode}/view/${id}`,
+  partnerCatalogAssignPackage: (id?: IStringNumber) =>
+    `/partner-catalog/assign-package/${id ? id : ':id'}`,
 
   // Danh sách kho eSIM
   esimStock: '/esim-stock',

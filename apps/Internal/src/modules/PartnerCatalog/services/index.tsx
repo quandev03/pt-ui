@@ -1,15 +1,16 @@
-import { IPage, IParamsRequest } from '@vissoft-react/common';
+import { AnyElement, IPage, IParamsRequest } from '@vissoft-react/common';
 import {
   prefixAuthService,
   prefixSaleService,
-} from 'apps/Internal/src/constants';
-import { safeApiClient } from 'apps/Internal/src/services';
+} from '../../../../src/constants';
+import { safeApiClient } from '../../../../src/services';
 import type { AxiosRequestHeaders } from 'axios';
 import { Key } from 'react';
 import {
-  ICCCDInfo,
+  IAssignPackagePayload,
   IOrganizationUnitDTO,
   IParamsProductByCategory,
+  IPartner,
   IPartnerCatalogParams,
   IPayloadPartner,
   IProductAuthorization,
@@ -27,7 +28,7 @@ export const PartnerCatalogService = {
     );
   },
   getProductByCategory: (params: IParamsProductByCategory) => {
-    return safeApiClient.get<IPage<any>>(
+    return safeApiClient.get<IPage<AnyElement>>(
       `${prefixSaleService}/product/search-flat`,
       { params }
     );
@@ -48,50 +49,9 @@ export const PartnerCatalogService = {
     );
   },
   getOrganizationPartnerDetail: async (id: string | number) => {
-    const res = await safeApiClient.get<IOrganizationUnitDTO>(
+    const res = await safeApiClient.get<IPartner>(
       `${prefixSaleService}/organization-partner/${id}`
     );
-    console.log('res', res);
-
-    // if (res.contractNoFileUrl) {
-    //   const contractNoFileUrl = await PartnerCatalogService.getPreviewFile(
-    //     res.contractNoFileUrl
-    //   );
-    //   res.contractNoFileLink = contractNoFileUrl;
-    // }
-    // if (res.businessLicenseFileUrl) {
-    //   const businessLicenseFileLink =
-    //     await PartnerCatalogService.getPreviewFile(res.businessLicenseFileUrl);
-    //   res.businessLicenseFileLink = businessLicenseFileLink;
-    // }
-    if (
-      res?.deliveryInfos &&
-      res?.deliveryInfos?.length > 0 &&
-      res?.deliveryInfos[0]
-    ) {
-      const deliveryInfos = res?.deliveryInfos[0];
-      // if (deliveryInfos?.idCardFrontSiteFileUrl) {
-      //   const idCardFrontSiteFileLink =
-      //     await PartnerCatalogService.getPreviewFile(
-      //       deliveryInfos?.idCardFrontSiteFileUrl
-      //     );
-      //   deliveryInfos.idCardFrontSiteFileLink = idCardFrontSiteFileLink;
-      // }
-      // if (deliveryInfos?.idCardBackSiteFileUrl) {
-      //   const idCardBackSiteFileLink =
-      //     await PartnerCatalogService.getPreviewFile(
-      //       deliveryInfos?.idCardBackSiteFileUrl
-      //     );
-      //   deliveryInfos.idCardBackSiteFileLink = idCardBackSiteFileLink;
-      // }
-      // if (deliveryInfos?.multiFileUrl) {
-      //   const multiFileLink = await PartnerCatalogService.getPreviewFile(
-      //     deliveryInfos?.multiFileUrl
-      //   );
-      //   deliveryInfos.multiFileLink = multiFileLink;
-      // }
-      res.deliveryInfos = [deliveryInfos];
-    }
     return res;
   },
   updateStatusPartner: async ({
@@ -115,11 +75,6 @@ export const PartnerCatalogService = {
   },
   createOrganizationPartner: (payload: IPayloadPartner) => {
     const formData = new FormData();
-    formData.append('contractFile', payload.contractFile);
-    formData.append('businessLicenseFile', payload.businessLicenseFile);
-    formData.append('idCardFrontSite', payload.idCardFrontSite);
-    formData.append('idCardBackSite', payload.idCardBackSite);
-    formData.append('portrait', payload.portrait);
 
     formData.append(
       'organizationUnitDTO',
@@ -127,14 +82,8 @@ export const PartnerCatalogService = {
         type: 'application/json',
       })
     );
-    formData.append(
-      'organizationDeliveryInfoDTO',
-      new Blob([JSON.stringify(payload.organizationDeliveryInfoDTO)], {
-        type: 'application/json',
-      })
-    );
 
-    return safeApiClient.post<any>(
+    return safeApiClient.post<AnyElement>(
       `${prefixSaleService}/organization-partner`,
       formData,
       {
@@ -146,57 +95,15 @@ export const PartnerCatalogService = {
   },
   putOrganizationPartner: (payload: IPayloadPartner) => {
     const formData = new FormData();
-    if (payload.contractFile) {
-      formData.append('contractFile', payload.contractFile as Blob);
-    }
-    if (payload.businessLicenseFile) {
-      formData.append(
-        'businessLicenseFile',
-        payload.businessLicenseFile as Blob
-      );
-    }
-    if (payload.idCardFrontSite) {
-      formData.append('idCardFrontSite', payload.idCardFrontSite as Blob);
-    }
-    if (payload.idCardBackSite) {
-      formData.append('idCardBackSite', payload.idCardBackSite as Blob);
-    }
-    if (payload.portrait) {
-      formData.append('portrait', payload.portrait as Blob);
-    }
     formData.append(
       'organizationUnitDTO',
       new Blob([JSON.stringify(payload.organizationUnitDTO)], {
         type: 'application/json',
       })
     );
-    formData.append(
-      'organizationDeliveryInfoDTO',
-      new Blob([JSON.stringify(payload.organizationDeliveryInfoDTO)], {
-        type: 'application/json',
-      })
-    );
 
-    return safeApiClient.put<any>(
+    return safeApiClient.put<AnyElement>(
       `${prefixSaleService}/organization-partner/${payload.id}`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        } as AxiosRequestHeaders,
-      }
-    );
-  },
-  getCCCDInfor: (payload: any) => {
-    const formData = new FormData();
-    formData.append('cardFront', payload.cardFront as Blob);
-    formData.append('cardBack', payload.cardBack as Blob);
-    formData.append('portrait', payload.portrait as Blob);
-
-    return safeApiClient.post<ICCCDInfo>(
-      // `${prefixSaleService}/activation-info?cardType=1`,
-      `${prefixSaleService}/organization-partner/delivery/info`,
-
       formData,
       {
         headers: {
@@ -233,7 +140,7 @@ export const PartnerCatalogService = {
     partnerCode: string,
     params: IParamsRequest
   ) => {
-    return safeApiClient.get<any>(
+    return safeApiClient.get<AnyElement>(
       `${prefixAuthService}/api/users/partner/${partnerCode}`,
       {
         params,
@@ -241,16 +148,22 @@ export const PartnerCatalogService = {
     );
   },
   getUnitByCode: (code: string) => {
-    return safeApiClient.get<any>(
+    return safeApiClient.get<AnyElement>(
+      `${prefixSaleService}/organization-partner/get-by-code/${code}`
+    );
+  },
+
+  getPartnerInfoByCode: (code: string) => {
+    return safeApiClient.get<IPartner>(
       `${prefixSaleService}/organization-partner/get-by-code/${code}`
     );
   },
 
   createOrganizationUserByClientIdentity: (
     clientIdentity: string,
-    payload: any
+    payload: AnyElement
   ) => {
-    return safeApiClient.post<any>(
+    return safeApiClient.post<AnyElement>(
       `${prefixAuthService}/api/users/partner/${clientIdentity}`,
       payload
     );
@@ -262,13 +175,23 @@ export const PartnerCatalogService = {
   },
 
   getOrganizationUserDetail: (clientIdentity: string, id: string) => {
-    return safeApiClient.get<any>(
+    return safeApiClient.get<AnyElement>(
       `${prefixAuthService}/api/users/partner/${clientIdentity}/${id}`
     );
   },
-  updatePartnerUser: (clientIdentity: string, id: string, payload: any) => {
+  updatePartnerUser: (
+    clientIdentity: string,
+    id: string,
+    payload: AnyElement
+  ) => {
     return safeApiClient.put(
       `${prefixAuthService}/api/users/partner/${clientIdentity}/${id}`,
+      payload
+    );
+  },
+  assignPackagePermission: (payload: IAssignPackagePayload) => {
+    return safeApiClient.post(
+      `${prefixSaleService}/organization-partner/assign-package`,
       payload
     );
   },

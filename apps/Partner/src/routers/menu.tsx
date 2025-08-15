@@ -1,5 +1,10 @@
 import { RouterItems } from '@vissoft-react/common';
-import { ChartLine, ClipboardList, Settings, Store } from 'lucide-react';
+import {
+  ChartLine,
+  ClipboardList,
+  ShoppingCart,
+  UserRoundCog,
+} from 'lucide-react';
 import { pathRoutes } from './url';
 
 export const routerItems: RouterItems[] = [
@@ -14,9 +19,9 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.accountAuthorization as string,
+    icon: <UserRoundCog />,
     label: 'Quản Trị Hệ Thống',
     hasChild: true,
-    icon: <Settings />,
   },
   {
     key: pathRoutes.roleManager as string,
@@ -34,19 +39,19 @@ export const routerItems: RouterItems[] = [
     parentId: pathRoutes.accountAuthorization as string,
   },
   {
-    key: pathRoutes.saleManagement as string,
-    label: 'Quản Lý Bán Hàng',
-    hasChild: true,
-    icon: <Store />,
-  },
-  {
     key: pathRoutes.updateSubscriberInfo as string,
     label: 'Cập nhật thông tin thuê bao',
     parentId: pathRoutes.saleManagement as string,
   },
   {
+    key: pathRoutes.saleManagement as string,
+    icon: <ShoppingCart />,
+    label: 'Quản lý bán hàng',
+    hasChild: true,
+  },
+  {
     key: pathRoutes.freeEsimBooking as string,
-    label: 'Book eSIM',
+    label: 'Đặt hàng eSIM',
     parentId: pathRoutes.saleManagement as string,
   },
   {

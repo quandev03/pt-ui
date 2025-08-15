@@ -6,7 +6,7 @@ import {
 } from '@vissoft-react/common';
 import { Col, Form, Row } from 'antd';
 import { memo } from 'react';
-import { useLogicActionPackagedEsim } from '../pages/ActionPackagedEsim/useLogicActionPackagedEsim';
+import { useLogicActionPackagedEsim } from '../pages/ActionBookEsim/useLogicActionPackagedEsim';
 import { useGetPackageCodes } from '../hooks/usePackageCodes';
 import { Minus, Plus } from 'lucide-react';
 
@@ -21,13 +21,14 @@ const BookPackagedEsimForm = () => {
       label: pkg.pckCode,
     })) || [];
 
+  const isReadOnly = actionMode === IModeAction.READ;
+
   return (
     <Form.List
       name="packages"
       initialValue={[
         {
           quantity: null,
-          freePackageCode: undefined,
           paidPackageCode: undefined,
         },
       ]}
@@ -37,16 +38,15 @@ const BookPackagedEsimForm = () => {
           {fields.map((field, index) => (
             <Row
               key={field.key}
-              gutter={[15, 1]}
+              gutter={[24, 0]}
               style={{ alignItems: 'center' }}
             >
-              {/* === Quantity Input === */}
-              <Col span={7}>
+              <Col span={11}>
                 <Form.Item
                   {...field}
                   label="Số lượng eSIM"
                   name={[field.name, 'quantity']}
-                  labelCol={{ span: 10 }}
+                  labelCol={{ span: 6 }}
                   wrapperCol={{ span: 16 }}
                   rules={[
                     { required: true, message: 'Vui lòng nhập số lượng!' },
@@ -64,7 +64,7 @@ const BookPackagedEsimForm = () => {
                 >
                   <CInputNumber
                     placeholder="Nhập số lượng"
-                    disabled={actionMode === IModeAction.READ}
+                    disabled={isReadOnly}
                     style={{ width: '100%' }}
                     formatter={(value) =>
                       `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -75,30 +75,12 @@ const BookPackagedEsimForm = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={7}>
+              <Col span={11}>
                 <Form.Item
                   {...field}
-                  label="Gói cước miễn phí"
-                  name={[field.name, 'freePackageCode']}
-                  labelCol={{ span: 10 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  <CSelect
-                    placeholder="Chọn gói cước"
-                    disabled={actionMode === IModeAction.READ}
-                    options={packageOptions}
-                    allowClear
-                  />
-                </Form.Item>
-              </Col>
-
-              {/* === Paid Package Select === */}
-              <Col span={6}>
-                <Form.Item
-                  {...field}
-                  label="Gói cước có phí"
-                  name={[field.name, 'paidPackageCode']}
-                  labelCol={{ span: 10 }}
+                  label="Gói cước"
+                  name={[field.name, 'packageCode']}
+                  labelCol={{ span: 6 }}
                   wrapperCol={{ span: 16 }}
                   rules={[
                     { required: true, message: 'Vui lòng chọn gói cước!' },
@@ -106,22 +88,20 @@ const BookPackagedEsimForm = () => {
                 >
                   <CSelect
                     placeholder="Chọn gói cước"
-                    disabled={actionMode === IModeAction.READ}
+                    disabled={isReadOnly}
                     options={packageOptions}
                     allowClear
                   />
                 </Form.Item>
               </Col>
-              <Col span={1} />
               <Col
                 span={1}
                 style={{ display: 'flex', justifyContent: 'center' }}
               >
-                {/* Show Minus icon on every row except the first one */}
-                {fields.length > 1 && (
+                {fields.length > 1 && !isReadOnly && (
                   <Minus
                     className="cursor-pointer"
-                    size={24}
+                    size={27}
                     onClick={() => remove(field.name)}
                   />
                 )}
@@ -130,10 +110,10 @@ const BookPackagedEsimForm = () => {
                 span={1}
                 style={{ display: 'flex', justifyContent: 'center' }}
               >
-                {index === fields.length - 1 && (
+                {index === fields.length - 1 && !isReadOnly && (
                   <Plus
                     className="cursor-pointer"
-                    size={24}
+                    size={27}
                     onClick={() => add()}
                   />
                 )}

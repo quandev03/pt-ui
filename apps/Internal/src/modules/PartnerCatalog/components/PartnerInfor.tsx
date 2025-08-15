@@ -1,70 +1,51 @@
-import { Col, Form, Row, Tooltip } from 'antd';
-import { useWatch } from 'antd/es/form/Form';
-import { FocusEvent, useRef } from 'react';
-import usePartnerStore from '../stores';
-import { ChildRef } from '../types';
-import FileUpload from './FileUpload';
 import {
-  CDatePicker,
   CInput,
-  cleanUpPhoneNumber,
-  CSelect,
   CTextArea,
-  emailRegex,
-  formatDate,
-  handlePasteRemoveSpace,
-  ImageFileType,
+  IFieldErrorsItem,
   IModeAction,
+  StatusEnum,
   useActionMode,
   validateForm,
 } from '@vissoft-react/common';
-import { RotateCcw } from 'lucide-react';
-import useConfigAppStore from '../../Layouts/stores';
+import { Col, Form, Row } from 'antd';
+import useFormInstance from 'antd/es/form/hooks/useFormInstance';
+import { useGetPartnerInfoByCode } from '../hook';
+import { IPartner } from '../types';
 
 const PartnerInfor = () => {
-  const contractFileRef = useRef<ChildRef>(null);
-  const businessLicenseFileRef = useRef<ChildRef>(null);
   const actionMode = useActionMode();
-  const form = Form.useFormInstance();
-  const taxCode: string = useWatch('taxCode', form) ?? '';
-  const { partnerDetail, setPartnerDetail } = usePartnerStore();
-
-  const {
-    params: { PARTNER_TYPE = [], PARTNER_SUB_TYPE = [] },
-  } = useConfigAppStore();
-
-  const handleBlur = (e: FocusEvent<HTMLInputElement>, field: string) => {
-    form.setFieldValue(field, e.target.value.trim());
-    form.validateFields([field]);
+  const form = useFormInstance();
+  const onGetPartnerSuccess = (data: IPartner) => {
+    form.setFieldsValue({
+      orgCode: data.orgCode,
+      orgName: data.orgName,
+      taxCode: data.taxCode,
+      phone: data.phone,
+      address: data.address,
+      representative: data.representative,
+      status:
+        data.status === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động',
+      orgDescription: data.orgDescription,
+    });
   };
-
-  const handleRefreshPartnerInfor = () => {
-    form.resetFields(['contractFile', 'businessLicenseFile']);
-    if (partnerDetail) {
-      setPartnerDetail({
-        ...partnerDetail,
-        contractNoFileUrl: undefined,
-        businessLicenseFileUrl: undefined,
-        contractNoFileLink: undefined,
-        businessLicenseFileLink: undefined,
-      });
-    }
-    contractFileRef.current?.clearImage();
-    businessLicenseFileRef.current?.clearImage();
+  const onGetPartnerError = (error: IFieldErrorsItem[]) => {
+    form.setFields(
+      error.map((err) => ({ name: err.field, error: err.detail }))
+    );
   };
-
+  const { mutate: getPartnerInfoByCode } = useGetPartnerInfoByCode(
+    (data) => onGetPartnerSuccess(data),
+    (error: IFieldErrorsItem[]) => onGetPartnerError(error)
+  );
+  const handleGetPartnerInfo = () => {
+    const orgCode = form.getFieldValue('orgCode');
+    console.log('org code', form.getFieldValue('orgCode'));
+    if (orgCode) getPartnerInfoByCode(orgCode);
+  };
   return (
     <div className="relative p-5 border rounded-md">
       <div className="text-lg !text-[#076AB3] font-bold flex gap-4 bg-white absolute -top-[15px]">
         <div>Thông tin đối tác</div>
-        {actionMode !== IModeAction.READ && (
-          <Tooltip title="Làm mới">
-            <RotateCcw
-              className="self-center cursor-pointer"
-              onClick={handleRefreshPartnerInfor}
-            />
-          </Tooltip>
-        )}
       </div>
       <Row gutter={[30, 0]}>
         <Col span={12}>
@@ -76,226 +57,51 @@ const PartnerInfor = () => {
           >
             <CInput
               placeholder="Nhập mã đối tác"
-              maxLength={5}
+              maxLength={30}
               disabled={actionMode !== IModeAction.CREATE}
               preventSpecial
               preventVietnamese
               uppercase
+              onBlur={handleGetPartnerInfo}
             />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item
-            label="Tên đối tác"
-            name="orgName"
-            required
-            rules={[
-              {
-                validator(_, value) {
-                  if (!value) {
-                    return Promise.reject('Không được để trống trường này');
-                  } else {
-                    return Promise.resolve();
-                  }
-                },
-              },
-            ]}
-          >
-            <CInput
-              placeholder="Nhập tên đối tác"
-              maxLength={100}
-              disabled={actionMode === IModeAction.READ}
-            />
+          <Form.Item label="Tên đối tác" name="orgName">
+            <CTextArea placeholder="Nhập tên đối tác" disabled />
           </Form.Item>
         </Col>
-        <Col span={24}>
-          <div className="w-full ">
-            <div className="flex !w-2/4 m-auto">
-              <Col span={12}>
-                <FileUpload
-                  imageUrl={partnerDetail?.contractNoFileLink}
-                  label="Upload file hợp đồng"
-                  name="contractFile"
-                  disabled={actionMode === IModeAction.READ}
-                  showIconRequired={false}
-                  required={false}
-                  fileAccess={[...ImageFileType, 'application/pdf']}
-                  messageErrorFormat="File hợp đồng không đúng định dạng"
-                  ref={contractFileRef}
-                  mimeType={
-                    partnerDetail?.contractNoFileUrl?.endsWith('.pdf')
-                      ? 'application/pdf'
-                      : 'application/octet-stream'
-                  }
-                />
-              </Col>
-              <Col span={12}>
-                <FileUpload
-                  imageUrl={partnerDetail?.businessLicenseFileLink}
-                  label="Upload file ảnh ĐKKD"
-                  name="businessLicenseFile"
-                  disabled={actionMode === IModeAction.READ}
-                  showIconRequired={false}
-                  required={false}
-                  ref={businessLicenseFileRef}
-                />
-              </Col>
-            </div>
-          </div>
-        </Col>
         <Col span={12}>
-          <Form.Item
-            label="Mã số thuế"
-            name="taxCode"
-            required
-            rules={[
-              {
-                validator(_, value: string) {
-                  if (!value) {
-                    return Promise.reject('Không được để trống trường này');
-                  } else {
-                    if (
-                      value.length === 10 ||
-                      value.length === 14 ||
-                      value.length === 13
-                    ) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject('Mã số thuế không đúng định dạng');
-                  }
-                },
-              },
-            ]}
-          >
-            <CInput
-              placeholder="Nhập mã số thuế"
-              onlyNumber
-              preventSpace
-              maxLength={taxCode.includes('-') ? 14 : 13}
-              disabled={actionMode === IModeAction.READ}
-              onBlur={(e) => {
-                const value = e.target.value;
-                if (value.length === 13) {
-                  const formattedValue = `${value.slice(0, -3)}-${value.slice(
-                    -3
-                  )}`;
-                  form.setFieldsValue({ taxCode: formattedValue });
-                }
-              }}
-            />
+          <Form.Item label="Mã số thuế" name="taxCode">
+            <CInput placeholder="Nhập mã số thuế" disabled />
           </Form.Item>
         </Col>
 
         <Col span={12}>
-          <Form.Item
-            label="Số điện thoại"
-            name="phone"
-            required
-            rules={[validateForm.required]}
-          >
-            <CInput
-              onlyNumber
-              preventSpace
-              maxLength={12}
-              placeholder="Nhập số điện thoại"
-              disabled={actionMode === IModeAction.READ}
-            />
+          <Form.Item label="Số điện thoại" name="phone">
+            <CInput placeholder="Nhập số điện thoại" disabled />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="Số hợp đồng" name="contractNo">
-            <CInput
-              placeholder="Nhập số hợp đồng"
-              maxLength={50}
-              disabled={actionMode === IModeAction.READ}
-            />
-          </Form.Item>
-        </Col>
-
-        <Col span={12}>
-          <Form.Item
-            label="Ngày hiệu lực hợp đồng"
-            name="contractDate"
-            required
-            validateTrigger={['onBlur']}
-            rules={[
-              {
-                validator(_, value: string) {
-                  if (!value) {
-                    return Promise.reject('Không được để trống trường này');
-                  } else {
-                    return Promise.resolve();
-                  }
-                },
-              },
-            ]}
-          >
-            <CDatePicker
-              placeholder="Chọn ngày hiệu lực hợp đồng"
-              format={formatDate}
-              disabled={actionMode === IModeAction.READ}
-              style={{ width: '100%' }}
-            />
+          <Form.Item label="Địa chỉ" name="address">
+            <CTextArea placeholder="Nhập địa chỉ" disabled />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item
-            label={'Email'}
-            name="email"
-            required
-            rules={[
-              {
-                validator(_, value) {
-                  if (!value) {
-                    return Promise.reject('Không được để trống trường này');
-                  } else if (!emailRegex.test(value)) {
-                    return Promise.reject('Email không đúng định dạng');
-                  } else {
-                    return Promise.resolve();
-                  }
-                },
-              },
-            ]}
-          >
-            <CInput
-              placeholder="Nhập email"
-              onBlur={(e) => {
-                handleBlur(e, 'email');
-              }}
-              onPaste={(event) => handlePasteRemoveSpace(event, 100)}
-              maxLength={100}
-              disabled={actionMode === IModeAction.READ}
-              onInput={(e: any) =>
-                (e.target.value = cleanUpPhoneNumber(e.target.value))
-              }
-            />
+          <Form.Item label="Họ tên người liên hệ" name="representative">
+            <CInput placeholder="Nhập họ tên người liên hệ" disabled />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label="TK ngân hàng" name="orgBankAccountNo">
-            <CInput
-              placeholder="Nhập tài khoản ngân hàng"
-              maxLength={50}
-              disabled={actionMode === IModeAction.READ}
-            />
+          <Form.Item label="Trạng thái" name="status">
+            <CInput placeholder="Nhập trạng thái" disabled />
           </Form.Item>
         </Col>
-
         <Col span={12}>
-          <Form.Item label="Địa chỉ theo GPĐKKD" name="businessLicenseAddress">
-            <CInput
-              maxLength={100}
-              placeholder="Nhập địa chỉ GPĐKKD"
-              disabled={actionMode === IModeAction.READ}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={24}>
           <Form.Item label="Mô tả" name="orgDescription">
             <CTextArea
-              maxLength={200}
               placeholder="Nhập mô tả"
-              autoSize={{ minRows: 1, maxRows: 2 }}
+              maxLength={200}
               disabled={actionMode === IModeAction.READ}
             />
           </Form.Item>

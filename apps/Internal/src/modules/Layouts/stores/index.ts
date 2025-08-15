@@ -108,6 +108,7 @@ const useConfigAppStore = create(
       params: {
         ISDN_TRANSACTION_TRANS_STATUS: [],
         ISDN_TRANSACTION_UPLOAD_STATUS: [],
+        SUBSCRIBER_SUBS_STATUS: [],
       },
       setParams(params) {
         set(() => ({ params }));
@@ -148,6 +149,7 @@ const useConfigAppStore = create(
             params: {
               ISDN_TRANSACTION_TRANS_STATUS: [],
               ISDN_TRANSACTION_UPLOAD_STATUS: [],
+              SUBSCRIBER_SUBS_STATUS: [],
             },
           });
         }

@@ -7,7 +7,7 @@ import {
   useCreateStockPermission,
   useGetStockNumber,
   useGetStockPermission,
-} from '../queryHooks';
+} from '../hook';
 import usePartnerStore from '../stores';
 import {
   AnyElement,

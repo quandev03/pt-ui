@@ -16,7 +16,7 @@ const fetch = async (data: IListOfServicePackageForm & { id: string }) => {
     packagePrice: data.packagePrice,
     status: data.status,
     pckCode: data.pckCode,
-    description: data.description,
+    description: data.description ?? '',
   };
 
   // Only append image if it's actually a File (new image uploaded)
@@ -47,7 +47,7 @@ export const useEdit = (form: FormInstance, onSuccess?: () => void) => {
   return useMutation({
     mutationFn: fetch,
     onSuccess: () => {
-      NotificationSuccess('Cập nhật thành công');
+      NotificationSuccess('Cập nhật gói cước thành công');
       onSuccess?.();
     },
     onError: (error: IErrorResponse) => {
