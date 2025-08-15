@@ -27,3 +27,11 @@ export const useGetAllPackage = () => {
     queryFn: () => eSIMStockServices.getPackage(),
   });
 };
+
+export const useGetCustomerInfo = (id: string) => {
+  return useQuery({
+    queryKey: ['get-customer-info-detail-esim', id],
+    queryFn: () => eSIMStockServices.getCustomerInfo(id),
+    enabled: !!id,
+  });
+};

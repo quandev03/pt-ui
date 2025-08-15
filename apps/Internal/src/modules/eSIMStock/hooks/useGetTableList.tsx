@@ -1,20 +1,26 @@
 import {
   CButtonDetail,
-  CTag,
   CTooltip,
   RenderCell,
-  StatusEnum,
-  TypeTagEnum,
   WrapperActionTable,
   decodeSearchParams,
   formatDate,
+  formatDateTime,
   usePermissions,
 } from '@vissoft-react/common';
+import { Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useSearchParams } from 'react-router-dom';
-import { ActiveStatusEnum, ActiveStatusLabel, IeSIMStockItem } from '../types';
 import useConfigAppStore from '../../Layouts/stores';
+import {
+  ActiveStatusColor,
+  ActiveStatusEnum,
+  ActiveStatusOptions,
+  IeSIMStockItem,
+  SubscriberStatusColor,
+  SubscriberStatusOptions,
+} from '../types';
 
 export const useGetTableList = (
   handleOpenModal: (record: IeSIMStockItem) => void
@@ -42,7 +48,7 @@ export const useGetTableList = (
     {
       title: 'Số thuê bao',
       dataIndex: 'isdn',
-      width: 200,
+      width: 120,
       align: 'left',
       render(value) {
         return <RenderCell value={value} tooltip={value} />;
@@ -51,9 +57,9 @@ export const useGetTableList = (
     {
       title: 'Serial SIM',
       dataIndex: 'serial',
-      width: 250,
+      width: 180,
       align: 'left',
-      render(value, record) {
+      render(value) {
         return <RenderCell value={value} tooltip={value} />;
       },
     },
@@ -76,9 +82,9 @@ export const useGetTableList = (
       },
     },
     {
-      title: 'Đại lý',
+      title: 'Đối tác',
       dataIndex: 'orgName',
-      width: 250,
+      width: 230,
       align: 'left',
       render(value) {
         return <RenderCell value={value} />;
@@ -87,21 +93,25 @@ export const useGetTableList = (
 
     {
       title: 'Trạng thái thuê bao',
-      dataIndex: 'status',
-      width: 120,
+      dataIndex: 'statusSub',
+      width: 150,
       align: 'left',
-      render(value, record) {
+      render(value) {
+        const renderedValue =
+          SubscriberStatusOptions.find((item) => item.value === value)?.label ||
+          '';
         return (
-          <CTooltip title={value} placement="topLeft">
-            <CTag
-              type={
-                value === StatusEnum.ACTIVE
-                  ? TypeTagEnum.SUCCESS
-                  : TypeTagEnum.ERROR
+          <CTooltip title={renderedValue} placement="topLeft">
+            <Tag
+              color={
+                SubscriberStatusColor[
+                  value as keyof typeof SubscriberStatusColor
+                ]
               }
+              bordered={false}
             >
-              {value === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động'}
-            </CTag>
+              {renderedValue}
+            </Tag>
           </CTooltip>
         );
       },
@@ -112,14 +122,17 @@ export const useGetTableList = (
       width: 160,
       align: 'left',
       render(value: ActiveStatusEnum) {
-        const label = ActiveStatusLabel[value] || '';
-        const isNotBlocked = value === ActiveStatusEnum.NOT_BLOCKED;
+        const renderedValue =
+          ActiveStatusOptions.find((item) => item.value === value)?.label || '';
 
         return (
-          <CTooltip title={label} placement="topLeft">
-            <CTag type={isNotBlocked ? TypeTagEnum.SUCCESS : TypeTagEnum.ERROR}>
-              {label}
-            </CTag>
+          <CTooltip title={renderedValue} placement="topLeft">
+            <Tag
+              color={ActiveStatusColor[value as keyof typeof ActiveStatusColor]}
+              bordered={false}
+            >
+              {renderedValue}
+            </Tag>
           </CTooltip>
         );
       },
@@ -138,17 +151,22 @@ export const useGetTableList = (
     {
       title: 'Thời gian cập nhật',
       dataIndex: 'modifiedDate',
-      width: 120,
+      width: 160,
       align: 'left',
-      render(value, record) {
+      render(value) {
         const textformatDate = value ? dayjs(value).format(formatDate) : '';
+        const textformatDateTime = value
+          ? dayjs(value).format(formatDateTime)
+          : '';
 
-        return <RenderCell value={textformatDate} />;
+        return (
+          <RenderCell value={textformatDate} tooltip={textformatDateTime} />
+        );
       },
     },
 
     {
-      title: 'Hành động',
+      title: 'Thao tác',
       align: 'center',
       width: 150,
       fixed: 'right',

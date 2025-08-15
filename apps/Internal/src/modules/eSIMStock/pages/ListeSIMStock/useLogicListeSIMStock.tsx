@@ -10,9 +10,10 @@ import {
 } from '@vissoft-react/common';
 import { ColumnsType } from 'antd/es/table';
 import {
-  ActiveStatusLabel,
+  ActiveStatusOptions,
   IeSIMStockItem,
   IeSIMStockParams,
+  SubscriberStatusOptions,
 } from '../../types';
 import { useGetAllPackage, useGeteSIMStock } from '../../hooks';
 import { useGetAllOrganizationUnit } from 'apps/Internal/src/hooks/useGetAllPartners';
@@ -51,7 +52,7 @@ export const useLogicListeSIMStock = () => {
         placeholder: 'Chọn gói cước',
       },
       {
-        label: 'Đại lý',
+        label: 'Đối tác',
         type: 'TreeSelect',
         name: 'orgId',
         showDefault: true,
@@ -66,10 +67,7 @@ export const useLogicListeSIMStock = () => {
         name: 'subStatus',
         stateKey: 'subStatus',
         showDefault: true,
-        options: [
-          { label: 'Hoạt động', value: '1' },
-          { label: 'Không hoạt động', value: '0' },
-        ],
+        options: SubscriberStatusOptions,
         placeholder: 'Trạng thái thuê bao',
       },
       {
@@ -78,10 +76,7 @@ export const useLogicListeSIMStock = () => {
         name: 'activeStatus',
         stateKey: 'activeStatus',
         showDefault: true,
-        options: Object.entries(ActiveStatusLabel).map(([value, label]) => ({
-          label,
-          value: value,
-        })),
+        options: ActiveStatusOptions,
         placeholder: 'Trạng thái chặn cắt',
       },
     ];
