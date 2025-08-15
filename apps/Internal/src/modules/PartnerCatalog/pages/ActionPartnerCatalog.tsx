@@ -25,7 +25,7 @@ import {
   useUpdatePartner,
 } from '../hook';
 import usePartnerStore from '../stores';
-import { IFormData, IPayloadPartner } from '../types';
+import { IFormData, IPartner, IPayloadPartner } from '../types';
 
 const scrollToFirstError = () => {
   const firstErrorField = document.querySelector('.ant-form-item-has-error');
@@ -45,8 +45,7 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
   const [isSubmitBack, setIsSubmitBack] = useState(false);
-  const { setPartnerDetail, partnerDetail, resetOrderStore } =
-    usePartnerStore();
+  const { setPartnerDetail, resetOrderStore } = usePartnerStore();
   const [form] = Form.useForm();
 
   const setFieldError = useCallback(
@@ -65,7 +64,7 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
   );
 
   const { mutate: updatePartner, isPending: loadingUpdate } = useUpdatePartner(
-    (data) => {
+    () => {
       navigate(-1);
     },
     setFieldError
@@ -76,72 +75,24 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
       setPartnerDetail(data);
       const {
         address,
-        orgSubType,
-        orgPartnerType,
         orgCode,
         orgName,
-        contractNo,
         taxCode,
-        contractDate,
-        email,
-        orgBankAccountNo,
         phone,
-        businessLicenseAddress,
         orgDescription,
-        deliveryInfos,
+        representative,
+        status,
       } = data;
       form.setFieldsValue({
         address,
-        orgSubType,
-        orgPartnerType,
         orgCode,
         orgName,
-        contractNo,
         taxCode,
-        email,
-        orgBankAccountNo,
         phone,
-        businessLicenseAddress,
         orgDescription,
-        deliveryInfos,
-        contractDate: dayjs(contractDate, formatDateEnglishV2),
+        representative,
+        status,
       });
-      if (data.deliveryInfos) {
-        const {
-          consigneeName,
-          idNo,
-          idPlace,
-          idDate,
-          gender,
-          dateOfBirth,
-          passportNo,
-          phone,
-          email,
-          orgTitle,
-          provinceCode,
-          districtCode,
-          wardCode,
-          consigneeAddress,
-          address,
-        } = data.deliveryInfos[0];
-        form.setFieldsValue({
-          consigneeName,
-          idNo,
-          idPlace,
-          gender,
-          passportNo,
-          orgTitle,
-          provinceCode,
-          districtCode,
-          wardCode,
-          address,
-          consigneeAddress,
-          dateOfBirth: dateOfBirth ? dayjs(dateOfBirth) : null,
-          idDate: idDate ? dayjs(idDate) : null,
-          phoneOrganizationDeliveryInfoDTO: phone,
-          emailOrganizationDeliveryInfoDTO: email,
-        });
-      }
     });
 
   useEffect(() => {
@@ -165,13 +116,6 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
   }, [actionMode]);
 
   useEffect(() => {
-    if (actionMode === IModeAction.CREATE) {
-      form.setFieldsValue({
-        orgId: 'VNSKY',
-        paymentMethod: 3,
-        shippingMethod: 1,
-      });
-    }
     return () => {
       setPartnerDetail(undefined);
     };
@@ -192,116 +136,36 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
     setFieldError
   );
 
-  const handleFinish = (values: IFormData) => {
+  const handleFinish = (values: IPartner) => {
     const errors = form.getFieldsError();
     const hasError = errors.some((item) => item.errors.length > 0);
     if (hasError) {
       return;
     }
-
     const {
       address,
-      provinceCode,
-      districtCode,
-      wardCode,
-      contractFile,
-      businessLicenseFile,
-      orgSubType,
-      orgPartnerType,
       orgCode,
       orgName,
-      contractNo,
       taxCode,
-      contractDate,
-      email,
-      orgBankAccountNo,
       phone,
-      businessLicenseAddress,
       orgDescription,
-      idCardFrontSite,
-      idCardBackSite,
-      portrait,
-      consigneeName,
-      idNo,
-      idPlace,
-      idDate,
-      gender,
-      dateOfBirth,
-      passportNo,
-      phoneOrganizationDeliveryInfoDTO,
-      emailOrganizationDeliveryInfoDTO,
-      orgTitle,
-      consigneeAddress,
+      representative,
+      status,
     } = values;
 
     const payload: IPayloadPartner = {
       id: id,
       organizationUnitDTO: {
-        clientId: partnerDetail?.clientId,
         id: id,
         orgCode,
         orgName,
-        orgType: 'PARTNER',
-        orgSubType,
         orgDescription,
-        status: partnerDetail?.status ?? 0,
-        approvalStatus: partnerDetail?.approvalStatus ?? 1,
         taxCode,
-        contractNo,
-        contractDate: dayjs(contractDate).format(formatDateEnglishV2),
         phone,
-        email,
-        orgPartnerType,
-        orgBankAccountNo,
-        businessLicenseAddress,
-        businessLicenseFileUrl: partnerDetail?.businessLicenseFileUrl,
-        contractNoFileUrl: partnerDetail?.contractNoFileUrl,
-      },
-      organizationDeliveryInfoDTO: {
-        orgId: partnerDetail?.id,
-        id:
-          partnerDetail?.deliveryInfos &&
-          partnerDetail?.deliveryInfos.length > 0
-            ? partnerDetail?.deliveryInfos[0].id
-            : undefined,
-        consigneeName,
-        idNo,
-        idPlace,
-        idDate,
-        gender,
-        dateOfBirth: dateOfBirth
-          ? dayjs(dateOfBirth).format(formatDateEnglishV2)
-          : null,
-        passportNo,
-        phone: phoneOrganizationDeliveryInfoDTO,
-        email: emailOrganizationDeliveryInfoDTO,
-        orgTitle,
-        provinceCode,
-        districtCode,
-        wardCode,
-        consigneeAddress,
         address,
-        idCardFrontSiteFileUrl:
-          partnerDetail?.deliveryInfos &&
-          partnerDetail?.deliveryInfos.length > 0
-            ? partnerDetail?.deliveryInfos[0].idCardFrontSiteFileUrl
-            : undefined,
-        idCardBackSiteFileUrl:
-          partnerDetail?.deliveryInfos &&
-          partnerDetail?.deliveryInfos.length > 0
-            ? partnerDetail?.deliveryInfos[0].idCardBackSiteFileUrl
-            : undefined,
-        multiFileUrl:
-          partnerDetail?.deliveryInfos &&
-          partnerDetail?.deliveryInfos.length > 0
-            ? partnerDetail?.deliveryInfos[0].multiFileUrl
-            : undefined,
+        representative,
+        status: status === 'Hoạt động' ? 1 : 0,
       },
-      contractFile: contractFile,
-      businessLicenseFile: businessLicenseFile,
-      idCardFrontSite: idCardFrontSite,
-      idCardBackSite: idCardBackSite,
-      portrait: portrait,
     };
     if (actionMode === IModeAction.CREATE) {
       createPartner(payload);

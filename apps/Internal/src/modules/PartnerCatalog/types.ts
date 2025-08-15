@@ -272,13 +272,14 @@ export interface IListOfServicePackage {
   description: string;
 }
 export interface IPartner {
+  id?: string;
   orgCode: string;
   orgName: string;
   taxCode: string;
   phone: string;
   address: string;
   representative: string;
-  status: string;
+  status: number | string;
   orgDescription?: string;
 }
 export interface IRoleItem {

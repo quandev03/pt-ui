@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { IOrganizationUnitDTO } from '../types';
+import { IOrganizationUnitDTO, IPartner } from '../types';
 
 export interface IPartnerCatalogStore {
   provinceSelected: string;
@@ -7,8 +7,8 @@ export interface IPartnerCatalogStore {
   partnerTarget?: IOrganizationUnitDTO;
   openProductAuthorization: boolean;
   openStockPermission: boolean;
-  partnerDetail?: IOrganizationUnitDTO;
-  setPartnerDetail: (partnerDetail?: IOrganizationUnitDTO) => void;
+  partnerDetail?: IPartner;
+  setPartnerDetail: (partnerDetail?: IPartner) => void;
   setPartnerTarget: (partnerTarget?: IOrganizationUnitDTO) => void;
   setOpenProductAuthorization: (openProductAuthorization: boolean) => void;
   setOpenStockPermission: (openStockPermission: boolean) => void;

@@ -56,7 +56,7 @@ export const useUpdatePartner = (
 };
 
 export const useGetOrganizationPartnerDetail = (
-  onSuccess: (data: IOrganizationUnitDTO) => void
+  onSuccess: (data: IPartner) => void
 ) => {
   return useMutation({
     mutationFn: PartnerCatalogService.getOrganizationPartnerDetail,

@@ -3,6 +3,7 @@ import {
   CTextArea,
   IFieldErrorsItem,
   IModeAction,
+  StatusEnum,
   useActionMode,
   validateForm,
 } from '@vissoft-react/common';
@@ -22,7 +23,8 @@ const PartnerInfor = () => {
       phone: data.phone,
       address: data.address,
       representative: data.representative,
-      status: data.status,
+      status:
+        data.status === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động',
       orgDescription: data.orgDescription,
     });
   };

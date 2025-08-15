@@ -49,17 +49,9 @@ export const PartnerCatalogService = {
     );
   },
   getOrganizationPartnerDetail: async (id: string | number) => {
-    const res = await safeApiClient.get<IOrganizationUnitDTO>(
+    const res = await safeApiClient.get<IPartner>(
       `${prefixSaleService}/organization-partner/${id}`
     );
-    if (
-      res?.deliveryInfos &&
-      res?.deliveryInfos?.length > 0 &&
-      res?.deliveryInfos[0]
-    ) {
-      const deliveryInfos = res?.deliveryInfos[0];
-      res.deliveryInfos = [deliveryInfos];
-    }
     return res;
   },
   updateStatusPartner: async ({
