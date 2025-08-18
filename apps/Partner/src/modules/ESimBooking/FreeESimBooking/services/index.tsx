@@ -1,5 +1,10 @@
 import { AnyElement, IPage, IParamsRequest } from '@vissoft-react/common';
-import { IBookFreeEsimPayload, IFreeEsimBooking, IPackage } from '../types';
+import {
+  IBookEsimDetails,
+  IBookFreeEsimPayload,
+  IFreeEsimBooking,
+  IPackage,
+} from '../types';
 import { prefixSaleService } from '../../../../constants';
 import { safeApiClient } from '../../../../services/axios';
 
@@ -22,6 +27,13 @@ export const freeEsimBookingServices = {
   getPackageCodes: async () => {
     const res = await safeApiClient.get<IPackage[]>(
       `${prefixSaleService}/esim-free/get-package`
+    );
+    if (!res) throw new Error('Oops');
+    return res;
+  },
+  getEsimDetails: async (id: string | undefined) => {
+    const res = await safeApiClient.get<IBookEsimDetails>(
+      `${prefixSaleService}/esim/${id}`
     );
     if (!res) throw new Error('Oops');
     return res;
