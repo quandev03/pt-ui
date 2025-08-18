@@ -8,6 +8,7 @@ import {
   IModeAction,
   ModalConfirm,
   Show,
+  StatusEnum,
   TitleHeader,
   useActionMode,
   usePermissions,
@@ -91,7 +92,7 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         phone,
         orgDescription,
         representative,
-        status,
+        status: status === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động',
       });
     });
 
