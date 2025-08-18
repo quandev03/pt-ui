@@ -65,7 +65,7 @@ const BookPackagedEsimForm = () => {
                   <CInputNumber
                     placeholder="Nhập số lượng"
                     disabled={isReadOnly}
-                    style={{ width: '100%' }}
+                    style={{ width: '100%', color: 'black' }}
                     formatter={(value) =>
                       `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                     }
