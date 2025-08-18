@@ -281,7 +281,7 @@ export interface IPartner {
   representative: string;
   status: number | string;
   orgDescription?: string;
-  clientId: string;
+  clientId?: string;
 }
 export interface IRoleItem {
   code: string;

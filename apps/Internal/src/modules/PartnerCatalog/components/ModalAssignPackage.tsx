@@ -1,4 +1,5 @@
 import {
+  AnyElement,
   BtnGroupFooter,
   CButton,
   CButtonSave,
@@ -17,12 +18,13 @@ type Props = {
 };
 const ModalAssignPackage: FC<Props> = ({ open, onClose, partnerId }) => {
   const [form] = Form.useForm();
-  const { mutate: assignPackagePermission, isPending: loadingAssignPackage } =
-    useAssignPackagePermission();
+
   const handleCancel = () => {
     form.resetFields();
     onClose();
   };
+  const { mutate: assignPackagePermission, isPending: loadingAssignPackage } =
+    useAssignPackagePermission(handleCancel);
   const { data: packageOptions } = useListPackage({ page: 0, size: 1000 });
   const handleFinish = (values: Record<string, string[]>) => {
     assignPackagePermission({
@@ -33,7 +35,10 @@ const ModalAssignPackage: FC<Props> = ({ open, onClose, partnerId }) => {
   const { data: packageCodes } = useGetAssignedPackages(partnerId);
   useEffect(() => {
     if (packageCodes) {
-      form.setFieldValue('package', packageCodes);
+      form.setFieldValue(
+        'package',
+        packageCodes.map((item: AnyElement) => item.pckCode)
+      );
     }
   }, [form, packageCodes]);
   return (

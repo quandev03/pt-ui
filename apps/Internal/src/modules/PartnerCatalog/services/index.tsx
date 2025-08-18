@@ -196,7 +196,7 @@ export const PartnerCatalogService = {
     );
   },
   getAssignedPackages: (clientId: string) => {
-    return safeApiClient.get<string[]>(
+    return safeApiClient.get<AnyElement>(
       `${prefixSaleService}/organization-partner/${clientId}/packages`
     );
   },

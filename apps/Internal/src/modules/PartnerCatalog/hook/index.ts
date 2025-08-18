@@ -170,7 +170,7 @@ export const useUpdatePartnerUser = (
     },
   });
 };
-export const useAssignPackagePermission = () => {
+export const useAssignPackagePermission = (onSuccess: () => void) => {
   return useMutation({
     mutationFn: PartnerCatalogService.assignPackagePermission,
     onSuccess: () => {
