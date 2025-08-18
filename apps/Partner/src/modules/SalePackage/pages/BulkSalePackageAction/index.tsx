@@ -6,8 +6,10 @@ import {
   UploadFileTemplate,
 } from '@vissoft-react/common';
 import { Col, Form, Row } from 'antd';
-import { useLogicBulkSalePackageAction } from './useLogicBulkSalePackageAction';
+import { useEffect } from 'react'; // 1. Import useEffect
+import { useGetDebitLimit } from '../../../../../src/hooks/useGetDebitLimit'; // 1. Import the hook
 import { ModalOtpMemo } from '../components/ModalOtp';
+import { useLogicBulkSalePackageAction } from './useLogicBulkSalePackageAction';
 
 export const BulkSalePackageAction = () => {
   const {
@@ -18,7 +20,22 @@ export const BulkSalePackageAction = () => {
     openOtp,
     handleOpenOtp,
     loadingCheckData,
+    handleCloseOtp,
   } = useLogicBulkSalePackageAction();
+
+  // 2. Call the hook to get the debit limit data
+  const { data: debitLimitData } = useGetDebitLimit();
+
+  // 3. Use useEffect to set the form values when the data arrives
+  useEffect(() => {
+    if (debitLimitData) {
+      form.setFieldsValue({
+        debitLimit: debitLimitData.debitLimit,
+        debitLimitMbf: debitLimitData.debitLimitMbf,
+      });
+    }
+  }, [debitLimitData, form]);
+
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>Bán gói theo lô cho thuê bao</TitleHeader>
@@ -37,13 +54,13 @@ export const BulkSalePackageAction = () => {
         <div className="bg-white rounded-[10px] px-6 pt-4 pb-8">
           <Row gutter={[30, 0]}>
             <Col span={12}>
-              <Form.Item label="Hạn mức tạm tính" name="isdn">
-                <CInputNumber disabled />
+              <Form.Item label="Hạn mức tạm tính" name="debitLimit">
+                <CInputNumber disabled className="!text-black" />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="idPackage" label="Hạn mức với MBF">
-                <CInputNumber disabled />
+              <Form.Item label="Hạn mức với MBF" name="debitLimitMbf">
+                <CInputNumber disabled className="!text-black" />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -75,7 +92,7 @@ export const BulkSalePackageAction = () => {
         handleSuccess={handleCancel}
         handleGenOtp={form.submit}
         open={openOtp}
-        onClose={handleClose}
+        onClose={handleCloseOtp || handleClose}
       />
     </div>
   );

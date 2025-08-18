@@ -1,19 +1,23 @@
 import {
-  CTag,
-  CTooltip,
   RenderCell,
-  StatusEnum,
-  TypeTagEnum,
   decodeSearchParams,
   formatDate,
   formatDateTime,
+  Text,
 } from '@vissoft-react/common';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useSearchParams } from 'react-router-dom';
 import { IPackageSaleItem } from '../types';
+import { useGetFileDownloadFn } from './useDownloadFile';
+import { Tooltip } from 'antd';
 
 export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
+  const { mutate: getFileDownload } = useGetFileDownloadFn();
+  const handleDownload = (url: string) => {
+    getFileDownload(url);
+  };
+
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   return [
@@ -33,18 +37,29 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
     },
     {
       title: 'Tên file/Số thuê bao',
-      dataIndex: 'fileNameOrSubscriberNumber',
+      dataIndex: 'fileName',
       width: 200,
       align: 'left',
       fixed: 'left',
-      render(value) {
-        return <RenderCell value={value} tooltip={value} />;
+      render(value, record) {
+        return (
+          <div className="cursor-pointer">
+            <Tooltip title={value} placement="topLeft">
+              <Text
+                className="text-blue underline"
+                onClick={() => handleDownload(record.fileUrl)}
+              >
+                {value}
+              </Text>
+            </Tooltip>
+          </div>
+        );
       },
     },
     {
       title: 'Hình thức bán gói',
-      dataIndex: 'saleMethod',
-      width: 250,
+      dataIndex: 'saleType',
+      width: 200,
       align: 'left',
       fixed: 'left',
       render(value) {
@@ -54,7 +69,7 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
     {
       title: 'Gói cước',
       dataIndex: 'packageName',
-      width: 250,
+      width: 200,
       align: 'left',
       fixed: 'left',
       render(value) {
@@ -63,7 +78,7 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
     },
     {
       title: 'User thực hiện',
-      dataIndex: 'performedBy',
+      dataIndex: 'createdBy',
       width: 200,
       align: 'left',
       render(value) {
@@ -71,9 +86,9 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
       },
     },
     {
-      title: 'Ngày thực hiện',
-      dataIndex: 'executionDate',
-      width: 120,
+      title: 'Thời gian thực hiện',
+      dataIndex: 'createdDate',
+      width: 150,
       align: 'left',
       render(value) {
         const textformatDate = value ? dayjs(value).format(formatDate) : '';
@@ -86,23 +101,42 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
       },
     },
     {
-      title: 'Trạng thái',
+      title: 'Thời gian hoàn thành',
+      dataIndex: 'createdDate',
+      width: 150,
+      align: 'left',
+      render(value) {
+        const textformatDate = value ? dayjs(value).format(formatDate) : '';
+        const textformatDateTime = value
+          ? dayjs(value).format(formatDateTime)
+          : '';
+        return (
+          <RenderCell value={textformatDate} tooltip={textformatDateTime} />
+        );
+      },
+    },
+    {
+      title: 'Trạng thái xử lý',
       dataIndex: 'status',
       width: 150,
       align: 'left',
-      render: (value) => {
+      render(value) {
+        let displayText = '';
+        let textColor = '';
+
+        if (value === 2) {
+          displayText = 'Hoàn thành';
+          textColor = '#178801';
+        } else {
+          displayText = 'Đang xử lý';
+          textColor = '#FAAD14';
+        }
+
         return (
-          <CTooltip title={value} placement="topLeft">
-            <CTag
-              type={
-                value === StatusEnum.ACTIVE
-                  ? TypeTagEnum.SUCCESS
-                  : TypeTagEnum.ERROR
-              }
-            >
-              {value}
-            </CTag>
-          </CTooltip>
+          <RenderCell
+            value={<span style={{ color: textColor }}>{displayText}</span>}
+            tooltip={displayText}
+          />
         );
       },
     },
@@ -113,10 +147,16 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
       render(_, record) {
         const renderedValue = (
           <>
-            <p>Số lượng thành công: {record.successNumber}</p>
+            <p>Số lượng thành công: {record.succeededNumber}</p>
             <p>Số lượng thất bại: {record.failedNumber}</p>
             <p>
-              File kết quả: <span className="text-sky-600">File</span>
+              File kết quả:{' '}
+              <span
+                className="text-primary underline cursor-pointer"
+                onClick={() => handleDownload(record.resultFileUrl)}
+              >
+                File
+              </span>
             </p>
           </>
         );

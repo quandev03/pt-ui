@@ -14,7 +14,7 @@ export const useLogicActionSingleSalePackage = () => {
   const [optionPackage, setOptionPackage] = useState<
     { label: string; value: string; cycle: number | string; unit: string }[]
   >([]);
-  const { setDataGenOtp, setCount, reset } = useSellSinglePackageStore();
+  const { setCount, reset } = useSellSinglePackageStore();
   const handleCancel = useCallback(() => {
     form.resetFields();
     setOpenOtp(false);
@@ -46,18 +46,7 @@ export const useLogicActionSingleSalePackage = () => {
     [form]
   );
   const { mutate: genOtp } = useGenOtp((data) => {
-    const { idPackage, isdn, typePayment } = form.getFieldsValue();
-    setDataGenOtp({
-      isdn,
-      transactionId: data.transactionId,
-      id: data.id,
-      otp: undefined,
-      cycle: optionPackage.find((item) => item.value === idPackage)?.cycle,
-      unit: optionPackage.find((item) => item.value === idPackage)?.unit,
-      type: typePayment,
-      idPackage: idPackage,
-      pckCode: optionPackage.find((item) => item.value === idPackage)?.label,
-    });
+    const { idPackage, isdn } = form.getFieldsValue();
     setOpenOtp(true);
     setCount(120);
   });
@@ -65,10 +54,8 @@ export const useLogicActionSingleSalePackage = () => {
     (value: AnyElement) => {
       const data = {
         isdn: handleConvertIsdn(value.isdn),
-        isPackage: value.idPackage,
         pckCode: optionPackage.find((item) => item.value === value.idPackage)
           ?.label,
-        typePayment: Number(value.typePayment),
       };
       genOtp(data);
     },

@@ -1,14 +1,17 @@
 import { IParamsRequest } from '@vissoft-react/common';
 
 export interface IPackageSaleItem {
-  fileNameOrSubscriberNumber: string;
-  saleMethod: string;
-  packageName: string;
-  performedBy: string;
-  executionDate: string;
-  processingStatus: string;
-  successNumber: number;
+  clientId: string;
+  createdBy: string;
+  createdDate: string;
+  succeededNumber: number;
   failedNumber: number;
+  fileName: string;
+  fileUrl: string;
+  id: number;
+  resultFileUrl: string;
+  status: number;
+  totalNumber: number;
 }
 export interface IPackageSaleParams extends IParamsRequest {
   type?: string;
@@ -20,16 +23,12 @@ export interface ISinglePackageSalePayload {
 export interface IBulkPackageSalePayload {
   attachment: File;
 }
-export interface IPayloadCheckIsdnAndGetPackage {
-  isdn: string;
-  type: string;
-}
-export interface IPackage {
-  packageId: string;
-  packageCode: string;
-  cycle: number;
-  unit: string;
-}
+// export interface IPackage {
+//   packageId: string;
+//   packageCode: string;
+//   cycle: number;
+//   unit: string;
+// }
 export interface IResGenOtp {
   id: string;
   isdn: string;
@@ -72,4 +71,25 @@ export interface IPayloadRegister {
   };
   cycle: number | string;
   unit: string;
+}
+
+export interface IPackage {
+  createdBy: string;
+  createdDate: string;
+  description: string;
+  id: string;
+  modifiedBy: string;
+  modifiedDate: string;
+  packagePrice: number;
+  pckCode: string;
+  pckName: string;
+  status: number;
+  urlImagePackage: string;
+}
+
+export interface DownloadFileReq {
+  fileType: 'FILENAME' | 'TEMPLATE' | 'RESULT';
+  id?: number;
+  fileName: string;
+  detailId?: number;
 }

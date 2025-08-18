@@ -12,7 +12,7 @@ import {
 } from '@vissoft-react/common';
 import { REACT_QUERY_KEYS } from '../../../../../src/constants/query-key';
 import { handleConvertIsdn } from '../../utils';
-import { IPayloadRegister } from '../../types';
+import { IPayloadRegister, ISinglePackageSalePayload } from '../../types';
 import { Col, Form, Row } from 'antd';
 
 const ModalOtp = ({
@@ -60,16 +60,8 @@ const ModalOtp = ({
         isdn: handleConvertIsdn(dataGenOtp?.isdn),
         idPackage: dataGenOtp?.idPackage,
         pckCode: dataGenOtp?.pckCode,
-        otpConfirmRequest: {
-          otp: value.otp,
-          id: dataGenOtp?.id,
-          transactionId: dataGenOtp?.transactionId,
-          isdn: handleConvertIsdn(dataGenOtp?.isdn),
-        },
-        cycle: dataGenOtp.cycle,
-        unit: dataGenOtp.unit,
       };
-      addPackageSingle(data as IPayloadRegister);
+      addPackageSingle(data as ISinglePackageSalePayload);
     },
     [dataGenOtp, addPackageSingle]
   );

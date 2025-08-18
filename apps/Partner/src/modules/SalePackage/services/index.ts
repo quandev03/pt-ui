@@ -1,14 +1,14 @@
-import { IPage } from '@vissoft-react/common';
+import { AnyElement, IPage } from '@vissoft-react/common';
 import { prefixSaleService } from '../../../../src/constants';
 import { axiosClient, safeApiClient } from '../../../../src/services';
 import {
   IPackage,
   IPackageSaleItem,
   IPackageSaleParams,
-  IPayloadCheckIsdnAndGetPackage,
   IPayloadGenOtp,
   IPayloadRegister,
   IResGenOtp,
+  ISinglePackageSalePayload,
 } from '../types';
 import { RcFile } from 'antd/lib/upload';
 export const packageSaleService = {
@@ -21,21 +21,13 @@ export const packageSaleService = {
     );
   },
   addPackageSingle: async (data: IPayloadRegister) => {
-    const res = await safeApiClient.post<IPayloadRegister>(
+    const res = await safeApiClient.post<ISinglePackageSalePayload>(
       `${prefixSaleService}/sale-package/register-package`,
       data
     );
     return res;
   },
-  checkIsdnAndGetPackage: async (payload: IPayloadCheckIsdnAndGetPackage) => {
-    const res = await safeApiClient.get<IPackage[]>(
-      `${prefixSaleService}/sale-package/check-isdn`,
-      {
-        params: payload,
-      }
-    );
-    return res;
-  },
+
   checkDataFile: async (file: RcFile) => {
     const formData = new FormData();
     formData.append('attachment', file);
@@ -51,11 +43,27 @@ export const packageSaleService = {
     );
     return res;
   },
+
   genOtp: async (data: IPayloadGenOtp) => {
-    const res = await safeApiClient.post<IResGenOtp>(
-      `${prefixSaleService}/sale-package/gen-otp`,
+    const res = await safeApiClient.post<IPayloadRegister>(
+      `${prefixSaleService}/sale-package/register-package`,
       data
     );
+    return res;
+  },
+  getPackageCodes: async () => {
+    const res = await safeApiClient.get<IPackage[]>(
+      `${prefixSaleService}/esim-free/get-package`
+    );
+    if (!res) throw new Error('Oops');
+    return res;
+  },
+  getRegisterPackage: async (payload: ISinglePackageSalePayload) => {
+    const res = await safeApiClient.post<AnyElement>(
+      `${prefixSaleService}/public/api/v1/sale-package/register-package`,
+      payload
+    );
+    if (!res) throw new Error('Oops');
     return res;
   },
 };
