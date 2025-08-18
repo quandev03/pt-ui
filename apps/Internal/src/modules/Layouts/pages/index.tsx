@@ -1,4 +1,5 @@
 import {
+  AnyElement,
   LayoutPageCommon,
   themeConfig,
   useGetLoaderData,
@@ -28,7 +29,7 @@ export const LayoutPage = () => {
   console.log('menus', menus);
   return (
     <LayoutPageCommon
-      pathRoutes={pathRoutes}
+      pathRoutes={pathRoutes as AnyElement}
       isAuthenticated={isAuthenticated}
       routerItems={routerItems}
       menuData={menus}

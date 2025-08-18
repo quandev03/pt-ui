@@ -82,6 +82,9 @@ export enum ActionsTypeEnum {
   CREATE_ORDER_DELIVERY = 'CREATE_ORDER_DELIVERY', // action tạo đơn giao hàng màn quản lý đơn online
   TRANSLATE = 'TRANSLATE', // action dịch màn quản lý đơn online cs
   RECREATE_ORDER = 'RECREATE_ORDER',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  PACKAGE_AUTHORIZATION = 'PACKAGE_AUTHORIZATION',
 }
 export const TenMinutes = 10 * 60 * 1000;
 export const ImageFileType = ['image/png', 'image/jpeg', 'image/jpg'];

@@ -4,7 +4,7 @@ import {
   RegSpecicalCharExceptUnderscore,
 } from '../../constants/regex';
 import { AnyElement } from '../../types';
-import { convertVietnameseToEnglish } from '../../utils';
+import { convertVietnameseToEnglish, removeVietnamese } from '../../utils';
 import { Form, Input, InputProps, InputRef } from 'antd';
 import React, { forwardRef, useCallback } from 'react';
 
@@ -20,6 +20,7 @@ interface Props extends InputProps {
   preventVietnamese?: boolean;
   preventDoubleSpace?: boolean;
   preventSpecialExceptUnderscore?: boolean;
+  preventOnlyWhitespace?: boolean;
 }
 
 export const CInput = forwardRef<InputRef, Props>(
@@ -40,6 +41,7 @@ export const CInput = forwardRef<InputRef, Props>(
       preventVietnamese,
       preventDoubleSpace,
       preventSpecialExceptUnderscore,
+      preventOnlyWhitespace,
       ...rest
     },
     ref
@@ -67,8 +69,15 @@ export const CInput = forwardRef<InputRef, Props>(
       if (onChange) onChange(e);
       let value = e.target.value;
 
+      // Disallow values that are entirely whitespace
+      if (preventOnlyWhitespace && value && value.trim().length === 0) {
+        value = '';
+        form.setFieldValue(field, value);
+        return;
+      }
+
       if (preventVietnamese) {
-        value = convertVietnameseToEnglish(value);
+        value = removeVietnamese(value);
         form.setFieldValue(field, value);
       }
       if (uppercase) {

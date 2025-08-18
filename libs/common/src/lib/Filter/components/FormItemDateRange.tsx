@@ -31,6 +31,7 @@ export const FormItemDateRange = ({
               ? isFutureDateDisabled
               : undefined
           }
+          allowClear={false}
         />
       </Form.Item>
     </Tooltip>

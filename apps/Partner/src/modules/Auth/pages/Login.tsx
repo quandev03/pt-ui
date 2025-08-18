@@ -8,51 +8,61 @@ import {
   StorageService,
   cleanUpPhoneNumber,
   setFieldError,
+  usePermissions,
   validateForm,
 } from '@vissoft-react/common';
 import { Col, Form, Image, Row, Spin } from 'antd';
 import { FocusEvent, useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import BgLogin from '../../../assets/images/bg_banner.png';
 import Logo from '../../../assets/images/Logo-mini.svg';
-import BgLogin from '../../../assets/images/background.png';
-import Smartphone from '../../../assets/images/smartphone.png';
+import Smartphone from '../../../assets/images/Thumb.png';
 import { ACCESS_TOKEN_KEY } from '../../../constants';
 import { pathRoutes } from '../../../routers/url';
 import useConfigAppStore from '../../Layouts/stores';
 import ModalForgotPassword from '../components/ModalForgotPassword';
 import { useSupportLoginLocal } from '../hooks';
 import { ILoginDataRequest } from '../types';
+import { globalService } from '../../../../src/services';
 
 const LoginPage = () => {
   const totalMutating = useIsMutating({ mutationKey: ['login'] });
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [openForgot, setForgot] = useState(false);
-  const { setIsAuthenticated, isAuthenticated } = useConfigAppStore();
+  const { setIsAuthenticated, isAuthenticated, menuData, setMenuData } =
+    useConfigAppStore();
   const token = StorageService.get(ACCESS_TOKEN_KEY);
   const { state: locationState } = useLocation();
+  const permission = usePermissions(menuData, pathRoutes.dashboard);
   const handleRedirect = useCallback(() => {
-    navigate(pathRoutes.welcome as string);
     if (locationState) {
       const { pathname, search } = locationState;
       navigate(`${pathname}${search}`);
+    } else if (permission.canRead) {
+      navigate(pathRoutes.dashboard);
     } else {
-      navigate(pathRoutes.welcome as string);
+      navigate(pathRoutes.welcome);
     }
-  }, [locationState, navigate]);
+  }, [locationState, permission, navigate]);
 
   useEffect(() => {
     if (isAuthenticated && token) {
       handleRedirect();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated, token, handleRedirect]);
+  }, [isAuthenticated, token]);
 
   const { mutate: loginLocal, isPending: loadingLoginLocal } =
     useSupportLoginLocal(
-      () => {
+      async () => {
+        const menuData = await globalService.getMenu();
+        setMenuData(menuData);
+        localStorage.setItem(
+          'partner_code',
+          form.getFieldValue('client_identity')
+        );
         setIsAuthenticated(true);
-        handleRedirect();
       },
       (err: IErrorResponse) => {
         if (err.errors) {
@@ -74,6 +84,13 @@ const LoginPage = () => {
     form.setFieldValue(field, value.trim());
     form.validateFields([field]);
   };
+  useEffect(() => {
+    const savedPartnerCode = localStorage.getItem('partner_code');
+    if (savedPartnerCode) {
+      form.setFieldsValue({ client_identity: savedPartnerCode });
+    }
+  }, [form]);
+
   return (
     <Spin spinning={!!totalMutating} wrapperClassName="flex-1">
       <Row
@@ -108,7 +125,7 @@ const LoginPage = () => {
               onFinish={(values: ILoginDataRequest) => {
                 loginLocal(values);
               }}
-              autoComplete="off"
+              autoComplete="on"
               className="!w-full"
             >
               <Form.Item
@@ -126,6 +143,8 @@ const LoginPage = () => {
                   className="login-form__input"
                   placeholder={'Nhập mã đối tác'}
                   maxLength={50}
+                  name="partner_code" // Đặt name khác để Chrome coi là field riêng
+                  autoComplete="on" // Nhóm riêng biệt
                 />
               </Form.Item>
               <Form.Item
@@ -190,8 +209,16 @@ const LoginPage = () => {
             </Form>
           </div>
         </Col>
-        <Col span={12} className="flex justify-center items-center">
-          <div>
+        <Col span={12}>
+          <div className="text-center flex flex-col gap-3">
+            <span className="text-[#005aaa] text-3xl font-semibold drop-shadow-md">
+              Hệ thống Kinh doanh eSIM
+            </span>
+            <span className="text-[#e50013] text-3xl font-semibold drop-shadow-md flex items-center justify-center gap-2">
+              Hi Vietnam
+            </span>
+          </div>
+          <div className="flex justify-center mt-16">
             <Image src={Smartphone} preview={false} />
           </div>
         </Col>

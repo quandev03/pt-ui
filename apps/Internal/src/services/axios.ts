@@ -84,6 +84,10 @@ const errInterceptor = async (
 
   // Handle token refresh
   if (httpCode === STATUS_TOKEN_EXPIRED && config?.url !== authApi.tokenUrl) {
+    if ((config as any)?._retry) {
+      await useConfigAppStore.getState().logoutStore();
+      return Promise.reject(error);
+    }
     const refreshToken = StorageService.getRefreshToken(REFRESH_TOKEN_KEY);
 
     if (isRefreshing) {
@@ -91,22 +95,14 @@ const errInterceptor = async (
         failedQueue.push({
           resolve: (token: string) => {
             if (config?.headers) {
+              (config as any)._retry = true;
               config.headers['Authorization'] = `Bearer ${token}`;
             }
             axiosClient(config!).then(resolve).catch(reject);
           },
           reject,
         });
-      })
-        .then((token) => {
-          if (config?.headers) {
-            config.headers['Authorization'] = `Bearer ${token}`;
-          }
-          return axiosClient(config!);
-        })
-        .catch((err) => {
-          return Promise.reject(err);
-        });
+      });
     }
     isRefreshing = true;
 
@@ -115,7 +111,7 @@ const errInterceptor = async (
       const tokenError = new Error('Không tìm thấy refresh token');
       processQueue(tokenError, null);
       isRefreshing = false;
-      useConfigAppStore.getState().logoutStore();
+      await useConfigAppStore.getState().logoutStore();
       return Promise.reject(tokenError);
     }
 
@@ -146,6 +142,7 @@ const errInterceptor = async (
 
       // Retry original request
       if (config?.headers) {
+        (config as any)._retry = true;
         config.headers['Authorization'] = `Bearer ${token}`;
       }
       return axiosClient(config!);
@@ -155,7 +152,7 @@ const errInterceptor = async (
       if (axios.isAxiosError(refreshError)) {
         const refreshStatus = refreshError.response?.status;
         if (refreshStatus === STATUS_TOKEN_EXPIRED) {
-          useConfigAppStore.getState().logoutStore();
+          await useConfigAppStore.getState().logoutStore();
           NotificationWarning(
             'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại'
           );

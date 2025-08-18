@@ -10,7 +10,7 @@ export const MESSAGE = {
   G09: 'Từ chối thành công',
   G11: 'Đã mất kết nối!',
   G12: 'Thời gian tìm kiếm không vượt quá 30 ngày',
-  G13: 'Kích thước tệp tối đa: 5M',
+  G13: 'Kích thước ảnh phải nhỏ hơn 5MB',
   G14: 'File không đúng định dạng',
   G15: 'Bạn có chắc chắn muốn hủy bản ghi không?',
   G15b: (value: string) => `Bạn có chắc chắn muốn hủy ${value} không?`,
