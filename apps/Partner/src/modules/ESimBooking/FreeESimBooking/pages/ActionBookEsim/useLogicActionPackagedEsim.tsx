@@ -10,9 +10,11 @@ import {
 import { Form } from 'antd';
 import { useCallback, useMemo } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { IBookFreeEsimPayload } from '../../types';
 import { useBookFreeEsim } from '../../hooks/useBookFreeEsim';
 import { useGetListFreeEsimBooking } from '../../hooks/useGetListFreeEsimBooking';
+// We still need this to get the package IDs
+import { useGetPackageCodes } from '../../hooks/usePackageCodes';
+import { IBookFreeEsimPayload } from '../../types';
 
 export const useLogicActionPackagedEsim = () => {
   const navigate = useNavigate();
@@ -26,12 +28,16 @@ export const useLogicActionPackagedEsim = () => {
     formatQueryParams<IParamsRequest>(params)
   );
 
+  // Get the list of packages to access their IDs
+  const { data: packageCodeList } = useGetPackageCodes();
+
   const onSuccess = useCallback(() => {
     navigate(-1);
   }, [navigate]);
 
   const onError = useCallback(
     (errorField: IFieldErrorsItem[]) => {
+      // This is great for handling validation errors from the backend!
       form.setFields(
         errorField.map((error) => ({
           name: error.field,
@@ -46,6 +52,7 @@ export const useLogicActionPackagedEsim = () => {
     onSuccess,
     onError
   );
+
   const Title = useMemo(() => {
     switch (actionMode) {
       case IModeAction.READ:
@@ -58,16 +65,42 @@ export const useLogicActionPackagedEsim = () => {
   }, [actionMode]);
 
   const handleFinish = (values: AnyElement) => {
+    if (!packageCodeList) {
+      console.error('Package list is not available for submission.');
+      return;
+    }
+
+    const transformedPackages = values.packages
+      .map((formPackage: { packageCode: string; quantity: number }) => {
+        const fullPackageDetails = packageCodeList.find(
+          (p) => p.pckCode === formPackage.packageCode
+        );
+
+        if (!fullPackageDetails) {
+          return null;
+        }
+        return {
+          id: fullPackageDetails.id,
+          packageCode: formPackage.packageCode,
+          quantity: formPackage.quantity,
+        };
+      })
+      .filter(Boolean);
+
+    // This part is now correct
     const payload: IBookFreeEsimPayload = {
-      requests: values.packages,
+      requests: transformedPackages,
       note: values.note || '',
     };
+
+    console.log('✅ Submitting final payload to /esim/book:', payload);
     bookFreeEsim(payload);
   };
 
   const handleClose = useCallback(() => {
     navigate(-1);
   }, [navigate]);
+
   return {
     id,
     Title,

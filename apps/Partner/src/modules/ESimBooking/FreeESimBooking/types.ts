@@ -26,7 +26,7 @@ export interface IBookFreeEsim {
   id?: string;
   quantity: number;
   pckCode: string[];
-  description: string;
+  note: string;
 }
 interface IPackageRequest {
   id?: string;
@@ -51,4 +51,15 @@ export interface IPackage {
   pckName: string;
   status: number;
   urlImagePackage: string;
+}
+
+export interface ISaleOrderLine {
+  id: string;
+  pckCode: string;
+  quantity: number;
+}
+
+export interface IBookEsimDetails {
+  saleOrderLines: ISaleOrderLine[];
+  note: string;
 }

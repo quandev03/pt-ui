@@ -6,13 +6,13 @@ import {
   IModeAction,
   TitleHeader,
 } from '@vissoft-react/common';
-import { Col, Form, Row } from 'antd';
-// 1. Import useRef and useCallback
+import { Col, Form, Row, Spin } from 'antd';
 import { memo, useEffect, useRef, useCallback } from 'react';
 import { useLogicActionPackagedEsim } from './useLogicActionPackagedEsim';
 import { useGetPackageCodes } from '../../hooks/usePackageCodes';
-import EsimPackagedBookForm from '../../components/EsimPackagedBookForm'; // Assuming this is the correct path
-import { useGetDebitLimit } from 'apps/Partner/src/hooks/useGetDebitLimit';
+import EsimPackagedBookForm from '../../components/EsimPackagedBookForm';
+import { useGetDebitLimit } from '../../../../../hooks/useGetDebitLimit';
+import { useGetEsimDetails } from '../../hooks/useGetEsimDetails';
 
 export const ActionPackagedEsim = memo(() => {
   const {
@@ -23,12 +23,14 @@ export const ActionPackagedEsim = memo(() => {
     actionMode,
     handleFinish,
     bookingInProcess,
-    listEsimBooked,
   } = useLogicActionPackagedEsim();
 
   const { data: packageCodeList } = useGetPackageCodes();
   const { data: debitLimitData } = useGetDebitLimit();
   const originalDebitLimit = useRef(0);
+
+  const { data: esimDetailsData, isLoading: isLoadingDetails } =
+    useGetEsimDetails(id);
 
   const packageOptions = packageCodeList?.map((pkg) => ({
     key: pkg.id,
@@ -39,75 +41,71 @@ export const ActionPackagedEsim = memo(() => {
 
   useEffect(() => {
     if (actionMode === IModeAction.CREATE && debitLimitData) {
-      // Store the original value in the ref
       originalDebitLimit.current = debitLimitData.debitLimit;
-
       form.setFieldsValue({
-        temporaryLimit: debitLimitData.debitLimit, // Set the initial display value
+        temporaryLimit: debitLimitData.debitLimit,
         mbfLimit: debitLimitData.debitLimitMbf,
       });
     }
   }, [actionMode, debitLimitData, form]);
-
   useEffect(() => {
     if (actionMode === IModeAction.CREATE && packageOptions?.length === 1) {
       form.setFieldsValue({
+        note: esimDetailsData?.note || '',
         packages: [{ packageCode: packageOptions[0].value }],
       });
     }
-  }, [actionMode, form, packageOptions]);
+  }, [actionMode, esimDetailsData?.note, form, packageOptions]);
 
   useEffect(() => {
-    if (actionMode === IModeAction.READ && listEsimBooked?.content && id) {
-      const esimData = listEsimBooked.content.find(
-        (item: AnyElement) => item.id === id
-      );
-      if (esimData) {
-        form.setFieldsValue({
-          note: esimData.note,
-          packages: [
-            {
-              quantity: esimData.quantity,
-              packageCode: esimData.packageCodes,
-            },
-          ],
-        });
-      }
+    if (actionMode === IModeAction.READ && esimDetailsData) {
+      form.resetFields();
+
+      const formattedPackages = esimDetailsData.saleOrderLines.map((line) => ({
+        quantity: line.quantity,
+        packageCode: line.pckCode,
+      }));
+      const noteValue = esimDetailsData.note || '';
+
+      form.setFieldsValue({
+        note: noteValue,
+        packages: formattedPackages,
+      });
     }
-  }, [actionMode, form, id, listEsimBooked?.content]);
+  }, [actionMode, form, esimDetailsData]);
+
   const handleValuesChange = useCallback(
     (changedValues: AnyElement, allValues: AnyElement) => {
-      // We only care when the 'packages' array is changed
       if (
         changedValues.packages &&
         packageCodeList &&
         packageCodeList.length > 0
       ) {
         let totalCost = 0;
-
-        // Loop through all package rows in the form
         allValues.packages?.forEach((pkgItem: AnyElement) => {
-          // Ensure we have data to work with
           if (pkgItem && pkgItem.packageCode && pkgItem.quantity) {
-            const fullPackage = packageCodeList.find((p) => {
-              return p.pckCode === pkgItem.packageCode;
-            });
-
+            const fullPackage = packageCodeList.find(
+              (p) => p.pckCode === pkgItem.packageCode
+            );
             if (fullPackage) {
               totalCost += fullPackage.packagePrice * pkgItem.quantity;
-            } else {
-              console.error(`❌ No Match Found for "${pkgItem.packageCode}"`);
             }
           }
         });
-
-        console.log('Final Calculated Cost:', totalCost);
         const newTemporaryLimit = originalDebitLimit.current - totalCost;
         form.setFieldsValue({ temporaryLimit: newTemporaryLimit });
       }
     },
-    [form, packageCodeList] // Dependencies are correct
+    [form, packageCodeList]
   );
+
+  if (actionMode === IModeAction.READ && isLoadingDetails) {
+    return (
+      <div className="flex justify-center items-center w-full h-full">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -145,7 +143,7 @@ export const ActionPackagedEsim = memo(() => {
               <Col span={12}>
                 <Form.Item
                   label="Hạn mức với MBF"
-                  name="mbfLimit" // Renamed from debitLimitMbf
+                  name="mbfLimit"
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 18 }}
                 >
@@ -164,7 +162,7 @@ export const ActionPackagedEsim = memo(() => {
               </Col>
             </>
           )}
-          {/* ... The rest of your form ... */}
+
           <Col span={24} style={{ marginTop: 11 }}>
             <Form.Item label="Ghi chú" name="note" labelCol={{ span: 3 }}>
               <CTextArea
@@ -179,8 +177,8 @@ export const ActionPackagedEsim = memo(() => {
         <div className="bg-white p-5 rounded-md mt-4">
           <EsimPackagedBookForm />
         </div>
+
         <div className="flex gap-4 flex-wrap justify-end mt-7">
-          {/* ... Buttons ... */}
           {actionMode === IModeAction.CREATE && (
             <CButton
               onClick={() => {

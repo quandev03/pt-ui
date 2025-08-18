@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   IErrorResponse,
   IFieldErrorsItem,
+  NotificationError,
   NotificationSuccess,
 } from '@vissoft-react/common';
 import { IBookFreeEsimPayload } from '../types';
@@ -26,6 +27,10 @@ export const useBookFreeEsim = (
     },
     onError(error: IErrorResponse & { fieldErrors?: IFieldErrorsItem[] }) {
       if (error?.errors) {
+        const errorMessage =
+          error?.detail || 'Có lỗi xảy ra khi book eSIM miễn phí!';
+
+        NotificationError({ message: errorMessage });
         onError(error?.errors);
       }
     },
