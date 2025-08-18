@@ -20,7 +20,7 @@ import { useColumnsTablePartnerCatalog } from '../hook/useColumnsTablePartnerCat
 import { IOrganizationUnitDTO } from '../types';
 
 export const PartnerCatalogList = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -65,6 +65,7 @@ export const PartnerCatalogList = () => {
           return navigate(pathRoutes.partnerCatalogEdit(record.id));
         case IModeAction.PARTNER_USER_MANAGER:
           navigate(pathRoutes.partnerCatalogUserManagement(record.orgCode));
+          setSearchParams({ orgName: record.orgName });
           return;
         case IModeAction.PACKAGE_AUTHORIZATION:
           setIsOpenAssignModal(true);

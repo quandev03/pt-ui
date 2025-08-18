@@ -19,16 +19,17 @@ import {
 } from 'react-router-dom';
 
 import useConfigAppStore from '../../Layouts/stores';
-import { useGetDetailByCode, useGetOrganizationUsersByOrgCode } from '../hook';
+import { useGetOrganizationUsersByOrgCode } from '../hook';
 import { useColumnsTableUserManagement } from '../hook/useColumnsTableUserManagement';
 import { IUserPartnerCatalog } from '../types';
 
 export const PartnerCatalogUserManagement = () => {
   const { menuData } = useConfigAppStore();
   const permissions = usePermissions(menuData);
+  const [searchParams] = useSearchParams();
+  const params = decodeSearchParams(searchParams);
   const { orgCode } = useParams<{ orgCode: string }>();
-
-  const { data: detailPartner } = useGetDetailByCode(orgCode ?? '');
+  const orgName = params.orgName;
 
   const filtersItem: FilterItemProps[] = useMemo(() => {
     return [
@@ -54,14 +55,12 @@ export const PartnerCatalogUserManagement = () => {
         label: 'Đối tác',
         disabled: true,
         showDefault: true,
-        tooltip: detailPartner?.orgName,
-        defaultValue: detailPartner?.orgName,
-        value: detailPartner?.orgName,
+        tooltip: orgName,
+        defaultValue: orgName,
+        value: orgName,
       },
     ];
-  }, [detailPartner?.orgName]);
-  const [searchParams] = useSearchParams();
-  const params = decodeSearchParams(searchParams);
+  }, [orgName]);
   const { filters, requestTime, ...rest } = params;
 
   const { data: listUser, isLoading } = useGetOrganizationUsersByOrgCode(
