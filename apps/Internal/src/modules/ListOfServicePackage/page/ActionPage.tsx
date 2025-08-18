@@ -22,15 +22,15 @@ import {
 } from '@vissoft-react/common';
 import { Button, Card, Col, Form, Row, Space, Spin, Upload } from 'antd';
 import { RcFile } from 'antd/es/upload';
+import { pathRoutes } from 'apps/Internal/src/routers';
 import { UploadIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useGetImage } from '../hook';
 import { useAdd } from '../hook/useAdd';
 import { useEdit } from '../hook/useEdit';
 import { useView } from '../hook/useView';
 import { IListOfServicePackageForm } from '../types';
-import { pathRoutes } from 'apps/Internal/src/routers';
-import { useGetImage } from '../hook';
 
 export const ActionPage = () => {
   const actionMode = useActionMode();
@@ -382,10 +382,7 @@ export const ActionPage = () => {
                   >
                     Lưu
                   </CButtonSave>
-                  <CButtonClose
-                    onClick={() => navigate(pathRoutes.listOfServicePackage)}
-                    disabled={false}
-                  />
+                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
                 </>
               )}
               {actionMode === IModeAction.READ && (
@@ -396,19 +393,13 @@ export const ActionPage = () => {
                     }}
                     disabled={false}
                   />
-                  <CButtonClose
-                    onClick={() => navigate(pathRoutes.listOfServicePackage)}
-                    disabled={false}
-                  />
+                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
                 </>
               )}
               {actionMode === IModeAction.UPDATE && (
                 <>
                   <CButtonSave disabled={false} htmlType="submit" />
-                  <CButtonClose
-                    onClick={() => navigate(pathRoutes.listOfServicePackage)}
-                    disabled={false}
-                  />
+                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
                 </>
               )}
             </Space>

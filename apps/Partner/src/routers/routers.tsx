@@ -1,6 +1,10 @@
 import { isPageReload } from '@vissoft-react/common';
 import { isEmpty } from 'lodash';
-import { createHashRouter, ShouldRevalidateFunction } from 'react-router-dom';
+import {
+  createHashRouter,
+  redirect,
+  ShouldRevalidateFunction,
+} from 'react-router-dom';
 import { ErrorPage, NotFoundPage } from '../modules/Errors/index';
 import useConfigAppStore from '../modules/Layouts/stores';
 import { globalService } from '../services';
@@ -54,6 +58,13 @@ export const routers = createHashRouter([
     },
     loader: () => {
       localStorage.removeItem(LOADER_INIT_KEY);
+
+      const { isAuthenticated } = useConfigAppStore.getState();
+
+      if (isAuthenticated) {
+        throw redirect(pathRoutes.welcome);
+      }
+
       return null;
     },
     errorElement: <ErrorPage />,
