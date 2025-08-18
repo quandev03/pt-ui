@@ -7,13 +7,13 @@ import {
   MESSAGE,
 } from '@vissoft-react/common';
 import { Col, Form } from 'antd';
-import { FC } from 'react';
-import { useAssignPackagePermission } from '../hook';
+import { FC, useEffect } from 'react';
+import { useAssignPackagePermission, useGetAssignedPackages } from '../hook';
 import { useListPackage } from '../hook/useListPackage';
 type Props = {
   open: boolean;
   onClose: () => void;
-  partnerId: string | number;
+  partnerId: string;
 };
 const ModalAssignPackage: FC<Props> = ({ open, onClose, partnerId }) => {
   const [form] = Form.useForm();
@@ -26,10 +26,16 @@ const ModalAssignPackage: FC<Props> = ({ open, onClose, partnerId }) => {
   const { data: packageOptions } = useListPackage({ page: 0, size: 1000 });
   const handleFinish = (values: Record<string, string[]>) => {
     assignPackagePermission({
-      packageIds: values.package,
-      id: partnerId,
+      packageCodes: values.package,
+      clientId: partnerId,
     });
   };
+  const { data: packageCodes } = useGetAssignedPackages(partnerId);
+  useEffect(() => {
+    if (packageCodes) {
+      form.setFieldValue('package', packageCodes);
+    }
+  }, [form, packageCodes]);
   return (
     <CModal
       title="Phân quyền gói cước"

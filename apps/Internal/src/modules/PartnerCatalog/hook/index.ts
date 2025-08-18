@@ -7,11 +7,7 @@ import {
 } from '@vissoft-react/common';
 import { REACT_QUERY_KEYS } from 'apps/Internal/src/constants/query-key';
 import { PartnerCatalogService } from '../services';
-import {
-  IOrganizationUnitDTO,
-  IPartner,
-  IPartnerCatalogParams,
-} from '../types';
+import { IPartner, IPartnerCatalogParams } from '../types';
 
 export const useGetOrganizationPartner = (params: IPartnerCatalogParams) => {
   return useQuery({
@@ -180,5 +176,11 @@ export const useAssignPackagePermission = () => {
     onSuccess: () => {
       NotificationSuccess('Phân quyền gói cước thành công');
     },
+  });
+};
+export const useGetAssignedPackages = (clientId: string) => {
+  return useQuery({
+    queryKey: ['get-assigned-packages', clientId],
+    queryFn: () => PartnerCatalogService.getAssignedPackages(clientId),
   });
 };

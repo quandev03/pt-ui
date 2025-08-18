@@ -64,8 +64,11 @@ export const PartnerCatalogList = () => {
         case IModeAction.UPDATE:
           return navigate(pathRoutes.partnerCatalogEdit(record.id));
         case IModeAction.PARTNER_USER_MANAGER:
-          navigate(pathRoutes.partnerCatalogUserManagement(record.orgCode));
-          setSearchParams({ orgName: record.orgName });
+          navigate(
+            `${pathRoutes.partnerCatalogUserManagement(
+              record.orgCode
+            )}?orgName=${record.orgName}`
+          );
           return;
         case IModeAction.PACKAGE_AUTHORIZATION:
           setIsOpenAssignModal(true);
@@ -117,11 +120,13 @@ export const PartnerCatalogList = () => {
         columns={columns}
         data={organizationPartner}
       />
-      <ModalAssignPackage
-        open={isOpenAssignModal}
-        onClose={() => setIsOpenAssignModal(false)}
-        partnerId={selectedPartner?.id!}
-      />
+      {isOpenAssignModal && (
+        <ModalAssignPackage
+          open={isOpenAssignModal}
+          onClose={() => setIsOpenAssignModal(false)}
+          partnerId={selectedPartner?.clientId!}
+        />
+      )}
     </>
   );
 };
