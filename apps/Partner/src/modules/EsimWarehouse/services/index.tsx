@@ -4,7 +4,7 @@ import {
   ICustomerInfo,
   IEsimWarehouseDetails,
   IEsimWarehouseList,
-  IPackage,
+  IGetPackageCodes,
   IQrCodeGen,
   IQrCodeSent,
 } from '../types';
@@ -32,7 +32,7 @@ export const esimWarehouseServices = {
     );
   },
 
-  getGenQrCode: async (params: IQrCodeGen): Promise<Blob> => {
+  getGenQrCode: async (params: IQrCodeGen) => {
     const { subId, size } = params;
     const res = await safeApiClient.post<Blob>(
       `${prefixSaleService}/esim-manager/gen-qr-code/${subId}`,
@@ -56,8 +56,8 @@ export const esimWarehouseServices = {
   },
 
   getPackageCodes: async () => {
-    const res = await safeApiClient.get<IPackage[]>(
-      `${prefixSaleService}/esim-free/get-package`
+    const res = await safeApiClient.get<IGetPackageCodes>(
+      `${prefixSaleService}/esim-manager/package`
     );
     if (!res) throw new Error('Oops');
     return res;
