@@ -10,7 +10,7 @@ import {
 import { pathRoutes } from '../../../routers/url';
 
 import { ColumnsType } from 'antd/es/table';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   useNavigate,
   useNavigation,
@@ -29,9 +29,10 @@ export const PartnerCatalogUserManagement = () => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const { orgCode } = useParams<{ orgCode: string }>();
-  const orgName = params.orgName;
-
+  const [orgName] = useState(params.orgName);
   const filtersItem: FilterItemProps[] = useMemo(() => {
+    const isLong = orgName?.length > 17;
+    const displayOrgName = isLong ? orgName.slice(0, 17) + '...' : orgName;
     return [
       {
         type: 'Select',
@@ -51,13 +52,13 @@ export const PartnerCatalogUserManagement = () => {
       },
       {
         type: 'Input',
-        name: 'orgName',
+        name: 'name',
         label: 'Đối tác',
         disabled: true,
         showDefault: true,
         tooltip: orgName,
-        defaultValue: orgName,
-        value: orgName,
+        defaultValue: displayOrgName,
+        value: displayOrgName,
       },
     ];
   }, [orgName]);

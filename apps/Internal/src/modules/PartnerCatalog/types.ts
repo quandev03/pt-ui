@@ -282,6 +282,8 @@ export interface IPartner {
   status: number | string;
   orgDescription?: string;
   clientId?: string;
+  provinceCode: string;
+  parentCode: string;
 }
 export interface IRoleItem {
   code: string;
