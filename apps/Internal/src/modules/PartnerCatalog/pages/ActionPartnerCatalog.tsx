@@ -83,6 +83,8 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         orgDescription,
         representative,
         status,
+        parentCode,
+        provinceCode,
       } = data;
       form.setFieldsValue({
         address,
@@ -93,6 +95,8 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         orgDescription,
         representative,
         status: status === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động',
+        parentCode,
+        provinceCode,
       });
     });
 
