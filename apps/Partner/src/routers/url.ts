@@ -44,4 +44,7 @@ export const pathRoutes = {
   report: `/report`,
   partnerOrderReport: `/partner-order-report`,
   saleManagement: '/sale-management',
+  salePackage: '/sell-bundle-for-existing-sub',
+  salePackageAddSingle: '/sell-bundle-for-existing-sub/single',
+  salePackageAddBulk: '/sell-bundle-for-existing-sub/bulk',
 };
