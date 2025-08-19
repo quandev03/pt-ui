@@ -3,16 +3,16 @@ import { ColorList, TypeTagEnum } from '@vissoft-react/common';
 export enum ActiveStatusEnum {
   NORMAL = 1,
   ONE_WAY_CALL_BLOCK_BY_REQUEST = 10,
-  ONE_WAY_CALL_BLOCK_BY_PROVIDER = 11,
-  TWO_WAY_CALL_BLOCK_BY_REQUEST = 20,
-  TWO_WAY_CALL_BLOCK_BY_PROVIDER = 21,
+  // ONE_WAY_CALL_BLOCK_BY_PROVIDER = 11,
+  // TWO_WAY_CALL_BLOCK_BY_REQUEST = 20,
+  // TWO_WAY_CALL_BLOCK_BY_PROVIDER = 21,
 }
 
 export enum Status900Enum {
   IN_STORE = 0,
   SOLD = 1,
-  INFO_UPDATED = 2,
-  REJECTED = 3,
+  CALLED = 2,
+  INFO_UPDATED = 3,
 }
 
 // Map for ActiveStatusEnum to display text, type, color, and font weight
@@ -34,33 +34,19 @@ export const activeStatusMap: Record<
     fontWeight: 'bold',
   },
   [ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST]: {
-    text: 'Chặn 1C do yêu cầu',
+    text: 'Chặn 1C',
     type: TypeTagEnum.DEFAULT,
     color: '#C5254294', // Background color (semi-transparent red)
     textColor: '#9B1A32', // Darker, opaque red for text
     fontWeight: 'bold',
   },
-  [ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_PROVIDER]: {
-    text: 'Chặn 1C do nhà mạng',
-    type: TypeTagEnum.DEFAULT,
-    color: '#C5254294', // Background color (semi-transparent red)
-    textColor: '#9B1A32', // Darker, opaque red for text
-    fontWeight: 'bold',
-  },
-  [ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_REQUEST]: {
-    text: 'Chặn 2C do yêu cầu',
-    type: TypeTagEnum.DEFAULT,
-    color: '#0046FF', // Background color (blue)
-    textColor: '#0033B3', // Darker blue for text
-    fontWeight: 'bold',
-  },
-  [ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_PROVIDER]: {
-    text: 'Chặn 2C do nhà mạng',
-    type: TypeTagEnum.DEFAULT,
-    color: '#0046FF', // Background color (blue)
-    textColor: '#0033B3', // Darker blue for text
-    fontWeight: 'bold',
-  },
+  // [ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_PROVIDER]: {
+  //   text: 'Chặn 1C',
+  //   type: TypeTagEnum.DEFAULT,
+  //   color: '#C5254294',
+  //   textColor: '#9B1A32',
+  //   fontWeight: 'bold',
+  // },
 };
 
 // Map for Status900Enum to display text, type, color, and font weight
@@ -88,18 +74,18 @@ export const status900Map: Record<
     textColor: '#FFAC00',
     fontWeight: 'bold',
   },
+  [Status900Enum.CALLED]: {
+    text: 'Đã gọi 900',
+    type: TypeTagEnum.DEFAULT,
+    color: '#F0E2FF',
+    textColor: '#9E3DFF',
+    fontWeight: 'bold',
+  },
   [Status900Enum.INFO_UPDATED]: {
     text: 'Đã cập nhật TTTB',
     type: TypeTagEnum.DEFAULT,
     color: '#D9E6F2',
     textColor: '#005AAA',
-    fontWeight: 'bold',
-  },
-  [Status900Enum.REJECTED]: {
-    text: 'Rejected',
-    type: TypeTagEnum.DEFAULT,
-    color: '#E4F1FB',
-    textColor: '#4EA3E2',
     fontWeight: 'bold',
   },
 };
