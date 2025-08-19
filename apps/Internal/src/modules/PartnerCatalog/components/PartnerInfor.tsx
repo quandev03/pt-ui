@@ -17,7 +17,6 @@ const PartnerInfor = () => {
   const form = useFormInstance();
   const onGetPartnerSuccess = (data: IPartner) => {
     form.setFieldsValue({
-      orgCode: data.orgCode,
       orgName: data.orgName,
       taxCode: data.taxCode,
       phone: data.phone,

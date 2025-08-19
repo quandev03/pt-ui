@@ -67,7 +67,9 @@ const ModalAssignPackage: FC<Props> = ({ open, onClose, partnerId }) => {
         </Col>
         <BtnGroupFooter className="mt-9">
           <CButtonSave htmlType="submit" loading={loadingAssignPackage} />
-          <CButton type="default">Hủy</CButton>
+          <CButton type="default" onClick={handleCancel}>
+            Hủy
+          </CButton>
         </BtnGroupFooter>
       </Form>
     </CModal>
