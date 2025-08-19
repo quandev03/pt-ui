@@ -2,7 +2,9 @@ import {
   decodeSearchParams,
   FilterItemProps,
   formatQueryParams,
+  IErrorResponse,
   IParamsRequest,
+  NotificationError,
 } from '@vissoft-react/common';
 import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -18,7 +20,6 @@ import {
   Status900Enum,
   status900Map,
 } from '../../constants/enum';
-import { message } from 'antd';
 import { useGetGenQrCode } from '../../hooks/useGetGenQrCode';
 import { useGetAgencyOptions } from '../../../../hooks/useGetAgencyOptions';
 
@@ -54,28 +55,26 @@ export const useLogicListEsimWarehouse = () => {
 
   const onGenQrSuccess = (imageBlob: Blob) => {
     const url = URL.createObjectURL(imageBlob);
-    console.log('aaaaaaaaaaaaaaaaa: ', url);
     setQrCodeUrl(url);
-  };
-  const onGenQrError = () => {
-    message.error('Không tạo được mã QR. Vui lòng thử lại');
+    setGenQrModalOpen(true);
   };
 
-  const { mutate: genQrCode, isPending: genQrCodeInProcess } = useGetGenQrCode(
-    onGenQrSuccess,
-    onGenQrError
-  );
+  const { mutate: genQrCode, isPending: genQrCodeInProcess } =
+    useGetGenQrCode(onGenQrSuccess);
 
   const handleOpenGenQrModal = useCallback(
     (record: IEsimWarehouseList) => {
+      if (qrCodeUrl) {
+        URL.revokeObjectURL(qrCodeUrl);
+        setQrCodeUrl(null);
+      }
       setSelectedRecord(record);
-      setGenQrModalOpen(true);
       genQrCode({
         subId: record.subId,
         size: '200x200',
       });
     },
-    [genQrCode]
+    [genQrCode, qrCodeUrl]
   );
 
   const handleCloseGenQrModal = useCallback(() => {
@@ -86,16 +85,6 @@ export const useLogicListEsimWarehouse = () => {
       setQrCodeUrl(null);
     }
   }, [qrCodeUrl]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     if (qrCodeUrl) {
-  //       console.log('Revoking old Blob URL:', qrCodeUrl);
-  //       URL.revokeObjectURL(qrCodeUrl);
-  //       setQrCodeUrl(null);
-  //     }
-  //   };
-  // }, [qrCodeUrl]);
 
   const columns: ColumnsType<IEsimWarehouseList> = useColumnsEsimWarehouseList({
     onSendQr: handleOpenSendQr,
@@ -126,12 +115,12 @@ export const useLogicListEsimWarehouse = () => {
         label: status900Map[Status900Enum.SOLD].text,
       },
       {
-        value: String(Status900Enum.INFO_UPDATED),
-        label: status900Map[Status900Enum.INFO_UPDATED].text,
+        value: String(Status900Enum.CALLED),
+        label: status900Map[Status900Enum.CALLED].text,
       },
       {
-        value: String(Status900Enum.REJECTED),
-        label: status900Map[Status900Enum.REJECTED].text,
+        value: String(Status900Enum.INFO_UPDATED),
+        label: status900Map[Status900Enum.INFO_UPDATED].text,
       },
     ],
     []
@@ -147,21 +136,6 @@ export const useLogicListEsimWarehouse = () => {
         value: String(ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST),
         label:
           activeStatusMap[ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST].text,
-      },
-      {
-        value: String(ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_PROVIDER),
-        label:
-          activeStatusMap[ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_PROVIDER].text,
-      },
-      {
-        value: String(ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_REQUEST),
-        label:
-          activeStatusMap[ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_REQUEST].text,
-      },
-      {
-        value: String(ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_PROVIDER),
-        label:
-          activeStatusMap[ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_PROVIDER].text,
       },
     ],
     []
@@ -199,6 +173,7 @@ export const useLogicListEsimWarehouse = () => {
       },
     ];
   }, [activeStatusOptions, agencyOptions, packageOptions, subStatusOptions]);
+
   return {
     columns,
     filters,

@@ -200,7 +200,11 @@ export const useColumnsEsimWarehouseList = ({
 
         return (
           <WrapperActionTable>
-            <CButton type="default" onClick={() => onGenQr(record)}>
+            <CButton
+              type="default"
+              onClick={() => onGenQr(record)}
+              disabled={record.statusSub !== 0}
+            >
               Gen QR
             </CButton>
             <div className="w-5">
