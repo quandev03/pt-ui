@@ -144,7 +144,7 @@ const VerifyFace = () => {
   return (
     <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
       <div className="flex items-center flex-col  w-full">
-        <p className="text-lg font-semibold mt-2">Xác thực hộ chiếu</p>
+        <p className="text-lg font-semibold mt-2">Xác thực khuôn mặt</p>
         {errMessage ? (
           <p className="text-center text-[#E92429] mb-7 mt-4 font-medium">
             {errMessage}
