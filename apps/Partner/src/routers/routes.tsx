@@ -9,9 +9,11 @@ import routesPersonalInfo from '../modules/PersonalInfo/routes';
 import { routesUserManagement } from '../modules/UserManagement/routes';
 import routesWelcome from '../modules/WelcomePage/routes';
 import partnerOrderReportRoutes from '../modules/PartnerOrderReport/routes';
+import { routesPackageSaleList } from '../modules/SalePackage/routes';
 
 export const protectedRoutes: RouteObject[] = [
   ...routesWelcome,
+  ...routesPackageSaleList,
   ...eSimWareHouseRoutes,
   ...routesUserManagement,
   ...routesAgencyList,
