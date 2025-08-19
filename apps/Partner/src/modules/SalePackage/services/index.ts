@@ -7,10 +7,9 @@ import {
   IPackageSaleParams,
   IPayloadGenOtp,
   IPayloadRegister,
-  IResGenOtp,
+  ISaleParamsResponse,
   ISinglePackageSalePayload,
 } from '../types';
-import { RcFile } from 'antd/lib/upload';
 export const packageSaleService = {
   getPackageSales: (params: IPackageSaleParams) => {
     return safeApiClient.get<IPage<IPackageSaleItem>>(
@@ -20,7 +19,7 @@ export const packageSaleService = {
       }
     );
   },
-  addPackageSingle: async (data: IPayloadRegister) => {
+  addPackageSingle: async (data: ISinglePackageSalePayload) => {
     const res = await safeApiClient.post<ISinglePackageSalePayload>(
       `${prefixSaleService}/sale-package/register-package`,
       data
@@ -28,10 +27,10 @@ export const packageSaleService = {
     return res;
   },
 
-  checkDataFile: async (file: RcFile) => {
+  checkDataFile: async (file: File) => {
     const formData = new FormData();
     formData.append('attachment', file);
-    const res = await axiosClient.post<string, Blob>(
+    const res = await axiosClient.post<Blob>(
       `${prefixSaleService}/sale-package/check-data`,
       formData,
       {
@@ -41,7 +40,7 @@ export const packageSaleService = {
         responseType: 'blob',
       }
     );
-    return res;
+    return res.data;
   },
 
   genOtp: async (data: IPayloadGenOtp) => {
@@ -60,10 +59,16 @@ export const packageSaleService = {
   },
   getRegisterPackage: async (payload: ISinglePackageSalePayload) => {
     const res = await safeApiClient.post<AnyElement>(
-      `${prefixSaleService}/public/api/v1/sale-package/register-package`,
+      `${prefixSaleService}/sale-package/register-package`,
       payload
     );
     if (!res) throw new Error('Oops');
     return res;
+  },
+  getSaleParams: async (): Promise<ISaleParamsResponse> => {
+    const response = await safeApiClient.get<ISaleParamsResponse>(
+      `hvn-sale-service/private/api/v1/params`
+    );
+    return response;
   },
 };

@@ -1,55 +1,75 @@
-import { AnyElement, useActionMode } from '@vissoft-react/common';
+import { AnyElement, NotificationError } from '@vissoft-react/common';
 import { Form } from 'antd';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetFile } from '../../hooks/useGetFile';
+import { useSubmitData } from '../../hooks/useSubmitData';
 import useCheckData from '../../hooks/useCheckData';
-import { useSellSinglePackageStore } from '../../store';
 
 export const useLogicBulkSalePackageAction = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const actionMode = useActionMode();
   const [openOtp, setOpenOtp] = useState<boolean>(false);
-  const { setCount, reset, setDataGenOtp } = useSellSinglePackageStore();
+  const { mutate: downloadFile } = useGetFile();
 
   const { mutate: checkData, isPending: loadingCheckData } = useCheckData(
-    (data: AnyElement) => {
-      setCount(120);
+    () => {
       setOpenOtp(true);
-      setDataGenOtp(data);
     }
   );
-  const handleOpenOtp = useCallback(
-    (value: AnyElement) => {
-      checkData(value.attachment);
-    },
-    [checkData]
-  );
+  const handleCancel = useCallback(() => {
+    form.resetFields();
+    setOpenOtp(false);
+  }, [form]);
+  const { mutate: addPackageBulk, isPending: loadingAddBulk } =
+    useSubmitData(handleCancel);
 
-  const { mutate: downloadFile } = useGetFile();
+  const handleClose = useCallback(() => navigate(-1), [navigate]);
+  const handleCloseOtp = useCallback(() => setOpenOtp(false), []);
+
   const handleDownloadTemplate = useCallback(() => {
     downloadFile();
   }, [downloadFile]);
 
-  const handleCancel = useCallback(() => {
-    form.resetFields();
-  }, [form]);
+  const handleSubmitAndCheckFile = useCallback(
+    (values: AnyElement) => {
+      const file = values.attachment;
+      if (!file) {
+        NotificationError({ message: 'Vui lòng tải lên một file.' });
+        return;
+      }
 
-  const handleClose = useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
+      const formData = new FormData();
+      formData.append('attachment', file);
+      console.log('🚀 đoạn này gọi được:', file);
+
+      checkData(formData);
+    },
+    [checkData]
+  );
+
+  const handleConfirmWithPin = useCallback(
+    (pinCode: string) => {
+      const validFile = form.getFieldValue('attachment');
+      console.log('valid file và ko: ', validFile);
+      const formData = new FormData();
+      formData.append('attachment', validFile);
+      formData.append('pinCode', pinCode);
+      addPackageBulk(formData);
+    },
+    [addPackageBulk, form]
+  );
 
   return {
     form,
-    actionMode,
     handleClose,
-    handleCancel,
-    useGetFile,
     handleDownloadTemplate,
-    reset,
-    loadingCheckData,
-    handleOpenOtp,
+    handleCancel,
     openOtp,
+    handleCloseOtp,
+    handleSubmitAndCheckFile,
+    handleConfirmWithPin,
+    loadingCheckData,
+    loadingAddBulk,
   };
 };

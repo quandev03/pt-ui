@@ -46,7 +46,7 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
           <div className="cursor-pointer">
             <Tooltip title={value} placement="topLeft">
               <Text
-                className="text-blue underline"
+                className="text-blue-600 underline cursor-pointer"
                 onClick={() => handleDownload(record.fileUrl)}
               >
                 {value}
@@ -58,17 +58,25 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
     },
     {
       title: 'Hình thức bán gói',
-      dataIndex: 'saleType',
+      dataIndex: 'type',
       width: 200,
       align: 'left',
       fixed: 'left',
       render(value) {
-        return <RenderCell value={value} tooltip={value} />;
+        let displayText = 'Không xác định'; // Default text
+
+        if (value === 1) {
+          displayText = 'Đơn lẻ';
+        } else if (value === 2) {
+          displayText = 'Theo lô';
+        }
+
+        return <RenderCell value={displayText} tooltip={displayText} />;
       },
     },
     {
       title: 'Gói cước',
-      dataIndex: 'packageName',
+      dataIndex: 'pckCode',
       width: 200,
       align: 'left',
       fixed: 'left',
@@ -152,7 +160,7 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
             <p>
               File kết quả:{' '}
               <span
-                className="text-primary underline cursor-pointer"
+                className="text-blue-600 underline cursor-pointer"
                 onClick={() => handleDownload(record.resultFileUrl)}
               >
                 File

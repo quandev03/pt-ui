@@ -1,24 +1,18 @@
 import { create } from 'zustand';
-import { IPayloadConfirmOtp } from '../types';
+import { ISinglePackageSalePayload } from '../types';
 
-interface ISellSinglePackageStore {
-  dataGenOtp: IPayloadConfirmOtp;
-  count: number;
-  setCount: (count: number) => void;
-  setDataGenOtp: (data: IPayloadConfirmOtp) => void;
-  reset: () => void;
+interface SellSinglePackageState {
+  // We will store the payload here, without the pinCode
+  salePayload: Omit<ISinglePackageSalePayload, 'pinCode'> | null;
+  // Action to set the payload
+  setSalePayload: (
+    payload: Omit<ISinglePackageSalePayload, 'pinCode'> | null
+  ) => void;
 }
 
-export const useSellSinglePackageStore = create<ISellSinglePackageStore>(
+export const useSellSinglePackageStore = create<SellSinglePackageState>(
   (set) => ({
-    dataGenOtp: {} as IPayloadConfirmOtp,
-    count: 0,
-    setCount: (count: number) => {
-      set({ count });
-    },
-    setDataGenOtp: (data: IPayloadConfirmOtp) => {
-      set({ dataGenOtp: data });
-    },
-    reset: () => set({ count: 0, dataGenOtp: {} as IPayloadConfirmOtp }),
+    salePayload: null,
+    setSalePayload: (payload) => set({ salePayload: payload }),
   })
 );

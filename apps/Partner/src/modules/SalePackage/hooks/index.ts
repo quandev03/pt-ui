@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   AnyElement,
-  MESSAGE,
   NotificationError,
   NotificationSuccess,
 } from '@vissoft-react/common';
@@ -19,7 +18,7 @@ export const useAddPackageSingle = (onSuccess: () => void) => {
   return useMutation({
     mutationFn: packageSaleService.addPackageSingle,
     onSuccess: () => {
-      NotificationSuccess(MESSAGE.G01);
+      NotificationSuccess('Bán gói đơn lẻ thành công!');
       onSuccess && onSuccess();
     },
     onError: (error: AnyElement) => {

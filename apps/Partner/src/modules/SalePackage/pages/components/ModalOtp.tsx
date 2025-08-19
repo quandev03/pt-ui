@@ -1,108 +1,58 @@
 import { useForm } from 'antd/es/form/Form';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useSellSinglePackageStore } from '../../store';
-import { useAddPackageSingle } from '../../hooks';
-import {
-  CButton,
-  CInput,
-  CModal,
-  IUserInfo,
-  useGetDataFromQueryKey,
-  validateForm,
-} from '@vissoft-react/common';
-import { REACT_QUERY_KEYS } from '../../../../../src/constants/query-key';
-import { handleConvertIsdn } from '../../utils';
-import { IPayloadRegister, ISinglePackageSalePayload } from '../../types';
-import { Col, Form, Row } from 'antd';
+import React, { useEffect } from 'react';
+import { CButton, CInput, CModal, validateForm } from '@vissoft-react/common';
+import { Form } from 'antd';
 
-const ModalOtp = ({
-  open,
-  onClose,
-  handleGenOtp,
-  handleSuccess,
-}: {
+// Define the new, more generic props
+interface ModalOtpProps {
   open: boolean;
+  loading: boolean;
   onClose: () => void;
-  handleGenOtp: () => void;
+  onConfirm: (pinCode: string) => void;
   handleSuccess: () => void;
-}) => {
+}
+
+const ModalOtp = ({ open, loading, onClose, onConfirm }: ModalOtpProps) => {
   const [form] = useForm();
-  const [isDisabled, setIsDisabled] = useState(true);
-  const { count, setCount, dataGenOtp } = useSellSinglePackageStore();
-  const { mutate: addPackageSingle, isPending: loadingAdd } =
-    useAddPackageSingle(() => {
-      handleSuccess();
-      form.resetFields();
-    });
-  useEffect(() => {
-    if (count === 0) {
-      setIsDisabled(false);
-      return;
-    }
-    const timer = setInterval(() => {
-      setIsDisabled(true);
-      setCount(count - 1);
-    }, 1000);
-    return () => clearInterval(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [count]);
-  const userLogin = useGetDataFromQueryKey<IUserInfo>([
-    REACT_QUERY_KEYS.GET_PROFILE,
-  ]);
-  const formatTime = (time: number) => {
-    const minutes = String(Math.floor(time / 60)).padStart(2, '0');
-    const seconds = String(time % 60).padStart(2, '0');
-    return `${minutes}:${seconds}`;
-  };
-  const handleSubmit = useCallback(
-    (value: { otp: string }) => {
-      const data = {
-        isdn: handleConvertIsdn(dataGenOtp?.isdn),
-        idPackage: dataGenOtp?.idPackage,
-        pckCode: dataGenOtp?.pckCode,
-      };
-      addPackageSingle(data as ISinglePackageSalePayload);
-    },
-    [dataGenOtp, addPackageSingle]
-  );
+
   useEffect(() => {
     if (!open) {
       form.resetFields();
     }
   }, [open, form]);
+
+  const handleSubmit = (values: { pinCode: string }) => {
+    onConfirm(values.pinCode);
+  };
+
   return (
     <CModal closeIcon open={open} onCancel={onClose} footer={null}>
       <div>
         <strong className="block text-center text-lg py-3">Xác nhận</strong>
-        <p className="text-center mb-6 mx-16">
-          Nhập mã PIN để xác nhận bán gói cho thuê bao:
+        <p className="text-center mb-6">
+          Nhập mã PIN để xác nhận thực hiện giao dịch:
         </p>
-        <Form form={form} colon={false} onFinish={handleSubmit} labelWrap>
-          <Row>
-            <Col>
-              <Row>
-                <Form.Item
-                  name="otp"
-                  label="Mã PIN"
-                  className="flex pl-10"
-                  rules={[validateForm.required]}
-                >
-                  <CInput
-                    onlyNumber
-                    className="max-w-[220px] h-[36px] mr-4"
-                    maxLength={6}
-                    placeholder="Nhập mã OTP"
-                  />
-                </Form.Item>
-              </Row>
-            </Col>
-          </Row>
-          <div className="flex justify-center items-center gap-4 mt-2 ml-6">
+        <Form form={form} colon={false} onFinish={handleSubmit}>
+          <Form.Item
+            name="pinCode"
+            label="Mã PIN"
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
+            rules={[validateForm.required, validateForm.lengthNumber(6)]}
+          >
+            <CInput
+              onlyNumber
+              className="h-[36px]"
+              maxLength={6}
+              placeholder="Nhập mã PIN"
+            />
+          </Form.Item>
+          <div className="flex justify-center items-center gap-4 mt-6">
             <CButton type="default" className="min-w-[90px]" onClick={onClose}>
               Hủy
             </CButton>
             <CButton
-              loading={loadingAdd}
+              loading={loading} // Use the loading prop
               className="min-w-[90px]"
               htmlType="submit"
             >
@@ -114,4 +64,5 @@ const ModalOtp = ({
     </CModal>
   );
 };
+
 export const ModalOtpMemo = React.memo(ModalOtp);

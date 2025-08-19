@@ -6,8 +6,8 @@ import {
   UploadFileTemplate,
 } from '@vissoft-react/common';
 import { Col, Form, Row } from 'antd';
-import { useEffect } from 'react'; // 1. Import useEffect
-import { useGetDebitLimit } from '../../../../../src/hooks/useGetDebitLimit'; // 1. Import the hook
+import { useEffect } from 'react';
+import { useGetDebitLimit } from '../../../../../src/hooks/useGetDebitLimit';
 import { ModalOtpMemo } from '../components/ModalOtp';
 import { useLogicBulkSalePackageAction } from './useLogicBulkSalePackageAction';
 
@@ -18,15 +18,15 @@ export const BulkSalePackageAction = () => {
     handleDownloadTemplate,
     handleCancel,
     openOtp,
-    handleOpenOtp,
     loadingCheckData,
     handleCloseOtp,
+    handleSubmitAndCheckFile,
+    handleConfirmWithPin,
+    loadingAddBulk,
   } = useLogicBulkSalePackageAction();
 
-  // 2. Call the hook to get the debit limit data
   const { data: debitLimitData } = useGetDebitLimit();
 
-  // 3. Use useEffect to set the form values when the data arrives
   useEffect(() => {
     if (debitLimitData) {
       form.setFieldsValue({
@@ -41,26 +41,33 @@ export const BulkSalePackageAction = () => {
       <TitleHeader>Bán gói theo lô cho thuê bao</TitleHeader>
       <Form
         form={form}
-        onFinish={handleOpenOtp}
+        onFinish={handleSubmitAndCheckFile}
         labelAlign="left"
         labelCol={{ span: 5 }}
         labelWrap={true}
-        validateTrigger={['onSubmit']}
-        colon={false}
-        initialValues={{
-          status: 1,
-        }}
       >
         <div className="bg-white rounded-[10px] px-6 pt-4 pb-8">
           <Row gutter={[30, 0]}>
             <Col span={12}>
               <Form.Item label="Hạn mức tạm tính" name="debitLimit">
-                <CInputNumber disabled className="!text-black" />
+                <CInputNumber
+                  disabled
+                  className="!text-black"
+                  formatter={(value) =>
+                    value ? `${value.toLocaleString('vi-VN')} ₫` : ''
+                  }
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="Hạn mức với MBF" name="debitLimitMbf">
-                <CInputNumber disabled className="!text-black" />
+              <Form.Item name="debitLimitMbf" label="Hạn mức với MBF">
+                <CInputNumber
+                  disabled
+                  className="!text-black"
+                  formatter={(value) =>
+                    value ? `${value.toLocaleString('vi-VN')} ₫` : ''
+                  }
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -77,12 +84,7 @@ export const BulkSalePackageAction = () => {
           </Row>
         </div>
         <div className="flex gap-4 flex-wrap justify-end mt-7">
-          <CButton
-            loading={loadingCheckData}
-            onClick={() => {
-              form.submit();
-            }}
-          >
+          <CButton loading={loadingCheckData} onClick={() => form.submit()}>
             Thực hiện
           </CButton>
           <CButtonClose onClick={handleClose} />
@@ -90,9 +92,10 @@ export const BulkSalePackageAction = () => {
       </Form>
       <ModalOtpMemo
         handleSuccess={handleCancel}
-        handleGenOtp={form.submit}
         open={openOtp}
-        onClose={handleCloseOtp || handleClose}
+        onClose={handleCloseOtp}
+        onConfirm={handleConfirmWithPin}
+        loading={loadingAddBulk}
       />
     </div>
   );

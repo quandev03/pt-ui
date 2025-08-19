@@ -18,17 +18,18 @@ export interface IPackageSaleParams extends IParamsRequest {
 }
 export interface ISinglePackageSalePayload {
   isdn: string;
-  package: string[];
+  pckCode: string;
+  pinCode: string;
 }
-export interface IBulkPackageSalePayload {
+export interface IBulkCheckPayload {
   attachment: File;
 }
-// export interface IPackage {
-//   packageId: string;
-//   packageCode: string;
-//   cycle: number;
-//   unit: string;
-// }
+
+export interface IBulkSalePayload {
+  attachment: File;
+  pinCode: string;
+}
+
 export interface IResGenOtp {
   id: string;
   isdn: string;
@@ -46,17 +47,6 @@ export interface IResGenOtp {
   isdn: string;
   idEkyc: string;
   transactionId: string;
-}
-export interface IPayloadConfirmOtp {
-  otp?: string;
-  id: string;
-  isdn: string;
-  transactionId: string;
-  cycle?: number | string;
-  unit?: string;
-  type: string | number;
-  pckCode?: string;
-  idPackage: string;
 }
 export interface IPayloadRegister {
   isdn: string;
@@ -92,4 +82,24 @@ export interface DownloadFileReq {
   id?: number;
   fileName: string;
   detailId?: number;
+}
+
+export interface IApiOption {
+  code: string;
+  value: string;
+}
+
+export interface ISelectOption {
+  value: number | string;
+  label: string;
+}
+
+export interface ISaleParamsResponse {
+  BATCH_PACKAGE_SALE_TYPE: IApiOption[];
+  ISDN_TRANSACTION_TRANS_STATUS: IApiOption[];
+  ISDN_TRANSACTION_UPLOAD_STATUS: IApiOption[];
+  PIN_CODES_VALID_PIN: IApiOption[];
+  SUBSCRIBER_ACTIVE_SUB_STATUS: IApiOption[];
+  SUBSCRIBER_SUBS_STATUS: IApiOption[];
+  SUBSCRIBER_SUB_STATUS: IApiOption[];
 }

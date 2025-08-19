@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { packageSaleService } from '../services';
-import { REACT_QUERY_KEYS } from 'apps/Partner/src/constants/query-key';
+import { REACT_QUERY_KEYS } from '../../../constants/query-key';
 import { ISinglePackageSalePayload } from '../types';
 import {
   IErrorResponse,

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { REACT_QUERY_KEYS } from 'apps/Partner/src/constants/query-key';
+import { REACT_QUERY_KEYS } from '../../../constants/query-key';
 import { packageSaleService } from '../services';
 
 export const useGetPackageCodes = () => {

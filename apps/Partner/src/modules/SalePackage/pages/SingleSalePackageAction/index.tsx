@@ -10,7 +10,6 @@ import {
 } from '@vissoft-react/common';
 import { Col, Form, Row } from 'antd';
 import { useEffect } from 'react';
-import { useGetPackageCodes } from '../../hooks/useGetPackageCode';
 import { useGetDebitLimit } from '../../../../../src/hooks/useGetDebitLimit';
 import { ModalOtpMemo } from '../components/ModalOtp';
 import { useLogicActionSingleSalePackage } from './useLogicActionSingleSalePackage';
@@ -19,15 +18,16 @@ export const SingleSalePackageAction = () => {
   const {
     form,
     handleClose,
-    setOptionPackage,
-    handleOpenOtp,
     handleCancel,
     openOtp,
     handleCheckNumberPhone,
     handleCloseOtp,
+    handleFormSubmit,
+    packageOptions,
+    handleConfirmOtp,
+    loadingAdd,
   } = useLogicActionSingleSalePackage();
   const { data: debitLimitData } = useGetDebitLimit();
-  const { data: packageCodeList } = useGetPackageCodes();
 
   useEffect(() => {
     if (debitLimitData) {
@@ -37,14 +37,6 @@ export const SingleSalePackageAction = () => {
       });
     }
   }, [debitLimitData, form]);
-
-  // Prepare package options for the Select component
-  const packageOptions = packageCodeList?.map((pkg) => ({
-    key: pkg.id,
-    value: pkg.pckCode,
-    label: pkg.pckCode,
-    price: pkg.packagePrice,
-  }));
 
   const handlePackageChange = (selectedValue: AnyElement) => {
     const selectedPackage = packageOptions?.find(
@@ -66,7 +58,7 @@ export const SingleSalePackageAction = () => {
       <TitleHeader>Bán gói đơn lẻ cho thuê bao</TitleHeader>
       <Form
         form={form}
-        onFinish={handleOpenOtp}
+        onFinish={handleFormSubmit}
         labelAlign="left"
         labelCol={{ span: 5 }}
         labelWrap={true}
@@ -80,12 +72,24 @@ export const SingleSalePackageAction = () => {
           <Row gutter={[30, 0]}>
             <Col span={12}>
               <Form.Item label="Hạn mức tạm tính" name="debitLimit">
-                <CInputNumber disabled className="!text-black" />
+                <CInputNumber
+                  disabled
+                  className="!text-black"
+                  formatter={(value) =>
+                    value ? `${value.toLocaleString('vi-VN')} ₫` : ''
+                  }
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item name="debitLimitMbf" label="Hạn mức với MBF">
-                <CInputNumber disabled className="!text-black" />
+                <CInputNumber
+                  disabled
+                  className="!text-black"
+                  formatter={(value) =>
+                    value ? `${value.toLocaleString('vi-VN')} ₫` : ''
+                  }
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -100,8 +104,6 @@ export const SingleSalePackageAction = () => {
                   maxLength={11}
                   onlyNumber
                   onChange={() => {
-                    setOptionPackage([]);
-                    form.setFieldValue('idPackage', null);
                     if (debitLimitData) {
                       form.setFieldValue(
                         'debitLimit',
@@ -117,12 +119,12 @@ export const SingleSalePackageAction = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="idPackage"
+                name="packageCode"
                 label="Gói cước"
                 rules={[validateForm.required]}
               >
                 <CSelect
-                  allowClear={true} // Set to true to allow resetting the limit
+                  allowClear={true}
                   options={packageOptions}
                   className="min-w-[200px]"
                   placeholder="Chọn gói cước"
@@ -145,9 +147,10 @@ export const SingleSalePackageAction = () => {
       </Form>
       <ModalOtpMemo
         handleSuccess={handleCancel}
-        handleGenOtp={form.submit}
         open={openOtp}
         onClose={handleCloseOtp}
+        onConfirm={handleConfirmOtp}
+        loading={loadingAdd}
       />
     </div>
   );

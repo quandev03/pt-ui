@@ -1,4 +1,3 @@
-import { useMutation } from '@tanstack/react-query';
 import {
   AnyElement,
   downloadFileFn,
@@ -6,16 +5,31 @@ import {
   IErrorResponse,
   NotificationError,
 } from '@vissoft-react/common';
+import { safeApiClient } from '../../../services/axios';
+import { useMutation } from '@tanstack/react-query';
 import { blobToJson } from '../utils';
 import useFileNameDownloaded from '../../../../src/hooks/useFileNameDownloaded';
-import { packageSaleService } from '../services';
+import { AxiosRequestHeaders } from 'axios';
+import { prefixSaleService } from '../../../../src/constants';
 
+const fetcher = async (file: FormData) => {
+  const res = await safeApiClient.post(
+    `${prefixSaleService}/sale-package/check-data`,
+    file,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      } as AxiosRequestHeaders,
+      responseType: 'blob',
+    }
+  );
+  return res;
+};
 const useCheckData = (onSuccess?: (data: AnyElement) => void) => {
   return useMutation({
-    mutationFn: packageSaleService.checkDataFile,
+    mutationFn: fetcher,
     onSuccess: async (data) => {
-      const dataParser = await blobToJson<IErrorResponse>(data);
-      onSuccess && onSuccess(dataParser);
+      onSuccess && onSuccess(data);
     },
     onError: async (error: AnyElement) => {
       console.log(error);
