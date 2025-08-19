@@ -7,6 +7,7 @@ import {
 import { prefixAuthService, prefixSaleService } from '../constants';
 import { IAgency } from '../types';
 import { safeApiClient } from './axios';
+import { IDebitLimit } from '../hooks/useGetDebitLimit';
 
 export const globalService = {
   async initApp(): Promise<LoaderData> {
@@ -53,5 +54,12 @@ export const globalService = {
         params,
       }
     );
+  },
+  getDebitLimit: async () => {
+    const res = await safeApiClient.get<IDebitLimit>(
+      `${prefixAuthService}/api/clients/agent-debit`
+    );
+    if (!res) throw new Error('Oops');
+    return res;
   },
 };

@@ -1,14 +1,16 @@
-import { prefixSaleService } from 'apps/Internal/src/constants';
-import { safeApiClient } from 'apps/Internal/src/services';
-import { IListOfServicePackageForm } from '../types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { REACT_QUERY_KEYS } from 'apps/Internal/src/constants/query-key';
 import {
   AnyElement,
   EStatus,
+  IErrorResponse,
   MESSAGE,
   NotificationSuccess,
 } from '@vissoft-react/common';
+import { FormInstance } from 'antd';
+import { prefixSaleService } from 'apps/Internal/src/constants';
+import { REACT_QUERY_KEYS } from 'apps/Internal/src/constants/query-key';
+import { safeApiClient } from 'apps/Internal/src/services';
+import { IListOfServicePackageForm } from '../types';
 
 const fetch = async (data: IListOfServicePackageForm) => {
   const formData = new FormData();
@@ -17,6 +19,7 @@ const fetch = async (data: IListOfServicePackageForm) => {
     packagePrice: Number(data.packagePrice),
     status: EStatus.ACTIVE,
     pckCode: data.pckCode,
+    description: data.description ?? '',
   };
   formData.append('images', data.images as File);
   formData.append(
@@ -38,16 +41,26 @@ const fetch = async (data: IListOfServicePackageForm) => {
   }
 };
 
-export const useAdd = (onSuccess?: () => void) => {
+export const useAdd = (form: FormInstance, onSuccess?: () => void) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: fetch,
     onSuccess: () => {
-      NotificationSuccess(MESSAGE.G01);
+      NotificationSuccess('Thêm mới gói cước thành công');
       queryClient.invalidateQueries({
         queryKey: [REACT_QUERY_KEYS.LIST_OF_SERVICE_PACKAGE],
       });
       onSuccess?.();
+    },
+    onError: (error: IErrorResponse) => {
+      if (error.errors && error.errors.length > 0) {
+        form.setFields(
+          error.errors.map((item) => ({
+            name: item.field,
+            errors: [item.detail],
+          }))
+        );
+      }
     },
   });
 };

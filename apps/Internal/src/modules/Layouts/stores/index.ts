@@ -106,8 +106,9 @@ const useConfigAppStore = create(
         set(() => ({ urlsActive }));
       },
       params: {
-        STOCK_ISDN_STATUS: [],
-        STOCK_ISDN_TRANSFER_STATUS: [],
+        ISDN_TRANSACTION_TRANS_STATUS: [],
+        ISDN_TRANSACTION_UPLOAD_STATUS: [],
+        SUBSCRIBER_SUBS_STATUS: [],
       },
       setParams(params) {
         set(() => ({ params }));
@@ -117,13 +118,16 @@ const useConfigAppStore = create(
         set(() => ({
           userLogin: data.profile,
           menuData: data.menus,
+          params: data.params,
         }));
       },
 
       async logoutStore() {
         const refreshToken = StorageService.getRefreshToken(REFRESH_TOKEN_KEY);
         try {
-          await layoutPageService.logout(refreshToken);
+          if (refreshToken) {
+            await layoutPageService.logout(refreshToken);
+          }
         } catch (e) {
           console.error('Logout failed', e);
         } finally {
@@ -133,26 +137,20 @@ const useConfigAppStore = create(
             FCM_TOKEN_KEY,
             USERNAME
           );
-          set(() => {
-            return {
-              collapsedMenu: false,
-              showNotify: false,
-              isAuthenticated: false,
-              showChangePassModal: false,
-              userLogin: null,
-              openChangePassword: false,
-              dataNotify: {
-                data: [],
-                totalNotSeen: 0,
-              },
-              menuData: [],
-              urlsActive: ['/'],
-              params: {
-                EXAMPLE: [],
-                EXAMPLE2: [],
-                EXAMPLE3: [],
-              },
-            };
+          set({
+            collapsedMenu: false,
+            showNotify: false,
+            isAuthenticated: false,
+            showChangePassModal: false,
+            userLogin: null,
+            openChangePassword: false,
+            menuData: [],
+            urlsActive: ['/'],
+            params: {
+              ISDN_TRANSACTION_TRANS_STATUS: [],
+              ISDN_TRANSACTION_UPLOAD_STATUS: [],
+              SUBSCRIBER_SUBS_STATUS: [],
+            },
           });
         }
       },

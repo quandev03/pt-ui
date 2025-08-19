@@ -51,7 +51,7 @@ export const ActionUser = memo(() => {
   const { data: INTERNAL_DEPARTMENT = [] } = useGetDepartments();
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
-
+  console.log(INTERNAL_DEPARTMENT, 'INTERNAL_DEPARTMENT');
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{Title}</TitleHeader>

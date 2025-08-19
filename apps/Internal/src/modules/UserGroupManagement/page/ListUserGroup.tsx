@@ -109,7 +109,9 @@ export const ListUserGroup = () => {
     ];
   }, []);
   const actionComponent = useMemo(() => {
-    return <CButtonAdd onClick={handleAdd} disabled={!permission.canCreate} />;
+    return (
+      <div>{permission.canCreate && <CButtonAdd onClick={handleAdd} />}</div>
+    );
   }, [permission.canCreate, handleAdd]);
   return (
     <LayoutList
@@ -123,6 +125,7 @@ export const ListUserGroup = () => {
           name="q"
           tooltip="Nhập mã hoặc tên nhóm tài khoản"
           placeholder="Nhập mã hoặc tên nhóm tài khoản"
+          className="!min-w-72"
         />
       }
       actionComponent={actionComponent}

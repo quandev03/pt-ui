@@ -10,8 +10,8 @@ import {
   singlePopActions,
   specialActions,
 } from '../../../routers';
-import useConfigAppStore from '../stores';
 import { layoutPageService } from '../services';
+import useConfigAppStore from '../stores';
 
 export const LayoutPage = () => {
   const { menus } = useGetLoaderData();

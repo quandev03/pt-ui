@@ -5,6 +5,7 @@ import {
   CButtonSaveAndAdd,
   CInput,
   CSwitch,
+  CTextArea,
   CTextInfo,
   EActionSubmit,
   getActionMode,
@@ -14,15 +15,18 @@ import {
   MESSAGE,
   NotificationError,
   NumberInput,
+  StatusEnum,
   TitleHeader,
   useActionMode,
   validateForm,
 } from '@vissoft-react/common';
 import { Button, Card, Col, Form, Row, Space, Spin, Upload } from 'antd';
 import { RcFile } from 'antd/es/upload';
+import { pathRoutes } from 'apps/Internal/src/routers';
 import { UploadIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useGetImage } from '../hook';
 import { useAdd } from '../hook/useAdd';
 import { useEdit } from '../hook/useEdit';
 import { useView } from '../hook/useView';
@@ -34,20 +38,58 @@ export const ActionPage = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const { id } = useParams();
-  const { data: dataView } = useView(id ?? '');
-  const { mutate: mutateEdit } = useEdit();
-  const { mutate: mutateAdd } = useAdd(() => {
+  const { data: dataView } = useView(id ?? '', actionMode);
+  const { mutate: mutateEdit } = useEdit(form, () => {
+    navigate(-1);
+    setImageUrl(null);
+  });
+  const { mutate: mutateAdd } = useAdd(form, () => {
     if (type === EActionSubmit.SAVE_AND_ADD) {
-      form.resetFields();
+      form.resetFields([
+        'pckCode',
+        'pckName',
+        'packagePrice',
+        'images',
+        'description',
+      ]);
       setImageUrl(null);
     } else {
-      form.resetFields();
+      form.resetFields([
+        'pckCode',
+        'pckName',
+        'packagePrice',
+        'images',
+        'description',
+      ]);
       setImageUrl(null);
       navigate(-1);
     }
   });
   const [imageUrl, setImageUrl] = useState<string | null | undefined>(null);
   const [isChangeImage, setIsChangeImage] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const { mutate: mutateGetImage } = useGetImage((blobData) => {
+    try {
+      if (blobData instanceof Blob) {
+        const url = window.URL.createObjectURL(blobData);
+        setImageUrl(url);
+        setImageError(false);
+        const existingFile = new File([blobData], 'image.jpg', {
+          type: blobData.type || 'image/jpeg',
+        });
+        form.setFieldValue('images', {
+          file: existingFile,
+        });
+      } else {
+        setImageError(true);
+        setImageUrl(null);
+      }
+    } catch (error) {
+      setImageError(true);
+      setImageUrl(null);
+    }
+  });
+
   const beforeUpload = async (file: RcFile) => {
     if (!ImageFileType.includes(file.type || '')) {
       form.setFields([
@@ -60,7 +102,7 @@ export const ActionPage = () => {
     }
     if (file.size && file.size / 1024 / 1024 > 5) {
       NotificationError({
-        message: MESSAGE.G31,
+        message: MESSAGE.G13,
       });
       return;
     }
@@ -74,8 +116,10 @@ export const ActionPage = () => {
     form.setFieldValue('images', file);
     setImageUrl(url);
     setIsChangeImage(true);
+    setImageError(false);
     return false;
   };
+
   const uploadButton = (
     <button
       className={
@@ -90,9 +134,23 @@ export const ActionPage = () => {
       <div className="mt-2 text-cyan-700">Tải file lên</div>
     </button>
   );
+
+  // Placeholder component for when image fails to load
+  const imagePlaceholder = (
+    <div className="border-2 border-dashed border-gray-300 bg-gray-50 rounded-xl h-36 w-[200px] flex flex-col items-center justify-center">
+      <div className="text-gray-400 text-sm">Ảnh gói cước</div>
+      <div className="text-gray-300 text-xs">Không có ảnh</div>
+    </div>
+  );
+
   const handleDeleteImage = () => {
+    // Cleanup object URL if it exists
+    if (imageUrl && imageUrl.startsWith('blob:')) {
+      window.URL.revokeObjectURL(imageUrl);
+    }
     setImageUrl(undefined);
     setIsChangeImage(true);
+    setImageError(false);
     form.setFieldValue('images', null);
     form.setFields([
       {
@@ -101,54 +159,72 @@ export const ActionPage = () => {
       },
     ]);
   };
+
   const handleSubmit = useCallback(
     (values: IListOfServicePackageForm) => {
+      // The form stores the File directly in `images`
+      const imageData = form.getFieldValue('images')?.file ?? undefined;
+      console.log(imageData, 'imageData');
       const data = {
         ...values,
-        images: form.getFieldValue('images')?.file ?? undefined,
+        images: imageData,
       };
-      console.log('data', data);
+
       if (actionMode === IModeAction.CREATE) {
         mutateAdd(data);
       } else {
         mutateEdit({
           ...data,
           id: id ?? '',
+          images: imageData,
+          status: values.status ? StatusEnum.ACTIVE : StatusEnum.INACTIVE,
         });
       }
     },
-    [form, id, mutateAdd, mutateEdit]
+    [form, id, mutateAdd, mutateEdit, actionMode, isChangeImage]
   );
+
   useEffect(() => {
-    if (dataView) {
+    if (dataView && id) {
       form.setFieldsValue({
         ...dataView,
+        status: dataView.status === StatusEnum.ACTIVE,
       });
+      mutateGetImage(id);
     }
-  }, [dataView]);
+  }, [dataView, form, id, mutateGetImage]);
+
+  // Cleanup object URL when component unmounts or imageUrl changes
+  useEffect(() => {
+    const currentImageUrl = imageUrl;
+    return () => {
+      if (currentImageUrl && currentImageUrl.startsWith('blob:')) {
+        window.URL.revokeObjectURL(currentImageUrl);
+      }
+    };
+  }, [imageUrl]);
+  useEffect(() => {
+    if (actionMode === IModeAction.CREATE) {
+      form.setFieldValue('status', true);
+    }
+  }, [actionMode, form]);
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{`${getActionMode(actionMode)} gói cước`}</TitleHeader>
       <Spin spinning={false}>
         <Form
-          disabled={actionMode === IModeAction.READ}
           form={form}
-          labelCol={{ span: 4 }}
+          labelCol={{ flex: '120px' }}
           colon={false}
           onFinish={handleSubmit}
+          labelAlign="left"
         >
           <Card className="mb-2">
             <CTextInfo>Thông tin gói cước</CTextInfo>
             <Row className="mt-2" gutter={[30, 0]}>
               <Col span={12}>
                 <Form.Item label="Hoạt động" name="status">
-                  <CSwitch
-                    disabled={actionMode !== IModeAction.UPDATE}
-                    checked={true}
-                    onChange={(value) => {
-                      console.log('value', value);
-                    }}
-                  />
+                  <CSwitch disabled={actionMode !== IModeAction.UPDATE} />
                 </Form.Item>
               </Col>
               <Col span={12} />
@@ -158,7 +234,15 @@ export const ActionPage = () => {
                   label="Mã gói cước"
                   name="pckCode"
                 >
-                  <CInput placeholder="Nhập mã gói cước" />
+                  <CInput
+                    disabled={actionMode !== IModeAction.CREATE}
+                    placeholder="Nhập mã gói cước"
+                    maxLength={20}
+                    preventVietnamese
+                    preventSpace
+                    uppercase
+                    preventSpecialExceptHyphenAndUnderscore
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -167,7 +251,11 @@ export const ActionPage = () => {
                   label="Tên gói cước"
                   name="pckName"
                 >
-                  <CInput placeholder="Nhập tên gói cước" />
+                  <CInput
+                    disabled={actionMode === IModeAction.READ}
+                    maxLength={100}
+                    placeholder="Nhập tên gói cước"
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -178,7 +266,11 @@ export const ActionPage = () => {
                   rules={[
                     {
                       validator(_, value) {
-                        if (!value || value.length === 0) {
+                        if (
+                          value === undefined ||
+                          value === null ||
+                          value === ''
+                        ) {
                           return Promise.reject(
                             'Không được để trống trường này'
                           );
@@ -209,7 +301,7 @@ export const ActionPage = () => {
                     multiple={false}
                     maxCount={1}
                   >
-                    {imageUrl ? (
+                    {imageUrl && !imageError ? (
                       <div className="relative inline-block">
                         <img
                           src={imageUrl}
@@ -220,6 +312,7 @@ export const ActionPage = () => {
                               ? 'cursor-not-allowed'
                               : 'cursor-pointer')
                           }
+                          onError={() => setImageError(true)}
                         />
                         {actionMode !== IModeAction.READ && (
                           <div className="absolute top-2 right-2 flex gap-1">
@@ -248,10 +341,27 @@ export const ActionPage = () => {
                           </div>
                         )}
                       </div>
-                    ) : (
+                    ) : actionMode === IModeAction.CREATE &&
+                      !imageUrl &&
+                      !imageError ? (
                       uploadButton
+                    ) : (
+                      <div className="relative inline-block">
+                        {actionMode !== IModeAction.READ && uploadButton}
+                        {actionMode === IModeAction.READ && imagePlaceholder}
+                      </div>
                     )}
                   </Upload>
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item label="Mô tả" name="description">
+                  <CTextArea
+                    disabled={actionMode === IModeAction.READ}
+                    placeholder="Nhập mô tả"
+                    maxLength={200}
+                    rows={3}
+                  />
                 </Form.Item>
               </Col>
             </Row>
@@ -272,48 +382,24 @@ export const ActionPage = () => {
                   >
                     Lưu
                   </CButtonSave>
-                  <CButtonClose
-                    disabled={false}
-                    type="default"
-                    onClick={() => navigate(-1)}
-                  >
-                    Đóng
-                  </CButtonClose>
+                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
                 </>
               )}
               {actionMode === IModeAction.READ && (
                 <>
                   <CButtonEdit
+                    onClick={() => {
+                      navigate(pathRoutes.listOfServicePackageEdit(id));
+                    }}
                     disabled={false}
-                    htmlType="submit"
-                    onClick={() => setType(EActionSubmit.SAVE)}
-                  >
-                    Sửa
-                  </CButtonEdit>
-                  <CButtonClose
-                    disabled={false}
-                    type="default"
-                    onClick={() => navigate(-1)}
-                  >
-                    Đóng
-                  </CButtonClose>
+                  />
+                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
                 </>
               )}
               {actionMode === IModeAction.UPDATE && (
                 <>
-                  <CButtonSave
-                    htmlType="submit"
-                    onClick={() => setType(EActionSubmit.SAVE)}
-                  >
-                    Lưu
-                  </CButtonSave>
-                  <CButtonClose
-                    disabled={false}
-                    type="default"
-                    onClick={() => navigate(-1)}
-                  >
-                    Đóng
-                  </CButtonClose>
+                  <CButtonSave disabled={false} htmlType="submit" />
+                  <CButtonClose onClick={() => navigate(-1)} disabled={false} />
                 </>
               )}
             </Space>
