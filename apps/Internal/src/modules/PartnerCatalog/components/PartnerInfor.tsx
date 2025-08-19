@@ -26,6 +26,8 @@ const PartnerInfor = () => {
       status:
         data.status === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động',
       orgDescription: data.orgDescription,
+      provinceCode: data.provinceCode,
+      parentCode: data.parentCode,
     });
   };
   const onGetPartnerError = (error: IFieldErrorsItem[]) => {
@@ -39,7 +41,6 @@ const PartnerInfor = () => {
   );
   const handleGetPartnerInfo = () => {
     const orgCode = form.getFieldValue('orgCode');
-    console.log('org code', form.getFieldValue('orgCode'));
     if (orgCode) getPartnerInfoByCode(orgCode);
   };
   return (
@@ -80,6 +81,17 @@ const PartnerInfor = () => {
         <Col span={12}>
           <Form.Item label="Số điện thoại" name="phone">
             <CInput placeholder="Nhập số điện thoại" disabled />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item label="Mã đại lý cha" name="parentCode">
+            <CInput placeholder="Nhập mã đại lý cha" disabled />
+          </Form.Item>
+        </Col>
+
+        <Col span={12}>
+          <Form.Item label="Mã tỉnh" name="provinceCode">
+            <CInput placeholder="Nhập mã tỉnh" disabled />
           </Form.Item>
         </Col>
         <Col span={12}>

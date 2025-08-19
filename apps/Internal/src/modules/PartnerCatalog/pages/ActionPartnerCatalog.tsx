@@ -152,6 +152,8 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
       orgDescription,
       representative,
       status,
+      provinceCode,
+      parentCode,
     } = values;
 
     const payload: IPayloadPartner = {
@@ -166,6 +168,8 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         address,
         representative,
         status: status === 'Hoạt động' ? 1 : 0,
+        provinceCode,
+        parentCode,
       },
     };
     if (actionMode === IModeAction.CREATE) {
