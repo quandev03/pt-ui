@@ -72,12 +72,6 @@ export const routerItems: RouterItems[] = [
     parentId: pathRoutes.report as string,
   },
   {
-    key: pathRoutes.saleManagement as string,
-    icon: <Store />,
-    label: 'Quản Lý Bán Hàng',
-    hasChild: true,
-  },
-  {
     key: pathRoutes.salePackage as string,
     label: 'Bán gói cho thuê bao hiện hữu',
     parentId: pathRoutes.saleManagement as string,
