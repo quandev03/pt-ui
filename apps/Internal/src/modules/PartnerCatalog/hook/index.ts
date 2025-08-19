@@ -175,6 +175,7 @@ export const useAssignPackagePermission = (onSuccess: () => void) => {
     mutationFn: PartnerCatalogService.assignPackagePermission,
     onSuccess: () => {
       NotificationSuccess('Phân quyền gói cước thành công');
+      onSuccess();
     },
   });
 };
