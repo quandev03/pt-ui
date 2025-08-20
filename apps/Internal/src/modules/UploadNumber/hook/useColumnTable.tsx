@@ -1,30 +1,31 @@
 import {
-  AnyElement,
   CButtonDetail,
   CTag,
   decodeSearchParams,
   formatDate,
-  formatDateTime,
   RenderCell,
   Text,
   usePermissions,
   WrapperActionTable,
 } from '@vissoft-react/common';
 import { TableColumnsType, Tooltip, Typography } from 'antd';
+import { pathRoutes } from 'apps/Internal/src/routers';
 import dayjs from 'dayjs';
 import { useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useConfigAppStore from '../../Layouts/stores';
-import { IResponseUploadNumber } from '../types';
-import { pathRoutes } from 'apps/Internal/src/routers';
 import {
-  TransactionStatusCode,
   TransactionStatusTagMap,
   UploadStatus,
   UploadStatusTagMap,
 } from '../../ListOfServicePackage/types';
+import { IFileInfo, IResponseUploadNumber } from '../types';
 
-export const useColumnTable = () => {
+export const useColumnTable = ({
+  onDownload,
+}: {
+  onDownload: (record?: IFileInfo) => void;
+}) => {
   const {
     params: { ISDN_TRANSACTION_UPLOAD_STATUS, ISDN_TRANSACTION_TRANS_STATUS },
   } = useConfigAppStore();
@@ -122,7 +123,7 @@ export const useColumnTable = () => {
                         marginLeft: '4px',
                         cursor: 'pointer',
                       }}
-                      onClick={() => {}}
+                      onClick={() => onDownload(record?.resultCheckFile)}
                     >
                       File
                     </div>
@@ -189,7 +190,7 @@ export const useColumnTable = () => {
                         marginLeft: '4px',
                         cursor: 'pointer',
                       }}
-                      onClick={() => {}}
+                      onClick={() => onDownload(record?.resultFile)}
                     >
                       File
                     </Typography.Text>
