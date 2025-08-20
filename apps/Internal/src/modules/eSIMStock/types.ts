@@ -92,9 +92,9 @@ export enum GenderEnum {
 
 export enum SubscriberStatusEnum {
   IN_STOCK = 0,
-  CALLED_900 = 1,
-  UPDATED_TTTB = 2,
-  SOLD = 3,
+  SOLD = 1,
+  CALLED_900 = 2,
+  UPDATED_TTTB = 3,
 }
 export const SubscriberStatusColor = {
   [SubscriberStatusEnum.IN_STOCK]: 'warning',
@@ -102,9 +102,3 @@ export const SubscriberStatusColor = {
   [SubscriberStatusEnum.UPDATED_TTTB]: 'blue',
   [SubscriberStatusEnum.SOLD]: 'success',
 };
-export const SubscriberStatusOptions = [
-  { label: 'Trong kho', value: SubscriberStatusEnum.IN_STOCK },
-  { label: 'Đã gọi 900', value: SubscriberStatusEnum.CALLED_900 },
-  { label: 'Đã cập nhật TTTB', value: SubscriberStatusEnum.UPDATED_TTTB },
-  { label: 'Đã bán', value: SubscriberStatusEnum.SOLD },
-];

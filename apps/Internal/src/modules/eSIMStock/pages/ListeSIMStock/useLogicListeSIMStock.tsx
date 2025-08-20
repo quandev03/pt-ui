@@ -5,24 +5,27 @@ import { useGetTableList } from '../../hooks/useGetTableList';
 
 import {
   decodeSearchParams,
-  formatQueryParams,
   FilterItemProps,
+  formatQueryParams,
 } from '@vissoft-react/common';
 import { ColumnsType } from 'antd/es/table';
+import { useGetAllOrganizationUnit } from 'apps/Internal/src/hooks/useGetAllPartners';
+import useConfigAppStore from '../../../Layouts/stores';
+import { useGetAllPackage, useGeteSIMStock } from '../../hooks';
 import {
   ActiveStatusOptions,
   IeSIMStockItem,
   IeSIMStockParams,
-  SubscriberStatusOptions,
 } from '../../types';
-import { useGetAllPackage, useGeteSIMStock } from '../../hooks';
-import { useGetAllOrganizationUnit } from 'apps/Internal/src/hooks/useGetAllPartners';
 
 export const useLogicListeSIMStock = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [id, setId] = useState<string>();
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
+  const {
+    params: { SUBSCRIBER_SUB_STATUS = [] },
+  } = useConfigAppStore();
 
   const { data: listeSIMStock, isLoading: loadingTable } = useGeteSIMStock(
     formatQueryParams<IeSIMStockParams>(params)
@@ -35,7 +38,10 @@ export const useLogicListeSIMStock = () => {
   };
   const handleCloseModal = () => setOpenModal(false);
 
-  const columns: ColumnsType<IeSIMStockItem> = useGetTableList(handleOpenModal);
+  const columns: ColumnsType<IeSIMStockItem> = useGetTableList(
+    handleOpenModal,
+    SUBSCRIBER_SUB_STATUS
+  );
   const { data: agencyOptions = [] } = useGetAllOrganizationUnit();
   const filters: FilterItemProps[] = useMemo(() => {
     return [
@@ -67,7 +73,7 @@ export const useLogicListeSIMStock = () => {
         name: 'subStatus',
         stateKey: 'subStatus',
         showDefault: true,
-        options: SubscriberStatusOptions,
+        options: SUBSCRIBER_SUB_STATUS,
         placeholder: 'Trạng thái thuê bao',
       },
       {
