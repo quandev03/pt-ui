@@ -228,3 +228,112 @@ button {
       -70px 90px 0 rgba(0, 0, 0, 0);
   }
 }
+
+.ant-form-item {
+  .ant-form-item-label {
+    text-align: start;
+  }
+}
+
+.ant-form-item-required {
+  position: relative;
+
+  &::after {
+    right: -10px;
+  }
+
+  &::before {
+    position: absolute;
+    margin-inline-end: -10px !important;
+    right: 0;
+  }
+}
+
+.ant-form-horizontal {
+  .ant-form-item-required {
+    margin-right: 12px;
+  }
+
+  ::before {
+    right: 13px;
+    top: 7px;
+  }
+}
+
+.ant-form-vertical {
+  .ant-form-item-required {
+    &::after {
+      margin-inline-start: 0 !important;
+      margin-inline-end: 0 !important;
+    }
+  }
+}
+
+/* loading custom */
+
+.logo-fade {
+  animation: fadeInOut 2s infinite;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.3;
+  }
+}
+
+.dot-flashing {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #4a6baf;
+  color: #4a6baf;
+  animation: dotFlashing 1s infinite linear alternate;
+  animation-delay: 0.5s;
+  margin-top: 20px;
+  margin-left: 50px;
+}
+
+.dot-flashing::before,
+.dot-flashing::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #4a6baf;
+  color: #4a6baf;
+}
+
+.dot-flashing::before {
+  left: -15px;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 0s;
+}
+
+.dot-flashing::after {
+  left: 15px;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 1s;
+}
+
+@keyframes dotFlashing {
+  0% {
+    background-color: #4a6baf;
+  }
+
+  50%,
+  100% {
+    background-color: rgba(74, 107, 175, 0.2);
+  }
+}

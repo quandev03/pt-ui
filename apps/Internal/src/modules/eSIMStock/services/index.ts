@@ -1,0 +1,36 @@
+import { IPage } from '@vissoft-react/common';
+import { prefixSaleService } from '../../../constants';
+import { safeApiClient } from '../../../services/axios';
+import {
+  IeSIMStockDetail,
+  IeSIMStockItem,
+  IeSIMStockParams,
+  IOrgItem,
+  IPackage,
+} from '../types';
+
+export const eSIMStockServices = {
+  geteSIMStock: (params: IeSIMStockParams) => {
+    return safeApiClient.get<IPage<IeSIMStockItem>>(
+      `${prefixSaleService}/esim-manager`,
+      {
+        params,
+      }
+    );
+  },
+  getDetaileSIMStock: async (id: string) => {
+    return await safeApiClient.get<IeSIMStockDetail[]>(
+      `${prefixSaleService}/esim-manager/${id}`
+    );
+  },
+  getPackage: async () => {
+    return await safeApiClient.get<IPackage[]>(
+      `${prefixSaleService}/esim-manager/package`
+    );
+  },
+  getOrganizationUnit: async () => {
+    return await safeApiClient.get<IOrgItem[]>(
+      `${prefixSaleService}/esim-manager/organization-unit`
+    );
+  },
+};

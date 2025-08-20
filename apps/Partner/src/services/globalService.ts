@@ -1,11 +1,11 @@
 import {
-  IParamsOption,
+  IAllParamResponse,
   IUserInfo,
   LoaderData,
   MenuObjectItem,
 } from '@vissoft-react/common';
 import { prefixAuthService, prefixSaleService } from '../constants';
-import { ParamKeys } from '../types';
+import { IAgency } from '../types';
 import { safeApiClient } from './axios';
 import { IDebitLimit } from '../hooks/useGetDebitLimit';
 
@@ -45,8 +45,14 @@ export const globalService = {
     return res;
   },
   getParamsOption() {
-    return safeApiClient.get<IParamsOption<ParamKeys>>(
-      `${prefixSaleService}/params`
+    return safeApiClient.get<IAllParamResponse>(`${prefixSaleService}/params`);
+  },
+  getAgencies: (params?: Record<string, string>) => {
+    return safeApiClient.get<IAgency[]>(
+      `${prefixSaleService}/organization-unit`,
+      {
+        params,
+      }
     );
   },
   getDebitLimit: async () => {

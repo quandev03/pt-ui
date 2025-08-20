@@ -1,10 +1,11 @@
 import { Form, InputProps, Row, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TableRowSelection } from 'antd/es/table/interface';
+import { TablePaginationConfig } from 'antd/lib';
 import { Search } from 'lucide-react';
 import { memo } from 'react';
 import { useLayoutRefs } from '../../hooks';
-import { IPage } from '../../types';
+import { AnyElement, IPage } from '../../types';
 import { CFilter, FilterItemProps } from '../Filter';
 import { CInput } from '../Input';
 import { CTable } from '../Table';
@@ -21,6 +22,9 @@ export interface LayoutListProps<T = unknown> {
   rowSelection?: TableRowSelection<T>;
   subFilter?: React.ReactNode;
   actionComponentSub?: React.ReactNode;
+  dataNoPagination?: T[];
+  expandable?: AnyElement;
+  pagination?: false | TablePaginationConfig;
 }
 
 function LayoutListComponent<T = unknown>({
@@ -34,11 +38,18 @@ function LayoutListComponent<T = unknown>({
   rowSelection,
   subFilter,
   actionComponentSub,
+  dataNoPagination,
+  expandable,
+  pagination,
 }: LayoutListProps<T>) {
   // Sử dụng custom hook để quản lý refs
   const { heightTitleRef, wrapperManagerRef, filterManagerRef } =
     useLayoutRefs();
-
+  const getDataSource = () => {
+    if (dataNoPagination) {
+      return dataNoPagination;
+    } else return data?.content ?? [];
+  };
   return (
     <Wrapper ref={wrapperManagerRef} id="wrapperManager">
       <TitleHeader ref={heightTitleRef} id="heightTitle">
@@ -63,19 +74,21 @@ function LayoutListComponent<T = unknown>({
           <div className="flex w-full">
             <CTable<T>
               columns={columns}
-              dataSource={data?.content ?? []}
+              dataSource={getDataSource()}
               loading={loading}
               rowKey="id"
-              pagination={{
-                total: data?.totalElements,
-              }}
+              pagination={
+                pagination ?? {
+                  total: data?.totalElements,
+                }
+              }
               rowSelection={rowSelection}
               refs={{
                 heightTitleRef,
                 wrapperManagerRef,
                 filterManagerRef,
               }}
-              scroll={{ x: 'max-content' }}
+              expandable={expandable}
             />
           </div>
         </Row>
@@ -89,11 +102,19 @@ interface SearchComponentProps extends InputProps {
   tooltip: string;
   placeholder: string;
   stateKey?: string;
+  className?: string;
 }
 
 // Tạo SearchComponent riêng
 const SearchComponent = memo(
-  ({ name, tooltip, placeholder, stateKey, ...rest }: SearchComponentProps) => {
+  ({
+    name,
+    tooltip,
+    placeholder,
+    stateKey,
+    className,
+    ...rest
+  }: SearchComponentProps) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       // Tự động cắt ký tự nếu vượt quá maxLength
       if (e.target.value.length > 100) {
@@ -151,7 +172,10 @@ const SearchComponent = memo(
 
     return (
       <Tooltip title={tooltip} placement="top">
-        <Form.Item name={stateKey ? stateKey : name} className="min-w-42">
+        <Form.Item
+          name={stateKey ? stateKey : name}
+          className={`min-w-42 ${className}`}
+        >
           <CInput
             maxLength={100}
             placeholder={placeholder}

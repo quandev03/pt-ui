@@ -4,7 +4,7 @@ import { CButton } from './CButton';
 
 export const CButtonAddFile: React.FC<ButtonProps> = ({ ...rest }) => {
   return (
-    <CButton icon={<Plus />} {...rest}>
+    <CButton icon={<Plus size={20} />} {...rest}>
       Thêm mới file
     </CButton>
   );

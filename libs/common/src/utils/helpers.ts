@@ -1,7 +1,7 @@
 import { GetProp } from 'antd';
 import { UploadProps } from 'antd/lib';
 import { cloneDeep } from 'lodash';
-import { AnyElement, IParamsRequest } from '../types';
+import { AnyElement, IModeAction, IParamsRequest } from '../types';
 import { parseValue } from './utils';
 export type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -121,4 +121,37 @@ export const checkIfImage = async (url: string): Promise<boolean> => {
     img.onerror = () => resolve(false);
     img.src = url;
   });
+};
+export const getActionMode = (value: string | undefined) => {
+  switch (value) {
+    case IModeAction.CREATE:
+      return 'Thêm mới';
+    case IModeAction.UPDATE:
+      return 'Chỉnh sửa';
+    case IModeAction.READ:
+      return 'Chi tiết';
+    default:
+      return '';
+  }
+};
+export const base64ImageToBlob = (str: string) => {
+  // extract content type and base64 payload from original string
+  const pos = str.indexOf(';base64,');
+  const type = str.substring(5, pos);
+  const b64 = str.substr(pos + 8);
+
+  // decode base64
+  const imageContent = atob(b64);
+
+  // create an ArrayBuffer and a view (as unsigned 8-bit)
+  const buffer = new ArrayBuffer(imageContent.length);
+  const view = new Uint8Array(buffer);
+
+  // fill the view, using the decoded base64
+  for (let n = 0; n < imageContent.length; n++) {
+    view[n] = imageContent.charCodeAt(n);
+  }
+
+  // convert ArrayBuffer to Blob
+  return new Blob([buffer], { type: type });
 };

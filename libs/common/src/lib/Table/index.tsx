@@ -5,6 +5,7 @@ import { decodeSearchParams } from '../../utils';
 import { useTableHeight } from '../../hooks';
 import { TotalTableMessage } from '../TotalTableMessage';
 import { StyledCommonTable } from './styles';
+import { Loader } from '../NavigationLoader';
 
 // Interface để type cho refs
 interface TableRefs {
@@ -53,10 +54,16 @@ export function CTable<T = unknown>({
   return (
     <StyledCommonTable
       size="small"
-      locale={{ emptyText: 'Không có dữ liệu' }}
+      locale={{
+        emptyText: 'Không có dữ liệu',
+      }}
       scroll={{
         y: tableHeight > 0 ? tableHeight : undefined,
         x: 'max-content',
+      }}
+      loading={{
+        spinning: rest.loading,
+        indicator: <Loader />,
       }}
       {...rest}
       pagination={
@@ -71,6 +78,10 @@ export function CTable<T = unknown>({
               onChange: pagination?.onChange ?? handleChangePagination,
               showTotal: TotalTableMessage,
               showQuickJumper: false,
+              locale: {
+                items_per_page: ' / trang',
+                page: 'Trang',
+              },
             }
           : false
       }

@@ -1,1 +1,4 @@
-export type ParamKeys = 'EXAMPLE' | 'EXAMPLE2';
+export type ParamKeys =
+  | 'ISDN_TRANSACTION_TRANS_STATUS'
+  | 'ISDN_TRANSACTION_UPLOAD_STATUS'
+  | 'SUBSCRIBER_SUBS_STATUS';

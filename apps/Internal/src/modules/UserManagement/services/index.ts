@@ -1,13 +1,11 @@
-import { IPage } from '@vissoft-react/common';
+import { AnyElement, IPage } from '@vissoft-react/common';
 import { prefixAuthService } from '../../../constants';
 import { axiosClient, safeApiClient } from '../../../services/axios';
 import { IRoleItem } from '../../../types/admin';
 import {
   IAllGroupUser,
-  IDepartment,
   IFormUser,
   IOrganization,
-  IRelationUser,
   IUserItem,
   IUserParams,
 } from '../types';
@@ -34,26 +32,11 @@ export const userServices = {
       `${prefixAuthService}/api/users/internal/${data.id}`,
       payload
     );
-    await safeApiClient.post<IUserItem>(
-      `${prefixAuthService}/api/organization-user/${res.id}`,
-      {
-        userId: res.id,
-        organizationIds: organizationIds ?? [],
-        username: res.username,
-        userFullName: res.fullname,
-        clientId: res.client.id,
-        status: res.status,
-        email: res.email,
-      }
-    );
     return res;
   },
   deleteUsers: async (id: string) => {
     const paramsDelete = new URLSearchParams();
     paramsDelete.append('userId', id);
-    await safeApiClient.delete(`${prefixAuthService}/organization-user`, {
-      params: paramsDelete,
-    });
     const res = await safeApiClient.delete(
       `${prefixAuthService}/api/users/internal/${id}`
     );
@@ -66,44 +49,16 @@ export const userServices = {
       `${prefixAuthService}/api/users/internal`,
       payload
     );
-    // await safeApiClient.post<IUserItem>(
-    //   `${prefixCatalogServicePublic}/organization-user/${createUserRes.id}`,
-    //   {
-    //     userId: createUserRes.id,
-    //     organizationIds: organizationIds ?? [],
-    //     username: createUserRes.username,
-    //     userFullName: createUserRes.fullname,
-    //     clientId: createUserRes.client.id,
-    //     status: createUserRes.status,
-    //     email: createUserRes.email,
-    //   }
-    // );
     return createUserRes;
   },
-  // getOrganization: async () => {
-  //   return await axiosClient.get<any, IOrganization[]>(
-  //     `${prefixCatalogService}/organization-unit`
-  //   );
-  // },
   getUser: async (id: string) => {
     const res = await safeApiClient.get<IUserItem>(
       `${prefixAuthService}/api/users/internal/${id}`
     );
-    const relationUser = await userServices.getRelationUser(id);
     return {
       ...res,
-      organizationIds: (relationUser ?? []).map((item) => item.orgId),
       loginMethod: String(res.loginMethod),
     } as IUserItem;
-  },
-  getRelationUser: async (id: string) => {
-    try {
-      return await safeApiClient.get<IRelationUser[]>(
-        `${prefixAuthService}/api/organization-user/data/${id}`
-      );
-    } catch {
-      return [];
-    }
   },
   getAllGroupUsers: async () => {
     try {
@@ -116,9 +71,10 @@ export const userServices = {
   },
   getAllDepartment: async () => {
     try {
-      return await axiosClient.get<string, IDepartment[]>(
+      const data = await axiosClient.get<AnyElement>(
         `${prefixAuthService}/api/departments/all`
       );
+      return data.data;
     } catch {
       return [];
     }

@@ -1,10 +1,8 @@
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ButtonProps } from 'antd';
-import Button from '.';
+import { Button, ButtonProps } from 'antd';
+import { Send } from 'lucide-react';
 const CButtonApprove: React.FC<ButtonProps> = ({ ...rest }) => {
   return (
-    <Button icon={<FontAwesomeIcon icon={faPaperPlane} />} {...rest}>
+    <Button icon={<Send size={20} />} {...rest}>
       Phê duyệt
     </Button>
   );

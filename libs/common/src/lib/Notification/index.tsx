@@ -1,6 +1,12 @@
 import { Modal } from 'antd';
 import delay from 'lodash/delay';
-import { CheckCircle, CircleX, TriangleAlert, X } from 'lucide-react';
+import {
+  CheckCircle,
+  CircleAlert,
+  CircleX,
+  TriangleAlert,
+  X,
+} from 'lucide-react';
 import {
   StyledIconX,
   StyledModalErrorWrapper,
@@ -33,7 +39,7 @@ export const NotificationSuccess = (message: string, timeDelay?: number) => {
           style={{
             top: 12,
             right: 12,
-            background: 'rgba(1,187,0,0.85)',
+            background: 'transparent',
             borderRadius: '50%',
             width: 36,
             height: 36,
@@ -44,7 +50,7 @@ export const NotificationSuccess = (message: string, timeDelay?: number) => {
           }}
           onClick={() => modalSuccess.destroy()}
         >
-          <X size={20} style={{ color: 'white' }} />
+          <X size={32} style={{ color: 'black' }} />
         </StyledIconX>
         <StyledModalSuccessIcon>
           <CheckCircle />
@@ -84,10 +90,10 @@ export const NotificationError = ({
           style={{
             top: 12,
             right: 12,
-            background: 'rgba(229,22,22,0.85)',
+            background: 'transparent',
             borderRadius: '50%',
-            width: 36,
-            height: 36,
+            width: 42,
+            height: 42,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -95,10 +101,10 @@ export const NotificationError = ({
           }}
           onClick={() => modalError.destroy()}
         >
-          <X size={20} style={{ color: 'white' }} />
+          <X size={32} style={{ color: 'black' }} />
         </StyledIconX>
         <StyledModalErrorIcon>
-          <CircleX />
+          <CircleAlert />
         </StyledModalErrorIcon>
         <StyledModalErrorTitle>{title ?? 'Thất bại'}</StyledModalErrorTitle>
         <StyledModalErrorContent>

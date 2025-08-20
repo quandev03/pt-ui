@@ -48,5 +48,18 @@ export const versionApi = '/v1';
 
 export const prefixAuthService = 'hvn-admin-service/public';
 export const prefixSaleService = 'hvn-sale-service/public/api' + versionApi;
-export const prefixCatalogService =
-  'hvn-catalog-service/public/api' + versionApi;
+
+export const STATUS_OPTIONS = [
+  {
+    label: 'Hoạt động',
+    value: '1',
+  },
+  {
+    label: 'Không hoạt động',
+    value: '0',
+  },
+];
+export const StatusLabel = {
+  ACTIVE: 'Hoạt động',
+  INACTIVE: 'Không hoạt động',
+};

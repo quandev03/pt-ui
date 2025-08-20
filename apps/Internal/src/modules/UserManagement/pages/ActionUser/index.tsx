@@ -8,7 +8,6 @@ import {
   CSelect,
   CSwitch,
   IModeAction,
-  ModalConfirm,
   TitleHeader,
   cleanUpPhoneNumber,
   cleanUpString,
@@ -34,7 +33,6 @@ export const ActionUser = memo(() => {
     userDetail,
     optionGroups,
     optionListRole,
-    optionOrganization,
     handleFinish,
     roleInActive,
     handleClose,
@@ -42,19 +40,18 @@ export const ActionUser = memo(() => {
     actionMode,
     setIsSubmitBack,
     loginMethod,
-    checkAllowDelete,
     loadingAdd,
     loadingUpdate,
-    loadingDelete,
     setRoleInActive,
     groupsInActive,
     setGroupsInActive,
+    handleDelete,
   } = useLogicActionUser();
   const { id } = useParams();
   const { data: INTERNAL_DEPARTMENT = [] } = useGetDepartments();
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
-
+  console.log(INTERNAL_DEPARTMENT, 'INTERNAL_DEPARTMENT');
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{Title}</TitleHeader>
@@ -63,6 +60,7 @@ export const ActionUser = memo(() => {
           form={form}
           onFinish={handleFinish}
           labelCol={{ span: 5 }}
+          labelAlign="left"
           labelWrap={true}
           validateTrigger={['onSubmit']}
           colon={false}
@@ -130,7 +128,7 @@ export const ActionUser = memo(() => {
                 >
                   <CInput
                     placeholder="Nhập họ và tên"
-                    maxLength={100}
+                    maxLength={50}
                     disabled={actionMode === IModeAction.READ}
                     onBlur={(e) => {
                       const value = cleanUpString(e.target.value);
@@ -255,17 +253,6 @@ export const ActionUser = memo(() => {
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="Kho" name="organizationIds">
-                  <CSelect
-                    placeholder="Chọn kho"
-                    options={optionOrganization}
-                    mode="multiple"
-                    maxRow={3}
-                    disabled={actionMode === IModeAction.READ}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
                 <Form.Item
                   label="Vai trò"
                   name="roleIds"
@@ -337,7 +324,7 @@ export const ActionUser = memo(() => {
             </Row>
           </div>
           <div className="flex gap-4 flex-wrap justify-end mt-7">
-            {actionMode === IModeAction.CREATE && (
+            {actionMode === IModeAction.CREATE && permission.canCreate && (
               <CButtonSaveAndAdd
                 onClick={() => {
                   form.submit();
@@ -347,42 +334,29 @@ export const ActionUser = memo(() => {
               />
             )}
             {actionMode !== IModeAction.READ &&
-              (permission.canDelete ||
-                (permission.canUpdate && (
-                  <CButtonSave
-                    onClick={() => {
-                      setIsSubmitBack(true);
-                      form.submit();
-                    }}
-                    loading={loadingAdd || loadingUpdate}
-                    disabled={loadingAdd || loadingUpdate}
-                  />
-                )))}
-            {actionMode === IModeAction.READ && (
-              <>
-                {permission.canDelete && (
-                  <CButtonDelete
-                    onClick={() => {
-                      ModalConfirm({
-                        title: 'Bạn có chắc chắn muốn Xóa bản ghi không?',
-                        message: 'Các dữ liệu liên quan cũng sẽ bị xóa',
-                        handleConfirm: () => {
-                          checkAllowDelete(id!);
-                        },
-                      });
-                    }}
-                    loading={loadingDelete}
-                    disabled={loadingDelete}
-                  />
-                )}
-                {permission.canUpdate && (
-                  <CButtonEdit
-                    onClick={() => {
-                      navigate(pathRoutes.systemUserManagerEdit(id!));
-                    }}
-                  />
-                )}
-              </>
+              (permission.canUpdate || permission.canCreate) && (
+                <CButtonSave
+                  onClick={() => {
+                    setIsSubmitBack(true);
+                    form.submit();
+                  }}
+                  loading={loadingAdd || loadingUpdate}
+                  disabled={loadingAdd || loadingUpdate}
+                />
+              )}
+            {actionMode === IModeAction.READ && permission.canUpdate && (
+              <CButtonEdit
+                onClick={() => {
+                  navigate(pathRoutes.systemUserManagerEdit(id!));
+                }}
+              />
+            )}
+            {actionMode === IModeAction.READ && permission.canDelete && (
+              <CButtonDelete
+                onClick={() => {
+                  handleDelete(id!);
+                }}
+              />
             )}
             <CButtonClose onClick={handleClose} />
           </div>

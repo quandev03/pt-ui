@@ -1,32 +1,47 @@
 ARG BASE_BUILDER="harbor.vissoft.vn/vnsky/web-builder"
 ARG BASE_RUNNER="harbor.vissoft.vn/vnsky/web-runner"
 
-FROM $BASE_BUILDER AS base
+FROM node:20-alpine AS base
 WORKDIR /workspace
 COPY package.json ./package.json
-ARG NPM_CONFIG_REGISTRY="https://registry.npmjs.org"
+COPY yarn.lock ./yarn.lock
+COPY .yarnrc.yml ./.yarnrc.yml
 ARG YARN_NPM_REGISTRY_SERVER="https://registry.npmjs.org"
-RUN ls -la &&  \
-    echo "Using yarn repo: $YARN_NPM_REGISTRY_SERVER" &&  \
-    echo "Using npm repo: $NPM_CONFIG_REGISTRY" &&  \
-    yarn config get npmRegistryServer &&  \
-    yarn config get unsafeHttpWhitelist &&  \
-    yarn install
+
+# Cài đặt và cấu hình corepack
+RUN npm install -g corepack
+
+# Enable corepack và sử dụng version từ package.json
+RUN corepack enable && \
+    corepack prepare --activate
+
+# Debug và cấu hình yarn registry
+RUN ls -la && \
+    echo "Yarn version:" && yarn --version && \
+    echo "Using yarn repo: $YARN_NPM_REGISTRY_SERVER" && \
+    yarn config set --home enableTelemetry 0 && \
+    yarn config set --home npmRegistryServer $YARN_NPM_REGISTRY_SERVER && \
+    yarn config set --home npmAlwaysAuth false && \
+    echo "Current yarn config:" && \
+    yarn config get npmRegistryServer && \
+    echo "Starting yarn install..." && \
+    rm -rf yarn.lock .yarn/cache && \
+    yarn install --network-timeout 100000
+
 COPY ./nx.json ./nx.json
-COPY ./.env ./.env
+COPY ./apps/Internal/.env.production ./.env
 COPY ./tsconfig.base.json ./tsconfig.base.json
 COPY ./jest.config.ts ./jest.config.ts
 COPY ./jest.preset.js ./jest.preset.js
-COPY ./webpack.config.js ./webpack.config.js
 COPY ./.eslintrc.json ./.eslintrc.json
 COPY ./.eslintignore ./.eslintignore
 COPY ./.prettierrc ./.prettierrc
 COPY ./.prettierignore ./.prettierignore
-COPY ./commons ./commons
+COPY ./libs ./libs
 COPY ./apps/Internal ./apps/Internal
-RUN yarn build:Internal
+RUN yarn build:internal
 
 FROM $BASE_RUNNER AS runner
 ENV TZ=Asia/Ho_Chi_Minh
 WORKDIR /usr/share/nginx/html
-COPY --from=base --chown=nginx:nginx /workspace/dist/apps/Internal /usr/share/nginx/html
+COPY --from=base --chown=nginx:nginx /workspace/dist/apps/internal /usr/share/nginx/html
