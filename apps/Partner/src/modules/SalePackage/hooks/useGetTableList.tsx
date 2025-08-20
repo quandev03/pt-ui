@@ -11,7 +11,7 @@ import { useSearchParams } from 'react-router-dom';
 import { IPackageSaleItem } from '../types';
 import { useGetFileDownloadFn } from './useDownloadFile';
 import { Tooltip } from 'antd';
-import { ProcessingStatusEnum } from '../constants/enum';
+import { ProcessingStatusEnum, SalePackageTypeEnum } from '../constants/enum';
 import { useGetParamsOption } from '../../../hooks/useGetParamsOption';
 
 export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
@@ -73,10 +73,13 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
       align: 'left',
       fixed: 'left',
       render(value) {
-        const matchingOption = getParamsBatchSalesOptions.find(
-          (option) => option.code === String(value)
-        );
-        const displayText = matchingOption?.value || '';
+        let displayText = '';
+        if (value === SalePackageTypeEnum.SINGLE_SALE) {
+          displayText = 'Bán lẻ';
+        }
+        if (value === SalePackageTypeEnum.BATCH_SALE) {
+          displayText = 'Theo lô';
+        }
 
         return <RenderCell value={displayText} tooltip={displayText} />;
       },
@@ -161,20 +164,29 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
       align: 'left',
       render(_, record) {
         let renderedValue;
-        if (record.type === 1) {
+        if (
+          getParamsBatchSalesOptions.some(
+            (option) => option.code === String(SalePackageTypeEnum.SINGLE_SALE)
+          )
+        ) {
           renderedValue = (
             <>
               <p>Số lượng thành công: {record.succeededNumber}</p>
               <p>Số lượng thất bại: {record.failedNumber}</p>
             </>
           );
-        } else {
+        }
+        if (
+          getParamsBatchSalesOptions.some(
+            (option) => option.code === String(SalePackageTypeEnum.BATCH_SALE)
+          )
+        ) {
           renderedValue = (
             <>
               <p>Số lượng thành công: {record.succeededNumber}</p>
               <p>Số lượng thất bại: {record.failedNumber}</p>
               <p>
-                File kết quả:{' '}
+                File kết quả:
                 <span
                   className="text-blue-600 underline cursor-pointer"
                   onClick={() => handleDownload(record.resultFileUrl)}
