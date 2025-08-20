@@ -28,11 +28,12 @@ export const useLogicActionSingleSalePackage = () => {
     form.resetFields();
     setOpenOtp(false);
     setSalePayload(null);
-  }, [form, setSalePayload]);
+    navigate(-1);
+  }, [form, navigate, setSalePayload]);
 
   const { mutate: addPackageSingle, isPending: loadingAdd } =
     useAddPackageSingle(() => {
-      handleCancel(); // On success, call the existing cancel logic
+      handleCancel();
     });
 
   const handleCheckNumberPhone = useCallback(
