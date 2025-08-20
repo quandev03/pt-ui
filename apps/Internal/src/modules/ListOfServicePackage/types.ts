@@ -19,6 +19,8 @@ export interface IListOfServicePackageForm {
   status: boolean | StatusEnum;
   images: File | null;
   description?: string;
+  cycleValue: number;
+  cycleUnit: string;
 }
 
 // Transaction status: 0: Chờ thực hiện, 1: Đang thực hiện, 2: Hoàn thành
