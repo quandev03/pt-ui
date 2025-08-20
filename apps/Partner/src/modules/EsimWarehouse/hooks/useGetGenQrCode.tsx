@@ -1,9 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  IErrorResponse,
-  IFieldErrorsItem,
-  NotificationError,
-} from '@vissoft-react/common';
+import { IErrorResponse } from '@vissoft-react/common';
 import { IQrCodeGen } from '../types';
 import { esimWarehouseServices } from '../services';
 import { REACT_QUERY_KEYS } from '../../../../src/constants/query-key';
@@ -20,10 +16,18 @@ export const useGetGenQrCode = (onSuccess: (data: Blob) => void) => {
       });
       onSuccess(data);
     },
-    onError(error: IErrorResponse) {
+    onError: async (error: IErrorResponse) => {
       console.log('🚀 ~ onError ~ error:', error);
+      if (error instanceof Blob && error.type === 'application/problem+json') {
+        const text = await error.text();
+        const jsonError: IErrorResponse = JSON.parse(text);
+        notification.error({
+          message: jsonError.detail || 'Lấy mã không thành công',
+        });
+        return;
+      }
       notification.error({
-        message: error.detail || 'Lấy mã không thành công',
+        message: error?.detail || 'Lấy mã không thành công',
       });
     },
   });

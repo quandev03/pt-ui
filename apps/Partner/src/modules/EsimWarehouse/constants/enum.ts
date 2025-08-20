@@ -3,9 +3,6 @@ import { ColorList, TypeTagEnum } from '@vissoft-react/common';
 export enum ActiveStatusEnum {
   NORMAL = 1,
   ONE_WAY_CALL_BLOCK_BY_REQUEST = 10,
-  // ONE_WAY_CALL_BLOCK_BY_PROVIDER = 11,
-  // TWO_WAY_CALL_BLOCK_BY_REQUEST = 20,
-  // TWO_WAY_CALL_BLOCK_BY_PROVIDER = 21,
 }
 
 export enum Status900Enum {
@@ -40,13 +37,6 @@ export const activeStatusMap: Record<
     textColor: '#9B1A32', // Darker, opaque red for text
     fontWeight: 'bold',
   },
-  // [ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_PROVIDER]: {
-  //   text: 'Chặn 1C',
-  //   type: TypeTagEnum.DEFAULT,
-  //   color: '#C5254294',
-  //   textColor: '#9B1A32',
-  //   fontWeight: 'bold',
-  // },
 };
 
 // Map for Status900Enum to display text, type, color, and font weight

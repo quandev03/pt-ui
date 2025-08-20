@@ -132,4 +132,6 @@ export interface IAllParamResponse {
   CLIENT_TYPE: IParamItem[];
   GENDER: IParamItem[];
   BATCH_PACKAGE_SALE_TYPE: IParamItem[];
+  SUBSCRIBER_ACTIVE_SUB_STATUS: IParamItem[];
+  SUBSCRIBER_SUBS_STATUS: IParamItem[];
 }

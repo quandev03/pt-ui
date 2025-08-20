@@ -1,9 +1,10 @@
-import { IPage, IParamsRequest } from '@vissoft-react/common';
+import { IPage } from '@vissoft-react/common';
 import { safeApiClient } from '../../../../src/services';
 import {
   ICustomerInfo,
   IEsimWarehouseDetails,
   IEsimWarehouseList,
+  IEsimWarehouseParams,
   IGetPackageCodes,
   IQrCodeGen,
   IQrCodeSent,
@@ -11,7 +12,7 @@ import {
 import { prefixSaleService } from '../../../../src/constants';
 
 export const esimWarehouseServices = {
-  getEsimWarehouseList: (params: IParamsRequest) => {
+  getEsimWarehouseList: (params: IEsimWarehouseParams) => {
     return safeApiClient.get<IPage<IEsimWarehouseList>>(
       `${prefixSaleService}/esim-manager`,
       {
@@ -24,6 +25,31 @@ export const esimWarehouseServices = {
     return await safeApiClient.get<IEsimWarehouseDetails[]>(
       `${prefixSaleService}/esim-manager/${subId}`
     );
+  },
+
+  getExportReport: async (params: IEsimWarehouseParams) => {
+    const apiParams = {
+      textSearch: params.q,
+      activeStatus: params.activeStatus,
+      pckCode: params.pckCode,
+      subStatus: params.subStatus,
+      orgId: params.orgId,
+    };
+
+    const res = await safeApiClient.post<Blob>(
+      `${prefixSaleService}/esim-manager/export`,
+      null,
+      {
+        params: apiParams,
+        responseType: 'blob',
+      }
+    );
+    if (!res || !res || res.size === 0) {
+      throw new Error(
+        'Không có dữ liệu để xuất báo cáo. Vui lòng kiểm tra lại bộ lọc.'
+      );
+    }
+    return res;
   },
 
   getCustomerInfo: async (subId?: string) => {
@@ -44,6 +70,15 @@ export const esimWarehouseServices = {
         responseType: 'blob',
       }
     );
+    console.log('🚀 ~ ressssssssssssss:', res);
+
+    // if (res instanceof Blob && res.type === 'application/problem+json') {
+    //   // Convert Blob to JSON
+    //   const text = await res.text();
+    //   const jsonError: IErrorResponse = JSON.parse(text);
+    //   console.log('🚀 ~ jsonError:', jsonError);
+    //   throw jsonError; // Throw the parsed JSON error
+    // }
     return res;
   },
   getSendQrCode: async (data: IQrCodeSent) => {
