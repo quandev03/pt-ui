@@ -8,7 +8,7 @@ import {
   TitleHeader,
   validateForm,
 } from '@vissoft-react/common';
-import { Col, Form, Row, Typography } from 'antd';
+import { Col, Form, Row } from 'antd';
 import { useEffect } from 'react';
 import { useGetDebitLimit } from '../../../../../src/hooks/useGetDebitLimit';
 import { ModalOtpMemo } from '../components/ModalOtp';
@@ -67,16 +67,6 @@ export const SingleSalePackageAction = () => {
         initialValues={{
           status: 1,
         }}
-        requiredMark={(label, { required }) => (
-          <>
-            {label}
-            {required && (
-              <Typography.Text type="danger" style={{ marginLeft: 4 }}>
-                *
-              </Typography.Text>
-            )}
-          </>
-        )}
       >
         <div className="bg-white rounded-[10px] px-6 pt-4 pb-8">
           <Row gutter={[30, 0]}>
