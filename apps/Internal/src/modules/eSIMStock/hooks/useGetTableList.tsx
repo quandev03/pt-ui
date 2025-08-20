@@ -17,20 +17,19 @@ import useConfigAppStore from '../../Layouts/stores';
 import {
   ActiveStatusColor,
   ActiveStatusEnum,
-  ActiveStatusOptions,
   IeSIMStockItem,
   SubscriberStatusColor,
 } from '../types';
 
 export const useGetTableList = (
   handleOpenModal: (record: IeSIMStockItem) => void,
-  SUBSCRIBER_SUB_STATUS: IOption[]
+  SUBSCRIBER_SUB_STATUS: IOption[],
+  SUBSCRIBER_ACTIVE_SUB_STATUS: IOption[]
 ): ColumnsType<IeSIMStockItem> => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
-  console.log('SUBSCRIBER_SUB_STATUS', SUBSCRIBER_SUB_STATUS);
   return [
     {
       title: 'STT',
@@ -123,7 +122,8 @@ export const useGetTableList = (
       align: 'left',
       render(value: ActiveStatusEnum) {
         const renderedValue =
-          ActiveStatusOptions.find((item) => item.value === value)?.label || '';
+          SUBSCRIBER_ACTIVE_SUB_STATUS.find((item) => item.code == value)
+            ?.value || '';
 
         return (
           <CTooltip title={renderedValue} placement="topLeft">

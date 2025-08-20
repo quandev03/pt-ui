@@ -13,7 +13,7 @@ import { useGetAllOrganizationUnit } from 'apps/Internal/src/hooks/useGetAllPart
 import useConfigAppStore from '../../../Layouts/stores';
 import { useGetAllPackage, useGeteSIMStock } from '../../hooks';
 import {
-  ActiveStatusOptions,
+  ActiveStatusEnum,
   IeSIMStockItem,
   IeSIMStockParams,
 } from '../../types';
@@ -24,7 +24,7 @@ export const useLogicListeSIMStock = () => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const {
-    params: { SUBSCRIBER_SUB_STATUS = [] },
+    params: { SUBSCRIBER_SUB_STATUS = [], SUBSCRIBER_ACTIVE_SUB_STATUS = [] },
   } = useConfigAppStore();
 
   const { data: listeSIMStock, isLoading: loadingTable } = useGeteSIMStock(
@@ -40,7 +40,8 @@ export const useLogicListeSIMStock = () => {
 
   const columns: ColumnsType<IeSIMStockItem> = useGetTableList(
     handleOpenModal,
-    SUBSCRIBER_SUB_STATUS
+    SUBSCRIBER_SUB_STATUS,
+    SUBSCRIBER_ACTIVE_SUB_STATUS
   );
   const { data: agencyOptions = [] } = useGetAllOrganizationUnit();
   const filters: FilterItemProps[] = useMemo(() => {
@@ -51,10 +52,11 @@ export const useLogicListeSIMStock = () => {
         name: 'pckCode',
         stateKey: 'pckCode',
         showDefault: true,
-        options: listPackage?.map((pkg) => ({
-          label: pkg.pckCode,
-          value: pkg.pckCode + '',
-        })),
+        options:
+          listPackage?.map((pkg) => ({
+            label: pkg.pckCode,
+            value: pkg.pckCode + '',
+          })) || [],
         placeholder: 'Chọn gói cước',
       },
       {
@@ -73,8 +75,13 @@ export const useLogicListeSIMStock = () => {
         name: 'subStatus',
         stateKey: 'subStatus',
         showDefault: true,
-        options: SUBSCRIBER_SUB_STATUS,
+        options:
+          SUBSCRIBER_SUB_STATUS?.map((item) => ({
+            label: item.value,
+            value: item.code + '',
+          })) || [],
         placeholder: 'Trạng thái thuê bao',
+        showSearch: false,
       },
       {
         label: 'Trạng thái chặn cắt',
@@ -82,8 +89,13 @@ export const useLogicListeSIMStock = () => {
         name: 'activeStatus',
         stateKey: 'activeStatus',
         showDefault: true,
-        options: ActiveStatusOptions,
+        options:
+          SUBSCRIBER_ACTIVE_SUB_STATUS?.map((item) => ({
+            label: item.value,
+            value: item.code + '',
+          })) || [],
         placeholder: 'Trạng thái chặn cắt',
+        showSearch: false,
       },
     ];
   }, [listPackage, agencyOptions]);

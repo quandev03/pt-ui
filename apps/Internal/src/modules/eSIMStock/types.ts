@@ -60,13 +60,8 @@ export interface IOrgItem {
 
 export enum ActiveStatusEnum {
   NOT_BLOCKED = 1,
-  BLOCKED_ONE_WAY = 10,
+  BLOCKED_ONE_WAY = 11,
 }
-
-export const ActiveStatusOptions = [
-  { label: 'Bình thường', value: ActiveStatusEnum.NOT_BLOCKED },
-  { label: 'Chặn 1 chiều', value: ActiveStatusEnum.BLOCKED_ONE_WAY },
-];
 
 export const ActiveStatusColor = {
   [ActiveStatusEnum.NOT_BLOCKED]: 'success',
