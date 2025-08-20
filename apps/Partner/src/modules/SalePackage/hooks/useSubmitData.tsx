@@ -18,6 +18,7 @@ export const useSubmitData = (onSuccess: () => void, onError?: () => void) => {
       );
     },
     onSuccess: (data: AnyElement) => {
+      onSuccess && onSuccess();
       NotificationSuccess(data.message || 'Bán gói theo lô thành công!');
     },
     onError: (error: AnyElement) => {

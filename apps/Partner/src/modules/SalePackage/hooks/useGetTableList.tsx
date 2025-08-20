@@ -42,6 +42,9 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
       align: 'left',
       fixed: 'left',
       render(value, record) {
+        if (record.type === 1) {
+          return <RenderCell value={record.isdn} tooltip={record.isdn} />;
+        }
         return (
           <div className="cursor-pointer">
             <Tooltip title={value} placement="topLeft">
@@ -153,21 +156,31 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
       width: 120,
       align: 'left',
       render(_, record) {
-        const renderedValue = (
-          <>
-            <p>Số lượng thành công: {record.succeededNumber}</p>
-            <p>Số lượng thất bại: {record.failedNumber}</p>
-            <p>
-              File kết quả:{' '}
-              <span
-                className="text-blue-600 underline cursor-pointer"
-                onClick={() => handleDownload(record.resultFileUrl)}
-              >
-                File
-              </span>
-            </p>
-          </>
-        );
+        let renderedValue;
+        if (record.type === 1) {
+          renderedValue = (
+            <>
+              <p>Số lượng thành công: {record.succeededNumber}</p>
+              <p>Số lượng thất bại: {record.failedNumber}</p>
+            </>
+          );
+        } else {
+          renderedValue = (
+            <>
+              <p>Số lượng thành công: {record.succeededNumber}</p>
+              <p>Số lượng thất bại: {record.failedNumber}</p>
+              <p>
+                File kết quả:{' '}
+                <span
+                  className="text-blue-600 underline cursor-pointer"
+                  onClick={() => handleDownload(record.resultFileUrl)}
+                >
+                  File
+                </span>
+              </p>
+            </>
+          );
+        }
         return <RenderCell value={renderedValue} />;
       },
     },

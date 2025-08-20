@@ -17,12 +17,17 @@ export const useLogicBulkSalePackageAction = () => {
       setOpenOtp(true);
     }
   );
+  const { mutate: addPackageBulk, isPending: loadingAddBulk } = useSubmitData(
+    () => {
+      handleCancel();
+    }
+  );
+
   const handleCancel = useCallback(() => {
     form.resetFields();
     setOpenOtp(false);
-  }, [form]);
-  const { mutate: addPackageBulk, isPending: loadingAddBulk } =
-    useSubmitData(handleCancel);
+    navigate(-1);
+  }, [form, navigate]);
 
   const handleClose = useCallback(() => navigate(-1), [navigate]);
   const handleCloseOtp = useCallback(() => setOpenOtp(false), []);
@@ -41,7 +46,6 @@ export const useLogicBulkSalePackageAction = () => {
 
       const formData = new FormData();
       formData.append('attachment', file);
-      console.log('🚀 đoạn này gọi được:', file);
 
       checkData(formData);
     },
@@ -51,7 +55,6 @@ export const useLogicBulkSalePackageAction = () => {
   const handleConfirmWithPin = useCallback(
     (pinCode: string) => {
       const validFile = form.getFieldValue('attachment');
-      console.log('valid file và ko: ', validFile);
       const formData = new FormData();
       formData.append('attachment', validFile);
       formData.append('pinCode', pinCode);
