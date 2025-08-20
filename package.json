@@ -7,7 +7,7 @@
     "build:internal": "npx nx run internal:build",
     "start:internal": "npx serve dist/apps/internal -l 3001",
     "partner": "npx nx serve partner",
-    "build:partner": "npx nx run partner:build",
+    "build:partner": "npx nx run partner:build --base-href=/daily/",
     "start:partner": "npx serve dist/apps/partner -l 3000",
     "nx:reset": "npx nx reset",
     "nx:repair": "npx nx repair",
