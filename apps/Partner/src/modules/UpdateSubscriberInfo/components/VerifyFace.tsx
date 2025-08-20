@@ -11,12 +11,14 @@ import imageCompression from 'browser-image-compression';
 import { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import useCamera from '../../../../src/assets/images/userCamera.png';
+import { useCheckFace } from '../hooks';
 import { useCameraStatus } from '../hooks/useCameraStatus';
 import { StyledUpload } from '../pages/styled';
 import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
 import { base64ToFile } from '../utils';
-import { useCheckFace } from '../hooks';
+import ViewImages from './ViewImages';
+import { blobToFile } from '../../../../src/services';
 
 const VerifyFace = () => {
   const form = useFormInstance();
@@ -26,9 +28,13 @@ const VerifyFace = () => {
   const [progressLoading, setProgressLoading] = useState<boolean>(false);
   const { setStep, ocrResponse } = useUpdateSubscriberInfoStore();
   const ImageFileType = ['image/png', 'image/jpeg', 'image/jpg'];
+  const [errMessage, setErrMessage] = useState<string | undefined>();
   const { mutate: checkFace, isPending: loadingCheckFace } = useCheckFace(
     (data) => {
       if (data.status === 1) setStep(StepEnum.STEP4);
+      else {
+        setErrMessage(data.message);
+      }
     }
   );
   const handleCapture = () => {
@@ -40,6 +46,7 @@ const VerifyFace = () => {
   };
   const handleResetImage = () => {
     setImageSrc(null);
+    setErrMessage(undefined);
   };
   const handlePressFile = (unCompressedFile: File) => {
     const options = {
@@ -73,7 +80,7 @@ const VerifyFace = () => {
           errors: [],
         },
       ]);
-      form.setFieldValue('portrait', file);
+      form.setFieldValue('portrait', blobToFile(file, 'portrait.jpg'));
       form.setFieldValue('portraitUrl', url);
       setImageSrc(url);
       setProgressLoading(false);
@@ -137,21 +144,41 @@ const VerifyFace = () => {
   return (
     <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
       <div className="flex items-center flex-col  w-full">
-        <p className="text-lg font-semibold mt-2">Xác thực hộ chiếu</p>
-        <p className={`text-center mb-6 mt-4`}>
-          {imageSrc
-            ? 'Kiểm tra hình ảnh và nhấn '
-            : 'Vui lòng điều chỉnh sao cho khuôn mặt của bạn nằm trong vòng tròn'}
-          <span className="text-[#1062AD]">{imageSrc ? 'Xác nhận' : ''}</span>
-        </p>
-        <div className="w-4/5">
-          <Form.Item name="image">
-            <Spin spinning={progressLoading}>{renderImage()}</Spin>
-          </Form.Item>
-          <Form.Item hidden name="portraitUrl"></Form.Item>
-        </div>
+        <p className="text-lg font-semibold mt-2">Xác thực khuôn mặt</p>
+        {errMessage ? (
+          <p className="text-center text-[#E92429] mb-7 mt-4 font-medium">
+            {errMessage}
+          </p>
+        ) : (
+          <p className={`text-center mb-6 mt-4`}>
+            {imageSrc
+              ? 'Kiểm tra hình ảnh và nhấn '
+              : 'Vui lòng điều chỉnh sao cho khuôn mặt của bạn nằm trong vòng tròn'}
+            <span className="text-[#1062AD]">{imageSrc ? 'Xác nhận' : ''}</span>
+          </p>
+        )}
+        {errMessage ? (
+          <ViewImages />
+        ) : (
+          <div className="w-4/5">
+            <Form.Item name="image">
+              <Spin spinning={progressLoading}>{renderImage()}</Spin>
+            </Form.Item>
+            <Form.Item hidden name="portraitUrl"></Form.Item>
+          </div>
+        )}
       </div>
-      {imageSrc ? (
+      {errMessage ? (
+        <div className="w-full">
+          <CButton
+            className="rounded-full w-full py-6 mb-4 flex-1"
+            onClick={handleResetImage}
+            type="primary"
+          >
+            Chụp lại
+          </CButton>
+        </div>
+      ) : imageSrc ? (
         <div className="flex justify-between gap-5 w-full">
           <CButton
             className="rounded-full w-full py-6 mb-4 flex-1"
@@ -164,7 +191,6 @@ const VerifyFace = () => {
             className="rounded-full w-full py-6 flex-1"
             onClick={handleCheckFace}
             loading={loadingCheckFace}
-            disabled={loadingCheckFace}
           >
             Kiểm tra
           </CButton>

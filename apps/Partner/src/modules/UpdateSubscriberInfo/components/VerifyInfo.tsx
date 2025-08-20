@@ -1,8 +1,7 @@
 import { CButton } from '@vissoft-react/common';
-import useFormInstance from 'antd/es/form/hooks/useFormInstance';
-import { CircleCheckIcon } from 'lucide-react';
 import { useUpdateSubscriberInfoStore } from '../store';
 import { StepEnum } from '../type';
+import ViewImages from './ViewImages';
 
 const VerifyInfo = () => {
   const { ocrResponse } = useUpdateSubscriberInfoStore();
@@ -28,7 +27,6 @@ const VerifyInfo = () => {
   const handleConfirm = () => {
     setStep(StepEnum.STEP5);
   };
-  const form = useFormInstance();
   return (
     <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
       <div className="flex items-center flex-col w-full">
@@ -50,36 +48,7 @@ const VerifyInfo = () => {
         </div>
         <div className="w-full text-[#1A3263] mt-3">
           <p className="text-base font-semibold mb-2">Ảnh xác minh</p>
-          <div className="flex justify-between gap-5">
-            <div className="flex-1">
-              <div className="bg-[#EEF3FE] p-4 rounded-lg relative flex justify-center items-center flex-col">
-                <div>
-                  <img src={form.getFieldValue('passportUrl')} alt="passport" />
-                </div>
-                <CircleCheckIcon
-                  className="absolute -top-[5px] -right-[5px]"
-                  color="#45B38C"
-                />
-              </div>
-              <p className="text-center mt-2">Hộ chiếu</p>
-            </div>
-            <div className="flex-1">
-              <div className="bg-[#EEF3FE] p-4 rounded-lg relative flex justify-center items-center flex-col">
-                <div className="w-[70%] aspect-[4/4] overflow-hidden rounded-full">
-                  <img
-                    src={form.getFieldValue('portraitUrl')}
-                    alt="portrait"
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <CircleCheckIcon
-                  className="absolute -top-[5px] -right-[5px]"
-                  color="#45B38C"
-                />
-              </div>
-              <p className="text-center mt-2">Khuôn mặt</p>
-            </div>
-          </div>
+          <ViewImages isSuccess />
         </div>
         <CButton
           className="rounded-full py-6 w-full mt-3"

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import {
   useCreateProductAuthorization,
   useGetProductAuthorization,
-} from '../queryHooks';
+} from '../hook';
 import usePartnerStore from '../stores';
 import ProductAuthorizationItem from './ProductAuthorizationItem';
 

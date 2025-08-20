@@ -24,7 +24,7 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
   const handleAction = (action: IModeAction, record: IFreeEsimBooking) => {
     switch (action) {
       case IModeAction.READ: {
-        const toView = pathRoutes.freeEsimBookingView;
+        const toView = pathRoutes.buyBundleWithEsimView;
         if (typeof toView === 'function') {
           navigate(toView(record.id));
         }
@@ -60,12 +60,26 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
     },
     {
       title: 'Gói cước',
-      dataIndex: 'pckCode',
-      width: 200,
+      dataIndex: 'packageCodes',
+      width: 150,
       align: 'left',
       fixed: 'left',
       render(value, record) {
         return <RenderCell value={value} tooltip={value} />;
+      },
+    },
+    {
+      title: 'Tổng tiền gói cước',
+      dataIndex: 'amountTotal',
+      width: 150,
+      align: 'left',
+      render(value, record) {
+        if (value === null || value === undefined) {
+          return <RenderCell value="-" tooltip="-" />;
+        }
+        const formattedValue = `${Number(value).toLocaleString('vi-VN')} ₫`;
+
+        return <RenderCell value={formattedValue} tooltip={formattedValue} />;
       },
     },
     {
@@ -89,7 +103,7 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
     },
     {
       title: 'Thời gian hoàn thành',
-      dataIndex: 'finishedDate',
+      dataIndex: 'orderDate',
       width: 200,
       align: 'left',
       render(value) {
@@ -128,21 +142,26 @@ export const useGetTableFreeEsimBooking = (): ColumnsType<IFreeEsimBooking> => {
       width: 230,
       align: 'left',
       render(value, record) {
-        return (
-          <RenderCell
-            value={
-              <div>
-                <div>Số lượng thành công: {record.succeededNumber}</div>
-                <div>Số lượng thất bại: {record.failedNumber}</div>
-              </div>
-            }
-            tooltip={`Số lượng thành công: ${record.succeededNumber}\nSố lượng thất bại: ${record.failedNumber}`}
-          />
+        const cellContent = (
+          <div>
+            <div>Số lượng thành công: {record.successedNumber}</div>
+            <div>Số lượng thất bại: {record.failedNumber}</div>
+          </div>
         );
+
+        const tooltipContent = (
+          <span>
+            {`Số lượng thành công: ${record.successedNumber}`}
+            <br />
+            {`Số lượng thất bại: ${record.failedNumber}`}
+          </span>
+        );
+
+        return <RenderCell value={cellContent} tooltip={tooltipContent} />;
       },
     },
     {
-      title: 'Hành động',
+      title: 'Thao tác',
       align: 'center',
       width: 150,
       fixed: 'right',

@@ -10,17 +10,17 @@ const freeEsimBookingRoutes: RouteObject[] = [
     },
   },
   {
-    path: pathRoutes.freeEsimBookingAdd,
+    path: pathRoutes.buyBundleWithEsimAdd,
     lazy: async () => {
-      const { ActionFreeEsim } = await import('./pages');
-      return { Component: ActionFreeEsim };
+      const { ActionPackagedEsim } = await import('./pages');
+      return { Component: ActionPackagedEsim };
     },
   },
   {
-    path: pathRoutes.freeEsimBookingView(),
+    path: pathRoutes.buyBundleWithEsimView(),
     lazy: async () => {
-      const { ActionFreeEsim } = await import('./pages');
-      return { Component: ActionFreeEsim };
+      const { ActionPackagedEsim } = await import('./pages');
+      return { Component: ActionPackagedEsim };
     },
   },
 ];

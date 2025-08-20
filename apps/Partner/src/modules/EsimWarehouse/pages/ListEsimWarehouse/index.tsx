@@ -4,7 +4,6 @@ import { useLogicListEsimWarehouse } from './useLogicListEsimWarehouse';
 import { EsimWarehouseDetails } from '../../components/esimWarehouseDetails';
 import { GenQrPopup } from '../../components/genQrPopup';
 import { SendQrPopup } from '../../components/sendQrPopup';
-
 export const ListEsimWarehouse = memo(() => {
   const {
     columns,
@@ -16,9 +15,12 @@ export const ListEsimWarehouse = memo(() => {
     isGenQrModalOpen,
     isSendQrModalOpen,
     handleCloseSendQr,
-    handleCloseGenQr,
     handleCloseModal,
+    handleCloseGenQrModal,
+    genQrCodeInProcess,
+    qrCodeUrl,
   } = useLogicListEsimWarehouse();
+
   return (
     <>
       <LayoutList
@@ -29,7 +31,7 @@ export const ListEsimWarehouse = memo(() => {
         loading={loadingEsimList}
         searchComponent={
           <LayoutList.SearchComponent
-            name="q"
+            name="textSearch"
             tooltip="Nhập STB, serial, mã đơn hàng"
             placeholder="Nhập STB, serial, mã đơn hàng"
           />
@@ -42,9 +44,12 @@ export const ListEsimWarehouse = memo(() => {
       />
       <GenQrPopup
         open={isGenQrModalOpen}
-        onCancel={handleCloseGenQr}
+        onCancel={handleCloseGenQrModal}
         record={selectedRecord}
+        loading={genQrCodeInProcess}
+        qrCodeUrl={qrCodeUrl}
       />
+
       <SendQrPopup
         open={isSendQrModalOpen}
         onCancel={handleCloseSendQr}

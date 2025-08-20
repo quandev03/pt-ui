@@ -47,27 +47,29 @@ export const useGetPreviewND13 = (onSuccess?: (data: string) => void) => {
     },
   });
 };
+export const useCheckSignedContract = (
+  onSuccess?: (data: AnyElement) => void
+) => {
+  return useMutation({
+    mutationFn: UpdateSubscriberInfo.checkSignedContract,
+    onSuccess(data) {
+      if (onSuccess) onSuccess(data);
+    },
+  });
+};
 export const useGenContract = (onSuccess?: () => void) => {
   return useMutation({
     mutationFn: UpdateSubscriberInfo.gencontract,
     onSuccess: () => {
       onSuccess?.();
-      // const link = `${baseSignUrl || window.location.origin}/#/`;
-      // form.setFieldValue('signLink', link);
-      // window.open(link, '_blank', 'top=200,left=500,width=600,height=600');
-      // form.setFieldValue('contractId', id);
-      // const interval = setInterval(() => {
-      //   mutateSigningChecker({
-      //     contractId: id,
-      //     key: TypePDF.HD,
-      //     timeStampContract,
-      //   });
-      // }, 5000);
-      // if (isSignSuccess) {
-      //   clearInterval(interval);
-      // } else {
-      //   setIntervalApi(interval);
-      // }
+    },
+  });
+};
+export const useSubmitInfo = (onSuccess?: (data: AnyElement) => void) => {
+  return useMutation({
+    mutationFn: UpdateSubscriberInfo.submit,
+    onSuccess(data) {
+      if (onSuccess) onSuccess(data);
     },
   });
 };

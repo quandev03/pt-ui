@@ -34,7 +34,7 @@ import {
   useGetAllPartnerRoles,
   useGetOrganizationUserDetail,
   useUpdatePartnerUser,
-} from '../queryHooks';
+} from '../hook';
 
 export const ActionUserPartnerCatalog = () => {
   const [isSubmitBack, setIsSubmitBack] = useState(false);
@@ -181,16 +181,12 @@ export const ActionUserPartnerCatalog = () => {
                         }
 
                         const trimmed = value.trim();
-                        const wordList = trimmed.split(/\s+/);
-                        if (wordList.length < 2 || wordList.length > 5) {
-                          return Promise.reject(
-                            'Vui lòng nhập tối thiểu 2 từ và tối đa 5 từ'
-                          );
-                        }
 
                         const onlyLetters = /^[A-Za-zÀ-ỹ\s]+$/u;
                         if (!onlyLetters.test(trimmed)) {
-                          return Promise.reject('Chỉ được phép nhập chữ cái');
+                          return Promise.reject(
+                            'Họ và tên không đúng định dạng'
+                          );
                         }
 
                         return Promise.resolve();
@@ -222,11 +218,7 @@ export const ActionUserPartnerCatalog = () => {
 
                       form.setFieldValue('fullname', formatted);
                     }}
-                    onKeyPress={(e) => {
-                      if (e.key === ',') {
-                        e.preventDefault();
-                      }
-                    }}
+                    preventNumber
                   />
                 </Form.Item>
               </Col>

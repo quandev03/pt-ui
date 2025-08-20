@@ -13,18 +13,22 @@ export const globalService = {
     try {
       const profilePromise = globalService.getProfile();
       const menuPromise = globalService.getMenu();
-      const [profile, menuData] = await Promise.all([
+      const paramsPromise = globalService.getParamsOption();
+      const [profile, menuData, paramsData] = await Promise.all([
         profilePromise,
         menuPromise,
+        paramsPromise,
       ]);
       return {
         profile,
         menus: menuData,
+        params: paramsData,
       };
     } catch {
       return {
         profile: {} as IUserInfo,
         menus: [],
+        params: {},
       };
     }
   },

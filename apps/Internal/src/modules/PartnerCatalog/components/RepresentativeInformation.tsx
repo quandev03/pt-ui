@@ -18,7 +18,7 @@ import { RcFile } from 'antd/es/upload';
 import dayjs from 'dayjs';
 import { RotateCcw } from 'lucide-react';
 import { FocusEvent, useCallback, useEffect, useMemo, useRef } from 'react';
-import { useGetCCCDInfo } from '../queryHooks';
+import { useGetCCCDInfo } from '../hook';
 import usePartnerStore from '../stores';
 import { ChildRef } from '../types';
 import FileUpload from './FileUpload';

@@ -19,6 +19,8 @@ export const FormItemSelect = ({
         <CSelect
           {...props}
           allowClear={props.defaultValue ? false : props.allowClear}
+          onPopupScroll={props.onPopupScroll}
+          onSearch={props.onSearch}
         />
       </Form.Item>
     </Tooltip>

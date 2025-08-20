@@ -1,20 +1,44 @@
+import { AnyElement } from '@vissoft-react/common';
+
 export interface IFreeEsimBooking {
-  id: string;
-  quantity: number;
-  pckCode: string;
+  amountTotal: number;
+  cancelReason: string;
   createdBy: string;
   createdDate: string;
-  finishedDate: string;
-  status: number;
-  succeededNumber: string;
-  failedNumber: string;
+  customerEmail: string;
+  description: string;
+  failedNumber: number;
+  id: string;
+  modifiedBy: string;
+  modifiedDate: string;
+  note: string;
+  orderDate: string;
+  orderNo: AnyElement;
+  orderType: number;
+  orgId: string;
+  packageCodes: string;
+  quantity: number;
+  reasonId: string;
+  successedNumber: number;
 }
 
 export interface IBookFreeEsim {
   id?: string;
   quantity: number;
   pckCode: string[];
+  note: string;
 }
+interface IPackageRequest {
+  id?: string;
+  quantity: number;
+  packageCode: string;
+}
+
+export interface IBookFreeEsimPayload {
+  requests: IPackageRequest[];
+  note: string;
+}
+
 export interface IPackage {
   createdBy: string;
   createdDate: string;
@@ -27,4 +51,15 @@ export interface IPackage {
   pckName: string;
   status: number;
   urlImagePackage: string;
+}
+
+export interface ISaleOrderLine {
+  id: string;
+  pckCode: string;
+  quantity: number;
+}
+
+export interface IBookEsimDetails {
+  saleOrderLines: ISaleOrderLine[];
+  note: string;
 }

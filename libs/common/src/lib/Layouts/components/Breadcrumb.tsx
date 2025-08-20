@@ -29,6 +29,10 @@ const specialPaths = [
     key: 'user-management',
     label: 'Danh sách user',
   },
+  {
+    key: 'profile',
+    label: 'Thông tin tài khoản',
+  },
 ];
 
 interface IBreadcrumbComponentProps {
@@ -94,7 +98,8 @@ export const BreadcrumbComponent: React.FC<IBreadcrumbComponentProps> = memo(
               to={itemInMenus.key}
               className="!flex items-center gap-1 text-sm"
             >
-              {itemInMenus.icon ? itemInMenus.icon : null} {itemInMenus.label}
+              {/* {itemInMenus.icon ? itemInMenus.icon : null} {itemInMenus.label} */}
+              {itemInMenus.label}
             </Link>
           ) : (
             itemInMenus.label

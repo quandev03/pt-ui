@@ -2,7 +2,9 @@ import {
   decodeSearchParams,
   FilterItemProps,
   formatQueryParams,
+  IErrorResponse,
   IParamsRequest,
+  NotificationError,
 } from '@vissoft-react/common';
 import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -18,29 +20,22 @@ import {
   Status900Enum,
   status900Map,
 } from '../../constants/enum';
+import { useGetGenQrCode } from '../../hooks/useGetGenQrCode';
+import { useGetAgencyOptions } from '../../../../hooks/useGetAgencyOptions';
 
-// No props are needed here. The hook will manage its own state.
 export const useLogicListEsimWarehouse = () => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const { data: esimList, isLoading: loadingEsimList } =
     useGetEsimWarehouseList(formatQueryParams<IParamsRequest>(params));
+  const { data: agencyOptions = [] } = useGetAgencyOptions();
 
-  // --- State for Modals and selected data ---
   const [selectedRecord, setSelectedRecord] =
     useState<IEsimWarehouseList | null>(null);
   const [showEsimDetails, setShowEsimDetails] = useState(false);
   const [isGenQrModalOpen, setGenQrModalOpen] = useState(false);
   const [isSendQrModalOpen, setSendQrModalOpen] = useState(false);
-
-  const handleOpenGenQr = useCallback((record: IEsimWarehouseList) => {
-    setSelectedRecord(record);
-    setGenQrModalOpen(true);
-  }, []);
-
-  const handleCloseGenQr = useCallback(() => {
-    setGenQrModalOpen(false);
-  }, []);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
 
   const handleOpenSendQr = useCallback((record: IEsimWarehouseList) => {
     setSelectedRecord(record);
@@ -58,9 +53,42 @@ export const useLogicListEsimWarehouse = () => {
     setShowEsimDetails(false);
   }, []);
 
+  const onGenQrSuccess = (imageBlob: Blob) => {
+    const url = URL.createObjectURL(imageBlob);
+    setQrCodeUrl(url);
+    setGenQrModalOpen(true);
+  };
+
+  const { mutate: genQrCode, isPending: genQrCodeInProcess } =
+    useGetGenQrCode(onGenQrSuccess);
+
+  const handleOpenGenQrModal = useCallback(
+    (record: IEsimWarehouseList) => {
+      if (qrCodeUrl) {
+        URL.revokeObjectURL(qrCodeUrl);
+        setQrCodeUrl(null);
+      }
+      setSelectedRecord(record);
+      genQrCode({
+        subId: record.subId,
+        size: '200x200',
+      });
+    },
+    [genQrCode, qrCodeUrl]
+  );
+
+  const handleCloseGenQrModal = useCallback(() => {
+    setGenQrModalOpen(false);
+    setSelectedRecord(null);
+    if (qrCodeUrl) {
+      URL.revokeObjectURL(qrCodeUrl);
+      setQrCodeUrl(null);
+    }
+  }, [qrCodeUrl]);
+
   const columns: ColumnsType<IEsimWarehouseList> = useColumnsEsimWarehouseList({
     onSendQr: handleOpenSendQr,
-    onGenQr: handleOpenGenQr,
+    onGenQr: handleOpenGenQrModal,
     onViewDetails: handleShowDetails,
   });
   const { data: packageCodeList } = useGetPackageCodes();
@@ -79,58 +107,38 @@ export const useLogicListEsimWarehouse = () => {
   const subStatusOptions: DefaultOptionType[] = useMemo(
     () => [
       {
-        value: Status900Enum.NOT_CALLED,
-        label: status900Map[Status900Enum.NOT_CALLED].text,
+        value: String(Status900Enum.IN_STORE),
+        label: status900Map[Status900Enum.IN_STORE].text,
       },
       {
-        value: Status900Enum.CALLED,
+        value: String(Status900Enum.SOLD),
+        label: status900Map[Status900Enum.SOLD].text,
+      },
+      {
+        value: String(Status900Enum.CALLED),
         label: status900Map[Status900Enum.CALLED].text,
+      },
+      {
+        value: String(Status900Enum.INFO_UPDATED),
+        label: status900Map[Status900Enum.INFO_UPDATED].text,
       },
     ],
     []
-  );
-  console.log(
-    '🚀 ~ useLogicListEsimWarehouse ~ subStatusOptions:',
-    subStatusOptions
   );
 
   const activeStatusOptions: DefaultOptionType[] = useMemo(
     () => [
       {
-        value: ActiveStatusEnum.NORMAL,
+        value: String(ActiveStatusEnum.NORMAL),
         label: activeStatusMap[ActiveStatusEnum.NORMAL].text,
       },
       {
-        value: ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST,
+        value: String(ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST),
         label:
           activeStatusMap[ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST].text,
       },
-      {
-        value: ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_PROVIDER,
-        label:
-          activeStatusMap[ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_PROVIDER].text,
-      },
-      {
-        value: ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_REQUEST,
-        label:
-          activeStatusMap[ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_REQUEST].text,
-      },
-      {
-        value: ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_PROVIDER,
-        label:
-          activeStatusMap[ActiveStatusEnum.TWO_WAY_CALL_BLOCK_BY_PROVIDER].text,
-      },
     ],
     []
-  );
-  console.log(
-    '🚀 ~ useLogicListEsimWarehouse ~ activeStatusOptions:',
-    activeStatusOptions
-  );
-
-  console.log(
-    '🚀 ~ useLogicListEsimWarehouse ~ packageOptions:',
-    packageOptions
   );
 
   const filters: FilterItemProps[] = useMemo(() => {
@@ -141,6 +149,13 @@ export const useLogicListEsimWarehouse = () => {
         label: 'Chọn gói cước',
         placeholder: 'Chọn gói cước',
         options: packageOptions,
+      },
+      {
+        type: 'TreeSelect',
+        name: 'orgCode',
+        label: 'Đại lý',
+        placeholder: 'Đại lý',
+        treeData: agencyOptions,
       },
       {
         type: 'Select',
@@ -157,7 +172,8 @@ export const useLogicListEsimWarehouse = () => {
         options: activeStatusOptions,
       },
     ];
-  }, [activeStatusOptions, packageOptions, subStatusOptions]);
+  }, [activeStatusOptions, agencyOptions, packageOptions, subStatusOptions]);
+
   return {
     columns,
     filters,
@@ -168,7 +184,11 @@ export const useLogicListEsimWarehouse = () => {
     isGenQrModalOpen,
     isSendQrModalOpen,
     handleCloseSendQr,
-    handleCloseGenQr,
     handleCloseModal,
+    genQrCodeInProcess,
+    onGenQrSuccess,
+    handleCloseGenQrModal,
+    genQrCode,
+    qrCodeUrl,
   };
 };

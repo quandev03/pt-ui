@@ -2,8 +2,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   IErrorResponse,
   IFieldErrorsItem,
+  NotificationError,
   NotificationSuccess,
 } from '@vissoft-react/common';
+import { IBookFreeEsimPayload } from '../types';
 import { freeEsimBookingServices } from '../services';
 import { REACT_QUERY_KEYS } from '../../../../constants/query-key';
 
@@ -13,9 +15,11 @@ export const useBookFreeEsim = (
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: freeEsimBookingServices.getBookEsimFree,
+    // Add the type here for clarity and safety
+    mutationFn: (data: IBookFreeEsimPayload) =>
+      freeEsimBookingServices.getBookEsimFree(data),
     onSuccess: () => {
-      NotificationSuccess('Book mới thành công!');
+      NotificationSuccess('Hệ thống đang thực hiện book eSIM miễn phí!');
       queryClient.invalidateQueries({
         queryKey: [REACT_QUERY_KEYS.BOOK_NEW_ESIM],
       });
@@ -23,6 +27,10 @@ export const useBookFreeEsim = (
     },
     onError(error: IErrorResponse & { fieldErrors?: IFieldErrorsItem[] }) {
       if (error?.errors) {
+        const errorMessage =
+          error?.detail || 'Có lỗi xảy ra khi book eSIM miễn phí!';
+
+        NotificationError({ message: errorMessage });
         onError(error?.errors);
       }
     },

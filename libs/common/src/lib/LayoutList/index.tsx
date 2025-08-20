@@ -88,7 +88,6 @@ function LayoutListComponent<T = unknown>({
                 wrapperManagerRef,
                 filterManagerRef,
               }}
-              scroll={{ x: 'max-content' }}
               expandable={expandable}
             />
           </div>
