@@ -11,9 +11,16 @@ import { useSearchParams } from 'react-router-dom';
 import { IPackageSaleItem } from '../types';
 import { useGetFileDownloadFn } from './useDownloadFile';
 import { Tooltip } from 'antd';
+import { ProcessingStatusEnum } from '../constants/enum';
+import { useGetParamsOption } from '../../../hooks/useGetParamsOption';
 
 export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
   const { mutate: getFileDownload } = useGetFileDownloadFn();
+  const { data: getParamsBatchSales } = useGetParamsOption();
+
+  const getParamsBatchSalesOptions =
+    getParamsBatchSales?.BATCH_PACKAGE_SALE_TYPE || [];
+
   const handleDownload = (url: string) => {
     getFileDownload(url);
   };
@@ -66,13 +73,10 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
       align: 'left',
       fixed: 'left',
       render(value) {
-        let displayText = 'Không xác định'; // Default text
-
-        if (value === 1) {
-          displayText = 'Đơn lẻ';
-        } else if (value === 2) {
-          displayText = 'Theo lô';
-        }
+        const matchingOption = getParamsBatchSalesOptions.find(
+          (option) => option.code === String(value)
+        );
+        const displayText = matchingOption?.value || '';
 
         return <RenderCell value={displayText} tooltip={displayText} />;
       },
@@ -135,7 +139,7 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
         let displayText = '';
         let textColor = '';
 
-        if (value === 2) {
+        if (value === ProcessingStatusEnum.COMPLETED) {
           displayText = 'Hoàn thành';
           textColor = '#178801';
         } else {
