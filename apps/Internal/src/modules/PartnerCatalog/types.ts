@@ -281,6 +281,9 @@ export interface IPartner {
   representative: string;
   status: number | string;
   orgDescription?: string;
+  clientId?: string;
+  provinceCode: string;
+  parentCode: string;
 }
 export interface IRoleItem {
   code: string;
@@ -289,6 +292,6 @@ export interface IRoleItem {
   status: number;
 }
 export interface IAssignPackagePayload {
-  id: string | number;
-  packageIds: string[];
+  clientId: string | number;
+  packageCodes: string[];
 }

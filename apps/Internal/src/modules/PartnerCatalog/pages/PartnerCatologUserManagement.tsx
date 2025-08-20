@@ -10,7 +10,7 @@ import {
 import { pathRoutes } from '../../../routers/url';
 
 import { ColumnsType } from 'antd/es/table';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   useNavigate,
   useNavigation,
@@ -19,18 +19,20 @@ import {
 } from 'react-router-dom';
 
 import useConfigAppStore from '../../Layouts/stores';
-import { useGetDetailByCode, useGetOrganizationUsersByOrgCode } from '../hook';
+import { useGetOrganizationUsersByOrgCode } from '../hook';
 import { useColumnsTableUserManagement } from '../hook/useColumnsTableUserManagement';
 import { IUserPartnerCatalog } from '../types';
 
 export const PartnerCatalogUserManagement = () => {
   const { menuData } = useConfigAppStore();
   const permissions = usePermissions(menuData);
+  const [searchParams] = useSearchParams();
+  const params = decodeSearchParams(searchParams);
   const { orgCode } = useParams<{ orgCode: string }>();
-
-  const { data: detailPartner } = useGetDetailByCode(orgCode ?? '');
-
+  const [orgName] = useState(params.orgName);
   const filtersItem: FilterItemProps[] = useMemo(() => {
+    const isLong = orgName?.length > 17;
+    const displayOrgName = isLong ? orgName.slice(0, 17) + '...' : orgName;
     return [
       {
         type: 'Select',
@@ -50,18 +52,16 @@ export const PartnerCatalogUserManagement = () => {
       },
       {
         type: 'Input',
-        name: 'orgName',
+        name: 'name',
         label: 'Đối tác',
         disabled: true,
         showDefault: true,
-        tooltip: detailPartner?.orgName,
-        defaultValue: detailPartner?.orgName,
-        value: detailPartner?.orgName,
+        tooltip: orgName,
+        defaultValue: displayOrgName,
+        value: displayOrgName,
       },
     ];
-  }, [detailPartner?.orgName]);
-  const [searchParams] = useSearchParams();
-  const params = decodeSearchParams(searchParams);
+  }, [orgName]);
   const { filters, requestTime, ...rest } = params;
 
   const { data: listUser, isLoading } = useGetOrganizationUsersByOrgCode(

@@ -191,8 +191,13 @@ export const PartnerCatalogService = {
   },
   assignPackagePermission: (payload: IAssignPackagePayload) => {
     return safeApiClient.post(
-      `${prefixSaleService}/organization-partner/assign-package`,
+      `${prefixSaleService}/organization-partner/packages`,
       payload
+    );
+  },
+  getAssignedPackages: (clientId: string) => {
+    return safeApiClient.get<AnyElement>(
+      `${prefixSaleService}/organization-partner/${clientId}/packages`
     );
   },
 };

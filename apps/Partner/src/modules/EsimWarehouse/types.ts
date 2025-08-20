@@ -1,15 +1,16 @@
 export interface IEsimWarehouseList {
+  activeStatus: number;
+  genQrBy: string;
   isdn: number;
-  serial: string;
-  packCode: string;
+  modifiedDate: string;
   orderNo: string;
   orgCode: string;
   orgName: string;
+  packCode: string;
+  serial: string;
   status: number;
   status900: number;
-  activeStatus: number;
-  modifiedDate: string;
-  genQrBy: string;
+  statusSub: number;
   subId: string;
 }
 
@@ -38,17 +39,19 @@ export interface IQrCodeGen {
   size: string;
 }
 
-export interface IPackage {
+export type IGetPackageCodes = IGetPackageCodesItems[];
+
+export interface IGetPackageCodesItems {
   createdBy: string;
   createdDate: string;
-  description: string;
-  id: string;
   modifiedBy: string;
   modifiedDate: string;
-  packagePrice: number;
+  id: string;
   pckCode: string;
   pckName: string;
+  packagePrice: number;
   status: number;
+  description: string;
   urlImagePackage: string;
 }
 
