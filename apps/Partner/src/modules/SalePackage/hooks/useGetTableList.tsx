@@ -12,14 +12,9 @@ import { IPackageSaleItem } from '../types';
 import { useGetFileDownloadFn } from './useDownloadFile';
 import { Tooltip } from 'antd';
 import { ProcessingStatusEnum, SalePackageTypeEnum } from '../constants/enum';
-import { useGetParamsOption } from '../../../hooks/useGetParamsOption';
 
 export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
   const { mutate: getFileDownload } = useGetFileDownloadFn();
-  const { data: getParamsBatchSales } = useGetParamsOption();
-
-  const getParamsBatchSalesOptions =
-    getParamsBatchSales?.BATCH_PACKAGE_SALE_TYPE || [];
 
   const handleDownload = (url: string) => {
     getFileDownload(url);
@@ -160,29 +155,21 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
     },
     {
       title: 'Kết quả',
-      width: 120,
+      width: 140,
       align: 'left',
       render(_, record) {
         let renderedValue;
-        if (
-          getParamsBatchSalesOptions.some(
-            (option) => option.code === String(SalePackageTypeEnum.SINGLE_SALE)
-          )
-        ) {
+        if (record.type === SalePackageTypeEnum.SINGLE_SALE) {
           renderedValue = (
-            <>
+            <div className="my-2">
               <p>Số lượng thành công: {record.succeededNumber}</p>
               <p>Số lượng thất bại: {record.failedNumber}</p>
-            </>
+            </div>
           );
         }
-        if (
-          getParamsBatchSalesOptions.some(
-            (option) => option.code === String(SalePackageTypeEnum.BATCH_SALE)
-          )
-        ) {
+        if (record.type === SalePackageTypeEnum.BATCH_SALE) {
           renderedValue = (
-            <>
+            <div className="my-2">
               <p>Số lượng thành công: {record.succeededNumber}</p>
               <p>Số lượng thất bại: {record.failedNumber}</p>
               <p>
@@ -194,7 +181,7 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
                   File
                 </span>
               </p>
-            </>
+            </div>
           );
         }
         return <RenderCell value={renderedValue} />;
