@@ -46,8 +46,8 @@ export const GOOGLE_CLIENT_ID =
 export const LOADER_INIT_KEY = 'app_loader_initialized';
 export const versionApi = '/v1';
 
-export const prefixAuthService = 'hvn-admin-service/public';
-export const prefixSaleService = 'hvn-sale-service/public/api' + versionApi;
+export const prefixAuthService = 'hivn-admin-service/public';
+export const prefixSaleService = 'hivn-sale-service/public/api' + versionApi;
 
 export const STATUS_OPTIONS = [
   {
