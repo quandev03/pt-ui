@@ -6,12 +6,12 @@ import { resolve } from 'path';
 
 export default defineConfig({
   root: __dirname,
-  // base: '/daily/',
+  base: '/daily/',
   cacheDir: '../../node_modules/.vite/apps/partner',
 
   server: {
     port: 4201,
-    host: 'localhost',
+    host: '0.0.0.0',
     strictPort: true,
     fs: {
       allow: ['..'],
