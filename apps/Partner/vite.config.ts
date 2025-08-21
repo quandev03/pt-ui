@@ -10,13 +10,18 @@ export default defineConfig({
   cacheDir: '../../node_modules/.vite/apps/partner',
 
   server: {
-    port: 4200,
+    port: 4201,
     host: 'localhost',
+    strictPort: true,
+    fs: {
+      allow: ['..'],
+    },
   },
 
   preview: {
-    port: 4300,
+    port: 4301,
     host: 'localhost',
+    strictPort: true,
   },
 
   plugins: [react(), nxViteTsPaths()],
@@ -38,6 +43,11 @@ export default defineConfig({
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
     },
   },
 

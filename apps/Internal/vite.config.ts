@@ -12,11 +12,16 @@ export default defineConfig({
   server: {
     port: 4200,
     host: 'localhost',
+    strictPort: true,
+    fs: {
+      allow: ['..'],
+    },
   },
 
   preview: {
     port: 4300,
     host: 'localhost',
+    strictPort: true,
   },
 
   plugins: [react(), nxViteTsPaths()],
@@ -39,6 +44,11 @@ export default defineConfig({
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
     },
   },
 
