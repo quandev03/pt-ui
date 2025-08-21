@@ -6,16 +6,11 @@ import ViewImages from './ViewImages';
 const VerifyInfo = () => {
   const { ocrResponse } = useUpdateSubscriberInfoStore();
   const customerInfo = [
-    { label: 'Loại giấy tờ', value: 'Passport' },
+    { label: 'Loại giấy tờ', value: 'Hộ chiếu' },
     { label: 'Họ và tên', value: ocrResponse?.ocrData.fullname || '' },
     {
       label: 'Giới tính',
-      value:
-        ocrResponse?.ocrData.gender === 'Female'
-          ? 'Nữ'
-          : ocrResponse?.ocrData.gender === 'Male'
-          ? 'Nam'
-          : '',
+      value: ocrResponse?.ocrData.gender || '',
     },
     { label: 'Ngày sinh', value: ocrResponse?.ocrData.dob || '' },
     { label: 'Số hộ chiếu', value: ocrResponse?.ocrData.idNumber || '' },
