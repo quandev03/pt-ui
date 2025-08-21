@@ -16,7 +16,7 @@ export default defineConfig({
     fs: {
       allow: ['..'],
     },
-    allowedHosts: ['*']
+    allowedHosts: ['hivn.mobifone.vn']
   },
 
   preview: {
