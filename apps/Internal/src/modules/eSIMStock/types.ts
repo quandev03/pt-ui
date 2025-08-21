@@ -79,6 +79,7 @@ export interface ICustomerInfo {
   issuePlace: string | null;
   nationality: string | null;
   typeDocument: string | null;
+  issueDate: string | null;
 }
 export enum GenderEnum {
   MALE = 0,

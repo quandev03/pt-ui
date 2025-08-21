@@ -111,7 +111,7 @@ export const useLogicListeSIMStock = () => {
     exportFile({
       params: rest,
       url: `${prefixSaleService}/esim-manager/export`,
-      filename: `Danh_sach_esim_${dayjs().format(formatDateExport)}`,
+      filename: `Danh_sach_esim_${dayjs().format(formatDateExport)}.xlsx`,
     });
   };
   const actionComponent = useMemo(() => {

@@ -1,4 +1,10 @@
-import { CDatePicker, CInput, CModal, CTable } from '@vissoft-react/common';
+import {
+  CDatePicker,
+  CInput,
+  CModal,
+  CTable,
+  formatDate,
+} from '@vissoft-react/common';
 import { Col, Form, Row } from 'antd';
 import { memo } from 'react';
 import { useLogicActioneSIMStock } from './useLogicActioneSIMStock';
@@ -65,8 +71,9 @@ export const ActioneSIMStock = memo(({ openModal, onClose, id }: Props) => {
               <Form.Item label="Ngày sinh" name="birthOfDate">
                 <CDatePicker
                   disabled={true}
-                  format="DD/MM/YYYY"
+                  format={formatDate}
                   className="w-full"
+                  placeholder=""
                 />
               </Form.Item>
             </Col>
@@ -79,8 +86,9 @@ export const ActioneSIMStock = memo(({ openModal, onClose, id }: Props) => {
               <Form.Item label="Ngày cấp" name="issueDate">
                 <CDatePicker
                   disabled={true}
-                  format="DD/MM/YYYY"
+                  format={formatDate}
                   className="w-full"
+                  placeholder=""
                 />
               </Form.Item>
             </Col>
@@ -90,6 +98,7 @@ export const ActioneSIMStock = memo(({ openModal, onClose, id }: Props) => {
                   disabled={true}
                   format="DD/MM/YYYY"
                   className="w-full"
+                  placeholder=""
                 />
               </Form.Item>
             </Col>

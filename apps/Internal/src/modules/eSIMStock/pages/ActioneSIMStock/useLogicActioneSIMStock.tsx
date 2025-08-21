@@ -4,6 +4,7 @@ import { useGetCustomerInfo, useGetDetaileSIMStock } from '../../hooks';
 import { useGetTableDetail } from '../../hooks/useGetTableDetail';
 import { Form } from 'antd';
 import { useEffect } from 'react';
+import dayjs from 'dayjs';
 
 export const useLogicActioneSIMStock = (id: string) => {
   const { data: listeSIMDetail, isLoading: loadingTable } =
@@ -22,6 +23,14 @@ export const useLogicActioneSIMStock = (id: string) => {
             : GenderEnum.FEMALE
             ? 'Nữ'
             : '',
+        issueDate: customerInfo.issueDate ? dayjs(customerInfo.issueDate) : '',
+        birthOfDate: customerInfo.birthOfDate
+          ? dayjs(customerInfo.birthOfDate)
+          : '',
+        idNoExpireDate: customerInfo.idNoExpireDate
+          ? dayjs(customerInfo.idNoExpireDate)
+          : '',
+        typeDocument: 'Hộ chiếu',
       });
     }
   }, [customerInfo, form]);
