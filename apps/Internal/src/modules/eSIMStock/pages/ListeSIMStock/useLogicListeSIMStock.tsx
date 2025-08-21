@@ -4,19 +4,23 @@ import { useSearchParams } from 'react-router-dom';
 import { useGetTableList } from '../../hooks/useGetTableList';
 
 import {
+  CButtonExport,
   decodeSearchParams,
   FilterItemProps,
+  formatDate,
+  formatDateExport,
   formatQueryParams,
+  IModeAction,
+  usePermissions,
 } from '@vissoft-react/common';
 import { ColumnsType } from 'antd/es/table';
 import { useGetAllOrganizationUnit } from 'apps/Internal/src/hooks/useGetAllPartners';
 import useConfigAppStore from '../../../Layouts/stores';
 import { useGetAllPackage, useGeteSIMStock } from '../../hooks';
-import {
-  ActiveStatusEnum,
-  IeSIMStockItem,
-  IeSIMStockParams,
-} from '../../types';
+import { IeSIMStockItem, IeSIMStockParams } from '../../types';
+import { useExportFile } from 'apps/Internal/src/hooks/useExportFile';
+import { prefixSaleService } from 'apps/Internal/src/constants';
+import dayjs from 'dayjs';
 
 export const useLogicListeSIMStock = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -99,6 +103,26 @@ export const useLogicListeSIMStock = () => {
       },
     ];
   }, [listPackage, agencyOptions]);
+  const { mutate: exportFile } = useExportFile();
+  const { menuData } = useConfigAppStore();
+  const permission = usePermissions(menuData);
+  const handleExport = () => {
+    const { page, size, ...rest } = params;
+    exportFile({
+      params: rest,
+      url: `${prefixSaleService}/esim-manager/export`,
+      filename: `Danh_sach_esim_${dayjs().format(formatDateExport)}`,
+    });
+  };
+  const actionComponent = useMemo(() => {
+    return (
+      <div>
+        {permission.hasPermission(IModeAction.EXPORT_EXCEL) && (
+          <CButtonExport onClick={handleExport} />
+        )}
+      </div>
+    );
+  }, [permission]);
 
   return {
     listeSIMStock,
@@ -108,5 +132,6 @@ export const useLogicListeSIMStock = () => {
     openModal,
     handleCloseModal,
     id,
+    actionComponent,
   };
 };

@@ -10,6 +10,7 @@ export const ListeSIMStock = memo(() => {
     filters,
     columns,
     openModal,
+    actionComponent,
     handleCloseModal,
     id,
   } = useLogicListeSIMStock();
@@ -18,6 +19,7 @@ export const ListeSIMStock = memo(() => {
       <LayoutList
         data={listeSIMStock}
         columns={columns}
+        actionComponent={actionComponent}
         title="Danh sách eSIM"
         filterItems={filters}
         loading={loadingTable}

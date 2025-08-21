@@ -10,3 +10,4 @@ export const formatDateV2 = 'DD-MM-YYYY';
 export const formatDateEnglish = 'YYYY/MM/DD';
 export const formatDateEnglishV2 = 'YYYY-MM-DD';
 export const formatDateISO = 'YYYY-MM-DDTHH:mm:ssZ';
+export const formatDateExport = 'DDMMYYYY';
