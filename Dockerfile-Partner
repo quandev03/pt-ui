@@ -1,18 +1,21 @@
 ARG BASE_BUILDER="harbor.vissoft.vn/vnsky/web-builder"
 ARG BASE_RUNNER="harbor.vissoft.vn/vnsky/web-runner"
 
-FROM $BASE_BUILDER AS base
+FROM node:20-alpine AS base
 WORKDIR /workspace
 COPY package.json ./package.json
 COPY yarn.lock ./yarn.lock
-ARG NPM_CONFIG_REGISTRY="https://registry.npmjs.org"
+COPY .yarnrc.yml ./.yarnrc.yml
 ARG YARN_NPM_REGISTRY_SERVER="https://registry.npmjs.org"
+
+# Cài đặt và cấu hình corepack
 RUN npm install -g corepack
 
 # Enable corepack và sử dụng version từ package.json
 RUN corepack enable && \
     corepack prepare --activate
 
+# Debug và cấu hình yarn registry
 RUN ls -la && \
     echo "Yarn version:" && yarn --version && \
     echo "Using yarn repo: $YARN_NPM_REGISTRY_SERVER" && \
@@ -36,7 +39,7 @@ COPY ./.prettierrc ./.prettierrc
 COPY ./.prettierignore ./.prettierignore
 COPY ./libs ./libs
 COPY ./apps/Partner ./apps/Partner
-# RUN yarn build:partner
+# RUN yarn build:internal
 
 RUN npm install nx -g
-CMD [ "nx","run","partner:serve" ]
+CMD [ "nx","run","internal:serve" ]
