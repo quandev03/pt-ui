@@ -6,6 +6,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   root: __dirname,
+  base: '/daily',
   cacheDir: '../../node_modules/.vite/apps/partner',
 
   server: {
