@@ -13,6 +13,7 @@ export const useLogicActionSingleSalePackage = () => {
   const [form] = Form.useForm();
   const actionMode = useActionMode();
   const [openOtp, setOpenOtp] = useState<boolean>(false);
+  const [openWarning, setOpenWarning] = useState<boolean>(false);
   const { setSalePayload, salePayload } = useSellSinglePackageStore();
 
   const { data: packageCodeList } = useGetPackageCodes();

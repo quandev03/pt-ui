@@ -11,12 +11,13 @@ export const useLogicBulkSalePackageAction = () => {
   const [form] = Form.useForm();
   const [openOtp, setOpenOtp] = useState<boolean>(false);
   const { mutate: downloadFile } = useGetFile();
+  const [fileToSubmit, setFileToSubmit] = useState<File | null>(null);
 
-  const { mutate: checkData, isPending: loadingCheckData } = useCheckData(
-    () => {
-      setOpenOtp(true);
-    }
-  );
+  // const { mutate: checkData, isPending: loadingCheckData } = useCheckData(
+  //   () => {
+  //     setOpenOtp(true);
+  //   }
+  // );
   const { mutate: addPackageBulk, isPending: loadingAddBulk } = useSubmitData(
     () => {
       handleCancel();
@@ -36,31 +37,33 @@ export const useLogicBulkSalePackageAction = () => {
     downloadFile();
   }, [downloadFile]);
 
-  const handleSubmitAndCheckFile = useCallback(
-    (values: AnyElement) => {
-      const file = values.attachment;
-      if (!file) {
-        NotificationError({ message: 'Vui lòng tải lên một file.' });
-        return;
-      }
+  const handleSubmitAttachment = useCallback((values: AnyElement) => {
+    const file = values.attachment;
+    if (!file) {
+      NotificationError({ message: 'Vui lòng tải lên một file.' });
+      return;
+    }
 
-      const formData = new FormData();
-      formData.append('attachment', file);
-
-      checkData(formData);
-    },
-    [checkData]
-  );
+    setFileToSubmit(file);
+    setOpenOtp(true);
+  }, []);
 
   const handleConfirmWithPin = useCallback(
     (pinCode: string) => {
+      if (!fileToSubmit) {
+        NotificationError({
+          message: 'Không tìm thấy file để thực hiện.',
+        });
+        handleCloseOtp(); // Close modal if there's an error
+        return;
+      }
       const validFile = form.getFieldValue('attachment');
       const formData = new FormData();
       formData.append('attachment', validFile);
       formData.append('pinCode', pinCode);
       addPackageBulk(formData);
     },
-    [addPackageBulk, form]
+    [addPackageBulk, fileToSubmit, form, handleCloseOtp]
   );
 
   return {
@@ -70,9 +73,8 @@ export const useLogicBulkSalePackageAction = () => {
     handleCancel,
     openOtp,
     handleCloseOtp,
-    handleSubmitAndCheckFile,
+    handleSubmitAttachment,
     handleConfirmWithPin,
-    loadingCheckData,
     loadingAddBulk,
   };
 };
