@@ -210,10 +210,8 @@ export const ActionPage = () => {
     }
   }, [actionMode, form]);
   const unitOptions = [
-    { label: 'Giờ', value: 'Giờ' },
-    { label: 'Ngày', value: 'Ngày' },
-    { label: 'Tuần', value: 'Tuần' },
-    { label: 'Tháng', value: 'Tháng' },
+    { label: 'Ngày', value: 0 },
+    { label: 'Tháng', value: 1 },
   ];
   return (
     <div className="flex flex-col w-full h-full">
@@ -225,7 +223,7 @@ export const ActionPage = () => {
           colon={false}
           onFinish={handleSubmit}
           labelAlign="left"
-          initialValues={{ cycleUnit: 'Ngày' }}
+          initialValues={{ cycleUnit: 0 }}
         >
           <Card className="mb-2">
             <CTextInfo>Thông tin gói cước</CTextInfo>
