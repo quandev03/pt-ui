@@ -29,4 +29,4 @@ COPY ./apps/Partner ./apps/Partner
 # RUN yarn build:partner
 
 RUN npm install nx -g
-CMD [ "nx","run","internal:serve" ]
+CMD [ "nx","run","partner:serve" ]

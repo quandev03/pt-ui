@@ -11,7 +11,7 @@ export default defineConfig({
 
   server: {
     port: 4200,
-    host: '0.0.0.0',
+    host: 'hivn.mobifone.vn',
     strictPort: true,
     fs: {
       allow: ['..'],
