@@ -148,7 +148,7 @@ const VerifyFace = () => {
           {errMessage}
         </p>
       );
-    if (blockCamera) {
+    if (blockCamera || !hasCamera) {
       return (
         <p className={`text-center ${imageSrc ? 'mb-6' : 'mb-3'} mt-4`}>
           Bạn đã chặn quyền camera. Vui lòng bật lại trong cài đặt trình duyệt.
