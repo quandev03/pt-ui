@@ -39,7 +39,7 @@ COPY ./.prettierrc ./.prettierrc
 COPY ./.prettierignore ./.prettierignore
 COPY ./libs ./libs
 COPY ./apps/Partner ./apps/Partner
-# RUN yarn build:internal
+RUN yarn build:partner
 
 RUN npm install nx -g
 CMD [ "nx","run","partner:serve" ]

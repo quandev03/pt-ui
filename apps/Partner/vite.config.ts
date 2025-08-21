@@ -20,9 +20,11 @@ export default defineConfig({
   },
 
   preview: {
-    port: 4301,
-    host: 'localhost',
+    port: 4201,
+    host: true,
     strictPort: true,
+    allowedHosts: true,
+    cors: true
   },
 
   plugins: [react(), nxViteTsPaths()],
