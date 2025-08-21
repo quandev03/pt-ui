@@ -40,10 +40,10 @@ export const useLogicListEsimWarehouse = () => {
   const { data: getParams } = useGetParamsOption();
 
   const subStatusOptions: ISelectOption[] = useMemo(() => {
-    if (!getParams?.SUBSCRIBER_SUBS_STATUS) {
+    if (!getParams?.SUBSCRIBER_SUB_STATUS) {
       return [];
     }
-    return getParams.SUBSCRIBER_SUBS_STATUS.map((item) => ({
+    return getParams.SUBSCRIBER_SUB_STATUS.map((item) => ({
       value: item.code,
       label: item.value,
     }));
