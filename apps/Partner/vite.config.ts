@@ -11,11 +11,12 @@ export default defineConfig({
 
   server: {
     port: 4201,
-    host: 'hivn.mobifone.vn',
+    host: '0.0.0.0',
     strictPort: true,
     fs: {
       allow: ['..'],
     },
+    allowedHosts: ['*']
   },
 
   preview: {
