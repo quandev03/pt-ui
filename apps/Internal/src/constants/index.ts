@@ -17,7 +17,7 @@ export const APP_VERSION = (
   window as unknown as { _env_: { [key: string]: string } }
 )._env_?.VITE_APP_VERSION;
 
-export const APP_CODE = 'hivn-internal';
+export const APP_CODE = 'vnsky-internal';
 
 export const STORAGE_KEY_PREFIX =
   (window as unknown as { _env_: { [key: string]: string } })._env_
