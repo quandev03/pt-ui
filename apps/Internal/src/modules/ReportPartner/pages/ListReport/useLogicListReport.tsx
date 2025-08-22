@@ -6,6 +6,8 @@ import {
   CButtonExport,
   decodeSearchParams,
   FilterItemProps,
+  formatDateBe,
+  formatDateEnglishV2,
   formatQueryParams,
   usePermissions,
 } from '@vissoft-react/common';
@@ -57,7 +59,7 @@ export const useLogicListReport = () => {
       },
       {
         label: 'Ngày đặt hàng',
-        formatSearch: 'YYYY-MM-DDTHH:mm:ss.SSSZ',
+        formatSearch: formatDateEnglishV2,
         type: 'DateRange',
         name: 'orderedAt',
         keySearch: ['startDate', 'endDate'],
