@@ -11,6 +11,7 @@ import {
   CButton,
   formatDate,
   CTooltip,
+  formatDateTime,
 } from '@vissoft-react/common';
 import useConfigAppStore from '../../Layouts/stores';
 import { Dropdown, Tag } from 'antd';
@@ -175,7 +176,10 @@ export const useColumnsEsimWarehouseList = ({
       align: 'left',
       render(value, record) {
         return (
-          <RenderCell value={dayjs(value).format(formatDate)} tooltip={value} />
+          <RenderCell
+            value={dayjs(value).format(formatDate)}
+            tooltip={dayjs(value).format(formatDateTime)}
+          />
         );
       },
     },
