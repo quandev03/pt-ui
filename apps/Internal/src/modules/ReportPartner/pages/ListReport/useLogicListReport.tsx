@@ -16,6 +16,7 @@ import { useGetAllReportPartner } from '../../hooks';
 import { useGetTableList } from '../../hooks/useGetTableList';
 import { IReportPartnerItem, IReportPartnerParams } from '../../types';
 import { prefixSaleService } from 'apps/Internal/src/constants';
+import dayjs from 'dayjs';
 
 export const useLogicListReport = () => {
   const [searchParams] = useSearchParams();
@@ -30,14 +31,12 @@ export const useLogicListReport = () => {
   const { mutate: exportFile } = useExportFile();
   const handleExport = useCallback(() => {
     const { page, size, ...rest } = params;
-    console.log('params', params, 'searchParams', searchParams);
     exportFile({
       params: formatQueryParams(rest),
-      url: `${prefixSaleService}/api/orders-report`,
+      url: `${prefixSaleService}/revenue-statistic/order/export-excel`,
       filename: `Bao_cao_don_hang_doi_tac.xlsx`,
     });
   }, [params]);
-
   const actionComponent = useMemo(() => {
     return (
       <div>
@@ -51,7 +50,7 @@ export const useLogicListReport = () => {
       {
         label: 'Đối tác',
         type: 'TreeSelect',
-        name: 'orgId',
+        name: 'orgCode',
         treeData: agencyOptions,
         showSearch: true,
         placeholder: 'Đối tác',
@@ -61,13 +60,14 @@ export const useLogicListReport = () => {
         formatSearch: 'YYYY-MM-DDTHH:mm:ss.SSSZ',
         type: 'DateRange',
         name: 'orderedAt',
-        keySearch: ['orderedAtFrom', 'orderedAtTo'],
+        keySearch: ['startDate', 'endDate'],
         placeholder: ['Ngày bắt đầu', 'Ngày kết thúc'],
         showDefault: true,
         format: 'DD/MM/YYYY',
+        defaultValue: [dayjs().subtract(29, 'day'), dayjs()],
       },
     ];
-  }, []);
+  }, [agencyOptions]);
 
   return {
     listReportPartner,

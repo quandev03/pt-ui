@@ -18,6 +18,7 @@ export const ListReportPartner = memo(() => {
           name="q"
           tooltip="Nhập mã đơn hàng, mã đối tác, tên đối tác để tìm kiếm"
           placeholder="Nhập mã đơn hàng, mã đối tác, tên đối tác để tìm kiếm"
+          maxLength={20}
         />
       }
     />

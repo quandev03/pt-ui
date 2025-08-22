@@ -1,6 +1,7 @@
 import {
   RenderCell,
   decodeSearchParams,
+  formatCurrencyVND,
   formatDate,
 } from '@vissoft-react/common';
 import { ColumnsType } from 'antd/es/table';
@@ -28,8 +29,8 @@ export const useGetTableList = (): ColumnsType<IReportPartnerItem> => {
     },
     {
       title: 'Mã đơn hàng',
-      dataIndex: 'orderCode',
-      width: 200,
+      dataIndex: 'orderNo',
+      width: 180,
       align: 'left',
       render(value) {
         return <RenderCell value={value} tooltip={value} />;
@@ -37,8 +38,8 @@ export const useGetTableList = (): ColumnsType<IReportPartnerItem> => {
     },
     {
       title: 'Mã đối tác',
-      dataIndex: 'partnerCode',
-      width: 250,
+      dataIndex: 'orgCode',
+      width: 150,
       align: 'left',
       render(value) {
         return <RenderCell value={value} tooltip={value} />;
@@ -46,35 +47,36 @@ export const useGetTableList = (): ColumnsType<IReportPartnerItem> => {
     },
     {
       title: 'Tên đối tác',
-      dataIndex: 'partnerName',
-      width: 100,
+      dataIndex: 'orgName',
+      width: 230,
       align: 'left',
       render(value) {
         return <RenderCell value={value} />;
       },
     },
     {
-      title: 'Loại dịch vụ',
-      dataIndex: 'serviceType',
-      width: 250,
+      title: 'Tổng tiền gói cước gán thành công',
+      dataIndex: 'amountTotal',
+      width: 260,
       align: 'left',
       render(value) {
-        return <RenderCell value={value} />;
-      },
-    },
-    {
-      title: 'Tổng tiền gói cước',
-      dataIndex: 'agentName',
-      width: 250,
-      align: 'left',
-      render(value) {
-        return <RenderCell value={value} />;
+        const renderedValue = formatCurrencyVND(value ?? '');
+        return <RenderCell value={renderedValue} />;
       },
     },
     {
       title: 'Số lượng eSIM',
-      dataIndex: 'esimCount',
-      width: 250,
+      dataIndex: 'quantity',
+      width: 120,
+      align: 'left',
+      render(value) {
+        return <RenderCell value={value} />;
+      },
+    },
+    {
+      title: 'eSIM đặt thành công',
+      dataIndex: 'succeededNumber',
+      width: 160,
       align: 'left',
       render(value) {
         return <RenderCell value={value} />;
@@ -82,7 +84,7 @@ export const useGetTableList = (): ColumnsType<IReportPartnerItem> => {
     },
     {
       title: 'Người đặt hàng',
-      dataIndex: 'orderedBy',
+      dataIndex: 'createdBy',
       width: 250,
       align: 'left',
       render(value) {
@@ -92,7 +94,7 @@ export const useGetTableList = (): ColumnsType<IReportPartnerItem> => {
 
     {
       title: 'Ngày đặt hàng',
-      dataIndex: 'orderedAt',
+      dataIndex: 'orderDate',
       width: 120,
       align: 'left',
       render(value) {
