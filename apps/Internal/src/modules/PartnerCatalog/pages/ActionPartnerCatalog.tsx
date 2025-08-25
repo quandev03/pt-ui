@@ -85,6 +85,7 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         status,
         parentCode,
         provinceCode,
+        employeeCode,
       } = data;
       form.setFieldsValue({
         address,
@@ -97,6 +98,7 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         status: status === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động',
         parentCode,
         provinceCode,
+        employeeCode,
       });
     });
 
@@ -158,6 +160,7 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
       status,
       provinceCode,
       parentCode,
+      employeeCode,
     } = values;
 
     const payload: IPayloadPartner = {
@@ -174,6 +177,7 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         status: status === 'Hoạt động' ? 1 : 0,
         provinceCode,
         parentCode,
+        employeeCode,
       },
     };
     if (actionMode === IModeAction.CREATE) {

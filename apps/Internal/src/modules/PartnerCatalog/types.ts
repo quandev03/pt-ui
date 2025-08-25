@@ -284,6 +284,7 @@ export interface IPartner {
   clientId?: string;
   provinceCode: string;
   parentCode: string;
+  employeeCode: string;
 }
 export interface IRoleItem {
   code: string;
