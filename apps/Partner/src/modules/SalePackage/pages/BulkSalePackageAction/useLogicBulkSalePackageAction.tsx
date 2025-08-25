@@ -4,7 +4,6 @@ import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetFile } from '../../hooks/useGetFile';
 import { useSubmitData } from '../../hooks/useSubmitData';
-import useCheckData from '../../hooks/useCheckData';
 
 export const useLogicBulkSalePackageAction = () => {
   const navigate = useNavigate();
@@ -12,12 +11,6 @@ export const useLogicBulkSalePackageAction = () => {
   const [openOtp, setOpenOtp] = useState<boolean>(false);
   const { mutate: downloadFile } = useGetFile();
   const [fileToSubmit, setFileToSubmit] = useState<File | null>(null);
-
-  // const { mutate: checkData, isPending: loadingCheckData } = useCheckData(
-  //   () => {
-  //     setOpenOtp(true);
-  //   }
-  // );
   const { mutate: addPackageBulk, isPending: loadingAddBulk } = useSubmitData(
     () => {
       handleCancel();
