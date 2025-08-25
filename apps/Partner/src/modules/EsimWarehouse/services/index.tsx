@@ -29,7 +29,7 @@ export const esimWarehouseServices = {
 
   getExportReport: async (params: IEsimWarehouseParams) => {
     const apiParams = {
-      textSearch: params.q,
+      textSearch: params.textSearch,
       activeStatus: params.activeStatus,
       pckCode: params.pckCode,
       subStatus: params.subStatus,

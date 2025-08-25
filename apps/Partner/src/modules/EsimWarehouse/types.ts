@@ -1,5 +1,4 @@
 import { IParamsRequest } from '@vissoft-react/common';
-import { IPVersion } from 'net';
 
 export interface IEsimWarehouseList {
   activeStatus: number;
@@ -22,6 +21,7 @@ export interface IEsimWarehouseParams extends IParamsRequest {
   activeStatus: string;
   pckCode: string;
   orgId: string;
+  textSearch: string;
 }
 
 export interface IEsimWarehouseDetails {
