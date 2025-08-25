@@ -29,8 +29,6 @@ export const useColumnTable = ({
   const {
     params: { ISDN_TRANSACTION_UPLOAD_STATUS, ISDN_TRANSACTION_TRANS_STATUS },
   } = useConfigAppStore();
-  console.log('ISDN_TRANSACTION_UPLOAD_STATUS', ISDN_TRANSACTION_UPLOAD_STATUS);
-  console.log('ISDN_TRANSACTION_TRANS_STATUS', ISDN_TRANSACTION_TRANS_STATUS);
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const { menuData } = useConfigAppStore();
@@ -63,7 +61,7 @@ export const useColumnTable = ({
         dataIndex: 'createdBy',
         width: 200,
         align: 'left',
-        render(value, record) {
+        render(value) {
           return <RenderCell value={value} tooltip={value} />;
         },
       },
@@ -140,10 +138,10 @@ export const useColumnTable = ({
         width: 150,
         align: 'left',
         render: (value) => {
-          if (!value) return null;
-          const text = ISDN_TRANSACTION_TRANS_STATUS.find(
-            (item) => String(item.code) === String(value)
-          )?.value;
+          const text =
+            ISDN_TRANSACTION_TRANS_STATUS.find(
+              (item) => String(item.code) === String(value)
+            )?.value || '';
           return (
             <CTag
               type={
