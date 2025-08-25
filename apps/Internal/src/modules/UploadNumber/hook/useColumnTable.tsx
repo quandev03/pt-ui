@@ -24,7 +24,7 @@ import { IFileInfo, IResponseUploadNumber } from '../types';
 export const useColumnTable = ({
   onDownload,
 }: {
-  onDownload: (record?: IFileInfo) => void;
+  onDownload: (isCheckFile: boolean, record?: IFileInfo) => void;
 }) => {
   const {
     params: { ISDN_TRANSACTION_UPLOAD_STATUS, ISDN_TRANSACTION_TRANS_STATUS },
@@ -121,7 +121,7 @@ export const useColumnTable = ({
                         marginLeft: '4px',
                         cursor: 'pointer',
                       }}
-                      onClick={() => onDownload(record?.resultCheckFile)}
+                      onClick={() => onDownload(true, record?.resultCheckFile)}
                     >
                       File
                     </div>
@@ -188,7 +188,7 @@ export const useColumnTable = ({
                         marginLeft: '4px',
                         cursor: 'pointer',
                       }}
-                      onClick={() => onDownload(record?.resultFile)}
+                      onClick={() => onDownload(false, record?.resultFile)}
                     >
                       File
                     </Typography.Text>

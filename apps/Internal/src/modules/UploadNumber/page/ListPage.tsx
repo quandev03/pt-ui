@@ -35,10 +35,12 @@ export const ListPage = () => {
   const filters = useFilters();
   const { mutate: handleDownloadFile } = useDownloadResourceFile();
   const { columns } = useColumnTable({
-    onDownload: (record) => {
+    onDownload: (isChecktFile, record) => {
       handleDownloadFile({
         uri: record?.fileUrl ?? '',
-        filename: record?.fileName,
+        filename: isChecktFile
+          ? 'Ket_qua_kiem_tra.xlsx'
+          : 'Ket_qua_thuc_hien.xlsx',
       });
     },
   });
