@@ -5,6 +5,7 @@ import {
   FileDigit,
   LayoutList,
   NotebookPen,
+  PencilLine,
   Users,
 } from 'lucide-react';
 import { pathRoutes } from './url';
@@ -87,6 +88,11 @@ export const routerItems: RouterItems[] = [
     key: pathRoutes.esimStock,
     icon: <CardSim />,
     label: 'Danh sách eSIM',
+  },
+  {
+    key: pathRoutes.updateSubscriberInfo as string,
+    icon: <PencilLine />,
+    label: 'Cập nhật thông tin thuê bao',
   },
   // Báo cáo
   {
