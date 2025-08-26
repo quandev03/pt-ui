@@ -69,7 +69,7 @@ export const useLogicListeSIMStock = () => {
         name: 'orgId',
         showDefault: true,
         treeData: agencyOptions,
-        placeholder: 'Đại lý',
+        placeholder: 'Đối tác',
         showSearch: true,
       },
 
