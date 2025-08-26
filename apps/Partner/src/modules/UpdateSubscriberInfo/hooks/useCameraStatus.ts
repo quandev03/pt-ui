@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 export function useCameraStatus() {
   const [hasCamera, setHasCamera] = useState(false);
+  const [blockCamera, setBlockCamera] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const requestedRef = useRef(false); // Đảm bảo chỉ request 1 lần
 
@@ -23,6 +24,7 @@ export function useCameraStatus() {
       videoTrack.onended = () => {
         notification.error({ message: 'Camera đã bị tắt hoặc ngắt kết nối.' });
         setHasCamera(false);
+        setBlockCamera(true);
         setStream(null);
         requestedRef.current = false; // Cho phép request lại nếu bị ngắt
       };
@@ -32,6 +34,7 @@ export function useCameraStatus() {
       switch (err?.name) {
         case 'NotAllowedError':
           message = 'Bạn đã từ chối quyền truy cập camera.';
+          setBlockCamera(true);
           break;
         case 'NotFoundError':
           message = 'Không tìm thấy camera trên thiết bị.';
@@ -80,5 +83,5 @@ export function useCameraStatus() {
     };
   }, [checkHasCamera, stream, requestCamera]);
 
-  return { hasCamera, stream, requestCamera };
+  return { hasCamera, stream, requestCamera, blockCamera };
 }

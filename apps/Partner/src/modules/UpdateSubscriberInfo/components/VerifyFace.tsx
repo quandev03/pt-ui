@@ -23,7 +23,7 @@ import { blobToFile } from '../../../../src/services';
 const VerifyFace = () => {
   const form = useFormInstance();
   const webcamRef = useRef<Webcam>(null);
-  const { hasCamera } = useCameraStatus();
+  const { hasCamera, blockCamera } = useCameraStatus();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [progressLoading, setProgressLoading] = useState<boolean>(false);
   const { setStep, ocrResponse } = useUpdateSubscriberInfoStore();
@@ -141,22 +141,34 @@ const VerifyFace = () => {
     const portrait = form.getFieldValue('portrait');
     checkFace({ portrait: portrait, transactionId: transactionId });
   };
+  const renderedGuideMessage = () => {
+    if (errMessage)
+      return (
+        <p className="text-center text-[#E92429] mb-7 mt-4 font-medium">
+          {errMessage}
+        </p>
+      );
+    if (blockCamera || !hasCamera) {
+      return (
+        <p className={`text-center ${imageSrc ? 'mb-6' : 'mb-3'} mt-4`}>
+          Bạn đã chặn quyền camera. Vui lòng bật lại trong cài đặt trình duyệt.
+        </p>
+      );
+    }
+    return (
+      <p className={`text-center mb-6 mt-4`}>
+        {imageSrc
+          ? 'Kiểm tra hình ảnh và nhấn '
+          : 'Vui lòng điều chỉnh sao cho khuôn mặt của bạn nằm trong vòng tròn'}
+        <span className="text-[#1062AD]">{imageSrc ? 'Xác nhận' : ''}</span>
+      </p>
+    );
+  };
   return (
     <div className="flex items-center flex-col justify-between min-h-[72vh] gap-5">
       <div className="flex items-center flex-col  w-full">
         <p className="text-lg font-semibold mt-2">Xác thực khuôn mặt</p>
-        {errMessage ? (
-          <p className="text-center text-[#E92429] mb-7 mt-4 font-medium">
-            {errMessage}
-          </p>
-        ) : (
-          <p className={`text-center mb-6 mt-4`}>
-            {imageSrc
-              ? 'Kiểm tra hình ảnh và nhấn '
-              : 'Vui lòng điều chỉnh sao cho khuôn mặt của bạn nằm trong vòng tròn'}
-            <span className="text-[#1062AD]">{imageSrc ? 'Xác nhận' : ''}</span>
-          </p>
-        )}
+        {renderedGuideMessage()}
         {errMessage ? (
           <ViewImages />
         ) : (
