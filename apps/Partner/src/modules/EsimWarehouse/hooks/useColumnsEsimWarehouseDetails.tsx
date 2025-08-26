@@ -39,7 +39,7 @@ export const useColumnsEsimWarehouseDetails =
           const action = translateActionType.find(
             (item) => item.code === value
           );
-          const displayLabel = action ? action.label : value;
+          const displayLabel = action ? action?.label : value;
           return <RenderCell value={displayLabel} tooltip={displayLabel} />;
         },
       },

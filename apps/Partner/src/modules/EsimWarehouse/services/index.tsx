@@ -70,7 +70,6 @@ export const esimWarehouseServices = {
         responseType: 'blob',
       }
     );
-    console.log('🚀 ~ ressssssssssssss:', res);
 
     return res;
   },
