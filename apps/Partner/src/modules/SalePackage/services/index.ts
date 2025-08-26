@@ -67,7 +67,7 @@ export const packageSaleService = {
   },
   getSaleParams: async (): Promise<ISaleParamsResponse> => {
     const response = await safeApiClient.get<ISaleParamsResponse>(
-      `hvn-sale-service/private/api/v1/params`
+      `${prefixSaleService}/params`
     );
     return response;
   },
