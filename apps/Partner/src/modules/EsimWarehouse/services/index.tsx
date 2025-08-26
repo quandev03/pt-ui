@@ -1,17 +1,18 @@
-import { IPage, IParamsRequest } from '@vissoft-react/common';
+import { IPage } from '@vissoft-react/common';
+import { prefixSaleService } from '../../../../src/constants';
 import { safeApiClient } from '../../../../src/services';
 import {
   ICustomerInfo,
   IEsimWarehouseDetails,
   IEsimWarehouseList,
+  IEsimWarehouseParams,
   IGetPackageCodes,
   IQrCodeGen,
   IQrCodeSent,
 } from '../types';
-import { prefixSaleService } from '../../../../src/constants';
 
 export const esimWarehouseServices = {
-  getEsimWarehouseList: (params: IParamsRequest) => {
+  getEsimWarehouseList: (params: IEsimWarehouseParams) => {
     return safeApiClient.get<IPage<IEsimWarehouseList>>(
       `${prefixSaleService}/esim-manager`,
       {
@@ -24,6 +25,31 @@ export const esimWarehouseServices = {
     return await safeApiClient.get<IEsimWarehouseDetails[]>(
       `${prefixSaleService}/esim-manager/${subId}`
     );
+  },
+
+  getExportReport: async (params: IEsimWarehouseParams) => {
+    const apiParams = {
+      textSearch: params.textSearch,
+      activeStatus: params.activeStatus,
+      pckCode: params.pckCode,
+      subStatus: params.subStatus,
+      orgId: params.orgId,
+    };
+
+    const res = await safeApiClient.post<Blob>(
+      `${prefixSaleService}/esim-manager/export`,
+      null,
+      {
+        params: apiParams,
+        responseType: 'blob',
+      }
+    );
+    if (!res || res.size === 0) {
+      throw new Error(
+        'Không có dữ liệu để xuất báo cáo. Vui lòng kiểm tra lại bộ lọc.'
+      );
+    }
+    return res;
   },
 
   getCustomerInfo: async (subId?: string) => {
@@ -44,6 +70,7 @@ export const esimWarehouseServices = {
         responseType: 'blob',
       }
     );
+
     return res;
   },
   getSendQrCode: async (data: IQrCodeSent) => {

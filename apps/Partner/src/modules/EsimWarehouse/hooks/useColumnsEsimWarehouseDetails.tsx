@@ -1,10 +1,24 @@
-import { ColumnsType } from 'antd/es/table';
-import { IEsimWarehouseDetails } from '../types';
 import { formatDate, RenderCell } from '@vissoft-react/common';
+import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
+import { useMemo } from 'react';
+import { useGetParamsOption } from '../../../hooks/useGetParamsOption';
+import { IEsimWarehouseDetails } from '../types';
 
 export const useColumnsEsimWarehouseDetails =
   (): ColumnsType<IEsimWarehouseDetails> => {
+    const { data: getParams } = useGetParamsOption();
+
+    const translateActionType = useMemo(() => {
+      if (!getParams?.ACTION_HISTORY_ACTION_CODE) {
+        return [];
+      }
+      return getParams.ACTION_HISTORY_ACTION_CODE.map((item) => ({
+        code: item.code,
+        label: item.value,
+      }));
+    }, [getParams]);
+
     return [
       {
         title: 'STT',
@@ -22,7 +36,11 @@ export const useColumnsEsimWarehouseDetails =
         align: 'left',
         fixed: 'left',
         render(value) {
-          return <RenderCell value={value} tooltip={value} />;
+          const action = translateActionType.find(
+            (item) => item.code === value
+          );
+          const displayLabel = action ? action?.label : value;
+          return <RenderCell value={displayLabel} tooltip={displayLabel} />;
         },
       },
       {
@@ -32,7 +50,8 @@ export const useColumnsEsimWarehouseDetails =
         align: 'left',
         fixed: 'left',
         render(value) {
-          return <RenderCell value={value} tooltip={value} />;
+          const displayValue = value === null ? 'KH' : value;
+          return <RenderCell value={displayValue} tooltip={displayValue} />;
         },
       },
       {
