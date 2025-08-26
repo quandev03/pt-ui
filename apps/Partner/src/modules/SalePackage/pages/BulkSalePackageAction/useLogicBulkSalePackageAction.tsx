@@ -4,25 +4,24 @@ import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetFile } from '../../hooks/useGetFile';
 import { useSubmitData } from '../../hooks/useSubmitData';
-import useCheckData from '../../hooks/useCheckData';
 
 export const useLogicBulkSalePackageAction = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [openOtp, setOpenOtp] = useState<boolean>(false);
   const { mutate: downloadFile } = useGetFile();
-
-  const { mutate: checkData, isPending: loadingCheckData } = useCheckData(
+  const [fileToSubmit, setFileToSubmit] = useState<File | null>(null);
+  const { mutate: addPackageBulk, isPending: loadingAddBulk } = useSubmitData(
     () => {
-      setOpenOtp(true);
+      handleCancel();
     }
   );
+
   const handleCancel = useCallback(() => {
     form.resetFields();
     setOpenOtp(false);
-  }, [form]);
-  const { mutate: addPackageBulk, isPending: loadingAddBulk } =
-    useSubmitData(handleCancel);
+    navigate(-1);
+  }, [form, navigate]);
 
   const handleClose = useCallback(() => navigate(-1), [navigate]);
   const handleCloseOtp = useCallback(() => setOpenOtp(false), []);
@@ -31,33 +30,33 @@ export const useLogicBulkSalePackageAction = () => {
     downloadFile();
   }, [downloadFile]);
 
-  const handleSubmitAndCheckFile = useCallback(
-    (values: AnyElement) => {
-      const file = values.attachment;
-      if (!file) {
-        NotificationError({ message: 'Vui lòng tải lên một file.' });
-        return;
-      }
+  const handleSubmitAttachment = useCallback((values: AnyElement) => {
+    const file = values.attachment;
+    if (!file) {
+      NotificationError({ message: 'Vui lòng tải lên một file.' });
+      return;
+    }
 
-      const formData = new FormData();
-      formData.append('attachment', file);
-      console.log('🚀 đoạn này gọi được:', file);
-
-      checkData(formData);
-    },
-    [checkData]
-  );
+    setFileToSubmit(file);
+    setOpenOtp(true);
+  }, []);
 
   const handleConfirmWithPin = useCallback(
     (pinCode: string) => {
+      if (!fileToSubmit) {
+        NotificationError({
+          message: 'Không tìm thấy file để thực hiện.',
+        });
+        handleCloseOtp(); // Close modal if there's an error
+        return;
+      }
       const validFile = form.getFieldValue('attachment');
-      console.log('valid file và ko: ', validFile);
       const formData = new FormData();
       formData.append('attachment', validFile);
       formData.append('pinCode', pinCode);
       addPackageBulk(formData);
     },
-    [addPackageBulk, form]
+    [addPackageBulk, fileToSubmit, form, handleCloseOtp]
   );
 
   return {
@@ -67,9 +66,8 @@ export const useLogicBulkSalePackageAction = () => {
     handleCancel,
     openOtp,
     handleCloseOtp,
-    handleSubmitAndCheckFile,
+    handleSubmitAttachment,
     handleConfirmWithPin,
-    loadingCheckData,
     loadingAddBulk,
   };
 };
