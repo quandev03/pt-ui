@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import { useGetDebitLimit } from '../../../../../src/hooks/useGetDebitLimit';
 import { ModalOtpMemo } from '../components/ModalOtp';
 import { useLogicActionSingleSalePackage } from './useLogicActionSingleSalePackage';
+import { ModalWarning } from '../components/ModaWarning';
 
 export const SingleSalePackageAction = () => {
   const {
@@ -26,6 +27,9 @@ export const SingleSalePackageAction = () => {
     packageOptions,
     handleConfirmOtp,
     loadingAdd,
+    openWarning,
+    handleConfirmWarning,
+    handleCloseWarning,
   } = useLogicActionSingleSalePackage();
   const { data: debitLimitData } = useGetDebitLimit();
 
@@ -76,8 +80,11 @@ export const SingleSalePackageAction = () => {
                   disabled
                   className="!text-black"
                   formatter={(value) =>
-                    value ? `${value.toLocaleString('vi-VN')} ₫` : ''
+                    value
+                      ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ₫'
+                      : ''
                   }
+                  parser={(value: AnyElement) => value.replace(/\s?₫|,/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -87,8 +94,11 @@ export const SingleSalePackageAction = () => {
                   disabled
                   className="!text-black"
                   formatter={(value) =>
-                    value ? `${value.toLocaleString('vi-VN')} ₫` : ''
+                    value
+                      ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ₫'
+                      : ''
                   }
+                  parser={(value: AnyElement) => value.replace(/\s?₫|,/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -96,7 +106,6 @@ export const SingleSalePackageAction = () => {
               <Form.Item
                 label="Số thuê bao"
                 name="isdn"
-                required
                 rules={[validateForm.required, validateForm.maxLength(11)]}
               >
                 <CInput
@@ -145,6 +154,11 @@ export const SingleSalePackageAction = () => {
           <CButtonClose onClick={handleClose} />
         </div>
       </Form>
+      <ModalWarning
+        open={openWarning}
+        onClose={handleCloseWarning}
+        onConfirm={handleConfirmWarning}
+      />
       <ModalOtpMemo
         handleSuccess={handleCancel}
         open={openOtp}
