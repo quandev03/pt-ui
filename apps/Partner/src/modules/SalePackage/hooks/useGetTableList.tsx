@@ -70,7 +70,7 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
       render(value) {
         let displayText = '';
         if (value === SalePackageTypeEnum.SINGLE_SALE) {
-          displayText = 'Bán lẻ';
+          displayText = 'Đơn lẻ';
         }
         if (value === SalePackageTypeEnum.BATCH_SALE) {
           displayText = 'Theo lô';

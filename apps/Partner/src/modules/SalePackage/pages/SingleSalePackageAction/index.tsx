@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import { useGetDebitLimit } from '../../../../../src/hooks/useGetDebitLimit';
 import { ModalOtpMemo } from '../components/ModalOtp';
 import { useLogicActionSingleSalePackage } from './useLogicActionSingleSalePackage';
+import { ModalWarning } from '../components/ModaWarning';
 
 export const SingleSalePackageAction = () => {
   const {
@@ -26,6 +27,9 @@ export const SingleSalePackageAction = () => {
     packageOptions,
     handleConfirmOtp,
     loadingAdd,
+    openWarning,
+    handleConfirmWarning,
+    handleCloseWarning,
   } = useLogicActionSingleSalePackage();
   const { data: debitLimitData } = useGetDebitLimit();
 
@@ -150,6 +154,11 @@ export const SingleSalePackageAction = () => {
           <CButtonClose onClick={handleClose} />
         </div>
       </Form>
+      <ModalWarning
+        open={openWarning}
+        onClose={handleCloseWarning}
+        onConfirm={handleConfirmWarning}
+      />
       <ModalOtpMemo
         handleSuccess={handleCancel}
         open={openOtp}

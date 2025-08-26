@@ -52,7 +52,7 @@ const ModalOtp = ({ open, loading, onClose, onConfirm }: ModalOtpProps) => {
               Hủy
             </CButton>
             <CButton
-              loading={loading} // Use the loading prop
+              loading={loading}
               className="min-w-[90px]"
               htmlType="submit"
             >

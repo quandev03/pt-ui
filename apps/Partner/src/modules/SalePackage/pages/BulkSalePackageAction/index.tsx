@@ -19,9 +19,8 @@ export const BulkSalePackageAction = () => {
     handleDownloadTemplate,
     handleCancel,
     openOtp,
-    loadingCheckData,
     handleCloseOtp,
-    handleSubmitAndCheckFile,
+    handleSubmitAttachment,
     handleConfirmWithPin,
     loadingAddBulk,
   } = useLogicBulkSalePackageAction();
@@ -42,7 +41,7 @@ export const BulkSalePackageAction = () => {
       <TitleHeader>Bán gói theo lô cho thuê bao</TitleHeader>
       <Form
         form={form}
-        onFinish={handleSubmitAndCheckFile}
+        onFinish={handleSubmitAttachment}
         labelAlign="left"
         labelCol={{ span: 5 }}
         labelWrap={true}
@@ -92,9 +91,7 @@ export const BulkSalePackageAction = () => {
           </Row>
         </div>
         <div className="flex gap-4 flex-wrap justify-end mt-7">
-          <CButton loading={loadingCheckData} onClick={() => form.submit()}>
-            Thực hiện
-          </CButton>
+          <CButton onClick={() => form.submit()}>Thực hiện</CButton>
           <CButtonClose onClick={handleClose} />
         </div>
       </Form>
