@@ -41,7 +41,5 @@ COPY ./libs ./libs
 COPY ./apps/Internal ./apps/Internal
 RUN yarn build:internal
 
-FROM $BASE_RUNNER AS runner
-ENV TZ=Asia/Ho_Chi_Minh
-WORKDIR /usr/share/nginx/html
-COPY --from=base --chown=nginx:nginx /workspace/dist/apps/internal /usr/share/nginx/html
+RUN npm install nx -g
+CMD [ "nx","run","internal:preview" ]

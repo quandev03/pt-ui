@@ -1,7 +1,7 @@
 import { isPageReload } from '@vissoft-react/common';
 import { isEmpty } from 'lodash';
 import {
-  createHashRouter,
+  createBrowserRouter,
   redirect,
   ShouldRevalidateFunction,
 } from 'react-router-dom';
@@ -18,7 +18,7 @@ const mainRouterShouldRevalidate: ShouldRevalidateFunction = () => {
 
 const LOADER_INIT_KEY = 'LOADER_INIT_KEY';
 
-export const routers = createHashRouter([
+export const routers = createBrowserRouter([
   {
     path: pathRoutes.home as string,
     loader: async () => {
@@ -80,4 +80,6 @@ export const routers = createHashRouter([
     path: '*',
     element: <NotFoundPage />,
   },
-]);
+], {
+  basename: '/admin'
+});
