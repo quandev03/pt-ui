@@ -9,20 +9,17 @@ import {
   Text,
   WrapperActionTable,
   CButton,
-  CTag,
-  TypeTagEnum,
   formatDate,
+  CTooltip,
+  formatDateTime,
 } from '@vissoft-react/common';
 import useConfigAppStore from '../../Layouts/stores';
-import { Dropdown } from 'antd';
+import { Dropdown, Tag } from 'antd';
 import { MoreVertical } from 'lucide-react';
 import dayjs from 'dayjs';
-import {
-  ActiveStatusEnum,
-  activeStatusMap,
-  Status900Enum,
-  status900Map,
-} from '../constants/enum';
+import { ActiveStatusMap, SubStatusMap } from '../constants/enum';
+import { useMemo } from 'react';
+import { useGetParamsOption } from '../../../hooks/useGetParamsOption';
 
 interface useColumnsEsimWarehouseListProps {
   onGenQr: (record: IEsimWarehouseList) => void;
@@ -39,6 +36,27 @@ export const useColumnsEsimWarehouseList = ({
   const params = decodeSearchParams(searchParams);
   const { menuData } = useConfigAppStore();
   const permission = usePermissions(menuData);
+  const { data: getParams } = useGetParamsOption();
+
+  const subStatusOptions = useMemo(() => {
+    if (!getParams?.SUBSCRIBER_SUB_STATUS) {
+      return [];
+    }
+    return getParams.SUBSCRIBER_SUB_STATUS.map((item) => ({
+      code: item.code,
+      label: item.value,
+    }));
+  }, [getParams]);
+
+  const activeStatusOptions = useMemo(() => {
+    if (!getParams?.SUBSCRIBER_ACTIVE_SUB_STATUS) {
+      return [];
+    }
+    return getParams.SUBSCRIBER_ACTIVE_SUB_STATUS.map((item) => ({
+      code: item.code,
+      label: item.value,
+    }));
+  }, [getParams]);
 
   return [
     {
@@ -106,27 +124,18 @@ export const useColumnsEsimWarehouseList = ({
       dataIndex: 'statusSub',
       width: 200,
       align: 'left',
-      render(value: Status900Enum, record) {
-        const { text, type, color, textColor, fontWeight } = status900Map[
-          value
-        ] || {
-          text: '',
-          type: TypeTagEnum.DEFAULT,
-          color: '#808080',
-          textColor: '#FFFFFF',
-          fontWeight: 'normal',
-        };
+      render(value) {
+        const renderedValue =
+          subStatusOptions.find((item) => item.code == value)?.label || '';
         return (
-          <CTag color={color} type={type}>
-            <RenderCell
-              value={
-                <span style={{ color: textColor, fontWeight: fontWeight }}>
-                  {text}
-                </span>
-              }
-              tooltip={text}
-            />
-          </CTag>
+          <CTooltip title={renderedValue} placement="topLeft">
+            <Tag
+              color={SubStatusMap[value as keyof typeof SubStatusMap]}
+              bordered={false}
+            >
+              {renderedValue}
+            </Tag>
+          </CTooltip>
         );
       },
     },
@@ -135,27 +144,19 @@ export const useColumnsEsimWarehouseList = ({
       dataIndex: 'activeStatus',
       width: 200,
       align: 'left',
-      render(value: ActiveStatusEnum, record) {
-        const { text, type, color, textColor, fontWeight } = activeStatusMap[
-          value
-        ] || {
-          text: '',
-          type: '',
-          color: '',
-          textColor: '',
-          fontWeight: '',
-        };
+      render(value) {
+        const renderedValue =
+          activeStatusOptions.find((item) => item.code == value)?.label || '';
+
         return (
-          <CTag color={color} type={type}>
-            <RenderCell
-              value={
-                <span style={{ color: textColor, fontWeight: fontWeight }}>
-                  {text}
-                </span>
-              }
-              tooltip={text}
-            />
-          </CTag>
+          <CTooltip title={renderedValue} placement="topLeft">
+            <Tag
+              color={ActiveStatusMap[value as keyof typeof ActiveStatusMap]}
+              bordered={false}
+            >
+              {renderedValue}
+            </Tag>
+          </CTooltip>
         );
       },
     },
@@ -175,7 +176,10 @@ export const useColumnsEsimWarehouseList = ({
       align: 'left',
       render(value, record) {
         return (
-          <RenderCell value={dayjs(value).format(formatDate)} tooltip={value} />
+          <RenderCell
+            value={dayjs(value).format(formatDate)}
+            tooltip={dayjs(value).format(formatDateTime)}
+          />
         );
       },
     },
@@ -200,11 +204,7 @@ export const useColumnsEsimWarehouseList = ({
 
         return (
           <WrapperActionTable>
-            <CButton
-              type="default"
-              onClick={() => onGenQr(record)}
-              disabled={record.statusSub !== 0}
-            >
+            <CButton type="default" onClick={() => onGenQr(record)}>
               Gen QR
             </CButton>
             <div className="w-5">

@@ -1,3 +1,5 @@
+import { IParamsRequest } from '@vissoft-react/common';
+
 export interface IEsimWarehouseList {
   activeStatus: number;
   genQrBy: string;
@@ -12,6 +14,14 @@ export interface IEsimWarehouseList {
   status900: number;
   statusSub: number;
   subId: string;
+}
+
+export interface IEsimWarehouseParams extends IParamsRequest {
+  subStatus?: string;
+  activeStatus: string;
+  pckCode: string;
+  orgId: string;
+  textSearch: string;
 }
 
 export interface IEsimWarehouseDetails {

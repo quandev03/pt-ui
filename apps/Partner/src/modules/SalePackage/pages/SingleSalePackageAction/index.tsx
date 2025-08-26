@@ -76,8 +76,11 @@ export const SingleSalePackageAction = () => {
                   disabled
                   className="!text-black"
                   formatter={(value) =>
-                    value ? `${value.toLocaleString('vi-VN')} ₫` : ''
+                    value
+                      ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ₫'
+                      : ''
                   }
+                  parser={(value: AnyElement) => value.replace(/\s?₫|,/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -87,8 +90,11 @@ export const SingleSalePackageAction = () => {
                   disabled
                   className="!text-black"
                   formatter={(value) =>
-                    value ? `${value.toLocaleString('vi-VN')} ₫` : ''
+                    value
+                      ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ₫'
+                      : ''
                   }
+                  parser={(value: AnyElement) => value.replace(/\s?₫|,/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -96,7 +102,6 @@ export const SingleSalePackageAction = () => {
               <Form.Item
                 label="Số thuê bao"
                 name="isdn"
-                required
                 rules={[validateForm.required, validateForm.maxLength(11)]}
               >
                 <CInput
