@@ -1,4 +1,5 @@
 import { IPage } from '@vissoft-react/common';
+import { prefixSaleService } from '../../../../src/constants';
 import { safeApiClient } from '../../../../src/services';
 import {
   ICustomerInfo,
@@ -9,7 +10,6 @@ import {
   IQrCodeGen,
   IQrCodeSent,
 } from '../types';
-import { prefixSaleService } from '../../../../src/constants';
 
 export const esimWarehouseServices = {
   getEsimWarehouseList: (params: IEsimWarehouseParams) => {
@@ -44,7 +44,7 @@ export const esimWarehouseServices = {
         responseType: 'blob',
       }
     );
-    if (!res || !res || res.size === 0) {
+    if (!res || res.size === 0) {
       throw new Error(
         'Không có dữ liệu để xuất báo cáo. Vui lòng kiểm tra lại bộ lọc.'
       );
@@ -72,13 +72,6 @@ export const esimWarehouseServices = {
     );
     console.log('🚀 ~ ressssssssssssss:', res);
 
-    // if (res instanceof Blob && res.type === 'application/problem+json') {
-    //   // Convert Blob to JSON
-    //   const text = await res.text();
-    //   const jsonError: IErrorResponse = JSON.parse(text);
-    //   console.log('🚀 ~ jsonError:', jsonError);
-    //   throw jsonError; // Throw the parsed JSON error
-    // }
     return res;
   },
   getSendQrCode: async (data: IQrCodeSent) => {
