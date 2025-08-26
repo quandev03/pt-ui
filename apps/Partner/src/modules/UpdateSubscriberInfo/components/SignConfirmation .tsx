@@ -89,10 +89,8 @@ const SignConfirmation = () => {
       },
     });
   };
-  console.log('isSignSuccess', isSignSuccess, 'interval', interval);
   useEffect(() => {
     if (isSignSuccess && interval) {
-      console.log('interval now', interval);
       clearInterval(interval);
     }
   }, [isSignSuccess, interval]);
@@ -155,8 +153,12 @@ const SignConfirmation = () => {
                 <div className="relative">
                   <PreviewPdf fileUrl={contractUrl} title="Biên bản xác nhận" />
                   <div
-                    className="absolute cursor-pointer top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2"
-                    onClick={() => setIsOpenModalContract(true)}
+                    className={`absolute ${
+                      contractUrl ? 'cursor-pointer' : ''
+                    }  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2`}
+                    onClick={() => {
+                      if (contractUrl) setIsOpenModalContract(true);
+                    }}
                   ></div>
                 </div>
               </div>
@@ -165,8 +167,12 @@ const SignConfirmation = () => {
                 <div className="relative">
                   <PreviewPdf fileUrl={degree13Url} title="BBXN NĐ13" />
                   <div
-                    className="absolute cursor-pointer top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2"
-                    onClick={() => setIsOpenModalDegree(true)}
+                    className={`absolute ${
+                      degree13Url ? 'cursor-pointer' : ''
+                    }  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2`}
+                    onClick={() => {
+                      if (degree13Url) setIsOpenModalDegree(true);
+                    }}
                   ></div>
                 </div>
               </div>
