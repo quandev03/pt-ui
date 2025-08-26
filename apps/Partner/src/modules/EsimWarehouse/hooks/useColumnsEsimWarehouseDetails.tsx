@@ -39,7 +39,7 @@ export const useColumnsEsimWarehouseDetails =
           const action = translateActionType.find(
             (item) => item.code === value
           );
-          const displayLabel = action ? action.label : value; // Fallback to value if no label is found
+          const displayLabel = action ? action.label : value;
           return <RenderCell value={displayLabel} tooltip={displayLabel} />;
         },
       },
@@ -50,7 +50,8 @@ export const useColumnsEsimWarehouseDetails =
         align: 'left',
         fixed: 'left',
         render(value) {
-          return <RenderCell value={value} tooltip={value} />;
+          const displayValue = value === null ? 'KH' : value;
+          return <RenderCell value={displayValue} tooltip={displayValue} />;
         },
       },
       {
