@@ -299,12 +299,7 @@ export const ActionUserPartnerCatalog = () => {
               </Col>
 
               <Col span={12}>
-                <Form.Item
-                  label="Số điện thoại"
-                  name="phoneNumber"
-                  required
-                  rules={[validateForm.required, {}]}
-                >
+                <Form.Item label="Số điện thoại" name="phoneNumber">
                   <CInput
                     placeholder="Nhập số điện thoại"
                     maxLength={10}
