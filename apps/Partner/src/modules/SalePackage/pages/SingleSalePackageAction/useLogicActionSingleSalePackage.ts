@@ -13,6 +13,7 @@ export const useLogicActionSingleSalePackage = () => {
   const [form] = Form.useForm();
   const actionMode = useActionMode();
   const [openOtp, setOpenOtp] = useState<boolean>(false);
+  const [openWarning, setOpenWarning] = useState<boolean>(false);
   const { setSalePayload, salePayload } = useSellSinglePackageStore();
 
   const { data: packageCodeList } = useGetPackageCodes();
@@ -27,12 +28,14 @@ export const useLogicActionSingleSalePackage = () => {
   const handleCancel = useCallback(() => {
     form.resetFields();
     setOpenOtp(false);
+    setOpenWarning(false);
     setSalePayload(null);
-  }, [form, setSalePayload]);
+    navigate(-1);
+  }, [form, navigate, setSalePayload]);
 
   const { mutate: addPackageSingle, isPending: loadingAdd } =
     useAddPackageSingle(() => {
-      handleCancel(); // On success, call the existing cancel logic
+      handleCancel();
     });
 
   const handleCheckNumberPhone = useCallback(
@@ -55,21 +58,32 @@ export const useLogicActionSingleSalePackage = () => {
             errors: ['Số thuê bao không đúng định dạng'],
           },
         ]);
-        return;
       }
     },
     [form]
   );
 
-  const handleConfirmOtp = (pinCode: string) => {
-    if (!salePayload) return;
+  const handleCloseWarning = useCallback(() => {
+    setOpenWarning(false);
+  }, []);
 
-    const finalPayload: ISinglePackageSalePayload = {
-      ...salePayload,
-      pinCode,
-    };
-    addPackageSingle(finalPayload);
-  };
+  const handleConfirmWarning = useCallback(() => {
+    setOpenWarning(false);
+    setOpenOtp(true);
+  }, []);
+
+  const handleConfirmOtp = useCallback(
+    (pinCode: string) => {
+      if (!salePayload) return;
+
+      const finalPayload: ISinglePackageSalePayload = {
+        ...salePayload,
+        pinCode,
+      };
+      addPackageSingle(finalPayload);
+    },
+    [salePayload, addPackageSingle]
+  );
 
   const handleFormSubmit = useCallback(
     (values: { isdn: string; packageCode: string }) => {
@@ -88,7 +102,7 @@ export const useLogicActionSingleSalePackage = () => {
       };
 
       setSalePayload(payload);
-      setOpenOtp(true);
+      setOpenWarning(true); // Open warning modal
     },
     [setSalePayload, packageOptions]
   );
@@ -106,7 +120,6 @@ export const useLogicActionSingleSalePackage = () => {
     handleClose,
     actionMode,
     openOtp,
-    setOpenOtp,
     handleCancel,
     handleCheckNumberPhone,
     handleCloseOtp,
@@ -114,5 +127,8 @@ export const useLogicActionSingleSalePackage = () => {
     handleFormSubmit,
     handleConfirmOtp,
     loadingAdd,
+    openWarning,
+    handleConfirmWarning,
+    handleCloseWarning,
   };
 };

@@ -11,9 +11,11 @@ import { useSearchParams } from 'react-router-dom';
 import { IPackageSaleItem } from '../types';
 import { useGetFileDownloadFn } from './useDownloadFile';
 import { Tooltip } from 'antd';
+import { ProcessingStatusEnum, SalePackageTypeEnum } from '../constants/enum';
 
 export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
   const { mutate: getFileDownload } = useGetFileDownloadFn();
+
   const handleDownload = (url: string) => {
     getFileDownload(url);
   };
@@ -42,6 +44,9 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
       align: 'left',
       fixed: 'left',
       render(value, record) {
+        if (record.type === 1) {
+          return <RenderCell value={record.isdn} tooltip={record.isdn} />;
+        }
         return (
           <div className="cursor-pointer">
             <Tooltip title={value} placement="topLeft">
@@ -63,11 +68,11 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
       align: 'left',
       fixed: 'left',
       render(value) {
-        let displayText = 'Không xác định'; // Default text
-
-        if (value === 1) {
+        let displayText = '';
+        if (value === SalePackageTypeEnum.SINGLE_SALE) {
           displayText = 'Đơn lẻ';
-        } else if (value === 2) {
+        }
+        if (value === SalePackageTypeEnum.BATCH_SALE) {
           displayText = 'Theo lô';
         }
 
@@ -132,7 +137,7 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
         let displayText = '';
         let textColor = '';
 
-        if (value === 2) {
+        if (value === ProcessingStatusEnum.COMPLETED) {
           displayText = 'Hoàn thành';
           textColor = '#178801';
         } else {
@@ -150,24 +155,35 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
     },
     {
       title: 'Kết quả',
-      width: 120,
+      width: 140,
       align: 'left',
       render(_, record) {
-        const renderedValue = (
-          <>
-            <p>Số lượng thành công: {record.succeededNumber}</p>
-            <p>Số lượng thất bại: {record.failedNumber}</p>
-            <p>
-              File kết quả:{' '}
-              <span
-                className="text-blue-600 underline cursor-pointer"
-                onClick={() => handleDownload(record.resultFileUrl)}
-              >
-                File
-              </span>
-            </p>
-          </>
-        );
+        let renderedValue;
+        if (record.type === SalePackageTypeEnum.SINGLE_SALE) {
+          renderedValue = (
+            <div className="my-2">
+              <p>Số lượng thành công: {record.succeededNumber}</p>
+              <p>Số lượng thất bại: {record.failedNumber}</p>
+            </div>
+          );
+        }
+        if (record.type === SalePackageTypeEnum.BATCH_SALE) {
+          renderedValue = (
+            <div className="my-2">
+              <p>Số lượng thành công: {record.succeededNumber}</p>
+              <p>Số lượng thất bại: {record.failedNumber}</p>
+              <p>
+                File kết quả:
+                <span
+                  className="text-blue-600 underline cursor-pointer"
+                  onClick={() => handleDownload(record.resultFileUrl)}
+                >
+                  File
+                </span>
+              </p>
+            </div>
+          );
+        }
         return <RenderCell value={renderedValue} />;
       },
     },

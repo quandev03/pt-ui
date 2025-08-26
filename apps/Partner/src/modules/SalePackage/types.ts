@@ -9,8 +9,10 @@ export interface IPackageSaleItem {
   fileName: string;
   fileUrl: string;
   id: number;
+  isdn: string;
   resultFileUrl: string;
   status: number;
+  type: number;
   totalNumber: number;
 }
 export interface IPackageSaleParams extends IParamsRequest {

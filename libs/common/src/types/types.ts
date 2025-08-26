@@ -124,11 +124,12 @@ export interface IErrorResponse {
 }
 
 export interface IParamItem {
-  label: string;
+  code: string;
   value: string;
 }
 
 export interface IAllParamResponse {
   CLIENT_TYPE: IParamItem[];
   GENDER: IParamItem[];
+  BATCH_PACKAGE_SALE_TYPE: IParamItem[];
 }
