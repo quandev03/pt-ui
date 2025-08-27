@@ -23,7 +23,6 @@ export const CustomerInfoTable = ({ subId }: CustomerInfoTableProps) => {
       label: item.value,
     }));
   }, [getParams]);
-  console.log('🚀 ~ CustomerInfoTable ~ subsGender:', subsGender);
 
   const { data: customerInfo } = useGetCusomerInfo(subId);
 
