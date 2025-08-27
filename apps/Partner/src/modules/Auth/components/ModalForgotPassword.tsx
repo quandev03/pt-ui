@@ -36,7 +36,7 @@ const ModalForgotPassword = ({ open, onClose }: Props) => {
   const handleFinish = (values: IInitPayload) => {
     initForgotPassword({
       ...values,
-      callbackUri: `/#/forgot-password?token=`,
+      callbackUri: `/forgot-password?token=`,
     });
   };
   const handlePaste = async (
