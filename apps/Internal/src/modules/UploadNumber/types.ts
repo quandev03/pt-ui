@@ -72,3 +72,7 @@ export type IResponseUploadNumber = {
   validFailedNumber: number;
   validSucceededNumber: number;
 };
+export interface IFileInfo {
+  fileName: string;
+  fileUrl: string;
+}

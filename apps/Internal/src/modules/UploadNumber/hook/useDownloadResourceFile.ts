@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
+import { prefixSaleService } from 'apps/Internal/src/constants';
 import { safeApiClient } from 'apps/Internal/src/services';
-import { urlUploadNumber } from '../services/url';
 interface ExportRequest {
   uri: string;
   filename?: string;
@@ -20,11 +20,8 @@ const openSaveDialog = (data: Blob, filename?: string) => {
 export const useDownloadResourceFile = () => {
   return useMutation({
     mutationFn: async (payload: ExportRequest) => {
-      return await safeApiClient.post<Blob>(
-        `${urlUploadNumber}/files`,
-        {
-          fileUrl: payload.uri,
-        },
+      return await safeApiClient.get<Blob>(
+        `${prefixSaleService}/files/download?fileUrl=${payload.uri}`,
         {
           responseType: 'blob',
         }
