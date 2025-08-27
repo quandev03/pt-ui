@@ -93,7 +93,9 @@ export const ActionPage = () => {
     if (actionType === IModeAction.READ && id && numberTransactionDetail) {
       form.setFieldsValue({
         description: numberTransactionDetail.description,
-        numberFile: {},
+        numberFile: {
+          name: numberTransactionDetail.uploadFile?.fileName,
+        },
       });
     }
   }, [
@@ -101,13 +103,19 @@ export const ActionPage = () => {
     id,
     numberTransactionDetail,
     loadingGetDetailUploadDigitalResources,
+    form,
   ]);
   const { mutate: handleDownloadFile } = useDownloadResourceFile();
   const handleDownloadUploadFile = useCallback(() => {
     handleDownloadFile({
-      uri: '',
+      uri: numberTransactionDetail?.uploadFile.fileUrl || '',
+      filename: numberTransactionDetail?.uploadFile.fileName,
     });
-  }, [handleDownloadFile]);
+  }, [
+    handleDownloadFile,
+    numberTransactionDetail?.uploadFile.fileUrl,
+    numberTransactionDetail?.uploadFile.fileName,
+  ]);
   return (
     <Wrapper>
       <TitleHeader>{renderTitle()}</TitleHeader>

@@ -17,7 +17,7 @@ export const APP_VERSION = (
   window as unknown as { _env_: { [key: string]: string } }
 )._env_?.VITE_APP_VERSION;
 
-export const APP_CODE = 'vnsky-internal';
+export const APP_CODE = 'hivn-internal';
 
 export const STORAGE_KEY_PREFIX =
   (window as unknown as { _env_: { [key: string]: string } })._env_
@@ -46,5 +46,5 @@ export const GOOGLE_CLIENT_ID =
 export const LOADER_INIT_KEY = 'app_loader_initialized';
 export const versionApi = '/v1';
 
-export const prefixAuthService = 'hvn-admin-service/private';
-export const prefixSaleService = 'hvn-sale-service/private/api' + versionApi;
+export const prefixAuthService = 'hivn-admin-service/private';
+export const prefixSaleService = 'hivn-sale-service/private/api' + versionApi;

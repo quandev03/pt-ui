@@ -65,7 +65,7 @@ export const layoutPageService: ILayoutService = {
   },
   fetcherChangePassword: async (payload: PayloadType) => {
     return safeApiClient.post(
-      `hvn-admin-service/private/api/auth/change-password`,
+      `hivn-admin-service/private/api/auth/change-password`,
       payload
     );
   },
