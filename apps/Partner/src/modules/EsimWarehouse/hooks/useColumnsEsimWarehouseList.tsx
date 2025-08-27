@@ -193,12 +193,12 @@ export const useColumnsEsimWarehouseList = ({
           {
             key: IModeAction.UPDATE,
             onClick: () => onSendQr(record),
-            label: <Text>Gửi QR</Text>,
+            label: <Text>Gửi lại QR</Text>,
           },
           {
             key: IModeAction.READ,
             onClick: () => onViewDetails(record),
-            label: <Text>Xem chi tiết eSIM</Text>,
+            label: <Text>Xem chi tiết</Text>,
           },
         ].filter((item) => permission.getAllPermissions().includes(item.key));
 
