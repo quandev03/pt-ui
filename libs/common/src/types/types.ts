@@ -135,4 +135,5 @@ export interface IAllParamResponse {
   SUBSCRIBER_ACTIVE_SUB_STATUS: IParamItem[];
   SUBSCRIBER_SUB_STATUS: IParamItem[];
   ACTION_HISTORY_ACTION_CODE: IParamItem[];
+  SUBSCRIBER_GENDER: IParamItem[];
 }

@@ -1,4 +1,4 @@
-import { formatDate, RenderCell } from '@vissoft-react/common';
+import { formatDate, formatDateTime, RenderCell } from '@vissoft-react/common';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
@@ -64,7 +64,7 @@ export const useColumnsEsimWarehouseDetails =
           return (
             <RenderCell
               value={dayjs(value).format(formatDate)}
-              tooltip={value}
+              tooltip={dayjs(value).format(formatDateTime)}
             />
           );
         },
