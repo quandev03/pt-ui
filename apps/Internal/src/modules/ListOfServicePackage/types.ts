@@ -32,7 +32,7 @@ export const TransactionStatusTagMap: Record<
   TransactionStatusCode,
   TypeTagEnum
 > = {
-  [TransactionStatusCode.PENDING]: TypeTagEnum.WAITING,
+  [TransactionStatusCode.PENDING]: TypeTagEnum.WARNING,
   [TransactionStatusCode.IN_PROGRESS]: TypeTagEnum.PROCESSING,
   [TransactionStatusCode.COMPLETED]: TypeTagEnum.SUCCESS,
 };

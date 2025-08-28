@@ -44,7 +44,7 @@ export const useGetTableList = (): ColumnsType<IPackageSaleItem> => {
       align: 'left',
       fixed: 'left',
       render(value, record) {
-        if (record.type === 1) {
+        if (record.type === SalePackageTypeEnum.SINGLE_SALE) {
           return <RenderCell value={record.isdn} tooltip={record.isdn} />;
         }
         return (

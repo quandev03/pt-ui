@@ -5,10 +5,10 @@
   "scripts": {
     "internal": "npx nx serve internal",
     "build:internal": "npx nx run internal:build",
-    "start:internal": "npx serve dist/apps/internal -l 3001",
-    "partner": "npx nx serve partner",
+    "start:internal": "npx serve dist/apps/internal -s",
+    "partner": "npx nx serve partner --port=4201",
     "build:partner": "npx nx run partner:build",
-    "start:partner": "npx serve dist/apps/partner -l 3000",
+    "start:partner": "npx serve dist/apps/partner -l 3001 -s",
     "nx:reset": "npx nx reset",
     "nx:repair": "npx nx repair",
     "vis-add": "yarn generate-lib --",

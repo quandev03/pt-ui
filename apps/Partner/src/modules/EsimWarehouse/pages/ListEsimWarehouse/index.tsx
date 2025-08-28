@@ -19,6 +19,7 @@ export const ListEsimWarehouse = memo(() => {
     handleCloseGenQrModal,
     genQrCodeInProcess,
     qrCodeUrl,
+    exportComponent,
   } = useLogicListEsimWarehouse();
 
   return (
@@ -27,6 +28,7 @@ export const ListEsimWarehouse = memo(() => {
         title="Danh sách eSIM"
         columns={columns}
         filterItems={filters}
+        actionComponent={exportComponent}
         data={esimList}
         loading={loadingEsimList}
         searchComponent={

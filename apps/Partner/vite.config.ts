@@ -6,16 +6,25 @@ import { resolve } from 'path';
 
 export default defineConfig({
   root: __dirname,
+  base: '/daily/',
   cacheDir: '../../node_modules/.vite/apps/partner',
 
   server: {
-    port: 4200,
-    host: 'localhost',
+    port: 4201,
+    host: true,
+    strictPort: true,
+    fs: {
+      allow: ['..'],
+    },
+    allowedHosts: true
   },
 
   preview: {
-    port: 4300,
-    host: 'localhost',
+    port: 4201,
+    host: true,
+    strictPort: true,
+    allowedHosts: true,
+    cors: true
   },
 
   plugins: [react(), nxViteTsPaths()],
@@ -37,6 +46,11 @@ export default defineConfig({
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
     },
   },
 

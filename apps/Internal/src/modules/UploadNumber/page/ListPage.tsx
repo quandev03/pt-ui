@@ -13,6 +13,7 @@ import { useColumnTable } from '../hook/useColumnTable';
 import { useFilters } from '../hook/useFilters';
 import useGetListUploadNumber from '../hook/useGetListUploadNumber';
 import { IParamsRequestUploadDigitalResources } from '../types';
+import { useDownloadResourceFile } from '../hook/useDownloadResourceFile';
 
 export const ListPage = () => {
   const navigate = useNavigate();
@@ -32,7 +33,17 @@ export const ListPage = () => {
     );
   }, [permission]);
   const filters = useFilters();
-  const { columns } = useColumnTable();
+  const { mutate: handleDownloadFile } = useDownloadResourceFile();
+  const { columns } = useColumnTable({
+    onDownload: (isChecktFile, record) => {
+      handleDownloadFile({
+        uri: record?.fileUrl ?? '',
+        filename: isChecktFile
+          ? 'Ket_qua_kiem_tra.xlsx'
+          : 'Ket_qua_thuc_hien.xlsx',
+      });
+    },
+  });
   return (
     <>
       <LayoutList

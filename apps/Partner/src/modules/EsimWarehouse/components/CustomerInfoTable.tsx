@@ -1,9 +1,9 @@
 import { CInput, formatDate } from '@vissoft-react/common';
 import { Col, Form, Row } from 'antd';
 import { useGetCusomerInfo } from '../hooks/useGetCustomerInfo';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import dayjs from 'dayjs';
-import { GENDER_MAP } from '../constants/enum';
+import { useGetParamsOption } from '../../../hooks/useGetParamsOption';
 
 interface CustomerInfoTableProps {
   subId: string | undefined;
@@ -12,10 +12,26 @@ interface CustomerInfoTableProps {
 export const CustomerInfoTable = ({ subId }: CustomerInfoTableProps) => {
   const [form] = Form.useForm();
 
+  const { data: getParams } = useGetParamsOption();
+
+  const subsGender = useMemo(() => {
+    if (!getParams?.SUBSCRIBER_GENDER) {
+      return [];
+    }
+    return getParams.SUBSCRIBER_GENDER.map((item) => ({
+      code: item.code,
+      label: item.value,
+    }));
+  }, [getParams]);
+
   const { data: customerInfo } = useGetCusomerInfo(subId);
 
   useEffect(() => {
     if (customerInfo) {
+      const genderLabel =
+        subsGender.find((item) => item.code === String(customerInfo.gender))
+          ?.label || 'Không xác định';
+
       form.setFieldsValue({
         ...customerInfo,
         nationality: customerInfo.nationality,
@@ -23,7 +39,7 @@ export const CustomerInfoTable = ({ subId }: CustomerInfoTableProps) => {
           ? customerInfo.typeDocument
           : 'Hộ chiếu',
         contractCode: customerInfo.contractCode,
-        gender: GENDER_MAP[customerInfo.gender] || 'Không xác định',
+        gender: genderLabel,
         customerCode: customerInfo.customerCode,
         fullName: customerInfo.fullName,
         birthOfDate: customerInfo.birthOfDate
@@ -36,7 +52,7 @@ export const CustomerInfoTable = ({ subId }: CustomerInfoTableProps) => {
         idNumber: customerInfo.idNumber,
       });
     }
-  }, [customerInfo, form]);
+  }, [customerInfo, form, subsGender]);
 
   return (
     <Form labelAlign="left" colon={false} form={form} disabled={true}>

@@ -6,16 +6,25 @@ import { resolve } from 'path';
 
 export default defineConfig({
   root: __dirname,
+  base: '/admin/',
   cacheDir: '../../node_modules/.vite/apps/internal',
 
   server: {
     port: 4200,
-    host: 'localhost',
+    host: true,
+    strictPort: true,
+    fs: {
+      allow: ['..'],
+    },
+    allowedHosts: true
   },
 
   preview: {
-    port: 4300,
-    host: 'localhost',
+    port: 4200,
+    host: true,
+    strictPort: true,
+    allowedHosts: true,
+    cors: true
   },
 
   plugins: [react(), nxViteTsPaths()],
@@ -38,6 +47,22 @@ export default defineConfig({
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+        assetFileNames: (assetInfo) => {
+          if (!assetInfo.name) return 'assets/[name]-[hash][extname]';
+          const info = assetInfo.name.split('.');
+          const ext = info[info.length - 1];
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
+            return `assets/images/[name]-[hash][extname]`;
+          }
+          return `assets/[name]-[hash][extname]`;
+        },
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+      },
     },
   },
 
