@@ -21,7 +21,6 @@ export interface IPackageSaleParams extends IParamsRequest {
 export interface ISinglePackageSalePayload {
   isdn: string;
   pckCode: string;
-  pinCode: string;
 }
 export interface IBulkCheckPayload {
   attachment: File;
@@ -29,7 +28,6 @@ export interface IBulkCheckPayload {
 
 export interface IBulkSalePayload {
   attachment: File;
-  pinCode: string;
 }
 
 export interface IResGenOtp {
