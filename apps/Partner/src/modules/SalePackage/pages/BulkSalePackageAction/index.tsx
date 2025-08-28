@@ -9,7 +9,6 @@ import {
 import { Col, Form, Row } from 'antd';
 import { useEffect } from 'react';
 import { useGetDebitLimit } from '../../../../../src/hooks/useGetDebitLimit';
-import { ModalOtpMemo } from '../components/ModalOtp';
 import { useLogicBulkSalePackageAction } from './useLogicBulkSalePackageAction';
 
 export const BulkSalePackageAction = () => {
@@ -17,11 +16,7 @@ export const BulkSalePackageAction = () => {
     form,
     handleClose,
     handleDownloadTemplate,
-    handleCancel,
-    openOtp,
-    handleCloseOtp,
     handleSubmitAttachment,
-    handleConfirmWithPin,
     loadingAddBulk,
   } = useLogicBulkSalePackageAction();
 
@@ -91,17 +86,12 @@ export const BulkSalePackageAction = () => {
           </Row>
         </div>
         <div className="flex gap-4 flex-wrap justify-end mt-7">
-          <CButton onClick={() => form.submit()}>Thực hiện</CButton>
+          <CButton loading={loadingAddBulk} onClick={() => form.submit()}>
+            Thực hiện
+          </CButton>
           <CButtonClose onClick={handleClose} />
         </div>
       </Form>
-      <ModalOtpMemo
-        handleSuccess={handleCancel}
-        open={openOtp}
-        onClose={handleCloseOtp}
-        onConfirm={handleConfirmWithPin}
-        loading={loadingAddBulk}
-      />
     </div>
   );
 };

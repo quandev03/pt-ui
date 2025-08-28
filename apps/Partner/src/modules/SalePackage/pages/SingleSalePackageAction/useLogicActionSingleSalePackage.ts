@@ -69,21 +69,9 @@ export const useLogicActionSingleSalePackage = () => {
 
   const handleConfirmWarning = useCallback(() => {
     setOpenWarning(false);
-    setOpenOtp(true);
-  }, []);
-
-  const handleConfirmOtp = useCallback(
-    (pinCode: string) => {
-      if (!salePayload) return;
-
-      const finalPayload: ISinglePackageSalePayload = {
-        ...salePayload,
-        pinCode,
-      };
-      addPackageSingle(finalPayload);
-    },
-    [salePayload, addPackageSingle]
-  );
+    if (!salePayload) return;
+    addPackageSingle(salePayload); // Call API here
+  }, [salePayload, addPackageSingle]);
 
   const handleFormSubmit = useCallback(
     (values: { isdn: string; packageCode: string }) => {
@@ -96,13 +84,13 @@ export const useLogicActionSingleSalePackage = () => {
         return;
       }
 
-      const payload: Omit<ISinglePackageSalePayload, 'pinCode'> = {
+      const payload: Omit<ISinglePackageSalePayload, 'id'> = {
         isdn: handleConvertIsdn(values.isdn),
         pckCode: values.packageCode,
       };
 
       setSalePayload(payload);
-      setOpenWarning(true); // Open warning modal
+      setOpenWarning(true);
     },
     [setSalePayload, packageOptions]
   );
@@ -125,7 +113,6 @@ export const useLogicActionSingleSalePackage = () => {
     handleCloseOtp,
     packageOptions,
     handleFormSubmit,
-    handleConfirmOtp,
     loadingAdd,
     openWarning,
     handleConfirmWarning,

@@ -3,10 +3,10 @@ import { ISinglePackageSalePayload } from '../types';
 
 interface SellSinglePackageState {
   // We will store the payload here, without the pinCode
-  salePayload: Omit<ISinglePackageSalePayload, 'pinCode'> | null;
+  salePayload: Omit<ISinglePackageSalePayload, 'id'> | null;
   // Action to set the payload
   setSalePayload: (
-    payload: Omit<ISinglePackageSalePayload, 'pinCode'> | null
+    payload: Omit<ISinglePackageSalePayload, 'id'> | null
   ) => void;
 }
 

@@ -10,7 +10,6 @@ export const useLogicBulkSalePackageAction = () => {
   const [form] = Form.useForm();
   const [openOtp, setOpenOtp] = useState<boolean>(false);
   const { mutate: downloadFile } = useGetFile();
-  const [fileToSubmit, setFileToSubmit] = useState<File | null>(null);
   const { mutate: addPackageBulk, isPending: loadingAddBulk } = useSubmitData(
     () => {
       handleCancel();
@@ -30,33 +29,19 @@ export const useLogicBulkSalePackageAction = () => {
     downloadFile();
   }, [downloadFile]);
 
-  const handleSubmitAttachment = useCallback((values: AnyElement) => {
-    const file = values.attachment;
-    if (!file) {
-      NotificationError({ message: 'Vui lòng tải lên một file.' });
-      return;
-    }
-
-    setFileToSubmit(file);
-    setOpenOtp(true);
-  }, []);
-
-  const handleConfirmWithPin = useCallback(
-    (pinCode: string) => {
-      if (!fileToSubmit) {
-        NotificationError({
-          message: 'Không tìm thấy file để thực hiện.',
-        });
-        handleCloseOtp(); // Close modal if there's an error
+  const handleSubmitAttachment = useCallback(
+    (values: AnyElement) => {
+      const file = values.attachment;
+      if (!file) {
+        NotificationError({ message: 'Vui lòng tải lên một file.' });
         return;
       }
-      const validFile = form.getFieldValue('attachment');
+      // Directly call API here, no OTP modal
       const formData = new FormData();
-      formData.append('attachment', validFile);
-      formData.append('pinCode', pinCode);
+      formData.append('attachment', file);
       addPackageBulk(formData);
     },
-    [addPackageBulk, fileToSubmit, form, handleCloseOtp]
+    [addPackageBulk]
   );
 
   return {
@@ -67,7 +52,6 @@ export const useLogicBulkSalePackageAction = () => {
     openOtp,
     handleCloseOtp,
     handleSubmitAttachment,
-    handleConfirmWithPin,
     loadingAddBulk,
   };
 };
