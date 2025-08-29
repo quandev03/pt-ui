@@ -26,9 +26,6 @@ export const PartnerCatalogList = () => {
   const [form] = Form.useForm();
   const { data: organizationPartner, isLoading: loadingTable } =
     useGetOrganizationPartner(formatQueryParams(cleanParams(params)));
-  const {
-    params: { PARTNER_STATUS = [] },
-  } = useConfigAppStore();
   const [isOpenAssignModal, setIsOpenAssignModal] = useState(false);
   const [selectedPartner, setSelectedPartner] =
     useState<IOrganizationUnitDTO>();
@@ -55,7 +52,7 @@ export const PartnerCatalogList = () => {
         placeholder: 'Chọn trạng thái',
       },
     ];
-  }, [PARTNER_STATUS]);
+  }, []);
   const handleAction = useCallback(
     (action: IModeAction, record: IOrganizationUnitDTO) => {
       switch (action) {
@@ -80,11 +77,7 @@ export const PartnerCatalogList = () => {
     [navigate]
   );
 
-  const columns = useColumnsTablePartnerCatalog(
-    params,
-    PARTNER_STATUS,
-    handleAction
-  );
+  const columns = useColumnsTablePartnerCatalog(params, handleAction);
   const handleAdd = useCallback(() => {
     navigate(pathRoutes.partnerCatalogAdd);
   }, []);

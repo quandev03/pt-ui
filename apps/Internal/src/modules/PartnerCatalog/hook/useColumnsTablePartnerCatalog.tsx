@@ -24,7 +24,6 @@ import useConfigAppStore from '../../Layouts/stores';
 
 export const useColumnsTablePartnerCatalog = (
   params: IParamsRequest,
-  PARTNER_STATUS: IOption[],
   onAction: (type: IModeAction, record: IOrganizationUnitDTO) => void
 ) => {
   const { menuData } = useConfigAppStore();

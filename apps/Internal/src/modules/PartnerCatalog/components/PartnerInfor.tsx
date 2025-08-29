@@ -11,6 +11,7 @@ import { Col, Form, Row } from 'antd';
 import useFormInstance from 'antd/es/form/hooks/useFormInstance';
 import { useGetPartnerInfoByCode } from '../hook';
 import { IPartner } from '../types';
+import { FocusEvent } from 'react';
 
 const PartnerInfor = () => {
   const actionMode = useActionMode();
@@ -38,8 +39,13 @@ const PartnerInfor = () => {
     (data) => onGetPartnerSuccess(data),
     (error: IFieldErrorsItem[]) => onGetPartnerError(error)
   );
+  const handleBlur = (e: FocusEvent<HTMLInputElement>, field: string) => {
+    form.setFieldValue(field, e.target.value.trim());
+    form.validateFields([field]);
+  };
   const handleGetPartnerInfo = () => {
     const orgCode = form.getFieldValue('orgCode');
+    // const employeeCode = form.getFieldValue('employeeCode');
     if (orgCode) getPartnerInfoByCode(orgCode);
   };
   return (
@@ -62,7 +68,28 @@ const PartnerInfor = () => {
               preventSpecial
               preventVietnamese
               uppercase
-              onBlur={handleGetPartnerInfo}
+              onBlur={(e) => {
+                handleBlur(e, 'orgCode');
+                handleGetPartnerInfo();
+              }}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            label="Mã nhân viên"
+            name="employeeCode"
+            required
+            rules={[validateForm.required]}
+          >
+            <CInput
+              placeholder="Nhập mã nhân viên"
+              maxLength={30}
+              disabled={actionMode !== IModeAction.CREATE}
+              preventSpecial
+              preventVietnamese
+              uppercase
+              onBlur={(e) => handleBlur(e, 'employeeCode')}
             />
           </Form.Item>
         </Col>
