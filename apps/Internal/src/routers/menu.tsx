@@ -89,12 +89,12 @@ export const routerItems: RouterItems[] = [
     label: 'Danh sách eSIM',
   },
   // Báo cáo
-  {
-    key: pathRoutes.report,
-    label: 'Báo cáo',
-    icon: <NotebookPen />,
-    hasChild: true,
-  },
+  // {
+  //   key: pathRoutes.report,
+  //   label: 'Báo cáo',
+  //   icon: <NotebookPen />,
+  //   hasChild: true,
+  // },
   // {
   //   key: pathRoutes.reportPartner,
   //   label: 'Báo cáo đơn hàng đối tác',
