@@ -20,6 +20,8 @@ const fetch = async (data: IListOfServicePackageForm) => {
     status: EStatus.ACTIVE,
     pckCode: data.pckCode,
     description: data.description ?? '',
+    cycleValue: data.cycleValue,
+    cycleUnit: data.cycleUnit,
   };
   formData.append('images', data.images as File);
   formData.append(

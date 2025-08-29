@@ -1,38 +1,17 @@
 import {
-  CButtonDetail,
-  IModeAction,
   RenderCell,
-  WrapperActionTable,
   decodeSearchParams,
+  formatCurrencyVND,
   formatDate,
-  usePermissions,
 } from '@vissoft-react/common';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { IReportPartnerItem } from '../types';
-import { pathRoutes } from '../../../routers';
-import useConfigAppStore from '../../Layouts/stores';
 
 export const useGetTableList = (): ColumnsType<IReportPartnerItem> => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
-  const { menuData } = useConfigAppStore();
-  const permission = usePermissions(menuData);
-  const navigate = useNavigate();
-
-  const handleAction = (action: IModeAction, record: IReportPartnerItem) => {
-    switch (action) {
-      case IModeAction.READ: {
-        const to = pathRoutes.reportPartnerView;
-        if (typeof to === 'function') {
-          navigate(to(record.id));
-        }
-        break;
-      }
-    }
-  };
-
   return [
     {
       title: 'STT',
@@ -50,53 +29,54 @@ export const useGetTableList = (): ColumnsType<IReportPartnerItem> => {
     },
     {
       title: 'Mã đơn hàng',
-      dataIndex: 'orderCode',
-      width: 200,
+      dataIndex: 'orderNo',
+      width: 180,
       align: 'left',
-      render(value, record) {
+      render(value) {
         return <RenderCell value={value} tooltip={value} />;
       },
     },
     {
       title: 'Mã đối tác',
-      dataIndex: 'partnerCode',
-      width: 250,
+      dataIndex: 'orgCode',
+      width: 150,
       align: 'left',
-      render(value, record) {
+      render(value) {
         return <RenderCell value={value} tooltip={value} />;
       },
     },
     {
       title: 'Tên đối tác',
-      dataIndex: 'partnerName',
-      width: 100,
+      dataIndex: 'orgName',
+      width: 230,
       align: 'left',
       render(value) {
         return <RenderCell value={value} />;
       },
     },
     {
-      title: 'Loại dịch vụ',
-      dataIndex: 'serviceType',
-      width: 250,
+      title: 'Tổng tiền gói cước gán thành công',
+      dataIndex: 'amountTotal',
+      width: 260,
       align: 'left',
       render(value) {
-        return <RenderCell value={value} />;
-      },
-    },
-    {
-      title: 'Tổng tiền gói cước',
-      dataIndex: 'agentName',
-      width: 250,
-      align: 'left',
-      render(value) {
-        return <RenderCell value={value} />;
+        const renderedValue = formatCurrencyVND(value ?? '');
+        return <RenderCell value={renderedValue} />;
       },
     },
     {
       title: 'Số lượng eSIM',
-      dataIndex: 'esimCount',
-      width: 250,
+      dataIndex: 'quantity',
+      width: 120,
+      align: 'left',
+      render(value) {
+        return <RenderCell value={value} />;
+      },
+    },
+    {
+      title: 'eSIM đặt thành công',
+      dataIndex: 'succeededNumber',
+      width: 160,
       align: 'left',
       render(value) {
         return <RenderCell value={value} />;
@@ -104,7 +84,7 @@ export const useGetTableList = (): ColumnsType<IReportPartnerItem> => {
     },
     {
       title: 'Người đặt hàng',
-      dataIndex: 'orderedBy',
+      dataIndex: 'createdBy',
       width: 250,
       align: 'left',
       render(value) {
@@ -114,32 +94,13 @@ export const useGetTableList = (): ColumnsType<IReportPartnerItem> => {
 
     {
       title: 'Ngày đặt hàng',
-      dataIndex: 'orderedAt',
+      dataIndex: 'orderDate',
       width: 120,
       align: 'left',
-      render(value, record) {
+      render(value) {
         const textformatDate = value ? dayjs(value).format(formatDate) : '';
 
         return <RenderCell value={textformatDate} />;
-      },
-    },
-    {
-      title: 'Hành động',
-      align: 'center',
-      width: 150,
-      fixed: 'right',
-      render(_, record) {
-        return (
-          <WrapperActionTable>
-            {permission.canRead && (
-              <CButtonDetail
-                onClick={() => {
-                  handleAction(IModeAction.READ, record);
-                }}
-              />
-            )}
-          </WrapperActionTable>
-        );
       },
     },
   ];

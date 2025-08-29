@@ -3,16 +3,22 @@ import { useSearchParams } from 'react-router-dom';
 import useConfigAppStore from '../../../Layouts/stores';
 
 import {
+  CButtonExport,
   decodeSearchParams,
+  FilterItemProps,
+  formatDateBe,
+  formatDateEnglishV2,
   formatQueryParams,
   usePermissions,
-  FilterItemProps,
-  CButtonExport,
 } from '@vissoft-react/common';
 import { ColumnsType } from 'antd/es/table';
+import { useExportFile } from 'apps/Internal/src/hooks/useExportFile';
+import { useGetAllOrganizationUnit } from 'apps/Internal/src/hooks/useGetAllPartners';
+import { useGetAllReportPartner } from '../../hooks';
 import { useGetTableList } from '../../hooks/useGetTableList';
 import { IReportPartnerItem, IReportPartnerParams } from '../../types';
-import { useGetAllReportPartner } from '../../hooks';
+import { prefixSaleService } from 'apps/Internal/src/constants';
+import dayjs from 'dayjs';
 
 export const useLogicListReport = () => {
   const [searchParams] = useSearchParams();
@@ -22,54 +28,48 @@ export const useLogicListReport = () => {
   const permission = usePermissions(menuData);
   const { data: listReportPartner, isLoading: loadingTable } =
     useGetAllReportPartner(formatQueryParams<IReportPartnerParams>(params));
-
+  const { data: agencyOptions = [] } = useGetAllOrganizationUnit();
   const columns: ColumnsType<IReportPartnerItem> = useGetTableList();
-
+  const { mutate: exportFile } = useExportFile();
   const handleExport = useCallback(() => {
-    console.log('handleExport called');
-  }, []);
-
+    const { page, size, ...rest } = params;
+    exportFile({
+      params: formatQueryParams(rest),
+      url: `${prefixSaleService}/revenue-statistic/order/export-excel`,
+      filename: `Bao_cao_don_hang_doi_tac.xlsx`,
+    });
+  }, [params]);
   const actionComponent = useMemo(() => {
     return (
       <div>
-        {permission.canCreate && <CButtonExport onClick={handleExport} />}
+        {permission.canRead && <CButtonExport onClick={handleExport} />}
       </div>
     );
-  }, [handleExport, permission.canCreate]);
+  }, [handleExport, permission.canRead]);
 
   const filters: FilterItemProps[] = useMemo(() => {
     return [
       {
-        label: 'Trạng thái đơn hàng',
-        type: 'Select',
-        name: 'status',
-        stateKey: 'status',
-        showDefault: true,
-        options: [],
-        placeholder: 'Trạng thái đơn hàng',
+        label: 'Đối tác',
+        type: 'TreeSelect',
+        name: 'orgCode',
+        treeData: agencyOptions,
+        showSearch: true,
+        placeholder: 'Đối tác',
       },
-      {
-        label: 'Loại dịch vụ',
-        type: 'Select',
-        name: 'serviceType',
-        stateKey: 'serviceType',
-        showDefault: true,
-        options: [],
-        placeholder: 'Loại dịch vụ',
-      },
-
       {
         label: 'Ngày đặt hàng',
-        formatSearch: 'YYYY-MM-DDTHH:mm:ss.SSSZ',
+        formatSearch: formatDateEnglishV2,
         type: 'DateRange',
         name: 'orderedAt',
-        keySearch: ['orderedAtFrom', 'orderedAtTo'],
+        keySearch: ['startDate', 'endDate'],
         placeholder: ['Ngày bắt đầu', 'Ngày kết thúc'],
         showDefault: true,
         format: 'DD/MM/YYYY',
+        defaultValue: [dayjs().subtract(29, 'day'), dayjs()],
       },
     ];
-  }, []);
+  }, [agencyOptions]);
 
   return {
     listReportPartner,

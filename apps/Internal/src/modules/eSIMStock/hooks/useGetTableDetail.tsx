@@ -7,11 +7,14 @@ import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { useSearchParams } from 'react-router-dom';
 import { IeSIMStockDetail } from '../types';
+import useConfigAppStore from '../../Layouts/stores';
 
 export const useGetTableDetail = (): ColumnsType<IeSIMStockDetail> => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
-
+  const {
+    params: { ACTION_HISTORY_ACTION_CODE = [] },
+  } = useConfigAppStore();
   return [
     {
       title: 'STT',
@@ -32,8 +35,11 @@ export const useGetTableDetail = (): ColumnsType<IeSIMStockDetail> => {
       dataIndex: 'actionCode',
       width: 200,
       align: 'left',
-      render(value, record) {
-        return <RenderCell value={value} tooltip={value} />;
+      render(value) {
+        const renderValue =
+          ACTION_HISTORY_ACTION_CODE.find((item) => item.code === value)
+            ?.value || '';
+        return <RenderCell value={renderValue} tooltip={renderValue} />;
       },
     },
     {
@@ -41,7 +47,7 @@ export const useGetTableDetail = (): ColumnsType<IeSIMStockDetail> => {
       dataIndex: 'createdBy',
       width: 250,
       align: 'left',
-      render(value, record) {
+      render(value) {
         return <RenderCell value={value} tooltip={value} />;
       },
     },
@@ -51,7 +57,7 @@ export const useGetTableDetail = (): ColumnsType<IeSIMStockDetail> => {
       dataIndex: 'actionDate',
       width: 120,
       align: 'left',
-      render(value, record) {
+      render(value) {
         const textformatDate = value
           ? dayjs(value).format(formatDateTimeHHmmRevert)
           : '';

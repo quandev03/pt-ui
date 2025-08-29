@@ -60,16 +60,41 @@ export interface IOrgItem {
 
 export enum ActiveStatusEnum {
   NOT_BLOCKED = 1,
-  BLOCKED_ONE_WAY_REQUEST = 10,
-  BLOCKED_TWO_WAY_REQUEST = 20,
-  BLOCKED_ONE_WAY_NETWORK = 11,
-  BLOCKED_TWO_WAY_NETWORK = 21,
+  BLOCKED_ONE_WAY = 11,
 }
 
-export const ActiveStatusLabel: Record<ActiveStatusEnum, string> = {
-  [ActiveStatusEnum.NOT_BLOCKED]: 'Không bị chặn',
-  [ActiveStatusEnum.BLOCKED_ONE_WAY_REQUEST]: 'Chặn một chiều do yêu cầu',
-  [ActiveStatusEnum.BLOCKED_TWO_WAY_REQUEST]: 'Chặn hai chiều do yêu cầu',
-  [ActiveStatusEnum.BLOCKED_ONE_WAY_NETWORK]: 'Chặn một chiều do nhà mạng',
-  [ActiveStatusEnum.BLOCKED_TWO_WAY_NETWORK]: 'Chặn hai chiều do nhà mạng',
+export const ActiveStatusColor = {
+  [ActiveStatusEnum.NOT_BLOCKED]: 'success',
+  [ActiveStatusEnum.BLOCKED_ONE_WAY]: 'error',
+};
+
+export interface ICustomerInfo {
+  birthOfDate: string | null;
+  contractCode: string | null;
+  customerCode: string | null;
+  fullName: string | null;
+  gender: number;
+  idNoExpireDate: string | null;
+  idNumber: string | null;
+  issuePlace: string | null;
+  nationality: string | null;
+  typeDocument: string | null;
+  issueDate: string | null;
+}
+export enum GenderEnum {
+  MALE = 1,
+  FEMALE = 0,
+}
+
+export enum SubscriberStatusEnum {
+  IN_STOCK = 0,
+  SOLD = 1,
+  CALLED_900 = 2,
+  UPDATED_TTTB = 3,
+}
+export const SubscriberStatusColor = {
+  [SubscriberStatusEnum.IN_STOCK]: 'warning',
+  [SubscriberStatusEnum.CALLED_900]: 'purple',
+  [SubscriberStatusEnum.UPDATED_TTTB]: 'blue',
+  [SubscriberStatusEnum.SOLD]: 'success',
 };

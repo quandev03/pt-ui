@@ -4,6 +4,7 @@ import {
   CButtonSave,
   CButtonSaveAndAdd,
   CInput,
+  CSelect,
   CSwitch,
   CTextArea,
   CTextInfo,
@@ -51,6 +52,7 @@ export const ActionPage = () => {
         'packagePrice',
         'images',
         'description',
+        'cycleValue',
       ]);
       setImageUrl(null);
     } else {
@@ -60,6 +62,7 @@ export const ActionPage = () => {
         'packagePrice',
         'images',
         'description',
+        'cycleValue',
       ]);
       setImageUrl(null);
       navigate(-1);
@@ -164,12 +167,10 @@ export const ActionPage = () => {
     (values: IListOfServicePackageForm) => {
       // The form stores the File directly in `images`
       const imageData = form.getFieldValue('images')?.file ?? undefined;
-      console.log(imageData, 'imageData');
       const data = {
         ...values,
         images: imageData,
       };
-
       if (actionMode === IModeAction.CREATE) {
         mutateAdd(data);
       } else {
@@ -208,6 +209,10 @@ export const ActionPage = () => {
       form.setFieldValue('status', true);
     }
   }, [actionMode, form]);
+  const unitOptions = [
+    { label: 'Ngày', value: 0 },
+    { label: 'Tháng', value: 1 },
+  ];
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{`${getActionMode(actionMode)} gói cước`}</TitleHeader>
@@ -218,6 +223,7 @@ export const ActionPage = () => {
           colon={false}
           onFinish={handleSubmit}
           labelAlign="left"
+          initialValues={{ cycleUnit: 0 }}
         >
           <Card className="mb-2">
             <CTextInfo>Thông tin gói cước</CTextInfo>
@@ -255,6 +261,30 @@ export const ActionPage = () => {
                     disabled={actionMode === IModeAction.READ}
                     maxLength={100}
                     placeholder="Nhập tên gói cước"
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  rules={[validateForm.required]}
+                  label="Chu kỳ"
+                  name="cycleValue"
+                >
+                  <CInput
+                    disabled={actionMode === IModeAction.READ}
+                    maxLength={3}
+                    placeholder="Nhập chu kỳ"
+                    onlyNumber
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="Đơn vị" name="cycleUnit">
+                  <CSelect
+                    disabled={actionMode === IModeAction.READ}
+                    placeholder="Chọn đơn vị"
+                    options={unitOptions}
+                    allowClear={false}
                   />
                 </Form.Item>
               </Col>

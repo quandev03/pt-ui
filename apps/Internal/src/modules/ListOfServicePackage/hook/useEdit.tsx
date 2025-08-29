@@ -17,6 +17,8 @@ const fetch = async (data: IListOfServicePackageForm & { id: string }) => {
     status: data.status,
     pckCode: data.pckCode,
     description: data.description ?? '',
+    cycleValue: data.cycleValue,
+    cycleUnit: data.cycleUnit,
   };
 
   // Only append image if it's actually a File (new image uploaded)

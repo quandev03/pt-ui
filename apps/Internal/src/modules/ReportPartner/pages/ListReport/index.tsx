@@ -16,8 +16,9 @@ export const ListReportPartner = memo(() => {
       searchComponent={
         <LayoutList.SearchComponent
           name="q"
-          tooltip="Nhập mã đơn hàng, mã đối tác, tên đối tác để tìm kiếm"
-          placeholder="Nhập mã đơn hàng, mã đối tác, tên đối tác để tìm kiếm"
+          tooltip="Nhập mã đơn hàng"
+          placeholder="Nhập mã đơn hàng"
+          maxLength={20}
         />
       }
     />

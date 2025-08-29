@@ -9,12 +9,4 @@ export const routesReportPartner: RouteObject[] = [
       return { Component: ListReportPartner };
     },
   },
-
-  {
-    path: pathRoutes.reportPartnerView(),
-    lazy: async () => {
-      const { ActionReport } = await import('./pages/ActionReport');
-      return { Component: ActionReport };
-    },
-  },
 ];

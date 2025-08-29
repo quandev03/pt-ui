@@ -4,33 +4,37 @@ import { useSearchParams } from 'react-router-dom';
 import { useGetTableList } from '../../hooks/useGetTableList';
 
 import {
+  CButtonExport,
   decodeSearchParams,
-  formatQueryParams,
   FilterItemProps,
+  formatDate,
+  formatDateExport,
+  formatQueryParams,
+  IModeAction,
+  usePermissions,
 } from '@vissoft-react/common';
 import { ColumnsType } from 'antd/es/table';
-import {
-  ActiveStatusLabel,
-  IeSIMStockItem,
-  IeSIMStockParams,
-} from '../../types';
-import {
-  useGetAllOrganizationUnit,
-  useGetAllPackage,
-  useGeteSIMStock,
-} from '../../hooks';
+import { useGetAllOrganizationUnit } from 'apps/Internal/src/hooks/useGetAllPartners';
+import useConfigAppStore from '../../../Layouts/stores';
+import { useGetAllPackage, useGeteSIMStock } from '../../hooks';
+import { IeSIMStockItem, IeSIMStockParams } from '../../types';
+import { useExportFile } from 'apps/Internal/src/hooks/useExportFile';
+import { prefixSaleService } from 'apps/Internal/src/constants';
+import dayjs from 'dayjs';
 
 export const useLogicListeSIMStock = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [id, setId] = useState<string>();
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
+  const {
+    params: { SUBSCRIBER_SUB_STATUS = [], SUBSCRIBER_ACTIVE_SUB_STATUS = [] },
+  } = useConfigAppStore();
 
   const { data: listeSIMStock, isLoading: loadingTable } = useGeteSIMStock(
     formatQueryParams<IeSIMStockParams>(params)
   );
   const { data: listPackage } = useGetAllPackage();
-  const { data: listOrganizationUnit } = useGetAllOrganizationUnit();
 
   const handleOpenModal = (record: IeSIMStockItem) => {
     setOpenModal(true);
@@ -38,8 +42,12 @@ export const useLogicListeSIMStock = () => {
   };
   const handleCloseModal = () => setOpenModal(false);
 
-  const columns: ColumnsType<IeSIMStockItem> = useGetTableList(handleOpenModal);
-
+  const columns: ColumnsType<IeSIMStockItem> = useGetTableList(
+    handleOpenModal,
+    SUBSCRIBER_SUB_STATUS,
+    SUBSCRIBER_ACTIVE_SUB_STATUS
+  );
+  const { data: agencyOptions = [] } = useGetAllOrganizationUnit();
   const filters: FilterItemProps[] = useMemo(() => {
     return [
       {
@@ -48,23 +56,21 @@ export const useLogicListeSIMStock = () => {
         name: 'pckCode',
         stateKey: 'pckCode',
         showDefault: true,
-        options: listPackage?.map((pkg) => ({
-          label: pkg.pckCode,
-          value: pkg.pckCode,
-        })),
+        options:
+          listPackage?.map((pkg) => ({
+            label: pkg.pckCode,
+            value: pkg.pckCode + '',
+          })) || [],
         placeholder: 'Chọn gói cước',
       },
       {
-        label: 'Đại lý',
-        type: 'Select',
+        label: 'Đối tác',
+        type: 'TreeSelect',
         name: 'orgId',
-        stateKey: 'orgId',
         showDefault: true,
-        options: listOrganizationUnit?.map((org) => ({
-          label: org.orgName,
-          value: org.id,
-        })),
-        placeholder: 'Đại lý',
+        treeData: agencyOptions,
+        placeholder: 'Đối tác',
+        showSearch: true,
       },
 
       {
@@ -73,11 +79,13 @@ export const useLogicListeSIMStock = () => {
         name: 'subStatus',
         stateKey: 'subStatus',
         showDefault: true,
-        options: [
-          { label: 'Hoạt động', value: 1 },
-          { label: 'Không hoạt động', value: 0 },
-        ],
+        options:
+          SUBSCRIBER_SUB_STATUS?.map((item) => ({
+            label: item.value,
+            value: item.code + '',
+          })) || [],
         placeholder: 'Trạng thái thuê bao',
+        showSearch: false,
       },
       {
         label: 'Trạng thái chặn cắt',
@@ -85,14 +93,36 @@ export const useLogicListeSIMStock = () => {
         name: 'activeStatus',
         stateKey: 'activeStatus',
         showDefault: true,
-        options: Object.entries(ActiveStatusLabel).map(([value, label]) => ({
-          label,
-          value: Number(value),
-        })),
+        options:
+          SUBSCRIBER_ACTIVE_SUB_STATUS?.map((item) => ({
+            label: item.value,
+            value: item.code + '',
+          })) || [],
         placeholder: 'Trạng thái chặn cắt',
+        showSearch: false,
       },
     ];
-  }, [listOrganizationUnit, listPackage]);
+  }, [listPackage, agencyOptions]);
+  const { mutate: exportFile } = useExportFile();
+  const { menuData } = useConfigAppStore();
+  const permission = usePermissions(menuData);
+  const handleExport = () => {
+    const { page, size, ...rest } = params;
+    exportFile({
+      params: rest,
+      url: `${prefixSaleService}/esim-manager/export`,
+      filename: `Danh_sach_esim_${dayjs().format(formatDateExport)}.xlsx`,
+    });
+  };
+  const actionComponent = useMemo(() => {
+    return (
+      <div>
+        {permission.hasPermission(IModeAction.EXPORT_EXCEL) && (
+          <CButtonExport onClick={handleExport} />
+        )}
+      </div>
+    );
+  }, [permission]);
 
   return {
     listeSIMStock,
@@ -102,5 +132,6 @@ export const useLogicListeSIMStock = () => {
     openModal,
     handleCloseModal,
     id,
+    actionComponent,
   };
 };

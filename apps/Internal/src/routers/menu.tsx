@@ -89,17 +89,17 @@ export const routerItems: RouterItems[] = [
     label: 'Danh sách eSIM',
   },
   // Báo cáo
-  {
-    key: pathRoutes.report,
-    label: 'Báo cáo',
-    icon: <NotebookPen />,
-    hasChild: true,
-  },
-  {
-    key: pathRoutes.reportPartner,
-    label: 'Báo cáo đơn hàng đối tác',
-    parentId: pathRoutes.report,
-  },
+  // {
+  //   key: pathRoutes.report,
+  //   label: 'Báo cáo',
+  //   icon: <NotebookPen />,
+  //   hasChild: true,
+  // },
+  // {
+  //   key: pathRoutes.reportPartner,
+  //   label: 'Báo cáo đơn hàng đối tác',
+  //   parentId: pathRoutes.report,
+  // },
 ];
 export const singlePopActions = ['add'];
 export const doublePopActions = ['edit', 'view'];
