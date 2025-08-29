@@ -11,21 +11,20 @@ import {
 import { Col, Form, Row } from 'antd';
 import { useEffect } from 'react';
 import { useGetDebitLimit } from '../../../../../src/hooks/useGetDebitLimit';
-import { ModalOtpMemo } from '../components/ModalOtp';
 import { useLogicActionSingleSalePackage } from './useLogicActionSingleSalePackage';
+import { ModalWarning } from '../components/ModaWarning';
 
 export const SingleSalePackageAction = () => {
   const {
     form,
     handleClose,
-    handleCancel,
-    openOtp,
     handleCheckNumberPhone,
-    handleCloseOtp,
     handleFormSubmit,
     packageOptions,
-    handleConfirmOtp,
     loadingAdd,
+    openWarning,
+    handleConfirmWarning,
+    handleCloseWarning,
   } = useLogicActionSingleSalePackage();
   const { data: debitLimitData } = useGetDebitLimit();
 
@@ -76,8 +75,11 @@ export const SingleSalePackageAction = () => {
                   disabled
                   className="!text-black"
                   formatter={(value) =>
-                    value ? `${value.toLocaleString('vi-VN')} ₫` : ''
+                    value
+                      ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ₫'
+                      : ''
                   }
+                  parser={(value: AnyElement) => value.replace(/\s?₫|,/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -87,8 +89,11 @@ export const SingleSalePackageAction = () => {
                   disabled
                   className="!text-black"
                   formatter={(value) =>
-                    value ? `${value.toLocaleString('vi-VN')} ₫` : ''
+                    value
+                      ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ₫'
+                      : ''
                   }
+                  parser={(value: AnyElement) => value.replace(/\s?₫|,/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -96,7 +101,6 @@ export const SingleSalePackageAction = () => {
               <Form.Item
                 label="Số thuê bao"
                 name="isdn"
-                required
                 rules={[validateForm.required, validateForm.maxLength(11)]}
               >
                 <CInput
@@ -136,6 +140,7 @@ export const SingleSalePackageAction = () => {
         </div>
         <div className="flex gap-4 flex-wrap justify-end mt-7">
           <CButton
+            loading={loadingAdd}
             onClick={() => {
               form.submit();
             }}
@@ -145,12 +150,10 @@ export const SingleSalePackageAction = () => {
           <CButtonClose onClick={handleClose} />
         </div>
       </Form>
-      <ModalOtpMemo
-        handleSuccess={handleCancel}
-        open={openOtp}
-        onClose={handleCloseOtp}
-        onConfirm={handleConfirmOtp}
-        loading={loadingAdd}
+      <ModalWarning
+        open={openWarning}
+        onClose={handleCloseWarning}
+        onConfirm={handleConfirmWarning}
       />
     </div>
   );

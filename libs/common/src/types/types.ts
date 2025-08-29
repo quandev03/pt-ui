@@ -1,6 +1,6 @@
+import type { RcFile as OriRcFile } from 'rc-upload/lib/interface';
 import { ReactNode } from 'react';
 import { IModeAction } from './enum';
-import type { RcFile as OriRcFile } from 'rc-upload/lib/interface';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyElement = any;
@@ -124,11 +124,16 @@ export interface IErrorResponse {
 }
 
 export interface IParamItem {
-  label: string;
+  code: string;
   value: string;
 }
 
 export interface IAllParamResponse {
   CLIENT_TYPE: IParamItem[];
   GENDER: IParamItem[];
+  BATCH_PACKAGE_SALE_TYPE: IParamItem[];
+  SUBSCRIBER_ACTIVE_SUB_STATUS: IParamItem[];
+  SUBSCRIBER_SUB_STATUS: IParamItem[];
+  ACTION_HISTORY_ACTION_CODE: IParamItem[];
+  SUBSCRIBER_GENDER: IParamItem[];
 }

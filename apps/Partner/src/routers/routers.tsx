@@ -1,7 +1,7 @@
 import { isPageReload } from '@vissoft-react/common';
 import { isEmpty } from 'lodash';
 import {
-  createHashRouter,
+  createBrowserRouter,
   redirect,
   ShouldRevalidateFunction,
 } from 'react-router-dom';
@@ -17,76 +17,81 @@ const mainRouterShouldRevalidate: ShouldRevalidateFunction = () => {
 
 const LOADER_INIT_KEY = 'LOADER_INIT_KEY';
 
-export const routers = createHashRouter([
-  {
-    path: pathRoutes.home as string,
-    loader: async () => {
-      // Kiểm tra nếu không phải page reload và đã có data trong store
-      if (!isPageReload()) {
-        const { userLogin, menuData, params } = useConfigAppStore.getState();
-        if (!isEmpty(userLogin) && !isEmpty(menuData) && !isEmpty(params)) {
-          return new Promise((resolve) => {
-            resolve({
-              profile: userLogin,
-              menus: menuData,
-              params: params,
+export const routers = createBrowserRouter(
+  [
+    {
+      path: pathRoutes.home as string,
+      loader: async () => {
+        // Kiểm tra nếu không phải page reload và đã có data trong store
+        if (!isPageReload()) {
+          const { userLogin, menuData, params } = useConfigAppStore.getState();
+          if (!isEmpty(userLogin) && !isEmpty(menuData) && !isEmpty(params)) {
+            return new Promise((resolve) => {
+              resolve({
+                profile: userLogin,
+                menus: menuData,
+                params: params,
+              });
             });
-          });
+          }
         }
-      }
-      const result = await globalService.initApp();
-      useConfigAppStore.getState().setInitApp(result);
-      return result;
+        const result = await globalService.initApp();
+        useConfigAppStore.getState().setInitApp(result);
+        return result;
+      },
+      lazy: async () => {
+        const { LayoutPage } = await import('../modules/Layouts/pages');
+        return {
+          element: <LayoutPage />,
+        };
+      },
+      shouldRevalidate: mainRouterShouldRevalidate,
+      errorElement: <ErrorPage />,
+      children: [...protectedRoutes],
     },
-    lazy: async () => {
-      const { LayoutPage } = await import('../modules/Layouts/pages');
-      return {
-        element: <LayoutPage />,
-      };
-    },
-    shouldRevalidate: mainRouterShouldRevalidate,
-    errorElement: <ErrorPage />,
-    children: [...protectedRoutes],
-  },
-  {
-    path: pathRoutes.login as string,
-    lazy: async () => {
-      const { default: Login } = await import('../modules/Auth/pages/Login');
-      return {
-        element: <Login />,
-      };
-    },
-    loader: () => {
-      localStorage.removeItem(LOADER_INIT_KEY);
+    {
+      path: pathRoutes.login as string,
+      lazy: async () => {
+        const { default: Login } = await import('../modules/Auth/pages/Login');
+        return {
+          element: <Login />,
+        };
+      },
+      loader: () => {
+        localStorage.removeItem(LOADER_INIT_KEY);
 
-      const { isAuthenticated } = useConfigAppStore.getState();
+        const { isAuthenticated } = useConfigAppStore.getState();
 
-      if (isAuthenticated) {
-        throw redirect(pathRoutes.welcome);
-      }
+        if (isAuthenticated) {
+          throw redirect(pathRoutes.welcome);
+        }
 
-      return null;
+        return null;
+      },
+      errorElement: <ErrorPage />,
     },
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: pathRoutes.forgotPassword as string,
-    lazy: async () => {
-      const { default: ForgotPassword } = await import(
-        '../modules/Auth/pages/ForgotPassword'
-      );
-      return {
-        element: <ForgotPassword />,
-      };
+    {
+      path: pathRoutes.forgotPassword as string,
+      lazy: async () => {
+        const { default: ForgotPassword } = await import(
+          '../modules/Auth/pages/ForgotPassword'
+        );
+        return {
+          element: <ForgotPassword />,
+        };
+      },
+      errorElement: <ErrorPage />,
     },
-    errorElement: <ErrorPage />,
-  },
+    {
+      path: pathRoutes.notFound as string,
+      element: <NotFoundPage />,
+    },
+    {
+      path: '*',
+      element: <NotFoundPage />,
+    },
+  ],
   {
-    path: pathRoutes.notFound as string,
-    element: <NotFoundPage />,
-  },
-  {
-    path: '*',
-    element: <NotFoundPage />,
-  },
-]);
+    basename: '/daily',
+  }
+);

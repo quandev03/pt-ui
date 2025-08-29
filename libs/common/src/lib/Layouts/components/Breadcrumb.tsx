@@ -33,6 +33,14 @@ const specialPaths = [
     key: 'profile',
     label: 'Thông tin tài khoản',
   },
+  {
+    key: 'single',
+    label: 'Bán gói cho thuê bao đơn lẻ',
+  },
+  {
+    key: 'bulk',
+    label: 'Bán gói cho thuê bao theo lô',
+  },
 ];
 
 interface IBreadcrumbComponentProps {

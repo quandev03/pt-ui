@@ -1,35 +1,34 @@
 import {
-  AnyElement,
   CButtonDetail,
   CTag,
   decodeSearchParams,
   formatDate,
-  formatDateTime,
   RenderCell,
   Text,
   usePermissions,
   WrapperActionTable,
 } from '@vissoft-react/common';
 import { TableColumnsType, Tooltip, Typography } from 'antd';
+import { pathRoutes } from 'apps/Internal/src/routers';
 import dayjs from 'dayjs';
 import { useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useConfigAppStore from '../../Layouts/stores';
-import { IResponseUploadNumber } from '../types';
-import { pathRoutes } from 'apps/Internal/src/routers';
 import {
-  TransactionStatusCode,
   TransactionStatusTagMap,
   UploadStatus,
   UploadStatusTagMap,
 } from '../../ListOfServicePackage/types';
+import { IFileInfo, IResponseUploadNumber } from '../types';
 
-export const useColumnTable = () => {
+export const useColumnTable = ({
+  onDownload,
+}: {
+  onDownload: (isCheckFile: boolean, record?: IFileInfo) => void;
+}) => {
   const {
     params: { ISDN_TRANSACTION_UPLOAD_STATUS, ISDN_TRANSACTION_TRANS_STATUS },
   } = useConfigAppStore();
-  console.log('ISDN_TRANSACTION_UPLOAD_STATUS', ISDN_TRANSACTION_UPLOAD_STATUS);
-  console.log('ISDN_TRANSACTION_TRANS_STATUS', ISDN_TRANSACTION_TRANS_STATUS);
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const { menuData } = useConfigAppStore();
@@ -62,7 +61,7 @@ export const useColumnTable = () => {
         dataIndex: 'createdBy',
         width: 200,
         align: 'left',
-        render(value, record) {
+        render(value) {
           return <RenderCell value={value} tooltip={value} />;
         },
       },
@@ -122,7 +121,7 @@ export const useColumnTable = () => {
                         marginLeft: '4px',
                         cursor: 'pointer',
                       }}
-                      onClick={() => {}}
+                      onClick={() => onDownload(true, record?.resultCheckFile)}
                     >
                       File
                     </div>
@@ -139,10 +138,10 @@ export const useColumnTable = () => {
         width: 150,
         align: 'left',
         render: (value) => {
-          if (!value) return null;
-          const text = ISDN_TRANSACTION_TRANS_STATUS.find(
-            (item) => String(item.code) === String(value)
-          )?.value;
+          const text =
+            ISDN_TRANSACTION_TRANS_STATUS.find(
+              (item) => String(item.code) === String(value)
+            )?.value || '';
           return (
             <CTag
               type={
@@ -189,7 +188,7 @@ export const useColumnTable = () => {
                         marginLeft: '4px',
                         cursor: 'pointer',
                       }}
-                      onClick={() => {}}
+                      onClick={() => onDownload(false, record?.resultFile)}
                     >
                       File
                     </Typography.Text>

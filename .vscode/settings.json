@@ -104,5 +104,6 @@
   "editor.formatOnPaste": true,
   "notebook.formatOnSave.enabled": true,
   "editor.formatOnSave": true,
-  "git.confirmSync": false
+  "git.confirmSync": false,
+  "nxConsole.generateAiAgentRules": true
 }

@@ -1,4 +1,5 @@
 import {
+  AnyElement,
   CButton,
   CButtonClose,
   CInputNumber,
@@ -8,7 +9,6 @@ import {
 import { Col, Form, Row } from 'antd';
 import { useEffect } from 'react';
 import { useGetDebitLimit } from '../../../../../src/hooks/useGetDebitLimit';
-import { ModalOtpMemo } from '../components/ModalOtp';
 import { useLogicBulkSalePackageAction } from './useLogicBulkSalePackageAction';
 
 export const BulkSalePackageAction = () => {
@@ -16,12 +16,7 @@ export const BulkSalePackageAction = () => {
     form,
     handleClose,
     handleDownloadTemplate,
-    handleCancel,
-    openOtp,
-    loadingCheckData,
-    handleCloseOtp,
-    handleSubmitAndCheckFile,
-    handleConfirmWithPin,
+    handleSubmitAttachment,
     loadingAddBulk,
   } = useLogicBulkSalePackageAction();
 
@@ -41,10 +36,11 @@ export const BulkSalePackageAction = () => {
       <TitleHeader>Bán gói theo lô cho thuê bao</TitleHeader>
       <Form
         form={form}
-        onFinish={handleSubmitAndCheckFile}
+        onFinish={handleSubmitAttachment}
         labelAlign="left"
         labelCol={{ span: 5 }}
         labelWrap={true}
+        colon={false}
       >
         <div className="bg-white rounded-[10px] px-6 pt-4 pb-8">
           <Row gutter={[30, 0]}>
@@ -54,8 +50,11 @@ export const BulkSalePackageAction = () => {
                   disabled
                   className="!text-black"
                   formatter={(value) =>
-                    value ? `${value.toLocaleString('vi-VN')} ₫` : ''
+                    value
+                      ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ₫'
+                      : ''
                   }
+                  parser={(value: AnyElement) => value.replace(/\s?₫|,/g, '')}
                 />
               </Form.Item>
             </Col>
@@ -65,38 +64,34 @@ export const BulkSalePackageAction = () => {
                   disabled
                   className="!text-black"
                   formatter={(value) =>
-                    value ? `${value.toLocaleString('vi-VN')} ₫` : ''
+                    value
+                      ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ₫'
+                      : ''
                   }
+                  parser={(value: AnyElement) => value.replace(/\s?₫|,/g, '')}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
               <UploadFileTemplate
-                required
                 onDownloadTemplate={handleDownloadTemplate}
                 accept={[
                   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 ]}
                 label="File số"
                 name={'attachment'}
+                rules={[{ required: true, message: 'Vui lòng tải file lên!' }]}
               />
             </Col>
           </Row>
         </div>
         <div className="flex gap-4 flex-wrap justify-end mt-7">
-          <CButton loading={loadingCheckData} onClick={() => form.submit()}>
+          <CButton loading={loadingAddBulk} onClick={() => form.submit()}>
             Thực hiện
           </CButton>
           <CButtonClose onClick={handleClose} />
         </div>
       </Form>
-      <ModalOtpMemo
-        handleSuccess={handleCancel}
-        open={openOtp}
-        onClose={handleCloseOtp}
-        onConfirm={handleConfirmWithPin}
-        loading={loadingAddBulk}
-      />
     </div>
   );
 };

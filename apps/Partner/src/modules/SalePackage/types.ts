@@ -9,8 +9,10 @@ export interface IPackageSaleItem {
   fileName: string;
   fileUrl: string;
   id: number;
+  isdn: string;
   resultFileUrl: string;
   status: number;
+  type: number;
   totalNumber: number;
 }
 export interface IPackageSaleParams extends IParamsRequest {
@@ -19,7 +21,6 @@ export interface IPackageSaleParams extends IParamsRequest {
 export interface ISinglePackageSalePayload {
   isdn: string;
   pckCode: string;
-  pinCode: string;
 }
 export interface IBulkCheckPayload {
   attachment: File;
@@ -27,7 +28,6 @@ export interface IBulkCheckPayload {
 
 export interface IBulkSalePayload {
   attachment: File;
-  pinCode: string;
 }
 
 export interface IResGenOtp {

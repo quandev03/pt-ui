@@ -1,34 +1,34 @@
 import {
+  CButtonExport,
   decodeSearchParams,
   FilterItemProps,
   formatQueryParams,
-  IErrorResponse,
-  IParamsRequest,
-  NotificationError,
+  usePermissions,
 } from '@vissoft-react/common';
 import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useColumnsEsimWarehouseList } from '../../hooks/useColumnsEsimWarehouseList';
-import { IEsimWarehouseList } from '../../types';
+import { IEsimWarehouseList, IEsimWarehouseParams } from '../../types';
 import { ColumnsType } from 'antd/es/table';
 import { useGetEsimWarehouseList } from '../../hooks/useGetEsimWarehouseList';
 import { useGetPackageCodes } from '../../hooks/useGetPackagesCode';
 import { DefaultOptionType } from 'antd/es/select';
-import {
-  ActiveStatusEnum,
-  activeStatusMap,
-  Status900Enum,
-  status900Map,
-} from '../../constants/enum';
 import { useGetGenQrCode } from '../../hooks/useGetGenQrCode';
 import { useGetAgencyOptions } from '../../../../hooks/useGetAgencyOptions';
+import { useGetExportEsim } from '../../hooks/useGetExportEsim';
+import useConfigAppStore from '../../../Layouts/stores';
+import { useGetParamsOption } from '../../../../hooks/useGetParamsOption';
+import { ISelectOption } from '../../../SalePackage/types';
 
 export const useLogicListEsimWarehouse = () => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const { data: esimList, isLoading: loadingEsimList } =
-    useGetEsimWarehouseList(formatQueryParams<IParamsRequest>(params));
+    useGetEsimWarehouseList(formatQueryParams<IEsimWarehouseParams>(params));
   const { data: agencyOptions = [] } = useGetAgencyOptions();
+  const { mutate: exportEsimList, isPending: isExporting } = useGetExportEsim();
+  const { menuData } = useConfigAppStore();
+  const permission = usePermissions(menuData);
 
   const [selectedRecord, setSelectedRecord] =
     useState<IEsimWarehouseList | null>(null);
@@ -36,6 +36,45 @@ export const useLogicListEsimWarehouse = () => {
   const [isGenQrModalOpen, setGenQrModalOpen] = useState(false);
   const [isSendQrModalOpen, setSendQrModalOpen] = useState(false);
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
+
+  const { data: getParams } = useGetParamsOption();
+
+  const subStatusOptions: ISelectOption[] = useMemo(() => {
+    if (!getParams?.SUBSCRIBER_SUB_STATUS) {
+      return [];
+    }
+    return getParams.SUBSCRIBER_SUB_STATUS.map((item) => ({
+      value: item.code,
+      label: item.value,
+    }));
+  }, [getParams]);
+
+  const activeStatusOptions: ISelectOption[] = useMemo(() => {
+    if (!getParams?.SUBSCRIBER_ACTIVE_SUB_STATUS) {
+      return [];
+    }
+    return getParams.SUBSCRIBER_ACTIVE_SUB_STATUS.map((item) => ({
+      value: item.code,
+      label: item.value,
+    }));
+  }, [getParams]);
+
+  const handleExport = useCallback(() => {
+    exportEsimList({
+      ...params,
+      fileFormat: 'xlsx',
+    });
+  }, [exportEsimList, params]);
+
+  const exportComponent = useMemo(() => {
+    return (
+      <div>
+        {permission.canCreate && (
+          <CButtonExport onClick={handleExport} loading={isExporting} />
+        )}
+      </div>
+    );
+  }, [handleExport, permission.canCreate, isExporting]);
 
   const handleOpenSendQr = useCallback((record: IEsimWarehouseList) => {
     setSelectedRecord(record);
@@ -104,43 +143,6 @@ export const useLogicListEsimWarehouse = () => {
       : [];
   }, [packageCodeList]);
 
-  const subStatusOptions: DefaultOptionType[] = useMemo(
-    () => [
-      {
-        value: String(Status900Enum.IN_STORE),
-        label: status900Map[Status900Enum.IN_STORE].text,
-      },
-      {
-        value: String(Status900Enum.SOLD),
-        label: status900Map[Status900Enum.SOLD].text,
-      },
-      {
-        value: String(Status900Enum.CALLED),
-        label: status900Map[Status900Enum.CALLED].text,
-      },
-      {
-        value: String(Status900Enum.INFO_UPDATED),
-        label: status900Map[Status900Enum.INFO_UPDATED].text,
-      },
-    ],
-    []
-  );
-
-  const activeStatusOptions: DefaultOptionType[] = useMemo(
-    () => [
-      {
-        value: String(ActiveStatusEnum.NORMAL),
-        label: activeStatusMap[ActiveStatusEnum.NORMAL].text,
-      },
-      {
-        value: String(ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST),
-        label:
-          activeStatusMap[ActiveStatusEnum.ONE_WAY_CALL_BLOCK_BY_REQUEST].text,
-      },
-    ],
-    []
-  );
-
   const filters: FilterItemProps[] = useMemo(() => {
     return [
       {
@@ -152,7 +154,7 @@ export const useLogicListEsimWarehouse = () => {
       },
       {
         type: 'TreeSelect',
-        name: 'orgCode',
+        name: 'orgId',
         label: 'Đại lý',
         placeholder: 'Đại lý',
         treeData: agencyOptions,
@@ -190,5 +192,6 @@ export const useLogicListEsimWarehouse = () => {
     handleCloseGenQrModal,
     genQrCode,
     qrCodeUrl,
+    exportComponent,
   };
 };
