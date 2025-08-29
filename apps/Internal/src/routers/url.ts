@@ -101,4 +101,7 @@ export const pathRoutes = {
   reportPartner: '/report-partner',
   reportPartnerView: (id?: IStringNumber) =>
     `/report-partner/view/${id ? id : ':id'}`,
+
+  // Cập nhật thông tin thuê bao
+  updateSubscriberInfo: '/subscriber-info-update',
 };
