@@ -9,7 +9,8 @@ export type ParamKeys =
   | 'ISDN_TRANSACTION_UPLOAD_STATUS'
   | 'SUBSCRIBER_SUBS_STATUS'
   | 'SUBSCRIBER_SUB_STATUS'
-  | 'SUBSCRIBER_ACTIVE_SUB_STATUS';
+  | 'SUBSCRIBER_ACTIVE_SUB_STATUS'
+  | 'ACTION_HISTORY_ACTION_CODE';
 export interface IOrgItem {
   id: string;
   orgCode: string;

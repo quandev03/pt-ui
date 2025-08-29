@@ -95,11 +95,11 @@ export const routerItems: RouterItems[] = [
     icon: <NotebookPen />,
     hasChild: true,
   },
-  {
-    key: pathRoutes.reportPartner,
-    label: 'Báo cáo đơn hàng đối tác',
-    parentId: pathRoutes.report,
-  },
+  // {
+  //   key: pathRoutes.reportPartner,
+  //   label: 'Báo cáo đơn hàng đối tác',
+  //   parentId: pathRoutes.report,
+  // },
 ];
 export const singlePopActions = ['add'];
 export const doublePopActions = ['edit', 'view'];

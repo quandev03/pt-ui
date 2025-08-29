@@ -15,14 +15,17 @@ export const useLogicActioneSIMStock = (id: string) => {
   const [form] = Form.useForm();
   useEffect(() => {
     if (customerInfo) {
+      let gender = '';
+      if (customerInfo.customerCode) {
+        if (customerInfo.gender === GenderEnum.MALE) {
+          gender = 'Nam';
+        } else if (customerInfo.gender === GenderEnum.FEMALE) {
+          gender = 'Nữ';
+        }
+      }
       form.setFieldsValue({
         ...customerInfo,
-        gender:
-          customerInfo.gender === GenderEnum.MALE
-            ? 'Nam'
-            : GenderEnum.FEMALE
-            ? 'Nữ'
-            : '',
+        gender: gender,
         issueDate: customerInfo.issueDate ? dayjs(customerInfo.issueDate) : '',
         birthOfDate: customerInfo.birthOfDate
           ? dayjs(customerInfo.birthOfDate)
@@ -30,7 +33,7 @@ export const useLogicActioneSIMStock = (id: string) => {
         idNoExpireDate: customerInfo.idNoExpireDate
           ? dayjs(customerInfo.idNoExpireDate)
           : '',
-        typeDocument: 'Hộ chiếu',
+        typeDocument: customerInfo.customerCode ? 'Hộ chiếu' : '',
       });
     }
   }, [customerInfo, form]);
