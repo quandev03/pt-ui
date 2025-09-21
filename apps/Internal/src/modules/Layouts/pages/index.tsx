@@ -15,7 +15,11 @@ import { layoutPageService } from '../services';
 import useConfigAppStore from '../stores';
 
 export const LayoutPage = () => {
-  const { menus } = useGetLoaderData();
+  console.log('🏠 ~ LayoutPage rendered');
+  const loaderData = useGetLoaderData();
+  console.log('📥 ~ useGetLoaderData result:', loaderData);
+  const { menus } = loaderData;
+  
   const {
     userLogin,
     collapsedMenu,
@@ -25,8 +29,9 @@ export const LayoutPage = () => {
     logoutStore,
     isAuthenticated,
   } = useConfigAppStore();
-  console.log('isAuthenticated', isAuthenticated);
-  console.log('menus', menus);
+  console.log('🔐 ~ isAuthenticated:', isAuthenticated);
+  console.log('👤 ~ userLogin:', userLogin ? 'logged in' : 'not logged in');
+  console.log('📋 ~ menus from loader:', menus, 'type:', typeof menus, 'isArray:', Array.isArray(menus));
   return (
     <LayoutPageCommon
       pathRoutes={pathRoutes as AnyElement}

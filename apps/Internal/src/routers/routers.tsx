@@ -22,17 +22,30 @@ export const routers = createBrowserRouter([
   {
     path: pathRoutes.home as string,
     loader: async () => {
+      console.log('🚀 ~ Router loader called');
+      
       // Kiểm tra nếu không phải page reload và đã có data trong store
       if (!isPageReload()) {
+        console.log('📋 ~ Not a page reload, checking store');
         const { userLogin, menuData } = useConfigAppStore.getState();
         if (!isEmpty(userLogin) && !isEmpty(menuData)) {
+          console.log('✅ ~ Using data from store');
           return {
             profile: userLogin,
             menus: menuData,
           };
         }
       }
+      
+      console.log('🔄 ~ Calling globalService.initApp()');
       const result = await globalService.initApp();
+      console.log('🚀 ~ routers ~ result:', result);
+      console.log('📤 ~ Router loader returning:', {
+        profile: result.profile ? 'loaded' : 'empty',
+        menus: Array.isArray(result.menus) ? `${result.menus.length} items` : 'not array',
+        params: result.params ? 'loaded' : 'empty'
+      });
+      
       useConfigAppStore.getState().setInitApp(result);
       return result;
     },

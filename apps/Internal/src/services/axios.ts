@@ -61,6 +61,7 @@ export const axiosClient = axios.create({
 const handleRequest = (req: InternalAxiosRequestConfig) => {
   req.headers = req.headers ?? {};
   const token = StorageService.getAccessToken(ACCESS_TOKEN_KEY);
+  console.log('🚀 ~ handleRequest ~ token:', token);
   if (token && !req.headers['Authorization']) {
     req.headers['Authorization'] = `Bearer ${token}`;
   }
