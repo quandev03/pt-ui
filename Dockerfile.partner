@@ -1,15 +1,16 @@
-# Build stage
-FROM node:18-alpine as builder
+# Build stage (Debian-based to support @swc/core prebuilt binaries)
+FROM node:18-bullseye-slim as builder
 
 # Enable Corepack and set correct Yarn version
 RUN corepack enable
 RUN corepack prepare yarn@4.4.1 --activate
 
-# Set working directory
 WORKDIR /app
 
-# System deps for native builds (node-gyp)
-RUN apk add --no-cache python3 make g++
+# System deps for native builds (node-gyp) and SSL certs
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends python3 build-essential ca-certificates git \
+  && rm -rf /var/lib/apt/lists/*
 
 # Yarn build-time parameters (tunable at build with --build-arg)
 ARG YARN_ENABLE_IMMUTABLE_INSTALLS=false
