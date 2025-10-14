@@ -137,31 +137,7 @@ export const ActionPage: React.FC = () => {
                   <CInput maxLength={100} disabled placeholder="Email" />
                 </Form.Item>
               </Col>
-              <Col span={12}>
-                <Form.Item label="Vai trò" name="roles">
-                  <CSelect
-                    options={roleOptions}
-                    disabled
-                    placeholder="Vai trò"
-                    mode="multiple"
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label="Nhóm tài khoản" name="groups">
-                  <CSelect
-                    options={data?.groups.map((group) => {
-                      return {
-                        label: group.name,
-                        value: group.id,
-                      };
-                    })}
-                    disabled
-                    placeholder="Nhóm tài khoản"
-                    mode="multiple"
-                  />
-                </Form.Item>
-              </Col>
+              
             </Row>
           </Card>
           <Row justify="end" className="mt-4">

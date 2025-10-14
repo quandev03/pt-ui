@@ -1,7 +1,7 @@
 import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import Logo from '../../../assets/images/Logo-mini.svg';
-import LogoMini from '../../../assets/images/Logo.svg';
+import Logo from '../../../assets/images/logo.jpg';
+import LogoMini from '../../../assets/images/logo.jpg';
 import { ThemesType } from '../../../constants';
 import { useGetLoaderData } from '../../../hooks';
 import { ILayoutService, RouterItems } from '../../../types';

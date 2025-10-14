@@ -13,13 +13,13 @@ import { pathRoutes } from './url';
 export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.dashboard as string,
-    label: 'Tổng quan',
+    label: 'Dashboard',
     icon: <ChartLine />,
   },
   // quản lý tài khoản
   {
     key: pathRoutes.accountAuthorization as string,
-    label: 'Tài khoản và phân quyền',
+    label: 'Người dùng',
     hasChild: true,
     icon: <Users />,
   },
@@ -31,7 +31,7 @@ export const routerItems: RouterItems[] = [
   // Quản lý danh mục
   {
     key: pathRoutes.category,
-    label: 'Quản lý danh mục',
+    label: 'Hệ thống',
     icon: <LayoutList />,
     hasChild: true,
   },
@@ -49,58 +49,53 @@ export const routerItems: RouterItems[] = [
   // Quản lý số
   {
     key: pathRoutes.manageNumber as string,
-    label: 'Quản lý số',
-    icon: <FileDigit />,
+    label: 'Hợp đồng',
+    icon: <PencilLine />,
     hasChild: true,
   },
   {
     key: pathRoutes.uploadNumber,
     parentId: pathRoutes.manageNumber,
-    label: 'Upload số',
+    label: 'Quản lý',
   },
   {
     key: pathRoutes.lookupNumber as string,
-    label: 'Tra cứu số',
+    label: 'Mẫu hợp đồng',
     parentId: pathRoutes.manageNumber as string,
   },
-  {
-    key: pathRoutes.groupUserManager as string,
-    label: 'Nhóm tài khoản',
-    parentId: pathRoutes.accountAuthorization as string,
-  },
-  {
-    key: pathRoutes.roleManager as string,
-    label: 'Vai trò & Phân quyền',
-    parentId: pathRoutes.accountAuthorization as string,
-  },
-  {
-    key: pathRoutes.rolePartnerManager as string,
-    label: 'Vai trò & Phân quyền đối tác',
-    parentId: pathRoutes.accountAuthorization as string,
-  },
+  // {
+  //   key: pathRoutes.groupUserManager as string,
+  //   label: 'Nhóm tài khoản',
+  //   parentId: pathRoutes.accountAuthorization as string,
+  // },
+  // {
+  //   key: pathRoutes.roleManager as string,
+  //   label: 'Vai trò & Phân quyền',
+  //   parentId: pathRoutes.accountAuthorization as string,
+  // },
+  // {
+  //   key: pathRoutes.rolePartnerManager as string,
+  //   label: 'Vai trò & Phân quyền đối tác',
+  //   parentId: pathRoutes.accountAuthorization as string,
+  // },
   {
     key: pathRoutes.object as string,
-    label: 'Quản lý object',
+    label: 'Báo cáo',
     parentId: pathRoutes.accountAuthorization as string,
   },
   // danh sách kho esim
-  {
-    key: pathRoutes.esimStock,
-    icon: <CardSim />,
-    label: 'Danh sách eSIM',
-  },
-  {
-    key: pathRoutes.updateSubscriberInfo as string,
-    icon: <PencilLine />,
-    label: 'Cập nhật thông tin thuê bao',
-  },
-  // Báo cáo
   // {
-  //   key: pathRoutes.report,
-  //   label: 'Báo cáo',
-  //   icon: <NotebookPen />,
-  //   hasChild: true,
+  //   key: pathRoutes.esimStock,
+  //   icon: <CardSim />,
+  //   label: 'Danh sách eSIM',
   // },
+  // {
+  //   key: pathRoutes.updateSubscriberInfo as string,
+  //   icon: <PencilLine />,
+  //   label: 'Cập nhật thông tin thuê bao',
+  // },
+   //Báo cáo
+   
   // {
   //   key: pathRoutes.reportPartner,
   //   label: 'Báo cáo đơn hàng đối tác',

@@ -16,8 +16,8 @@ import { Col, Divider, Form, Image, Row, Spin } from 'antd';
 import { globalService } from 'apps/Internal/src/services/globalService';
 import { FocusEvent, useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import BgLogin from '../../../assets/images/bg_banner.png';
-import Logo from '../../../assets/images/Logo-mini.svg';
+import BgLogin from '../../../assets/images/bg_banner.jpg';
+import Logo from '../../../assets/images/logo.jpg';
 import Smartphone from '../../../assets/images/Thumb.png';
 import { ACCESS_TOKEN_KEY, GOOGLE_CLIENT_ID } from '../../../constants';
 import { pathRoutes } from '../../../routers/url';
@@ -99,11 +99,11 @@ const LoginPage = () => {
             }}
           >
             <div className="flex items-center justify-center">
-              <img
+               <img
                 src={Logo}
                 className="!w-36 flex items-center justify-center mb-10"
                 alt="Logo"
-              />
+              /> 
             </div>
             <p className="mt-0 !mb-8 text-[1rem]  w-full">
               Vui lòng đăng nhập tài khoản để bắt đầu làm việc
@@ -176,25 +176,11 @@ const LoginPage = () => {
                 </CButton>
               </div>
             </Form>
-            <Divider style={{ borderColor: '#7cb305' }}>Hoặc</Divider>
-            <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-              <LoginButton />
-            </GoogleOAuthProvider>
+            
           </div>
         </Col>
-        <Col span={12}>
-          <div className="text-center flex flex-col gap-3">
-            <span className="text-[#005aaa] text-3xl font-semibold drop-shadow-md">
-              Hệ thống Kinh doanh eSIM
-            </span>
-            <span className="text-[#e50013] text-3xl font-semibold drop-shadow-md flex items-center justify-center gap-2">
-              Hi Vietnam
-            </span>
-          </div>
-          <div className="flex justify-center mt-16">
-            <Image src={Smartphone} preview={false} />
-          </div>
-        </Col>
+        
+       
         <ModalForgotPassword
           open={openForgot}
           onClose={() => {

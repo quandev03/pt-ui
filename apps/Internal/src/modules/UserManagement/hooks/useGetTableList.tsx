@@ -65,7 +65,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
     {
       title: 'STT',
       align: 'left',
-      width: 50,
+      width: 200,
       render(_, record, index) {
         return (
           <RenderCell
@@ -75,6 +75,21 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
           />
         );
       },
+    },
+    {
+      title: 'Mã khách hàng',
+      //dataIndex: 'fullname',
+      width: 200,
+      align: 'left',
+      // render(value, record) {
+      //   return (
+      //     <RenderCell
+      //       value={value}
+      //       tooltip={value}
+      //       disabled={record?.status !== StatusEnum.ACTIVE}
+      //     />
+      //   );
+      // },
     },
     {
       title: 'Họ và tên',
@@ -109,7 +124,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
     {
       title: 'SĐT',
       dataIndex: 'phoneNumber',
-      width: 100,
+      width: 200,
       align: 'left',
       render(value, record) {
         return (
@@ -123,7 +138,7 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
     {
       title: 'Vai trò',
       dataIndex: 'roles',
-      width: 250,
+      width: 200,
       align: 'left',
       render(value: IRoleItem[], record) {
         const roleNames = value
@@ -131,100 +146,17 @@ export const useGetTableList = (): ColumnsType<IUserItem> => {
           ?.map((item) => item.name)
           ?.join(', ');
         return (
-          <RenderCell
-            value={roleNames}
-            tooltip={roleNames}
-            disabled={record?.status !== StatusEnum.ACTIVE}
-          />
+          // <RenderCell
+          //   value={roleNames}
+          //   tooltip={roleNames}
+          //   disabled={record?.status !== StatusEnum.ACTIVE}
+          // />
+          "Chủ trọ"
         );
       },
     },
-    {
-      title: 'Nhóm tài khoản',
-      dataIndex: 'groups',
-      width: 250,
-      align: 'left',
-      render(value: IGroups[], record) {
-        const roleNames = value
-          ?.filter((item) => item.status !== StatusEnum.INACTIVE)
-          ?.map((item) => item.name)
-          ?.join(', ');
-        return (
-          <RenderCell
-            value={roleNames}
-            tooltip={roleNames}
-            disabled={record?.status !== StatusEnum.ACTIVE}
-          />
-        );
-      },
-    },
-    {
-      title: 'Người tạo',
-      dataIndex: 'createdBy',
-      width: 200,
-      align: 'left',
-      render(value, record) {
-        return (
-          <RenderCell
-            value={value}
-            tooltip={value}
-            disabled={record?.status !== StatusEnum.ACTIVE}
-          />
-        );
-      },
-    },
-    {
-      title: 'Ngày tạo',
-      dataIndex: 'createdDate',
-      width: 120,
-      align: 'left',
-      render(value, record) {
-        const textformatDate = value ? dayjs(value).format(formatDate) : '';
-        const textformatDateTime = value
-          ? dayjs(value).format(formatDateTime)
-          : '';
-        return (
-          <RenderCell
-            value={textformatDate}
-            tooltip={textformatDateTime}
-            disabled={record?.status !== StatusEnum.ACTIVE}
-          />
-        );
-      },
-    },
-    {
-      title: 'Người cập nhật',
-      dataIndex: 'lastModifiedBy',
-      width: 200,
-      align: 'left',
-      render(value, record) {
-        return (
-          <RenderCell
-            value={value}
-            disabled={record?.status !== StatusEnum.ACTIVE}
-          />
-        );
-      },
-    },
-    {
-      title: 'Ngày cập nhật',
-      dataIndex: 'lastModifiedDate',
-      width: 120,
-      align: 'left',
-      render(value, record) {
-        const textformatDate = value ? dayjs(value).format(formatDate) : '';
-        const textformatDateTime = value
-          ? dayjs(value).format(formatDateTime)
-          : '';
-        return (
-          <RenderCell
-            tooltip={textformatDateTime}
-            value={textformatDate}
-            disabled={record?.status !== StatusEnum.ACTIVE}
-          />
-        );
-      },
-    },
+    
+
     {
       title: 'Trạng thái',
       dataIndex: 'status',

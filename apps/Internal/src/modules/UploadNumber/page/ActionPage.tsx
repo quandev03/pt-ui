@@ -30,9 +30,9 @@ export const ActionPage = () => {
   const renderTitle = () => {
     switch (actionType) {
       case IModeAction.CREATE:
-        return 'Upload tài nguyên số';
+        return '';
       case IModeAction.READ:
-        return 'Xem chi tiết upload tài nguyên số';
+        return '';
       default:
         return '';
     }
@@ -136,7 +136,7 @@ export const ActionPage = () => {
                   required
                   onDownloadTemplate={handleExport}
                   accept={['text/csv']}
-                  label="Danh sách số"
+                  label="Danh sách"
                   name={'numberFile'}
                   onDownloadFile={
                     actionType === IModeAction.READ

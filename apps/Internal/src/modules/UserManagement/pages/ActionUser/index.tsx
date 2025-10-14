@@ -86,18 +86,7 @@ export const ActionUser = memo(() => {
         >
           <div className="bg-white rounded-[10px] px-6 pt-4 pb-8">
             <Row gutter={[30, 0]}>
-              <Col span={12}>
-                <Form.Item
-                  label="Kiểu đăng nhập"
-                  name="loginMethod"
-                  required={true}
-                >
-                  <Radio.Group disabled={IModeAction.CREATE !== actionMode}>
-                    <Radio value="1"> Username </Radio>
-                    <Radio value="2"> Google và Username </Radio>
-                  </Radio.Group>
-                </Form.Item>
-              </Col>
+              
               <Col span={12}>
                 <Form.Item
                   label="Hoạt động"
@@ -283,41 +272,6 @@ export const ActionUser = memo(() => {
                       );
                       setRoleInActive(newRoleInActive);
                     }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label="Nhóm tài khoản" name="groupIds">
-                  <CSelect
-                    placeholder="Chọn nhóm tài khoản"
-                    options={optionGroups}
-                    mode="multiple"
-                    maxRow={3}
-                    disabled={actionMode === IModeAction.READ}
-                    onChange={(value: string[]) => {
-                      const newGroupInActive = groupsInActive.filter((item) =>
-                        value.includes(item.id)
-                      );
-                      setGroupsInActive(newGroupInActive);
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label="Chức vụ" name="positionTitle">
-                  <CInput
-                    maxLength={100}
-                    placeholder="Nhập chức vụ"
-                    disabled={actionMode === IModeAction.READ}
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label="Phòng ban" name="departmentIds">
-                  <CSelect
-                    placeholder="Chọn phòng ban"
-                    options={INTERNAL_DEPARTMENT}
-                    disabled={actionMode === IModeAction.READ}
                   />
                 </Form.Item>
               </Col>
