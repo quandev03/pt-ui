@@ -1,25 +1,30 @@
-# Build stage
 FROM node:20-bullseye-slim AS builder
 RUN corepack enable && corepack prepare yarn@4.4.1 --activate
-
-# tool tối thiểu (phòng khi có gói cần node-gyp)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 make g++ git ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
-# Copy file Yarn trước để cache
+# 1) Copy file Yarn + lock trước
 COPY package.json yarn.lock .yarnrc.yml ./
-# Nếu bạn dùng Yarn Berry, nhớ copy thư mục .yarn (releases/plugins/cache nếu có)
+# (nếu dùng Berry) COPY .yarn (nếu repo có)
+# COPY .yarn/ .yarn/
 
-# Tắt immutable trong build (CI thường = true)
+# 2) Copy riêng các manifest của từng workspace (để cache install)
+# Giả sử cấu trúc:
+#   packages/source/package.json
+#   apps/internal/package.json
+COPY packages/source/package.json packages/source/package.json
+COPY apps/internal/package.json apps/internal/package.json
+# Nếu có thêm workspace khác, COPY manifest của chúng tương tự
+
+# 3) Cài dependency sau khi Yarn đã thấy đủ workspaces
 ENV YARN_ENABLE_IMMUTABLE_INSTALLS=false
 RUN yarn install --inline-builds
 
-# Copy source và build
+# 4) Bây giờ mới copy toàn bộ source
 COPY . .
-RUN yarn build:internal
+
+# 5) Build workspace
+RUN yarn workspace @vissoft-react/internal build
+# hoặc nếu script của bạn là "build:internal": dùng RUN yarn build:internal
 
 # Production stage
 FROM nginx:alpine
