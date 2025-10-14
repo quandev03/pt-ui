@@ -10,7 +10,7 @@ export const ListUser = memo(() => {
       actionComponent={actionComponent}
       data={listUser}
       columns={columns}
-      title="Tài khoản nhân sự"
+      title="Tài khoản "
       filterItems={filters}
       loading={loadingTable}
       searchComponent={

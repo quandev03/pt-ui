@@ -156,13 +156,13 @@ export const useLogicActionUser = () => {
   const Title = useMemo(() => {
     switch (actionMode) {
       case IModeAction.READ:
-        return 'Xem chi tiết tài khoản nhân sự';
+        return 'Xem chi tiết tài khoản';
       case IModeAction.CREATE:
-        return 'Tạo tài khoản nhân sự';
+        return 'Tạo tài khoản';
       case IModeAction.UPDATE:
-        return 'Chỉnh sửa tài khoản nhân sự';
+        return 'Chỉnh sửa tài khoản';
       default:
-        return 'Tạo tài khoản nhân sự';
+        return 'Tạo tài khoản';
     }
   }, [actionMode]);
 

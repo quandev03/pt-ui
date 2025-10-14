@@ -97,7 +97,7 @@ const LoginPage = () => {
             }}
           >
             <div className="flex items-center justify-center">
-              <img
+               <img
                 src={Logo}
                 className="!w-20 flex items-center justify-center mb-10"
                 alt="Logo"
@@ -178,9 +178,10 @@ const LoginPage = () => {
               </div>
             </Form>
             
-
           </div>
         </Col>
+        
+       
         <ModalForgotPassword
           open={openForgot}
           onClose={() => {

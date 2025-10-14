@@ -57,7 +57,7 @@ export const useColumnTable = ({
         },
       },
       {
-        title: 'Người tạo',
+        title: 'Khách hàng',
         dataIndex: 'createdBy',
         width: 200,
         align: 'left',
@@ -78,62 +78,9 @@ export const useColumnTable = ({
           return <RenderCell value={formatted} tooltip={value ?? ''} />;
         },
       },
+      
       {
-        title: 'Trạng thái kiểm tra',
-        dataIndex: 'uploadStatus',
-        width: 150,
-        align: 'left',
-        render: (value) => {
-          const text = ISDN_TRANSACTION_UPLOAD_STATUS.find(
-            (item) => String(item.code) === String(value)
-          )?.value;
-          return (
-            <CTag type={UploadStatusTagMap[value as UploadStatus]}>{text}</CTag>
-          );
-        },
-      },
-      {
-        title: 'Kết quả kiểm tra',
-        width: 150,
-        align: 'left',
-        render: (_, record) => {
-          const succeededNumber = record?.validSucceededNumber;
-          const failedNumber = record?.validFailedNumber;
-          return (
-            <div>
-              {record.stepStatus >= 2 && record.resultCheckFile ? (
-                <>
-                  <RenderCell
-                    value={`Số lượng thành công: ${succeededNumber}`}
-                    tooltip={`Số lượng thành công: ${succeededNumber}`}
-                  />
-                  <RenderCell
-                    value={`Số lượng thất bại: ${failedNumber}`}
-                    tooltip={`Số lượng thất bại: ${failedNumber}`}
-                  />
-                  <Text className="!flex w-full">
-                    File kết quả:
-                    <div
-                      style={{
-                        color: 'green',
-                        textDecoration: 'underline',
-                        fontStyle: 'italic',
-                        marginLeft: '4px',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => onDownload(true, record?.resultCheckFile)}
-                    >
-                      File
-                    </div>
-                  </Text>
-                </>
-              ) : null}
-            </div>
-          );
-        },
-      },
-      {
-        title: 'Trạng thái thực hiện',
+        title: 'Mã hợp đồng',
         dataIndex: 'transStatus',
         width: 150,
         align: 'left',
@@ -156,7 +103,7 @@ export const useColumnTable = ({
         },
       },
       {
-        title: 'Kết quả thực hiện',
+        title: 'Xem chi tiết',
         width: 200,
         align: 'left',
         render: (_, record) => {

@@ -1,8 +1,6 @@
 import { useGoogleLogin } from '@react-oauth/google';
 import { NotificationError } from '@vissoft-react/common';
-import { Button } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import GoogleIcon from '../../../assets/images/GoogleIcon.svg';
 import useConfigAppStore from '../../../modules/Layouts/stores';
 import { pathRoutes } from '../../../routers/url';
 import { useSupportLogin } from '../hooks';
@@ -40,16 +38,6 @@ const LoginButton = () => {
     },
     onError: (error) => console.log('error :>> ', error),
   });
-
-  return (
-    <Button
-      onClick={() => handleLogin()}
-      icon={<img src={GoogleIcon} alt="Google" />}
-      className="font-medium !px-12 h-12 border-0 shadow-[0_10px_20px_#D2D2D2] hover:!bg-[#4877ef28] hover:!text-black w-full"
-    >
-      <div>Đăng nhập với Google</div>
-    </Button>
-  );
 };
 
 export default LoginButton;
