@@ -1,30 +1,34 @@
-FROM node:20-bullseye-slim AS builder
-RUN corepack enable && corepack prepare yarn@4.4.1 --activate
+# Build stage
+FROM node:18-alpine as builder
+
+# Enable Corepack and set correct Yarn version
+RUN corepack enable
+RUN corepack prepare yarn@4.4.1 --activate
+
+# Set working directory
 WORKDIR /app
 
-# 1) Copy file Yarn + lock trước
-COPY package.json yarn.lock .yarnrc.yml ./
-# (nếu dùng Berry) COPY .yarn (nếu repo có)
-# COPY .yarn/ .yarn/
+# System deps for native builds (node-gyp)
+RUN apk add --no-cache python3 make g++
 
-# 2) Copy riêng các manifest của từng workspace (để cache install)
-# Giả sử cấu trúc:
-#   packages/source/package.json
-#   apps/internal/package.json
-COPY packages/source/package.json packages/source/package.json
-COPY apps/internal/package.json apps/internal/package.json
-# Nếu có thêm workspace khác, COPY manifest của chúng tương tự
+# Yarn build-time parameters (tunable at build with --build-arg)
+ARG YARN_ENABLE_IMMUTABLE_INSTALLS=false
+ARG YARN_HTTP_TIMEOUT=600000
+ENV YARN_ENABLE_IMMUTABLE_INSTALLS=$YARN_ENABLE_IMMUTABLE_INSTALLS
+ENV YARN_HTTP_TIMEOUT=$YARN_HTTP_TIMEOUT
 
-# 3) Cài dependency sau khi Yarn đã thấy đủ workspaces
-ENV YARN_ENABLE_IMMUTABLE_INSTALLS=false
-RUN yarn install --inline-builds
+# Copy package files
+COPY package.json yarn.lock ./
 
-# 4) Bây giờ mới copy toàn bộ source
+# Copy source code
 COPY . .
 
-# 5) Build workspace
-RUN yarn workspace @vissoft-react/internal build
-# hoặc nếu script của bạn là "build:internal": dùng RUN yarn build:internal
+# Configure Yarn and install deps
+RUN yarn config set enableImmutableInstalls $YARN_ENABLE_IMMUTABLE_INSTALLS \
+  && yarn install
+
+# Build the internal application
+RUN yarn build:internal
 
 # Production stage
 FROM nginx:alpine

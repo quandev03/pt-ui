@@ -8,13 +8,25 @@ RUN corepack prepare yarn@4.4.1 --activate
 # Set working directory
 WORKDIR /app
 
+# System deps for native builds (node-gyp)
+RUN apk add --no-cache python3 make g++
+
+# Yarn build-time parameters (tunable at build with --build-arg)
+ARG YARN_ENABLE_IMMUTABLE_INSTALLS=false
+ARG YARN_HTTP_TIMEOUT=600000
+ENV YARN_ENABLE_IMMUTABLE_INSTALLS=$YARN_ENABLE_IMMUTABLE_INSTALLS
+ENV YARN_HTTP_TIMEOUT=$YARN_HTTP_TIMEOUT
+
 # Copy package files
 COPY package.json yarn.lock ./
 COPY .yarnrc.yml ./
 
 # Copy source code
 COPY . .
-RUN YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+
+# Configure Yarn and install deps
+RUN yarn config set enableImmutableInstalls $YARN_ENABLE_IMMUTABLE_INSTALLS \
+  && yarn install
 
 # Build the partner application
 RUN yarn build:partner
