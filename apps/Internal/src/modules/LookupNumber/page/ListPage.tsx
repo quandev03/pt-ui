@@ -42,25 +42,94 @@ export const ListPage = () => {
       </div>
     );
   }, [canExport, handleExport]);
-  const { filters } = useFilters();
-  const columns = useColumns();
   return (
-    <>
-      <LayoutList
-        data={data}
-        actionComponent={actionComponent}
-        columns={columns}
-        title="Tra cứu số"
-        filterItems={filters}
-        loading={isPending}
-        searchComponent={
-          <LayoutList.SearchComponent
-            name="q"
-            tooltip="Nhập số để tìm kiếm"
-            placeholder="Nhập số để tìm kiếm"
+    <div style={{ maxWidth: 400, margin: '20px auto' }}>
+      <h2>Thêm dịch vụ</h2>
+      <form >
+        <div style={{ marginBottom: 10 }}>
+          <label>Mã dịch vụ</label><br />
+          <input
+            type="text"
+            name="maDV"
+            value={""}
+            style={{ width: '100%', padding: 8 }}
           />
-        }
-      />
-    </>
+        </div>
+
+        <div style={{ marginBottom: 10 }}>
+          <label>Tên dịch vụ</label><br />
+          <input
+            type="text"
+            name="tenDV"
+            value={""}
+            style={{ width: '100%', padding: 8 }}
+          />
+        </div>
+
+        <div style={{ marginBottom: 10 }}>
+          <label>Đơn vị tính:</label><br />
+          <input
+            type="text"
+            name="dvt"
+            value={""}
+            style={{ width: '100%', padding: 8 }}
+          />
+        </div>
+
+        <div style={{ marginBottom: 10 }}>
+          <label>Đơn giá</label><br />
+          <input
+            type="text"
+            name="gia"
+            value={""}
+            style={{ width: '100%', padding: 8 }}
+          />
+        </div>
+
+        <div style={{ marginBottom: 10 }}>
+          <label>Trạng thái</label><br />
+          <input
+            type="text"
+            name="gia"
+            value={""}
+            style={{ width: '100%', padding: 8 }}
+          />
+        </div>
+         
+        <div style={{ marginBottom: 10 }}>
+          <label>Nhà cung cấp</label><br />
+          <input
+            type="text"
+            name="ncc"
+            value={""}
+            style={{ width: '100%', padding: 8 }}
+          />
+        </div>
+
+        <div style={{ marginBottom: 10 }}>
+          <label>Mô tả chi tiết</label><br />
+          <input
+            type="text"
+            name="mota"
+            value={""}
+            style={{ width: '100%', padding: 8 }}
+          />
+        </div>
+
+        <button
+          type="submit"
+          style={{
+            padding: '8px 16px',
+            background: '#007bff',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 4,
+            cursor: 'pointer',
+          }}
+        >
+          Gửi
+        </button>
+      </form>
+    </div>
   );
 };

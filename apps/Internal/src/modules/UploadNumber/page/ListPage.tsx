@@ -50,7 +50,7 @@ export const ListPage = () => {
         data={data}
         actionComponent={actionComponent}
         columns={columns}
-        title="Danh sách upload tài nguyên số"
+        title="Danh sách"
         filterItems={filters}
         loading={isPending}
       />

@@ -96,14 +96,14 @@ function useCheckAllowDelete(onSuccess: (is: string) => void) {
       } else {
         NotificationError({
           message:
-            'Không thể xóa tài khoản được gán vị trí nhân viên kinh doanh/ AM',
+            'Không thể xóa tài khoản ',
         });
       }
     },
     onError() {
       NotificationError({
         message:
-          'Không thể xóa tài khoản được gán vị trí nhân viên kinh doanh/ AM',
+          'Không thể xóa tài khoản ',
       });
     },
   });

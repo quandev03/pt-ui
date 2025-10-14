@@ -1,7 +1,7 @@
 // export const Loader = () => {
 //   return <div className="loader"></div>;
 // };
-import Logo from '../../assets/images/Logo-mini.svg';
+import Logo from '../../assets/images/logo.jpg';
 export const Loader = () => {
   return (
     <div className="loading-overlay">

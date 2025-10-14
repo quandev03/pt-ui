@@ -3,7 +3,7 @@ import { message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useSupportGetNewPassword } from '../hooks';
-import Logo from '../../../assets/images/Logo-mini.svg';
+import Logo from '../../../assets/images/logo.jpg';
 import { CButton, Text } from '@vissoft-react/common';
 import { Copy } from 'lucide-react';
 import { pathRoutes } from '../../../routers/url';
