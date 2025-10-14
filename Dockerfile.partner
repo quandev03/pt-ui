@@ -12,11 +12,9 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 COPY .yarnrc.yml ./
 
-# Install dependencies
-RUN yarn install --frozen-lockfile
-
 # Copy source code
 COPY . .
+RUN YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
 
 # Build the partner application
 RUN yarn build:partner
@@ -24,19 +22,24 @@ RUN yarn build:partner
 # Production stage
 FROM nginx:alpine
 
-# Copy built files to nginx
-COPY --from=builder /app/dist/apps/partner /usr/share/nginx/html
+# Copy built files to nginx under /partner
+COPY --from=builder /app/dist/apps/partner /usr/share/nginx/html/partner
 
-# Create nginx configuration for Partner (no admin prefix)
+# Create nginx configuration for Partner under /partner
 RUN echo 'server { \
     listen 3002; \
     server_name localhost; \
     root /usr/share/nginx/html; \
     index index.html; \
     \
-    # Handle all routes \
-    location / { \
-        try_files $uri $uri/ /index.html; \
+    # Handle /partner routes \
+    location /partner { \
+        try_files $uri $uri/ /partner/index.html; \
+    } \
+    \
+    # Redirect root to /partner \
+    location = / { \
+        return 301 /partner/; \
     } \
     \
     # Handle static assets \
@@ -54,4 +57,4 @@ RUN chmod +x /usr/local/bin/docker-entrypoint-partner.sh
 EXPOSE 3002
 
 # Use entrypoint script
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint-partner.sh"] 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-partner.sh"]

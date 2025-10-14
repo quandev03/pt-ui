@@ -12,11 +12,9 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 COPY .yarnrc.yml ./
 
-# Install dependencies
-RUN yarn install --frozen-lockfile
-
 # Copy source code
 COPY . .
+RUN YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
 
 # Build the internal application
 RUN yarn build:internal

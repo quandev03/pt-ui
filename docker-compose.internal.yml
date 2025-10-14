@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  internal-web:
+    env_file:
+      - apps/Internal/.env.development
+    build:
+      context: .
+      dockerfile: Dockerfile.internal
+    container_name: hvn-internal-web
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001"]
+      timeout: 10s
+      interval: 30s
+      retries: 3
+      start_period: 40s
+    networks:
+      - hvn-network
+
+networks:
+  hvn-network:
+    driver: bridge
+
+

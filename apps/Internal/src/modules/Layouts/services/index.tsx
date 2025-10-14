@@ -65,7 +65,7 @@ export const layoutPageService: ILayoutService = {
   },
   fetcherChangePassword: async (payload: PayloadType) => {
     return safeApiClient.post(
-      `admin-servic/private/api/auth/change-password`,
+      `admin-service/private/api/auth/change-password`,
       payload
     );
   },
