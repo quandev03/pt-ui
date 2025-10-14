@@ -1,22 +1,24 @@
 # Build stage
-FROM node:18-alpine as builder
+FROM node:20-bullseye-slim AS builder
+RUN corepack enable && corepack prepare yarn@4.4.1 --activate
 
-# Enable Corepack and set correct Yarn version
-RUN corepack enable
-RUN corepack prepare yarn@4.4.1 --activate
+# tool tối thiểu (phòng khi có gói cần node-gyp)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 make g++ git ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package.json yarn.lock ./
-COPY .yarnrc.yml ./
+# Copy file Yarn trước để cache
+COPY package.json yarn.lock .yarnrc.yml ./
+# Nếu bạn dùng Yarn Berry, nhớ copy thư mục .yarn (releases/plugins/cache nếu có)
 
-# Copy source code
+# Tắt immutable trong build (CI thường = true)
+ENV YARN_ENABLE_IMMUTABLE_INSTALLS=false
+RUN yarn install --inline-builds
+
+# Copy source và build
 COPY . .
-RUN YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
-
-# Build the internal application
 RUN yarn build:internal
 
 # Production stage
