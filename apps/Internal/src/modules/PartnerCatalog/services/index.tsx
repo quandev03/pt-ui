@@ -136,6 +136,22 @@ export const PartnerCatalogService = {
       responseType: 'blob',
     });
   },
+  // External address kit APIs (not using safeApiClient because of different host)
+  getProvinces: async () => {
+    const res = await fetch(
+      'https://api.quannh.click/sale-service/public/api/v1/address'
+    );
+    if (!res.ok) throw new Error('Failed to fetch provinces');
+    return (await res.json()) as { provinces: { code: string; name: string }[] };
+  },
+  getCommunesByProvince: async (provinceCode: string) => {
+    const url = `https://api.quannh.click/sale-service/public/api/v1/address/${encodeURIComponent(
+      provinceCode
+    )}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Failed to fetch communes');
+    return (await res.json()) as { communes: { code: string; name: string }[] };
+  },
   getOrganizationUsersByOrgId: (
     partnerCode: string,
     params: IParamsRequest

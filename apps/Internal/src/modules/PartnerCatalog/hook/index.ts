@@ -185,3 +185,19 @@ export const useGetAssignedPackages = (clientId: string) => {
     queryFn: () => PartnerCatalogService.getAssignedPackages(clientId),
   });
 };
+
+export const useProvinces = () => {
+  return useQuery({
+    queryKey: ['address-provinces'],
+    queryFn: PartnerCatalogService.getProvinces,
+    staleTime: 1000 * 60 * 60, // 1h
+  });
+};
+
+export const useCommunes = (provinceCode?: string) => {
+  return useQuery({
+    queryKey: ['address-communes', provinceCode],
+    queryFn: () => PartnerCatalogService.getCommunesByProvince(provinceCode as string),
+    enabled: !!provinceCode,
+  });
+};

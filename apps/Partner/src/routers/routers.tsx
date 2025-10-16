@@ -92,6 +92,6 @@ export const routers = createBrowserRouter(
     },
   ],
   {
-    basename: '/daily',
+    basename: '/partner',
   }
 );

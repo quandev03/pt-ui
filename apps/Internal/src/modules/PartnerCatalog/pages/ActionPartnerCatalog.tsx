@@ -83,10 +83,9 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         orgDescription,
         representative,
         status,
-        parentCode,
         provinceCode,
-        employeeCode,
-      } = data;
+        orgType,
+      } = data as any;
       form.setFieldsValue({
         address,
         orgCode,
@@ -95,10 +94,9 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         phone,
         orgDescription,
         representative,
-        status: status === StatusEnum.ACTIVE ? 'Hoạt động' : 'Không hoạt động',
-        parentCode,
+        status: status === StatusEnum.ACTIVE,
         provinceCode,
-        employeeCode,
+        orgType,
       });
     });
 
@@ -159,9 +157,10 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
       representative,
       status,
       provinceCode,
-      parentCode,
-      employeeCode,
-    } = values;
+      wardCode,
+      email,
+      orgType,
+    } = values as any;
 
     const payload: IPayloadPartner = {
       id: id,
@@ -172,12 +171,13 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         orgDescription,
         taxCode,
         phone,
+        email,
         address,
         representative,
-        status: status === 'Hoạt động' ? 1 : 0,
+        status: status ? 1 : 0,
         provinceCode,
-        parentCode,
-        employeeCode,
+        wardCode,
+        orgType,
       },
     };
     if (actionMode === IModeAction.CREATE) {
@@ -204,7 +204,7 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
           onFinish={handleFinish}
           initialValues={{
             orgSubType: '0',
-            orgPartnerType: '0',
+            orgPartnerType: 1,
           }}
           labelAlign="left"
           onFinishFailed={scrollToFirstError}
