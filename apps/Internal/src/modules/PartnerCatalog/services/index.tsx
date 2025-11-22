@@ -8,6 +8,7 @@ import type { AxiosRequestHeaders } from 'axios';
 import { Key } from 'react';
 import {
   IAssignPackagePayload,
+  IBank,
   IOrganizationUnitDTO,
   IParamsProductByCategory,
   IPartner,
@@ -215,5 +216,8 @@ export const PartnerCatalogService = {
     return safeApiClient.get<AnyElement>(
       `${prefixSaleService}/organization-partner/${clientId}/packages`
     );
+  },
+  getBanks: () => {
+    return safeApiClient.get<IBank[]>(`${prefixSaleService}/banks`);
   },
 };

@@ -34,6 +34,36 @@ const LoginPage = () => {
   const token = StorageService.get(ACCESS_TOKEN_KEY);
   const { state: locationState } = useLocation();
   const permission = usePermissions(menuData, pathRoutes.dashboard);
+  
+  const { mutate: loginLocal, isPending: loadingLoginLocal } =
+    useSupportLoginLocal(
+      async () => {
+        // Đảm bảo token đã được lưu trước khi gọi API
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        try {
+        const menuData = await globalService.getMenu();
+        setMenuData(menuData);
+        setIsAuthenticated(true);
+          // Đợi một chút để đảm bảo state đã được update
+          setTimeout(() => {
+            handleRedirect();
+          }, 50);
+        } catch (error) {
+          console.error('Failed to load menu after login:', error);
+          // Vẫn set authenticated để có thể redirect
+          setIsAuthenticated(true);
+          setTimeout(() => {
+            handleRedirect();
+          }, 50);
+        }
+      },
+      (err: IErrorResponse) => {
+        if (err.errors) {
+          setFieldError(form, err.errors);
+        }
+      }
+    );
+
   const handleRedirect = useCallback(() => {
     if (locationState) {
       const { pathname, search } = locationState;
@@ -46,25 +76,13 @@ const LoginPage = () => {
   }, [locationState, permission, navigate]);
 
   useEffect(() => {
-    if (isAuthenticated && token) {
+    // Chỉ redirect nếu đã authenticated và có token, nhưng không redirect nếu vừa mới login
+    // (để tránh conflict với redirect trong onSuccess)
+    if (isAuthenticated && token && !loadingLoginLocal) {
       handleRedirect();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated, token]);
-
-  const { mutate: loginLocal, isPending: loadingLoginLocal } =
-    useSupportLoginLocal(
-      async () => {
-        const menuData = await globalService.getMenu();
-        setMenuData(menuData);
-        setIsAuthenticated(true);
-      },
-      (err: IErrorResponse) => {
-        if (err.errors) {
-          setFieldError(form, err.errors);
-        }
-      }
-    );
+  }, [isAuthenticated, token, loadingLoginLocal]);
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>, field: string) => {
     form.setFieldValue(field, e.target.value.trim());

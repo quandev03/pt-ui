@@ -10,8 +10,11 @@ import {
   MESSAGE,
   TitleHeader,
   usePermissions,
+  UploadFileMax,
 } from '@vissoft-react/common';
-import { Col, Form, Row, Spin, TreeSelect } from 'antd';
+import { Col, Form, Row, Spin, Upload } from 'antd';
+import { RcFile } from 'antd/es/upload';
+import { PlusOutlined } from '@ant-design/icons';
 import { memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { pathRoutes } from '../../../../../src/routers';
@@ -28,20 +31,20 @@ export const AgencyAction = memo(() => {
     loadingGetAgency,
     loadingAdd,
     loadingUpdate,
+    loadingUploadImages,
     handleFinish,
     handleClose,
     Title,
     actionMode,
     setIsSubmitBack,
-    loadingListAgency,
-    listParentId,
-    mapStockParent,
     agencyDetail,
   } = useLogicActionAgency();
+
+  // Cleanup blob URLs khi component unmount (đã được xử lý trong useImageBlobUrls hook)
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{Title}</TitleHeader>
-      <Spin spinning={loadingGetAgency}>
+      <Spin spinning={loadingGetAgency || loadingUploadImages}>
         <Form
           form={form}
           onFinish={handleFinish}
@@ -68,7 +71,7 @@ export const AgencyAction = memo(() => {
               <Col span={12}></Col>
               <Col span={12}>
                 <Form.Item
-                  label="Mã đại lý"
+                  label="Mã phòng"
                   name="orgCode"
                   required
                   rules={[
@@ -86,7 +89,7 @@ export const AgencyAction = memo(() => {
                   ]}
                 >
                   <CInput
-                    placeholder="Nhập mã đại lý"
+                    placeholder="Nhập mã phòng"
                     maxLength={30}
                     disabled={actionMode === IModeAction.READ}
                     preventSpecialExceptHyphenAndUnderscore
@@ -98,7 +101,7 @@ export const AgencyAction = memo(() => {
               </Col>
               <Col span={12}>
                 <Form.Item
-                  label="Tên đại lý"
+                  label="Tên phòng"
                   name="orgName"
                   required
                   rules={[
@@ -116,7 +119,7 @@ export const AgencyAction = memo(() => {
                   ]}
                 >
                   <CInput
-                    placeholder="Nhập tên đại lý"
+                    placeholder="Nhập tên phòng"
                     maxLength={100}
                     disabled={actionMode === IModeAction.READ}
                     onBlur={(e) => {
@@ -126,24 +129,68 @@ export const AgencyAction = memo(() => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col span={24}>
                 <Form.Item
-                  label="Đại lý cha"
-                  name="parentId"
-                  rules={[{ required: true, message: MESSAGE.G06 }]}
-                >
-                  <TreeSelect
-                    placeholder="Chọn đại lý cha"
-                    showSearch
-                    treeDefaultExpandAll
-                    treeNodeFilterProp="title"
-                    disabled={
-                      actionMode === IModeAction.READ ||
-                      agencyDetail?.parentId === null
+                  label="Ảnh phòng"
+                  name="images"
+                  valuePropName="fileList"
+                  getValueFromEvent={(e) => {
+                    if (Array.isArray(e)) {
+                      return e;
                     }
-                    loading={loadingListAgency}
-                    treeData={mapStockParent(listParentId || [])}
-                  />
+                    return e?.fileList;
+                  }}
+                >
+                  <Upload
+                    listType="picture-card"
+                    multiple
+                    beforeUpload={(file: RcFile) => {
+                      const isImage = file.type?.startsWith('image/');
+                      if (!isImage) {
+                        form.setFields([
+                          {
+                            name: 'images',
+                            errors: ['Chỉ được upload file ảnh'],
+                          },
+                        ]);
+                        return Upload.LIST_IGNORE;
+                      }
+                      // UploadFileMax là số bytes, chuyển sang MB để so sánh
+                      const maxSizeMB = UploadFileMax / 1024 / 1024;
+                      const fileSizeMB = file.size / 1024 / 1024;
+                      if (fileSizeMB > maxSizeMB) {
+                        form.setFields([
+                          {
+                            name: 'images',
+                            errors: [`Kích thước file không được vượt quá ${maxSizeMB.toFixed(2)}MB`],
+                          },
+                        ]);
+                        return Upload.LIST_IGNORE;
+                      }
+                      form.setFields([
+                        {
+                          name: 'images',
+                          errors: [],
+                        },
+                      ]);
+                      return false; // Prevent auto upload
+                    }}
+                    disabled={actionMode === IModeAction.READ}
+                    onRemove={(file) => {
+                      // Khi xóa ảnh, cần xử lý cleanup nếu là ảnh từ server
+                      if (file.url && file.url.startsWith('blob:')) {
+                        // Không cần cleanup vì sẽ được cleanup khi component unmount
+                      }
+                      return true;
+                    }}
+                  >
+                    {(form.getFieldValue('images')?.length || 0) < 10 && (
+                      <div>
+                        <PlusOutlined />
+                        <div style={{ marginTop: 8 }}>Upload</div>
+                      </div>
+                    )}
+                  </Upload>
                 </Form.Item>
               </Col>
             </Row>
@@ -154,8 +201,8 @@ export const AgencyAction = memo(() => {
                 onClick={() => {
                   form.submit();
                 }}
-                loading={loadingAdd || loadingUpdate}
-                disabled={loadingAdd || loadingUpdate}
+                loading={loadingAdd || loadingUpdate || loadingUploadImages}
+                disabled={loadingAdd || loadingUpdate || loadingUploadImages}
               />
             )}
             {actionMode !== IModeAction.READ &&
@@ -165,8 +212,8 @@ export const AgencyAction = memo(() => {
                     setIsSubmitBack(true);
                     form.submit();
                   }}
-                  loading={loadingAdd || loadingUpdate}
-                  disabled={loadingAdd || loadingUpdate}
+                  loading={loadingAdd || loadingUpdate || loadingUploadImages}
+                  disabled={loadingAdd || loadingUpdate || loadingUploadImages}
                 />
               )}
             {actionMode === IModeAction.READ && permission.canUpdate && (

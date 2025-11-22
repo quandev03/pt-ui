@@ -14,6 +14,7 @@ export interface IAgency {
   provinceCode: string | null;
   status: number;
   wardCode: string | null;
+  imageUrls?: string[]; // Danh sách URL ảnh
 }
 export interface IAgencyParams {
   status?: string | number;
@@ -22,7 +23,8 @@ export interface IAgencyParams {
 export interface IFormAgency {
   id?: string;
   orgCode: string;
-  parentId: string;
+  parentId?: string; // Optional vì đã bỏ field này
   status: number;
   orgName: string;
+  images?: File[]; // Danh sách ảnh
 }

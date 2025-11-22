@@ -201,3 +201,5 @@ export const useCommunes = (provinceCode?: string) => {
     enabled: !!provinceCode,
   });
 };
+
+export { useGetBanks } from './useGetBanks';

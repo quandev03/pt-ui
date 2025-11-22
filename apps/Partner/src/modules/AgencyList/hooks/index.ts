@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { agencyListService } from '../services';
+import { agencyListService, getImageDownloadUrl } from '../services';
 import {
   IFieldErrorsItem,
   NotificationSuccess,
@@ -9,6 +9,8 @@ import {
 } from '@vissoft-react/common';
 import { REACT_QUERY_KEYS } from '../../../../src/constants/query-key';
 import { IAgency, IAgencyParams } from '../types';
+import { safeApiClient } from '../../../../src/services';
+import { prefixSaleService } from '../../../../src/constants';
 
 export const useGetAgencies = (params: IAgencyParams) => {
   return useQuery({
@@ -25,25 +27,25 @@ export const useSupportGetAgency = (onSuccess: (data: IAgency) => void) => {
   });
 };
 export const useSupportAddAgency = (
-  onSuccess: () => void,
+  onSuccess: (data: IAgency) => void,
   onError: (errorField: IFieldErrorsItem[]) => void
 ) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: agencyListService.createAgency,
-    onSuccess: () => {
-      NotificationSuccess('Thêm Đại lý thành công');
+    onSuccess: (data) => {
+      NotificationSuccess('Thêm Phòng thành công');
       queryClient.invalidateQueries({
         queryKey: [REACT_QUERY_KEYS.GET_ALL_AGENCY],
       });
-      onSuccess();
+      onSuccess(data);
     },
     onError(error: IErrorResponse & { fieldErrors?: IFieldErrorsItem[] }) {
       if (error?.errors) {
         onError(error?.errors);
       } else {
         NotificationError({
-          message: 'Lỗi hệ thống, thêm mới Đại lý thất bại',
+          message: 'Lỗi hệ thống, thêm mới Phòng thất bại',
         });
       }
     },
@@ -51,23 +53,43 @@ export const useSupportAddAgency = (
 };
 
 export function useSupportUpdateUser(
-  onSuccess: () => void,
+  onSuccess: (data: IAgency) => void,
   onError: (errorField: IFieldErrorsItem[]) => void
 ) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: agencyListService.updateAgency,
-    onSuccess: () => {
-      NotificationSuccess('Cập nhật Đại lý thành công');
+    onSuccess: (data) => {
+      NotificationSuccess('Cập nhật Phòng thành công');
       queryClient.invalidateQueries({
         queryKey: [REACT_QUERY_KEYS.GET_ALL_AGENCY],
       });
-      onSuccess();
+      onSuccess(data);
     },
     onError(error: IErrorResponse & { fieldErrors?: IFieldErrorsItem[] }) {
       if (error?.errors) {
         onError(error?.errors);
       }
+    },
+  });
+}
+
+export function useUploadAgencyImages(
+  onSuccess?: () => void,
+  onError?: (error: IErrorResponse) => void
+) {
+  return useMutation({
+    mutationFn: ({ orgUnitId, files }: { orgUnitId: string; files: File[] }) =>
+      agencyListService.uploadAgencyImages(orgUnitId, files),
+    onSuccess: () => {
+      NotificationSuccess('Upload ảnh thành công');
+      onSuccess?.();
+    },
+    onError: (error: IErrorResponse) => {
+      NotificationError({
+        message: 'Upload ảnh thất bại',
+      });
+      onError?.(error);
     },
   });
 }
@@ -100,4 +122,37 @@ export const convertArrToObj = (arr: AnyElement[], parent: AnyElement) => {
     }, []);
 
   return newArr?.length > 0 ? newArr : undefined;
+};
+
+// Hook để fetch ảnh và tạo blob URL
+export const useImageBlobUrls = (fileUrls: string[] | undefined) => {
+  return useQuery({
+    queryKey: [REACT_QUERY_KEYS.AGENCY_IMAGES, fileUrls],
+    queryFn: async () => {
+      if (!fileUrls || fileUrls.length === 0) return [];
+      
+      const blobUrls: string[] = [];
+      for (const fileUrl of fileUrls) {
+        try {
+          const response = await safeApiClient.get<Blob>(
+            `${prefixSaleService}/files/download`,
+            {
+              params: { fileUrl },
+              responseType: 'blob',
+            }
+          );
+          const blob = new Blob([response], { type: 'image/jpeg' });
+          const url = window.URL.createObjectURL(blob);
+          blobUrls.push(url);
+        } catch (error) {
+          console.error('Failed to load image:', fileUrl, error);
+          // Nếu lỗi, thêm empty string để giữ index
+          blobUrls.push('');
+        }
+      }
+      return blobUrls;
+    },
+    enabled: !!fileUrls && fileUrls.length > 0,
+    staleTime: 5 * 60 * 1000, // Cache 5 phút
+  });
 };

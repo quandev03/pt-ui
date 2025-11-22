@@ -95,6 +95,7 @@ export const pathRoutes = {
   //Quản lý bán hàng
   salesManager: '/sales-manager',
   eSIMStock: '/esim-stock',
+  eSIMStockAdd: '/esim-stock/add',
   eSIMStockView: (id?: IStringNumber) => `/esim-stock/view/${id ? id : ':id'}`,
   // Báo cáo
   report: '/report',

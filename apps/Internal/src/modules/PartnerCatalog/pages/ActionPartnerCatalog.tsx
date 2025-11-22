@@ -85,6 +85,8 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         status,
         provinceCode,
         orgType,
+        orgBankAccountNo,
+        bankName,
       } = data as any;
       form.setFieldsValue({
         address,
@@ -97,6 +99,8 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         status: status === StatusEnum.ACTIVE,
         provinceCode,
         orgType,
+        orgBankAccountNo,
+        bankName,
       });
     });
 
@@ -160,6 +164,8 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
       wardCode,
       email,
       orgType,
+      orgBankAccountNo,
+      bankName,
     } = values as any;
 
     const payload: IPayloadPartner = {
@@ -178,6 +184,8 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         provinceCode,
         wardCode,
         orgType,
+        orgBankAccountNo,
+        bankName,
       },
     };
     if (actionMode === IModeAction.CREATE) {

@@ -63,44 +63,49 @@ export const routerItems: RouterItems[] = [
     label: 'Mẫu hợp đồng',
     parentId: pathRoutes.manageNumber as string,
   },
-  // {
-  //   key: pathRoutes.groupUserManager as string,
-  //   label: 'Nhóm tài khoản',
-  //   parentId: pathRoutes.accountAuthorization as string,
-  // },
-  // {
-  //   key: pathRoutes.roleManager as string,
-  //   label: 'Vai trò & Phân quyền',
-  //   parentId: pathRoutes.accountAuthorization as string,
-  // },
-  // {
-  //   key: pathRoutes.rolePartnerManager as string,
-  //   label: 'Vai trò & Phân quyền đối tác',
-  //   parentId: pathRoutes.accountAuthorization as string,
-  // },
+  {
+    key: pathRoutes.groupUserManager as string,
+    label: 'Nhóm tài khoản',
+    parentId: pathRoutes.accountAuthorization as string,
+  },
+  {
+    key: pathRoutes.roleManager as string,
+    label: 'Vai trò & Phân quyền',
+    parentId: pathRoutes.accountAuthorization as string,
+  },
+  {
+    key: pathRoutes.rolePartnerManager as string,
+    label: 'Vai trò & Phân quyền đối tác',
+    parentId: pathRoutes.accountAuthorization as string,
+  },
   {
     key: pathRoutes.object as string,
     label: 'Báo cáo',
     parentId: pathRoutes.accountAuthorization as string,
   },
   // danh sách kho esim
-  // {
-  //   key: pathRoutes.esimStock,
-  //   icon: <CardSim />,
-  //   label: 'Danh sách eSIM',
-  // },
-  // {
-  //   key: pathRoutes.updateSubscriberInfo as string,
-  //   icon: <PencilLine />,
-  //   label: 'Cập nhật thông tin thuê bao',
-  // },
+  {
+    key: pathRoutes.esimStock,
+    icon: <CardSim />,
+    label: 'Danh sách đăng ký dịch vụ',
+  },
+  {
+    key: pathRoutes.eSIMStockAdd,
+    label: 'Thêm đăng ký dịch vụ',
+    hasChild: true,
+  },
+  {
+    key: pathRoutes.updateSubscriberInfo as string,
+    icon: <PencilLine />,
+    label: 'Cập nhật thông tin thuê bao',
+  },
    //Báo cáo
    
-  // {
-  //   key: pathRoutes.reportPartner,
-  //   label: 'Báo cáo đơn hàng đối tác',
-  //   parentId: pathRoutes.report,
-  // },
+  {
+    key: pathRoutes.reportPartner,
+    label: 'Báo cáo đơn hàng đối tác',
+    parentId: pathRoutes.report,
+  },
 ];
 export const singlePopActions = ['add'];
 export const doublePopActions = ['edit', 'view'];

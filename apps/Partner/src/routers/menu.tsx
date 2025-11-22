@@ -31,12 +31,12 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.userManager as string,
-    label: 'Quản lý user đại lý',
+    label: 'Quản lý user',
     parentId: pathRoutes.accountAuthorization as string,
   },
   {
     key: pathRoutes.agencyList as string,
-    label: 'Danh sách đại lý',
+    label: 'Danh sách phòng',
     parentId: pathRoutes.accountAuthorization as string,
   },
   {
@@ -58,6 +58,16 @@ export const routerItems: RouterItems[] = [
   {
     key: pathRoutes.esimWarehouse as string,
     label: 'Danh sách eSIM',
+    parentId: pathRoutes.saleManagement as string,
+  },
+  {
+    key: pathRoutes.roomService as string,
+    label: 'Danh sách dịch vụ phòng',
+    parentId: pathRoutes.saleManagement as string,
+  },
+  {
+    key: pathRoutes.roomPayment as string,
+    label: 'Thanh toán dịch vụ phòng',
     parentId: pathRoutes.saleManagement as string,
   },
   {

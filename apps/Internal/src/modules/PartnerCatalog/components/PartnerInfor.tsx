@@ -1,7 +1,7 @@
 import { CInput, CTextArea, IModeAction, useActionMode, validateForm } from '@vissoft-react/common';
 import { Col, Form, Row, Select, Switch, ConfigProvider } from 'antd';
 import useFormInstance from 'antd/es/form/hooks/useFormInstance';
-import { useCommunes, useProvinces } from '../hook';
+import { useCommunes, useGetBanks, useProvinces } from '../hook';
 import { FocusEvent } from 'react';
 
 const PartnerInfor = () => {
@@ -22,6 +22,12 @@ const PartnerInfor = () => {
   const communeOptions = (communesData?.communes || []).map((c) => ({
     label: c.name,
     value: c.code,
+  }));
+
+  const { data: banksData, isLoading: loadingBanks } = useGetBanks();
+  const bankOptions = (banksData || []).map((bank) => ({
+    label: bank.name,
+    value: bank.name,
   }));
 
   return (
@@ -99,7 +105,58 @@ const PartnerInfor = () => {
             <CInput placeholder="Nhập số điện thoại" disabled={actionMode === IModeAction.READ} />
           </Form.Item>
         </Col>
-        
+        <Col span={12}>
+          <Form.Item
+            label="Số tài khoản ngân hàng"
+            name="orgBankAccountNo"
+            rules={[
+              {
+                required: true,
+                message: 'Không được để trống trường này',
+              },
+              {
+                pattern: /^\d+$/,
+                message: 'Chỉ được nhập số',
+              },
+              {
+                min: 8,
+                message: 'Độ dài tối thiểu 8 ký tự',
+              },
+              {
+                max: 20,
+                message: 'Độ dài tối đa 20 ký tự',
+              },
+            ]}
+          >
+            <CInput
+              placeholder="Nhập số tài khoản"
+              maxLength={20}
+              disabled={actionMode === IModeAction.READ}
+              onBlur={(e) => {
+                handleBlur(e, 'orgBankAccountNo');
+              }}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item
+            label="Tên ngân hàng"
+            name="bankName"
+            rules={[validateForm.required]}
+          >
+            <Select
+              placeholder="Chọn ngân hàng"
+              options={bankOptions}
+              loading={loadingBanks}
+              disabled={actionMode === IModeAction.READ}
+              showSearch
+              optionFilterProp="label"
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </Form.Item>
+        </Col>
 
         <Col span={12}>
           <Form.Item label="Tỉnh/Thành phố" name="provinceCode" rules={[validateForm.required]}>

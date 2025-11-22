@@ -38,7 +38,7 @@ export const useTableListPartnerOrder =
         },
       },
       {
-        title: 'Mã đại lý',
+        title: 'Mã phòng',
         dataIndex: 'orgCode',
         width: 150,
         align: 'left',
@@ -48,7 +48,7 @@ export const useTableListPartnerOrder =
         },
       },
       {
-        title: 'Tên đại lý',
+        title: 'Tên phòng',
         dataIndex: 'orgName',
         width: 150,
         align: 'left',

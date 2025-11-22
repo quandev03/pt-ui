@@ -1,17 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { REACT_QUERY_KEYS } from '../../../constants/query-key';
-import { IeSIMStockParams } from '../types';
+import {
+  ICreatePartnerPackageSubscriptionPayload,
+  IPartnerPackageSubscriptionParams,
+} from '../types';
 import { eSIMStockServices } from '../services';
-import { AnyElement } from '@vissoft-react/common';
-import { apiUtils } from 'apps/Internal/src/services';
-
-export const useGeteSIMStock = (params: IeSIMStockParams) => {
-  return useQuery({
-    queryKey: [REACT_QUERY_KEYS.GET_E_SIM_STOCK, params],
-    queryFn: () => eSIMStockServices.geteSIMStock(params),
-  });
-};
+import { NotificationSuccess } from '@vissoft-react/common';
 
 export const useGetDetaileSIMStock = (id: string) => {
   return useQuery({
@@ -33,5 +28,38 @@ export const useGetCustomerInfo = (id: string) => {
     queryKey: ['get-customer-info-detail-esim', id],
     queryFn: () => eSIMStockServices.getCustomerInfo(id),
     enabled: !!id,
+  });
+};
+
+export const useGetPartnerPackageSubscriptions = (
+  params: IPartnerPackageSubscriptionParams
+) => {
+  return useQuery({
+    queryKey: [REACT_QUERY_KEYS.GET_PARTNER_PACKAGE_SUBSCRIPTIONS, params],
+    queryFn: () => eSIMStockServices.getPartnerPackageSubscriptions(params),
+  });
+};
+
+export const useRegisterService = (
+  onSuccess?: () => void
+) => {
+  return useMutation({
+    mutationFn: (payload: ICreatePartnerPackageSubscriptionPayload) =>
+      eSIMStockServices.createPartnerPackageSubscription(payload),
+    onSuccess: () => {
+      NotificationSuccess('Thêm đăng ký dịch vụ thành công');
+      onSuccess?.();
+    },
+  });
+};
+
+export const useStopPartnerPackageSubscription = (onSuccess?: () => void) => {
+  return useMutation({
+    mutationFn: (id: string) =>
+      eSIMStockServices.stopPartnerPackageSubscription(id),
+    onSuccess: () => {
+      NotificationSuccess('Dừng gói dịch vụ thành công');
+      onSuccess?.();
+    },
   });
 };

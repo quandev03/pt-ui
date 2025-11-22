@@ -50,6 +50,35 @@ export interface IPackage {
   description: string;
 }
 
+export interface IPartnerPackageSubscription {
+  id: string;
+  organizationUnitId: string;
+  organizationUnitCode?: string;
+  organizationUnitName: string;
+  packageProfileId: string;
+  packageProfileCode?: string;
+  packageProfileName: string;
+  startTime: string;
+  endTime?: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'EXPIRED';
+  createdBy?: string;
+  createdDate?: string;
+  lastModifiedBy?: string;
+  lastModifiedDate?: string;
+}
+
+export interface IPartnerPackageSubscriptionParams extends IParamsRequest {
+  organizationUnitId?: string;
+  packageProfileId?: string;
+  status?: string;
+}
+
+export interface ICreatePartnerPackageSubscriptionPayload {
+  organizationUnitId: string;
+  packageProfileId: string;
+  startTime?: string;
+}
+
 export interface IOrgItem {
   id: string;
   orgCode: string;

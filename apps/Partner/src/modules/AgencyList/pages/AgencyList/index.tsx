@@ -11,7 +11,7 @@ export const AgencyList = memo(() => {
       actionComponent={actionComponent}
       dataNoPagination={convertArrToObj(listAgency || [], null) || []}
       columns={columns}
-      title="Danh sách đại lý"
+      title="Danh sách phòng"
       filterItems={filters}
       loading={loadingTable}
       expandable={{ defaultExpandAllRows: true }}
@@ -19,8 +19,8 @@ export const AgencyList = memo(() => {
       searchComponent={
         <LayoutList.SearchComponent
           name="textSearch"
-          tooltip="Nhập mã hoặc tên đại lý để tìm kiếm"
-          placeholder="Nhập mã hoặc tên đại lý để tìm kiếm"
+          tooltip="Nhập mã hoặc tên phòng để tìm kiếm"
+          placeholder="Nhập mã hoặc tên phòng để tìm kiếm"
           maxLength={100}
           className="w-[300px]"
         />

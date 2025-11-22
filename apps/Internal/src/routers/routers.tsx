@@ -24,6 +24,18 @@ export const routers = createBrowserRouter([
     loader: async () => {
       console.log('🚀 ~ Router loader called');
       
+      // Kiểm tra authentication trước
+      const { isAuthenticated } = useConfigAppStore.getState();
+      const { StorageService } = await import('@vissoft-react/common');
+      const { ACCESS_TOKEN_KEY } = await import('../constants');
+      const token = StorageService.getAccessToken(ACCESS_TOKEN_KEY);
+      
+      // Nếu không authenticated hoặc không có token, redirect về login
+      if (!isAuthenticated || !token) {
+        console.log('⚠️ ~ Not authenticated or no token, redirecting to login');
+        throw redirect(pathRoutes.login);
+      }
+      
       // Kiểm tra nếu không phải page reload và đã có data trong store
       if (!isPageReload()) {
         console.log('📋 ~ Not a page reload, checking store');
@@ -38,6 +50,7 @@ export const routers = createBrowserRouter([
       }
       
       console.log('🔄 ~ Calling globalService.initApp()');
+      try {
       const result = await globalService.initApp();
       console.log('🚀 ~ routers ~ result:', result);
       console.log('📤 ~ Router loader returning:', {
@@ -48,6 +61,16 @@ export const routers = createBrowserRouter([
       
       useConfigAppStore.getState().setInitApp(result);
       return result;
+      } catch (error) {
+        console.error('❌ ~ Router loader error:', error);
+        // Nếu có lỗi, vẫn trả về empty data thay vì redirect
+        // để tránh loop redirect
+        return {
+          profile: {} as any,
+          menus: [],
+          params: {},
+        };
+      }
     },
     lazy: async () => {
       const { LayoutPage } = await import('../modules/Layouts/pages');

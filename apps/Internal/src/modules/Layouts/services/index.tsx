@@ -15,13 +15,17 @@ import {
 import { AxiosRequestHeaders } from 'axios';
 import { compact } from 'lodash';
 import { Link } from 'react-router-dom';
-import { routerItems } from '../../../routers';
+import { pathRoutes, routerItems } from '../../../routers';
 import { safeApiClient } from '../../../services';
 
 export const layoutPageService: ILayoutService = {
   mappingMenus: (menuData: MenuObjectItem[], pathname: string) => {
     console.log('🚀 ~ menuData:', menuData);
-    const urlsActive = menuData?.map((item) => item.uri);
+    const extraUris = [pathRoutes.eSIMStockAdd as string];
+    const urlsActive = [
+      ...(menuData?.map((item) => item.uri) || []),
+      ...extraUris,
+    ];
     const menusClean = routerItems.filter(
       (item) => urlsActive?.includes(item.key) || item.hasChild === true
     );

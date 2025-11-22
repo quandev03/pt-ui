@@ -2,22 +2,15 @@ import { IPage } from '@vissoft-react/common';
 import { prefixSaleService } from '../../../constants';
 import { safeApiClient } from '../../../services/axios';
 import {
+  ICreatePartnerPackageSubscriptionPayload,
   ICustomerInfo,
   IeSIMStockDetail,
-  IeSIMStockItem,
-  IeSIMStockParams,
   IPackage,
+  IPartnerPackageSubscription,
+  IPartnerPackageSubscriptionParams,
 } from '../types';
 
 export const eSIMStockServices = {
-  geteSIMStock: (params: IeSIMStockParams) => {
-    return safeApiClient.get<IPage<IeSIMStockItem>>(
-      `${prefixSaleService}/esim-manager`,
-      {
-        params,
-      }
-    );
-  },
   getDetaileSIMStock: async (id: string) => {
     return await safeApiClient.get<IeSIMStockDetail[]>(
       `${prefixSaleService}/esim-manager/${id}`
@@ -31,6 +24,29 @@ export const eSIMStockServices = {
   getCustomerInfo: async (id: string) => {
     return await safeApiClient.get<ICustomerInfo>(
       `${prefixSaleService}/esim-manager/detail/${id}`
+    );
+  },
+  getPartnerPackageSubscriptions: (
+    params: IPartnerPackageSubscriptionParams
+  ) => {
+    return safeApiClient.get<IPage<IPartnerPackageSubscription>>(
+      `${prefixSaleService}/partner-package-subscriptions`,
+      {
+        params,
+      }
+    );
+  },
+  createPartnerPackageSubscription: (
+    payload: ICreatePartnerPackageSubscriptionPayload
+  ) => {
+    return safeApiClient.post(
+      `${prefixSaleService}/partner-package-subscriptions`,
+      payload
+    );
+  },
+  stopPartnerPackageSubscription: (subscriptionId: string) => {
+    return safeApiClient.post(
+      `${prefixSaleService}/partner-package-subscriptions/${subscriptionId}/stop`
     );
   },
 };

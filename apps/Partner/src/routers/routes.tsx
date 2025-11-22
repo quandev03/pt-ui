@@ -5,6 +5,8 @@ import routesDashboard from '../modules/Dashboard/routes';
 import { routesUpdateSubscriberInfo } from '../modules/UpdateSubscriberInfo/routes';
 import buyBundleWithEsimRoutes from '../modules/ESimBooking/BuyBundleWithEsim/routes';
 import { eSimWareHouseRoutes } from '../modules/EsimWarehouse/routes';
+import { roomServiceRoutes } from '../modules/RoomService/routes';
+import { roomPaymentRoutes } from '../modules/RoomPayment/routes';
 import routesPersonalInfo from '../modules/PersonalInfo/routes';
 import { routesUserManagement } from '../modules/UserManagement/routes';
 import routesWelcome from '../modules/WelcomePage/routes';
@@ -15,6 +17,8 @@ export const protectedRoutes: RouteObject[] = [
   ...routesWelcome,
   ...routesPackageSaleList,
   ...eSimWareHouseRoutes,
+  ...roomServiceRoutes,
+  ...roomPaymentRoutes,
   ...routesUserManagement,
   ...routesAgencyList,
   ...freeEsimBookingRoutes,

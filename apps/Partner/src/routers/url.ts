@@ -41,6 +41,15 @@ export const pathRoutes = {
   esimWarehouseAdd: '/esim-warehouse/add',
   esimWarehouseView: (id?: IStringNumber) =>
     `esim-warehouse/view/${id ? id : ':id'}`,
+  roomService: '/room-service',
+  roomServiceAdd: '/room-service/add',
+  roomServiceEdit: (id?: IStringNumber) =>
+    `/room-service/edit/${id ? id : ':id'}`,
+  roomServiceView: (id?: IStringNumber) =>
+    `/room-service/view/${id ? id : ':id'}`,
+  roomPayment: '/room-payments',
+  roomPaymentDetail: (id?: IStringNumber) =>
+    `/room-payments/${id ? id : ':id'}`,
   report: `/report`,
   partnerOrderReport: `/partner-order-report`,
   saleManagement: '/sale-management',

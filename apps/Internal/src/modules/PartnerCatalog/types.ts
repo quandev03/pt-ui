@@ -23,6 +23,14 @@ export interface IPayloadPartner {
   organizationUnitDTO: IPartner;
 }
 
+export interface IBank {
+  code: string;
+  name: string;
+  shortName: string;
+  logo: string;
+  nameEn: string;
+}
+
 export interface IOrganizationUnitDTO {
   id?: number | string;
   parentId?: number;
@@ -45,6 +53,7 @@ export interface IOrganizationUnitDTO {
   email: string;
   orgPartnerType: string;
   orgBankAccountNo: string;
+  bankName?: string;
   contractNoFileUrl?: string;
   businessLicenseFileUrl?: string;
   businessLicenseNo?: string;

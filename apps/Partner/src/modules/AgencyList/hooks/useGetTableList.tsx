@@ -57,7 +57,7 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
   };
   return [
     {
-      title: 'Tên đại lý',
+      title: 'Tên phòng',
       dataIndex: 'orgName',
       width: 200,
       align: 'left',
@@ -73,7 +73,7 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
       },
     },
     {
-      title: 'Mã đại lý',
+      title: 'Mã phòng',
       dataIndex: 'orgCode',
       width: 250,
       align: 'left',
