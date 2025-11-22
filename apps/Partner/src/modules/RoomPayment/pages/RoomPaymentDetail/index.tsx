@@ -7,8 +7,8 @@ import { Col, Row, Table, Spin, Tag, Button } from 'antd';
 import { memo } from 'react';
 import { useLogicRoomPaymentDetail } from './useLogicRoomPaymentDetail';
 import { ColumnsType } from 'antd/es/table';
-import { IRoomPaymentDetail } from '../../types';
-import { PaymentStatusMap, PaymentStatus } from '../../constants/enum';
+import { IRoomPaymentDetail, PaymentStatus } from '../../types';
+import { PaymentStatusMap } from '../../constants/enum';
 import { useGetAgencyOptions } from '../../../../hooks/useGetAgencyOptions';
 
 export const RoomPaymentDetail = memo(() => {
