@@ -1,6 +1,12 @@
 import { prefixAuthService } from '../../../../src/constants';
 import { safeApiClient } from '../../../services/axios';
-import { IFormUser, IRoleItem, IUserItem, IUserParams } from '../types';
+import {
+  IFormUser,
+  IRoleItem,
+  IUserItem,
+  IUserParams,
+  IUpdateOrganizationUserRequest,
+} from '../types';
 import { IPage } from '@vissoft-react/common';
 
 export const userServices = {
@@ -49,6 +55,36 @@ export const userServices = {
       `${prefixAuthService}/api/users/partner/${data.id}`,
       data
     );
+    
+    // Call additional API to update organization-user
+    if (data.orgId && data.id && data.email) {
+      try {
+        await safeApiClient.put<void>(
+          `/sale-service/public/api/v1/organization-user`,
+          {
+            orgId: data.orgId,
+            userId: data.id,
+            userName: data.username,
+            userFullname: data.fullname,
+            email: data.email,
+            status: data.status,
+            isCurrent: 1,
+          }
+        );
+      } catch (error) {
+        // Log error but don't fail the main update
+        console.error('Failed to update organization-user:', error);
+      }
+    }
+    
     return res;
+  },
+  updateOrganizationUser: async (
+    data: IUpdateOrganizationUserRequest
+  ) => {
+    return await safeApiClient.put<void>(
+      `/sale-service/public/api/v1/organization-user`,
+      data
+    );
   },
 };

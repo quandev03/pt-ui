@@ -129,3 +129,13 @@ export interface IGroups {
   name: string;
   status: number;
 }
+
+export interface IUpdateOrganizationUserRequest {
+  orgId: string;
+  userId: string;
+  userName: string;
+  userFullname: string;
+  email: string;
+  status: number;
+  isCurrent: number;
+}

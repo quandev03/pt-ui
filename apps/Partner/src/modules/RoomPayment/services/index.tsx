@@ -1,4 +1,3 @@
-import { IPage } from '@vissoft-react/common';
 import { prefixSaleService } from '../../../../src/constants';
 import { safeApiClient } from '../../../../src/services';
 import type { AxiosRequestHeaders } from 'axios';
@@ -10,7 +9,7 @@ import {
 
 export const roomPaymentServices = {
   getRoomPaymentList: (params: IRoomPaymentParams) => {
-    return safeApiClient.get<IPage<IRoomPayment>>(
+    return safeApiClient.get<IRoomPayment[]>(
       `${prefixSaleService}/room-payments`,
       {
         params,
@@ -27,8 +26,10 @@ export const roomPaymentServices = {
   uploadRoomPaymentFile: async (data: IRoomPaymentUploadParams) => {
     const formData = new FormData();
     formData.append('file', data.file);
-    formData.append('month', data.month.toString());
-    formData.append('year', data.year.toString());
+    
+    // Gửi month và year dưới dạng JSON với Content-Type application/json
+    formData.append('month', new Blob([JSON.stringify(data.month)], { type: 'application/json' }));
+    formData.append('year', new Blob([JSON.stringify(data.year)], { type: 'application/json' }));
 
     return await safeApiClient.post<IRoomPayment[]>(
       `${prefixSaleService}/room-payments/upload`,
@@ -38,6 +39,12 @@ export const roomPaymentServices = {
           'Content-Type': 'multipart/form-data',
         } as AxiosRequestHeaders,
       }
+    );
+  },
+
+  resendEmail: async (paymentId: string) => {
+    return await safeApiClient.post<void>(
+      `sale-service/public/api/v1/room-payments/${paymentId}/resend-email`
     );
   },
 };

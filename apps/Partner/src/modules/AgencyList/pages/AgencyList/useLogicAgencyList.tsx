@@ -15,6 +15,7 @@ import { IAgency, IAgencyParams } from '../../types';
 import { useGetTableList } from '../../hooks/useGetTableList';
 import { useGetAgencies, useSupportDeleteAgency } from '../../hooks';
 import { STATUS_OPTIONS } from '../../../../../src/constants';
+import { RoomRentalStatusOptions } from '../../constants/enum';
 
 export const useLogicListAgency = () => {
   const [searchParams] = useSearchParams();
@@ -63,6 +64,13 @@ export const useLogicListAgency = () => {
         label: 'Trạng thái',
         placeholder: 'Trạng thái',
         options: STATUS_OPTIONS,
+      },
+      {
+        type: 'Select',
+        name: 'rentalStatus',
+        label: 'Trạng thái phòng',
+        placeholder: 'Trạng thái phòng',
+        options: RoomRentalStatusOptions,
       },
     ];
   }, []);

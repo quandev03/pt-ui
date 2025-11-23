@@ -23,6 +23,7 @@ import { StatusLabel } from '../../../../src/constants';
 import { pathRoutes } from '../../../routers';
 import useConfigAppStore from '../../Layouts/stores';
 import { IAgency } from '../types';
+import { RoomRentalStatusMap, RoomRentalStatus } from '../constants/enum';
 
 export const useGetTableList = (): ColumnsType<IAgency> => {
   const { menuData } = useConfigAppStore();
@@ -172,6 +173,40 @@ export const useGetTableList = (): ColumnsType<IAgency> => {
               {value === StatusEnum.ACTIVE
                 ? StatusLabel.ACTIVE
                 : StatusLabel.INACTIVE}
+            </CTag>
+          </CTooltip>
+        );
+      },
+    },
+    {
+      title: 'Trạng thái phòng',
+      dataIndex: 'rentalStatus',
+      width: 150,
+      align: 'left',
+      render: (value) => {
+        if (!value) {
+          return <RenderCell value="-" tooltip="-" />;
+        }
+        const status = value as RoomRentalStatus;
+        const getStatusColor = (status: RoomRentalStatus) => {
+          switch (status) {
+            case RoomRentalStatus.RENTED:
+              return TypeTagEnum.ERROR;
+            case RoomRentalStatus.AVAILABLE:
+              return TypeTagEnum.SUCCESS;
+            case RoomRentalStatus.MAINTENANCE:
+              return TypeTagEnum.WARNING;
+            default:
+              return TypeTagEnum.DEFAULT;
+          }
+        };
+        return (
+          <CTooltip
+            title={RoomRentalStatusMap[status] || value}
+            placement="topLeft"
+          >
+            <CTag type={getStatusColor(status)}>
+              {RoomRentalStatusMap[status] || value}
             </CTag>
           </CTooltip>
         );

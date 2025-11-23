@@ -1,3 +1,5 @@
+import { RoomRentalStatus } from './constants/enum';
+
 export interface IAgency {
   address: string | null;
   createdBy: string;
@@ -15,10 +17,12 @@ export interface IAgency {
   status: number;
   wardCode: string | null;
   imageUrls?: string[]; // Danh sách URL ảnh
+  rentalStatus?: RoomRentalStatus | string; // Trạng thái phòng
 }
 export interface IAgencyParams {
   status?: string | number;
   textSearch?: string;
+  rentalStatus?: RoomRentalStatus | string;
 }
 export interface IFormAgency {
   id?: string;
@@ -27,4 +31,5 @@ export interface IFormAgency {
   status: number;
   orgName: string;
   images?: File[]; // Danh sách ảnh
+  rentalStatus?: RoomRentalStatus | string; // Trạng thái phòng
 }

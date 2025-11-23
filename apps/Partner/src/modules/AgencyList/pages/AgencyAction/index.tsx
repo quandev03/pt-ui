@@ -4,6 +4,7 @@ import {
   CButtonSave,
   CButtonSaveAndAdd,
   CInput,
+  CSelect,
   cleanUpString,
   CSwitch,
   IModeAction,
@@ -20,6 +21,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { pathRoutes } from '../../../../../src/routers';
 import useConfigAppStore from '../../../Layouts/stores';
 import { useLogicActionAgency } from './useLogicActionAgency';
+import { RoomRentalStatusOptions } from '../../constants/enum';
 
 export const AgencyAction = memo(() => {
   const navigate = useNavigate();
@@ -126,6 +128,18 @@ export const AgencyAction = memo(() => {
                       const value = cleanUpString(e.target.value);
                       form.setFieldValue('orgName', value);
                     }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Trạng thái phòng"
+                  name="rentalStatus"
+                >
+                  <CSelect
+                    placeholder="Chọn trạng thái phòng"
+                    options={RoomRentalStatusOptions}
+                    disabled={actionMode === IModeAction.READ}
                   />
                 </Form.Item>
               </Col>

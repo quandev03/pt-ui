@@ -18,6 +18,7 @@ import {
 } from '../../hooks';
 import { IAgency, IFormAgency } from '../../types';
 import { UploadFile } from 'antd';
+import { RoomRentalStatus } from '../../constants/enum';
 
 export const useLogicActionAgency = () => {
   const [isSubmitBack, setIsSubmitBack] = useState(false);
@@ -38,6 +39,7 @@ export const useLogicActionAgency = () => {
         agency?.status === StatusEnum.ACTIVE
           ? StatusEnum.ACTIVE
           : StatusEnum.INACTIVE,
+      rentalStatus: agency?.rentalStatus || RoomRentalStatus.AVAILABLE,
     });
   });
 
@@ -86,7 +88,10 @@ export const useLogicActionAgency = () => {
     if (id) {
       getAgencyAction(id);
     } else {
-      form.setFieldsValue({ status: true });
+      form.setFieldsValue({ 
+        status: true,
+        rentalStatus: RoomRentalStatus.AVAILABLE,
+      });
     }
   }, [form, getAgencyAction, id, pathname]);
 

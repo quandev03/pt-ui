@@ -4,6 +4,7 @@ import {
   NotificationSuccess,
   IErrorResponse,
   NotificationError,
+  IPage,
 } from '@vissoft-react/common';
 import { REACT_QUERY_KEYS } from '../../../../src/constants/query-key';
 import { IRoomPayment, IRoomPaymentParams, IRoomPaymentUploadParams } from '../types';
@@ -12,7 +13,42 @@ import { roomPaymentServices } from '../services';
 export const useGetRoomPaymentList = (params: IRoomPaymentParams) => {
   return useQuery({
     queryKey: [REACT_QUERY_KEYS.ROOM_PAYMENT_LIST, params],
-    queryFn: () => roomPaymentServices.getRoomPaymentList(params),
+    queryFn: async () => {
+      const response = await roomPaymentServices.getRoomPaymentList(params);
+      // API returns array directly, wrap it into IPage format
+      const dataArray = Array.isArray(response) ? response : [];
+      const page = params.page || 0;
+      const size = params.size || 20;
+      const result: IPage<IRoomPayment> = {
+        content: dataArray,
+        totalElements: dataArray.length,
+        totalPages: Math.ceil(dataArray.length / size),
+        numberOfElements: dataArray.length,
+        size,
+        number: page,
+        pageable: {
+          sort: {
+            unsorted: true,
+            sorted: false,
+            empty: true,
+          },
+          offset: page * size,
+          pageSize: size,
+          pageNumber: page,
+          unpaged: false,
+          paged: true,
+        },
+        sort: {
+          unsorted: true,
+          sorted: false,
+          empty: true,
+        },
+        last: page >= Math.ceil(dataArray.length / size) - 1,
+        first: page === 0,
+        empty: dataArray.length === 0,
+      };
+      return result;
+    },
   });
 };
 

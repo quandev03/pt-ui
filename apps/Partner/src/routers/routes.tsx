@@ -12,6 +12,7 @@ import { routesUserManagement } from '../modules/UserManagement/routes';
 import routesWelcome from '../modules/WelcomePage/routes';
 import partnerOrderReportRoutes from '../modules/PartnerOrderReport/routes';
 import { routesPackageSaleList } from '../modules/SalePackage/routes';
+import { advertisementManagementRoutes } from '../modules/AdvertisementManagement/routes';
 
 export const protectedRoutes: RouteObject[] = [
   ...routesWelcome,
@@ -27,4 +28,5 @@ export const protectedRoutes: RouteObject[] = [
   ...buyBundleWithEsimRoutes,
   ...routesPersonalInfo,
   ...partnerOrderReportRoutes,
+  ...advertisementManagementRoutes,
 ];
