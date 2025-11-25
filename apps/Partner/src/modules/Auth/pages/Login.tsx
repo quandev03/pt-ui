@@ -16,7 +16,6 @@ import { FocusEvent, useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BgLogin from '../../../assets/images/bg_banner.png';
 import Logo from '../../../assets/images/Logo-mini.svg';
-import Smartphone from '../../../assets/images/Thumb.png';
 import { ACCESS_TOKEN_KEY } from '../../../constants';
 import { pathRoutes } from '../../../routers/url';
 import useConfigAppStore from '../../Layouts/stores';
@@ -212,14 +211,14 @@ const LoginPage = () => {
         <Col span={12}>
           <div className="text-center flex flex-col gap-3">
             <span className="text-[#005aaa] text-3xl font-semibold drop-shadow-md">
-              Hệ thống Kinh doanh eSIM
+              Hệ thống Kinh doanh và quản lý phòng trọ
             </span>
             <span className="text-[#e50013] text-3xl font-semibold drop-shadow-md flex items-center justify-center gap-2">
-              Hi Vietnam
+              QLPT-VN
             </span>
           </div>
           <div className="flex justify-center mt-16">
-            <Image src={Smartphone} preview={false} />
+            <Image src="" preview={false} />
           </div>
         </Col>
         <ModalForgotPassword

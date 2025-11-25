@@ -60,7 +60,7 @@ const ForgotPassword = () => {
           }}
         >
           <img
-            src={Logo}
+            src=""
             className="!w-36 flex items-center justify-center mb-10"
             alt="Logo"
           />
