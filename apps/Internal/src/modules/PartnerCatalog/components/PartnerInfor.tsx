@@ -25,9 +25,10 @@ const PartnerInfor = () => {
   }));
 
   const { data: banksData, isLoading: loadingBanks } = useGetBanks();
-  const bankOptions = (banksData || []).map((bank) => ({
+  const bankOptions = (banksData?.data || []).map((bank) => ({
     label: bank.name,
-    value: bank.name,
+    value: bank.id,
+
   }));
 
   return (

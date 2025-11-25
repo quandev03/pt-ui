@@ -166,6 +166,7 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
       orgType,
       orgBankAccountNo,
       bankName,
+    
     } = values as any;
 
     const payload: IPayloadPartner = {
@@ -186,6 +187,7 @@ export const ActionPartnerCatalog: FC<Props> = ({ isEnabledApproval }) => {
         orgType,
         orgBankAccountNo,
         bankName,
+        rentalStatus: 1 // 0 chưa thuê
       },
     };
     if (actionMode === IModeAction.CREATE) {

@@ -80,7 +80,7 @@ export const routerItems: RouterItems[] = [
   },
   {
     key: pathRoutes.object as string,
-    label: 'Báo cáo',
+    label: 'Quản lý object',
     parentId: pathRoutes.accountAuthorization as string,
   },
   // danh sách kho esim

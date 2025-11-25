@@ -3,7 +3,7 @@ import {
   prefixAuthService,
   prefixSaleService,
 } from '../../../../src/constants';
-import { safeApiClient } from '../../../../src/services';
+import { safeApiClient, vnpayApiClient } from '../../../../src/services';
 import type { AxiosRequestHeaders } from 'axios';
 import { Key } from 'react';
 import {
@@ -217,7 +217,11 @@ export const PartnerCatalogService = {
       `${prefixSaleService}/organization-partner/${clientId}/packages`
     );
   },
-  getBanks: () => {
-    return safeApiClient.get<IBank[]>(`${prefixSaleService}/banks`);
+  getBanks: async () => {
+    const res = await fetch(
+      'https://api.vietqr.io/v2/banks'
+    );
+    if (!res.ok) throw new Error('Failed to fetch provinces');
+    return (await res.json()) as { data: { code: string; name: string, id: number }[] };
   },
 };

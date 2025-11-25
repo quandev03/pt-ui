@@ -48,6 +48,16 @@ const processQueue = (error: Error | null, token: string | null = null) => {
   failedQueue = [];
 };
 
+export const axiosClientThirdParty = axios.create({
+  baseURL: "https://api.vietqr.io",
+  timeout: API_REQUEST_TIMEOUT,
+  responseType: 'json',
+  withCredentials: false,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 export const axiosClient = axios.create({
   baseURL: baseApiUrl,
   timeout: API_REQUEST_TIMEOUT,
@@ -248,6 +258,32 @@ export const safeRequestWithResponse = async <T>(
 export const safeApiClient = {
   get: <T>(url: string, config?: Partial<InternalAxiosRequestConfig>) =>
     safeRequest<T>(axiosClient.get<T>(url, config)),
+
+  post: <T>(
+    url: string,
+    data?: unknown,
+    config?: Partial<InternalAxiosRequestConfig>
+  ) => safeRequest<T>(axiosClient.post<T>(url, data, config)),
+
+  put: <T>(
+    url: string,
+    data?: unknown,
+    config?: Partial<InternalAxiosRequestConfig>
+  ) => safeRequest<T>(axiosClient.put<T>(url, data, config)),
+
+  delete: <T>(url: string, config?: Partial<InternalAxiosRequestConfig>) =>
+    safeRequest<T>(axiosClient.delete<T>(url, config)),
+
+  patch: <T>(
+    url: string,
+    data?: unknown,
+    config?: Partial<InternalAxiosRequestConfig>
+  ) => safeRequest<T>(axiosClient.patch<T>(url, data, config)),
+};
+
+export const vnpayApiClient = {
+  get: <T>(url: string, config?: Partial<InternalAxiosRequestConfig>) =>
+    safeRequest<T>(axiosClientThirdParty.get<T>(url, config)),
 
   post: <T>(
     url: string,
