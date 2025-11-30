@@ -21,6 +21,8 @@ export interface IListOfServicePackageForm {
   description?: string;
   cycleValue: number;
   cycleUnit: string;
+  // Loại dịch vụ (map từ PACKAGE_SERVICE_ROOM -> packageType)
+  packageType?: string;
 }
 
 // Transaction status: 0: Chờ thực hiện, 1: Đang thực hiện, 2: Hoàn thành

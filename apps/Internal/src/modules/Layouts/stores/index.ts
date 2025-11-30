@@ -117,7 +117,8 @@ const useConfigAppStore = create(
         PARTNER_STATUS: [],
         SUBSCRIBER_SUB_STATUS: [],
         SUBSCRIBER_ACTIVE_SUB_STATUS: [],
-        ACTION_HISTORY_ACTION_CODE: []
+        ACTION_HISTORY_ACTION_CODE: [],
+        PACKAGE_SERVICE_ROOM: [],
       },
       setParams(params) {
         set(() => ({ params }));
@@ -167,7 +168,8 @@ const useConfigAppStore = create(
               PARTNER_STATUS: [],
               SUBSCRIBER_SUB_STATUS: [],
               SUBSCRIBER_ACTIVE_SUB_STATUS: [],
-              ACTION_HISTORY_ACTION_CODE: []  
+              ACTION_HISTORY_ACTION_CODE: [],
+              PACKAGE_SERVICE_ROOM: [],
             },
           });
         }

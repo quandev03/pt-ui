@@ -25,8 +25,9 @@ import { Button, Card, Col, Form, Row, Space, Spin, Upload } from 'antd';
 import { RcFile } from 'antd/es/upload';
 import { pathRoutes } from 'apps/Internal/src/routers';
 import { UploadIcon } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import useConfigAppStore from '../../Layouts/stores';
 import { useGetImage } from '../hook';
 import { useAdd } from '../hook/useAdd';
 import { useEdit } from '../hook/useEdit';
@@ -39,6 +40,7 @@ export const ActionPage = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const { id } = useParams();
+  const { params } = useConfigAppStore();
   const { data: dataView } = useView(id ?? '', actionMode);
   const { mutate: mutateEdit } = useEdit(form, () => {
     navigate(-1);
@@ -213,6 +215,17 @@ export const ActionPage = () => {
     { label: 'Ngày', value: 0 },
     { label: 'Tháng', value: 1 },
   ];
+
+  // Options loại dịch vụ (PACKAGE_SERVICE_ROOM) từ params
+  const packageTypeOptions = useMemo(
+    () =>
+      (params?.PACKAGE_SERVICE_ROOM || []).map((item) => ({
+        // UI hiển thị code (BASIC/PRO), backend nhận value (id)
+        value: item.value,
+        label: item.code,
+      })),
+    [params]
+  );
   return (
     <div className="flex flex-col w-full h-full">
       <TitleHeader>{`${getActionMode(actionMode)} gói cước`}</TitleHeader>
@@ -248,6 +261,19 @@ export const ActionPage = () => {
                     preventSpace
                     uppercase
                     preventSpecialExceptHyphenAndUnderscore
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  rules={[validateForm.required]}
+                  label="Loại dịch vụ"
+                  name="packageType"
+                >
+                  <CSelect
+                    disabled={actionMode === IModeAction.READ}
+                    placeholder="Chọn loại dịch vụ"
+                    options={packageTypeOptions}
                   />
                 </Form.Item>
               </Col>

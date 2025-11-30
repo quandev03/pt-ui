@@ -40,6 +40,7 @@ export const useLogicActionAgency = () => {
           ? StatusEnum.ACTIVE
           : StatusEnum.INACTIVE,
       rentalStatus: agency?.rentalStatus || RoomRentalStatus.AVAILABLE,
+      acreage: agency?.acreage || null,
     });
   });
 

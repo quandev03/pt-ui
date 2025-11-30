@@ -43,6 +43,19 @@ export const useLogicListSalePackage = () => {
       label: item.value,
     }));
   }, [saleParams]);
+
+  // Loại dịch vụ phòng (PACKAGE_SERVICE_ROOM)
+  const packageServiceOptions: ISelectOption[] = useMemo(() => {
+    if (!saleParams?.PACKAGE_SERVICE_ROOM) {
+      return [];
+    }
+    // API trả về { code: 'BASIC' | 'PRO', value: 'id...' }
+    // UI hiển thị code, backend nhận value (id)
+    return saleParams.PACKAGE_SERVICE_ROOM.map((item) => ({
+      value: item.value,
+      label: item.code,
+    }));
+  }, [saleParams]);
   const actionComponent = useMemo(() => {
     const dropdownItems = [
       {
@@ -71,6 +84,13 @@ export const useLogicListSalePackage = () => {
     return [
       {
         type: 'Select',
+        name: 'packageType',
+        label: 'Loại dịch vụ',
+        placeholder: 'Chọn loại dịch vụ',
+        options: packageServiceOptions,
+      },
+      {
+        type: 'Select',
         name: 'saleType',
         label: 'Hình thức bán gói',
         placeholder: 'Hình thức bán gói',
@@ -89,7 +109,7 @@ export const useLogicListSalePackage = () => {
         disabledFutureDate: true,
       },
     ];
-  }, [saleTypeOptions]);
+  }, [saleTypeOptions, packageServiceOptions]);
 
   return {
     listPackageSale,

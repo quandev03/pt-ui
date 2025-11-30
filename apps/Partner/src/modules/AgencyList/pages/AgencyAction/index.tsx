@@ -4,6 +4,7 @@ import {
   CButtonSave,
   CButtonSaveAndAdd,
   CInput,
+  CInputNumber,
   CSelect,
   cleanUpString,
   CSwitch,
@@ -140,6 +141,26 @@ export const AgencyAction = memo(() => {
                     placeholder="Chọn trạng thái phòng"
                     options={RoomRentalStatusOptions}
                     disabled={actionMode === IModeAction.READ}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Diện tích"
+                  name="acreage"
+                >
+                  <CInputNumber
+                    placeholder="Nhập diện tích"
+                    min={0}
+                    disabled={actionMode === IModeAction.READ}
+                    style={{ width: '100%' }}
+                    controls={true}
+                    formatter={(value) =>
+                      value ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
+                    }
+                    parser={(value) =>
+                      value ? value.replace(/\$\s?|(,*)/g, '') as any : ''
+                    }
                   />
                 </Form.Item>
               </Col>

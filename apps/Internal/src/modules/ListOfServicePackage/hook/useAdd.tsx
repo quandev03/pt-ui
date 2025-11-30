@@ -22,6 +22,8 @@ const fetch = async (data: IListOfServicePackageForm) => {
     description: data.description ?? '',
     cycleValue: data.cycleValue,
     cycleUnit: data.cycleUnit,
+    // Gửi loại dịch vụ (packageType) nếu người dùng chọn
+    packageType: data.packageType,
   };
   formData.append('images', data.images as File);
   formData.append(

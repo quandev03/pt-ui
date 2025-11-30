@@ -13,6 +13,8 @@ import {
   IAdvertisementCreateRequest,
 } from '../types';
 import { advertisementServices } from '../services';
+import { axiosClient } from '../../../../src/services/axios';
+import { prefixSaleService } from '../../../../src/constants';
 
 export const useGetAdvertisementList = (params?: IAdvertisementParams) => {
   return useQuery({
@@ -150,6 +152,36 @@ export const useSupportDeleteAdvertisement = (onSuccess?: () => void) => {
       });
       onSuccess && onSuccess();
     },
+  });
+};
+
+// Hook để fetch ảnh và tạo blob URL
+export const useAdvertisementImageBlobUrl = (fileUrl: string | null | undefined) => {
+  return useQuery({
+    queryKey: [REACT_QUERY_KEYS.ADVERTISEMENT_IMAGE, fileUrl],
+    queryFn: async () => {
+      if (!fileUrl) return null;
+      
+      try {
+        const response = await axiosClient.get<Blob>(
+          `${prefixSaleService}/files/download`,
+          {
+            params: { fileUrl },
+            responseType: 'blob',
+          }
+        );
+        const blob = response.data instanceof Blob 
+          ? response.data 
+          : new Blob([response.data], { type: 'image/jpeg' });
+        const url = window.URL.createObjectURL(blob);
+        return url;
+      } catch (error) {
+        console.error('Failed to load image:', fileUrl, error);
+        return null;
+      }
+    },
+    enabled: !!fileUrl,
+    staleTime: 5 * 60 * 1000, // Cache 5 phút
   });
 };
 

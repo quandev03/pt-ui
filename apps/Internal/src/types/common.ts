@@ -10,7 +10,9 @@ export type ParamKeys =
   | 'SUBSCRIBER_SUBS_STATUS'
   | 'SUBSCRIBER_SUB_STATUS'
   | 'SUBSCRIBER_ACTIVE_SUB_STATUS'
-  | 'ACTION_HISTORY_ACTION_CODE';
+  | 'ACTION_HISTORY_ACTION_CODE'
+  // Loại dịch vụ phòng cho gói cước
+  | 'PACKAGE_SERVICE_ROOM';
 export interface IOrgItem {
   id: string;
   orgCode: string;

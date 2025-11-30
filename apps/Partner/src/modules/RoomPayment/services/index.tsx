@@ -41,11 +41,5 @@ export const roomPaymentServices = {
       }
     );
   },
-
-  resendEmail: async (paymentId: string) => {
-    return await safeApiClient.post<void>(
-      `sale-service/public/api/v1/room-payments/${paymentId}/resend-email`
-    );
-  },
 };
 

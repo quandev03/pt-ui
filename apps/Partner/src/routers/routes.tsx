@@ -13,6 +13,7 @@ import routesWelcome from '../modules/WelcomePage/routes';
 import partnerOrderReportRoutes from '../modules/PartnerOrderReport/routes';
 import { routesPackageSaleList } from '../modules/SalePackage/routes';
 import { advertisementManagementRoutes } from '../modules/AdvertisementManagement/routes';
+import { contractManagementRoutes } from '../modules/ContractManagement/routes';
 
 export const protectedRoutes: RouteObject[] = [
   ...routesWelcome,
@@ -29,4 +30,5 @@ export const protectedRoutes: RouteObject[] = [
   ...routesPersonalInfo,
   ...partnerOrderReportRoutes,
   ...advertisementManagementRoutes,
+  ...contractManagementRoutes,
 ];

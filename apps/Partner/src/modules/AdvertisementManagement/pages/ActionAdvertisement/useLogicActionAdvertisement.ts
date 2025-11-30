@@ -13,11 +13,12 @@ import {
   useSupportCreateAdvertisement,
   useSupportGetAdvertisement,
   useSupportUpdateAdvertisement,
+  useAdvertisementImageBlobUrl,
 } from '../../hooks';
 import { IFormAdvertisement, AdvertisementStatus } from '../../types';
 import dayjs from 'dayjs';
-import { baseApiUrl } from '../../../../../src/constants';
 import { RcFile } from 'antd/es/upload';
+import { UploadFile } from 'antd';
 
 export const useLogicActionAdvertisement = () => {
   const [isSubmitBack, setIsSubmitBack] = useState(false);
@@ -39,20 +40,42 @@ export const useLogicActionAdvertisement = () => {
       ...advertisement,
       startDate: advertisement.startDate ? dayjs(advertisement.startDate) : null,
       endDate: advertisement.endDate ? dayjs(advertisement.endDate) : null,
-      image: advertisement.imageUrl
-        ? [
-            {
-              uid: '-1',
-              name: 'image.jpg',
-              status: 'done',
-              url: advertisement.imageUrl.startsWith('http')
-                ? advertisement.imageUrl
-                : `${baseApiUrl}/${advertisement.imageUrl}`,
-            },
-          ]
-        : [],
     });
   });
+
+  // Fetch ảnh hiện có để hiển thị trong form upload
+  const { data: imageBlobUrl } = useAdvertisementImageBlobUrl(
+    advertisementDetail?.imageUrl
+  );
+
+  // Convert blob URL thành UploadFile format để hiển thị trong Upload component
+  useEffect(() => {
+    if (advertisementDetail?.imageUrl && imageBlobUrl) {
+      const fileName = advertisementDetail.imageUrl.split('/').pop() || 'image.jpg';
+      const fileList: UploadFile[] = [
+        {
+          uid: `existing-${Date.now()}`,
+          name: fileName,
+          status: 'done' as const,
+          url: imageBlobUrl,
+          thumbUrl: imageBlobUrl,
+        } as UploadFile,
+      ];
+      form.setFieldValue('image', fileList);
+    } else if (advertisementDetail && !advertisementDetail.imageUrl) {
+      // Nếu không có ảnh, set empty array
+      form.setFieldValue('image', []);
+    }
+  }, [advertisementDetail, imageBlobUrl, form]);
+
+  // Cleanup blob URL khi component unmount hoặc khi advertisement detail thay đổi
+  useEffect(() => {
+    return () => {
+      if (imageBlobUrl && imageBlobUrl.startsWith('blob:')) {
+        window.URL.revokeObjectURL(imageBlobUrl);
+      }
+    };
+  }, [imageBlobUrl]);
 
   useEffect(() => {
     if (id) {
@@ -103,13 +126,21 @@ export const useLogicActionAdvertisement = () => {
   const handleFinish = useCallback(
     (values: IFormAdvertisement) => {
       const imageFileList = form.getFieldValue('image');
-      const imageFile =
-        imageFileList && imageFileList.length > 0
-          ? imageFileList[0]?.originFileObj || imageFileList[0]
-          : null;
+      let imageFile: File | null = null;
 
-      // Check if image is a new file (has originFileObj) or existing (has url)
-      const isNewImage = imageFile && (imageFile as any).originFileObj;
+      // Extract file from Upload component
+      if (imageFileList && imageFileList.length > 0) {
+        const fileItem = imageFileList[0];
+        // Check if it's a new file (has originFileObj) or existing (has url)
+        if (fileItem?.originFileObj) {
+          // New file from upload
+          imageFile = fileItem.originFileObj as File;
+        } else if (fileItem instanceof File) {
+          // Direct File object
+          imageFile = fileItem;
+        }
+        // If fileItem has url, it's an existing image, don't send file
+      }
 
       const data: any = {
         title: cleanUpString(values.title),
@@ -124,14 +155,14 @@ export const useLogicActionAdvertisement = () => {
       };
 
       // Only include imageUrl if we're not uploading a new image
-      if (!isNewImage && imageUrl) {
+      if (!imageFile && imageUrl) {
         data.imageUrl = imageUrl;
       }
 
       if (actionMode === IModeAction.CREATE) {
         createAdvertisement({
           data,
-          imageFile: isNewImage ? (imageFile as RcFile) : null,
+          imageFile: imageFile,
         });
       } else if (actionMode === IModeAction.UPDATE) {
         ModalConfirm({
@@ -142,7 +173,7 @@ export const useLogicActionAdvertisement = () => {
             updateAdvertisement({
               id,
               data,
-              imageFile: isNewImage ? (imageFile as RcFile) : null,
+              imageFile: imageFile,
             });
           },
         });

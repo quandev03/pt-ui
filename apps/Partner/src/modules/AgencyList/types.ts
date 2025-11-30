@@ -18,6 +18,7 @@ export interface IAgency {
   wardCode: string | null;
   imageUrls?: string[]; // Danh sách URL ảnh
   rentalStatus?: RoomRentalStatus | string; // Trạng thái phòng
+  acreage?: number | null; // Acreage
 }
 export interface IAgencyParams {
   status?: string | number;
@@ -32,4 +33,5 @@ export interface IFormAgency {
   orgName: string;
   images?: File[]; // Danh sách ảnh
   rentalStatus?: RoomRentalStatus | string; // Trạng thái phòng
+  acreage?: number | null; // Acreage
 }

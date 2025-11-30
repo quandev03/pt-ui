@@ -91,6 +91,11 @@ export const routerItems: RouterItems[] = [
     label: 'Quản lý quảng cáo',
     parentId: pathRoutes.saleManagement as string,
   },
+  {
+    key: pathRoutes.contractManagement as string,
+    label: 'Quản lý hợp đồng',
+    parentId: pathRoutes.saleManagement as string,
+  },
 ];
 
 export const singlePopActions = ['add'];

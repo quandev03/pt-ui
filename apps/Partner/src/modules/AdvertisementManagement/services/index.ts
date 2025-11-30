@@ -1,4 +1,4 @@
-import { prefixSaleService } from '../../../../src/constants';
+import { prefixSaleService, baseApiUrl } from '../../../../src/constants';
 import { safeApiClient } from '../../../../src/services';
 import type { AxiosRequestHeaders } from 'axios';
 import {
@@ -7,6 +7,14 @@ import {
   IFormAdvertisement,
   IAdvertisementCreateRequest,
 } from '../types';
+
+// Function để build URL download ảnh
+export const getImageDownloadUrl = (fileUrl: string): string => {
+  if (!fileUrl) return '';
+  // Encode fileUrl để tránh lỗi với các ký tự đặc biệt
+  const encodedFileUrl = encodeURIComponent(fileUrl);
+  return `${baseApiUrl}/${prefixSaleService}/files/download?fileUrl=${encodedFileUrl}`;
+};
 
 export const advertisementServices = {
   getAdvertisementList: (params?: IAdvertisementParams) => {
@@ -30,15 +38,15 @@ export const advertisementServices = {
   ) => {
     const formData = new FormData();
     
-    // Append request as JSON string
-    formData.append(
-      'request',
-      new Blob([JSON.stringify(data)], { type: 'application/json' })
-    );
+    // Append request as JSON string with Content-Type application/json
+    const requestBlob = new Blob([JSON.stringify(data)], { 
+      type: 'application/json' 
+    });
+    formData.append('request', requestBlob, 'request.json');
 
     // Append image file if provided
-    if (imageFile) {
-      formData.append('image', imageFile);
+    if (imageFile && imageFile instanceof File) {
+      formData.append('image', imageFile, imageFile.name);
     }
 
     return await safeApiClient.post<IAdvertisement>(
@@ -59,15 +67,15 @@ export const advertisementServices = {
   ) => {
     const formData = new FormData();
     
-    // Append request as JSON string
-    formData.append(
-      'request',
-      new Blob([JSON.stringify(data)], { type: 'application/json' })
-    );
+    // Append request as JSON string with Content-Type application/json
+    const requestBlob = new Blob([JSON.stringify(data)], { 
+      type: 'application/json' 
+    });
+    formData.append('request', requestBlob, 'request.json');
 
     // Append image file if provided
-    if (imageFile) {
-      formData.append('image', imageFile);
+    if (imageFile && imageFile instanceof File) {
+      formData.append('image', imageFile, imageFile.name);
     }
 
     return await safeApiClient.put<IAdvertisement>(

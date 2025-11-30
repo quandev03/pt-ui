@@ -62,4 +62,8 @@ export const pathRoutes = {
     `/advertisement-management/edit/${id ? id : ':id'}`,
   advertisementManagementView: (id?: IStringNumber) =>
     `/advertisement-management/view/${id ? id : ':id'}`,
+  contractManagement: '/contract-management',
+  contractManagementAdd: '/contract-management/add',
+  contractManagementDetail: (id?: IStringNumber) =>
+    `/contract-management/${id ? id : ':id'}`,
 };
