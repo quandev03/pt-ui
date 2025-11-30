@@ -14,8 +14,8 @@ import {
 import { Col, Form, Image, Row, Spin } from 'antd';
 import { FocusEvent, useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import BgLogin from '../../../assets/images/bg_banner.png';
-import Logo from '../../../assets/images/Logo-mini.svg';
+import BgLogin from '../../../assets/images/background_login.jpg';
+import Logo from '../../../assets/images/logo.jpg';
 import { ACCESS_TOKEN_KEY } from '../../../constants';
 import { pathRoutes } from '../../../routers/url';
 import useConfigAppStore from '../../Layouts/stores';
