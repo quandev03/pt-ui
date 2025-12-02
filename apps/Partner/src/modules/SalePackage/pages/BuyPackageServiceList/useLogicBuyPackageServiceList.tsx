@@ -1,5 +1,6 @@
 import {
   CButton,
+  FilterItemProps,
   decodeSearchParams,
   formatQueryParams,
 } from '@vissoft-react/common';
@@ -36,11 +37,30 @@ const renderStatus = (status?: string) => {
   }
 };
 
-export const useLogicPurchaseHistoryList = () => {
+export const useLogicBuyPackageServiceList = () => {
   const [searchParams] = useSearchParams();
   const params = decodeSearchParams(searchParams);
   const queryParams = formatQueryParams<IPurchaseHistoryParams>(params);
   const { data, isLoading } = useGetPurchaseHistory(queryParams);
+
+  const packageFilterOptions = useMemo(() => {
+    const map = new Map<string, { label: string; value: string }>();
+    (data?.content ?? []).forEach((item) => {
+      const key = item.packageProfileId || item.id;
+      if (!key || map.has(key)) return;
+      const label = item.packageName || key;
+      map.set(key, { label, value: key });
+    });
+    return Array.from(map.values());
+  }, [data]);
+
+  const statusOptions = useMemo(
+    () => [
+      { label: 'Đang hiệu lực', value: 'ACTIVE' },
+      { label: 'Hết hiệu lực', value: 'INACTIVE' },
+    ],
+    []
+  );
 
   const columns: ColumnsType<IPurchaseHistoryItem> = useMemo(
     () => [
@@ -48,11 +68,6 @@ export const useLogicPurchaseHistoryList = () => {
         title: 'Tên gói',
         dataIndex: 'packageName',
         key: 'packageName',
-      },
-      {
-        title: 'Mã gói',
-        dataIndex: 'packageCode',
-        key: 'packageCode',
       },
       {
         title: 'Thời gian bắt đầu',
@@ -78,11 +93,31 @@ export const useLogicPurchaseHistoryList = () => {
 
   const actionComponent = useMemo(
     () => (
-      <Link to={pathRoutes.salePackagePurchaseAdd}>
+      <Link to={pathRoutes.buyPackageServiceAdd}>
         <CButton icon={<Plus size={20} />}>Mua gói</CButton>
       </Link>
     ),
     []
+  );
+
+  const filters: FilterItemProps[] = useMemo(
+    () => [
+      {
+        type: 'Select',
+        name: 'packageProfileId',
+        label: 'Gói cước',
+        placeholder: 'Chọn gói cước',
+        options: packageFilterOptions,
+      },
+      {
+        type: 'Select',
+        name: 'status',
+        label: 'Trạng thái',
+        placeholder: 'Chọn trạng thái',
+        options: statusOptions,
+      },
+    ],
+    [packageFilterOptions, statusOptions]
   );
 
   return {
@@ -90,6 +125,6 @@ export const useLogicPurchaseHistoryList = () => {
     loading: isLoading,
     columns,
     actionComponent,
+    filters,
   };
 };
-

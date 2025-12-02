@@ -1,10 +1,10 @@
 import { LayoutList } from '@vissoft-react/common';
 import { memo } from 'react';
-import { useLogicPurchaseHistoryList } from './useLogicPurchaseHistoryList';
+import { useLogicBuyPackageServiceList } from './useLogicBuyPackageServiceList';
 
-export const PurchaseHistoryList = memo(() => {
-  const { purchaseHistory, loading, columns, actionComponent } =
-    useLogicPurchaseHistoryList();
+export const BuyPackageServiceList = memo(() => {
+  const { purchaseHistory, loading, columns, actionComponent, filters } =
+    useLogicBuyPackageServiceList();
 
   return (
     <LayoutList
@@ -13,15 +13,7 @@ export const PurchaseHistoryList = memo(() => {
       data={purchaseHistory}
       loading={loading}
       actionComponent={actionComponent}
-      filterItems={[]}
-      searchComponent={
-        <LayoutList.SearchComponent
-          name="q"
-          placeholder="Nhập tên hoặc mã gói"
-          tooltip="Tìm theo tên/mã gói"
-        />
-      }
+      filterItems={filters}
     />
   );
 });
-

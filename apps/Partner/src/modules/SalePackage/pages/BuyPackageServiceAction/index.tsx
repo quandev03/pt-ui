@@ -6,9 +6,9 @@ import {
   validateForm,
 } from '@vissoft-react/common';
 import { Col, Form, Radio, Row } from 'antd';
-import { useLogicPurchasePackage } from './useLogicPurchasePackage';
+import { useLogicBuyPackageService } from './useLogicBuyPackageService';
 
-export const PurchasePackageAction = () => {
+export const BuyPackageServiceAction = () => {
   const {
     form,
     packageOptions,
@@ -16,7 +16,7 @@ export const PurchasePackageAction = () => {
     loadingSubmit,
     handleSubmit,
     handleCancel,
-  } = useLogicPurchasePackage();
+  } = useLogicBuyPackageService();
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -73,4 +73,3 @@ export const PurchasePackageAction = () => {
     </div>
   );
 };
-

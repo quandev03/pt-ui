@@ -87,6 +87,11 @@ export const routerItems: RouterItems[] = [
     parentId: pathRoutes.saleManagement as string,
   },
   {
+    key: pathRoutes.buyPackageService as string,
+    label: 'Mua gói cước',
+    parentId: pathRoutes.saleManagement as string,
+  },
+  {
     key: pathRoutes.advertisementManagement as string,
     label: 'Quản lý quảng cáo',
     parentId: pathRoutes.saleManagement as string,

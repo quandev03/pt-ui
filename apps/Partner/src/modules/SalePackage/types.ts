@@ -103,3 +103,29 @@ export interface ISaleParamsResponse {
   SUBSCRIBER_SUBS_STATUS: IApiOption[];
   SUBSCRIBER_SUB_STATUS: IApiOption[];
 }
+
+export interface IPurchaseHistoryItem {
+  id: string;
+  packageProfileId: string;
+  packageName: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+  createdBy?: string;
+  createdDate?: string;
+  modifiedBy?: string;
+  modifiedDate?: string;
+  organizationUnitId?: string;
+  organizationUnitName?: string;
+}
+
+export interface IPurchaseHistoryParams extends IParamsRequest {
+  packageProfileId?: string;
+  status?: string;
+  isMoney?: boolean;
+}
+
+export interface IPurchasePackagePayload {
+  packageProfileId: string;
+  isMoney?: boolean;
+}

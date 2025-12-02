@@ -15,6 +15,7 @@ export const RoomPaymentDetail = memo(() => {
   const {
     paymentDetail,
     loadingDetail,
+    loadingResendEmail,
     handleClose,
     handlePrintInvoice,
     handleResendEmail,
@@ -181,7 +182,13 @@ export const RoomPaymentDetail = memo(() => {
 
         <div className="flex gap-4 justify-end mt-6">
           <Button onClick={handlePrintInvoice}>In hóa đơn</Button>
-          <Button onClick={handleResendEmail}>Gửi lại email</Button>
+          <Button
+            onClick={handleResendEmail}
+            loading={loadingResendEmail}
+            disabled={loadingResendEmail}
+          >
+            Gửi lại email
+          </Button>
           <CButtonClose onClick={handleClose} />
         </div>
       </div>

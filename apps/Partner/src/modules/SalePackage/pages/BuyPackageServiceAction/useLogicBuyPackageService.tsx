@@ -2,32 +2,27 @@ import { Form } from 'antd';
 import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pathRoutes } from '../../../../routers';
-import { useGetPurchaseHistory, usePurchasePackage } from '../../hooks';
-import { IPurchaseHistoryItem, IPurchasePackagePayload } from '../../types';
+import { useGetPackageCodes, usePurchasePackage } from '../../hooks';
+import { IPurchasePackagePayload } from '../../types';
 
-const PACKAGE_OPTIONS_PAGE_SIZE = 100;
-
-export const useLogicPurchasePackage = () => {
+export const useLogicBuyPackageService = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
   const handleNavigateList = useCallback(() => {
-    navigate(pathRoutes.salePackagePurchaseList as string);
+    navigate(pathRoutes.buyPackageService as string);
   }, [navigate]);
 
-  const { data: purchaseOptions, isLoading: loadingOptions } =
-    useGetPurchaseHistory({
-      page: 0,
-      size: PACKAGE_OPTIONS_PAGE_SIZE,
-    });
+  const { data: packageCodesData, isLoading: loadingOptions } =
+    useGetPackageCodes();
 
   const packageOptions = useMemo(() => {
-    const items = purchaseOptions?.content ?? [];
-    return items.map((item: IPurchaseHistoryItem) => ({
-      label: `${item.packageName} (${item.packageCode})`,
-      value: item.packageProfileId || item.id,
+    if (!packageCodesData) return [];
+    return packageCodesData.map((pkg) => ({
+      label: pkg.pckName || pkg.pckCode,
+      value: pkg.id,
     }));
-  }, [purchaseOptions]);
+  }, [packageCodesData]);
 
   const { mutate: purchasePackage, isPending: loadingSubmit } =
     usePurchasePackage(() => {
@@ -63,4 +58,3 @@ export const useLogicPurchasePackage = () => {
     handleCancel,
   };
 };
-

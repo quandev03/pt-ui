@@ -7,6 +7,9 @@ import {
   IPackageSaleParams,
   IPayloadGenOtp,
   IPayloadRegister,
+  IPurchaseHistoryItem,
+  IPurchaseHistoryParams,
+  IPurchasePackagePayload,
   ISaleParamsResponse,
   ISinglePackageSalePayload,
 } from '../types';
@@ -68,6 +71,22 @@ export const packageSaleService = {
   getSaleParams: async (): Promise<ISaleParamsResponse> => {
     const response = await safeApiClient.get<ISaleParamsResponse>(
       `hivn-sale-service/private/api/v1/params`
+    );
+    return response;
+  },
+  getPurchaseHistory: async (params?: IPurchaseHistoryParams) => {
+    const response = await safeApiClient.get<IPage<IPurchaseHistoryItem>>(
+      `${prefixSaleService}/sale-package-partner`,
+      {
+        params,
+      }
+    );
+    return response;
+  },
+  purchasePackage: async (payload: IPurchasePackagePayload) => {
+    const response = await safeApiClient.post(
+      `${prefixSaleService}/sale-package-partner`,
+      payload
     );
     return response;
   },

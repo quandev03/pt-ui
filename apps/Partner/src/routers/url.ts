@@ -56,6 +56,8 @@ export const pathRoutes = {
   salePackage: '/sell-bundle-for-existing-sub',
   salePackageAddSingle: '/sell-bundle-for-existing-sub/single',
   salePackageAddBulk: '/sell-bundle-for-existing-sub/bulk',
+  buyPackageService: '/buy-package-service',
+  buyPackageServiceAdd: '/buy-package-service/add',
   advertisementManagement: '/advertisement-management',
   advertisementManagementAdd: '/advertisement-management/add',
   advertisementManagementEdit: (id?: IStringNumber) =>

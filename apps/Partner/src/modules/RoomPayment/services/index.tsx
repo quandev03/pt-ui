@@ -41,5 +41,11 @@ export const roomPaymentServices = {
       }
     );
   },
+
+  resendEmail: async (id: string) => {
+    return await safeApiClient.post(
+      `${prefixSaleService}/room-payments/${id}/resend-email`
+    );
+  },
 };
 
